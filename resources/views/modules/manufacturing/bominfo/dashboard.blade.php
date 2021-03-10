@@ -1,7 +1,6 @@
-
 <div class="container-fluid">
-<div class="card">
-    <div class="card-body">
+    <div class="card">
+        <div class="card-body">
             <div class="row">
                 <div class="col-lg-6">
                     <h5>Stock</h5>
@@ -26,6 +25,6 @@
                     </ul>
                 </div>
             </div>
+        </div>
     </div>
-</div>
 </div>

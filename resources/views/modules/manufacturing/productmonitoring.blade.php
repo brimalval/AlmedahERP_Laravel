@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Product Monitoring</h2>
@@ -84,7 +83,7 @@
                     <td>03/15/2021</td>
                     <td>04/05/2021</td>
                     <td class="text-black-50">0%</td>
-                    
+
                 </tr>
             </tbody>
         </table>

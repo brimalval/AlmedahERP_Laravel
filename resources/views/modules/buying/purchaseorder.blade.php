@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
-    <h2 class="navbar-brand" style="font-size: 35px;">Purchase Order</h2>
+        <h2 class="navbar-brand" style="font-size: 35px;">Purchase Order</h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -106,52 +106,52 @@
             </div>
         </div>
 
-</div>
-<script type="text/javascript">
-    $(document).ready(function() {
-        var modalCrmLeadsForm = $("#modal-buying-purchaseorder-form");
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var modalCrmLeadsForm = $("#modal-buying-purchaseorder-form");
 
-        var oTable = $('#tbl-buying-purchaseorder').DataTable({
-            sDom: 'rt',
-            ajax: "data/buying-purchaseorder.json", // test data only
-            columns: [{
-                    data: 'title'
-                },
-                {
-                    data: 'status'
-                },
-                {
-                    data: 'date'
-                },
-                {
-                    data: 'grand_total'
-                },
-                {
-                    data: '%_received'
-                },
-                {
-                    data: '%_billed'
-                }
-            ]
-        });
+            var oTable = $('#tbl-buying-purchaseorder').DataTable({
+                sDom: 'rt',
+                ajax: "data/buying-purchaseorder.json", // test data only
+                columns: [{
+                        data: 'title'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'date'
+                    },
+                    {
+                        data: 'grand_total'
+                    },
+                    {
+                        data: '%_received'
+                    },
+                    {
+                        data: '%_billed'
+                    }
+                ]
+            });
 
-        $(document).on('click', '#btn-buying-purchaseorder-add', function(e) {
-            e.preventDefault();
-            modalCrmLeadsForm.modal('show');
-        });
+            $(document).on('click', '#btn-buying-purchaseorder-add', function(e) {
+                e.preventDefault();
+                modalCrmLeadsForm.modal('show');
+            });
 
-        $(document).on('click', '.close-modal-buying-purchaseorder-form', function() {
-            modalCrmLeadsForm.modal('hide');
-        });
+            $(document).on('click', '.close-modal-buying-purchaseorder-form', function() {
+                modalCrmLeadsForm.modal('hide');
+            });
 
-        // custom datatables commands
-        $(document).on('keyup', '#buying-purchaseorder-filter-input', function() {
-            oTable.search($(this).val()).draw();
+            // custom datatables commands
+            $(document).on('keyup', '#buying-purchaseorder-filter-input', function() {
+                oTable.search($(this).val()).draw();
+            });
+            $(document).on('click', '#btn-buying-purchaseorder-pagination-previous', function() {
+                oTable.page('previous').draw('page');
+            });
+            $(document).on('click', '#btn-buying-purchaseorder-pagination-next', function() {
+                oTable.page('next').draw('page');
+            });
         });
-        $(document).on('click', '#btn-buying-purchaseorder-pagination-previous', function() {
-            oTable.page('previous').draw('page');
-        });
-        $(document).on('click', '#btn-buying-purchaseorder-pagination-next', function() {
-            oTable.page('next').draw('page');
-        });
-    });

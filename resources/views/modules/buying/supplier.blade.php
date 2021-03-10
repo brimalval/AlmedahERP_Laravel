@@ -128,11 +128,11 @@
                     <option value="Individual">Individual</option>
                 </select>
                 <div class="d-flex">
-				<div class="form-check">
-					<input type="checkbox" class="form-check-input" id="snewdisabled">
-				</div>
-				<label for="snewdisabled">Disabled</label>
-			</div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="snewdisabled">
+                    </div>
+                    <label for="snewdisabled">Disabled</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <input type="submit" class="btn btn-info menu" data-name="Create New Supplier" data-parent="buying" data-bs-dismiss="modal" value="Edit in full page">

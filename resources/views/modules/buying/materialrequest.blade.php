@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
-    <h2 class="navbar-brand" style="font-size: 35px;">Material Request</h2>
+        <h2 class="navbar-brand" style="font-size: 35px;">Material Request</h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -83,7 +83,7 @@
                     <td>Purpose</td>
                     <td>UOM ID</td>
                     <td>Station ID</td>
-                    
+
                     <td></td>
                 </tr>
             </thead>
@@ -94,13 +94,13 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td ><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openMaterialRequestInfo();'>MTL-BAR-SHAFT-CRS-3/4"</a></td>
+                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openMaterialRequestInfo();'>MTL-BAR-SHAFT-CRS-3/4"</a></td>
                     <td>400</td>
                     <td class="text-black-50">03-11-2021</td>
                     <td class="text-black-50">Insert Purpose</td>
                     <td>10923</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
                 <tr>
@@ -115,7 +115,7 @@
                     <td class="text-black-50">Insert Purpose</td>
                     <td>10924</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
                 <tr>
@@ -130,7 +130,7 @@
                     <td class="text-black-50">Insert Purpose</td>
                     <td>10925</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
                 <tr>
@@ -145,7 +145,7 @@
                     <td class="text-black-50">Insert Purpose</td>
                     <td>10926</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
             </tbody>

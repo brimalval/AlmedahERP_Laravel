@@ -6,20 +6,20 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-bom"><a class="nav-link" href="#">Lead</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Opportunity</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Customer</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Contact</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Communication</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Lead Source</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Contract</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Appointment</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Newsletter</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Opportunity</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Customer</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Contact</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Communication</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Lead Source</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Contract</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Appointment</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Newsletter</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="col-4">
-            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;" >
+            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Reports</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
@@ -62,11 +62,11 @@
                         <li class="list-bom"><a class="nav-link" href="#">Maintenance Schedule</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Maintenance Visit</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Warranty Claim</a></li>
-                        
+
                     </ul>
                 </div>
             </div>
         </div>
-        
+
     </div>
 </div>

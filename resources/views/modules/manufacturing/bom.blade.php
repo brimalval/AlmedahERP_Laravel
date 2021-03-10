@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">BOM</h2>
@@ -82,7 +81,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td ><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openBlueprint();'>BOM-PR-EM-ADJ CAP-002</a></td>
+                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openBlueprint();'>BOM-PR-EM-ADJ CAP-002</a></td>
                     <td>Default</td>
                     <td class="text-black-50">PR-EM-ADJ CAP-002</td>
                     <td class="text-black-50">✓</td>

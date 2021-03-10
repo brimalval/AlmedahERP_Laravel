@@ -15,8 +15,8 @@
         // if the subject or sender is longer than 12, turn the remaining characters into ellipsis
         for ($i = 6; $i < 11; $i++) {
             // appends number just to lengthen the subject characters
-            $xsub = strlen($subject) > 14 ? substr($subject .$i, 0,12)."...": $subject;
-            echo "<a class='nav-link m-list' id='v-pills-message-tab' data-bs-toggle='pill' href='#v-pills-message" . $i . "' role='tab' aria-controls='v-pills-message" . $i . "' aria-selected='false'><p class='message-sender'>". $from . "</p>" . $xsub . "<i class='far fa-star' onclick='makeImportant(this)';'></i></a>";
+            $xsub = strlen($subject) > 14 ? substr($subject . $i, 0, 12) . "..." : $subject;
+            echo "<a class='nav-link m-list' id='v-pills-message-tab' data-bs-toggle='pill' href='#v-pills-message" . $i . "' role='tab' aria-controls='v-pills-message" . $i . "' aria-selected='false'><p class='message-sender'>" . $from . "</p>" . $xsub . "<i class='far fa-star' onclick='makeImportant(this)';'></i></a>";
         }
         ?>
 
@@ -34,7 +34,7 @@
                 <a class='dropdown-item' onclick='archiveMsg();'>Archive</a>
                 <a class='dropdown-item text-danger' onclick='deleteMsg();'>Delete</a>
                 </div>
-                </div><br><h1>". $subject." ".$i."</h2><br><h5>by ".$from. "<br>" . $date . "</h5><br> " . $message. "<br><br><br><br><div class='d-flex justify-content-center'><i class='fas fa-backward'></i><i class='fas fa-forward'></i></div></div>";
+                </div><br><h1>" . $subject . " " . $i . "</h2><br><h5>by " . $from . "<br>" . $date . "</h5><br> " . $message . "<br><br><br><br><div class='d-flex justify-content-center'><i class='fas fa-backward'></i><i class='fas fa-forward'></i></div></div>";
         }
         ?>
     </div>

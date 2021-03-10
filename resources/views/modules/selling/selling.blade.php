@@ -12,7 +12,7 @@
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="selling">Blanket Order</a></li>
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="selling">Sales Partner</a></li>
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="selling">Sales Person</a></li>
-    
+
                     </ul>
                 </div>
             </div>

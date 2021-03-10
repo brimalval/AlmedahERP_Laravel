@@ -6,5 +6,5 @@
 			</div>
 			<label for="sale-item">Enable Deffered Revenue</label>
 		</div>
-	</divs>
+	</div>
 </div>

@@ -1,7 +1,7 @@
 //--> start of Dashboard js <--//
 if ($("#divMain").children().length == 0) {
   $(document).ready(function () {
-    $('#divMain').load('modules.dashboard');
+    $('#divMain').load('/dashboard');
   });
 }
 //--> End of Dashboard js <--//
@@ -47,11 +47,11 @@ $(document).ready(function () {
         $link = $(this).attr('data-module-url');
       }
 
-      $(`#content${menu}`).load("./modules/" + $link.toLowerCase() + "/" + $link.toLowerCase() + ".php", function (responseTxt, statusTxt, xhr) {
+      $(`#content${menu}`).load("/" + $link.toLowerCase(), function (responseTxt, statusTxt, xhr) {
         if (statusTxt == "error"){
           console.log("Error: " + xhr.status + ": " + xhr.statusText);
           console.log($parent);
-          $(`#content${menu}`).load("./modules/" + $parent.toLowerCase() + "/" + $link.toLowerCase() + ".php", function (responseTxt, statusTxt, xhr) {
+          $(`#content${menu}`).load("/" + $link.toLowerCase(), function (responseTxt, statusTxt, xhr) {
             if (statusTxt == "error")
               alert("Error: " + xhr.status + ": " + xhr.statusText);
               
@@ -88,7 +88,7 @@ $(document).ready(function () {
     //--> Additional Dashboard js (close tabs) <--//
     if ($("#tabs").children().length == 0) {
       $(document).ready(function () {
-        $('#divMain').load('modules/dashboard.php');
+        $('#divMain').load('/dashboard');
       });
     }
     //--> End of Dashboard js (close tabs) <--//

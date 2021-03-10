@@ -24,7 +24,7 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onClick="loadNewEmployee()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-name="Add Payment Entry"  style="float: left;" value="New" />
+                    <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-name="Add Payment Entry" style="float: left;" value="New" />
                 </li>
             </ul>
         </div>
@@ -58,7 +58,7 @@
                     <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
                         Add Filter
                     </button>
-                    
+
                 </div>
                 <div class=" ml-auto float-right">
                     <span class="text-muted ">Last Modified On</span>
@@ -83,7 +83,7 @@
                     <td>Posting Date</td>
                     <td>Mode of Payment</td>
                     <td>Station ID</td>
-                    
+
                     <td></td>
                 </tr>
             </thead>
@@ -94,13 +94,13 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td >BOM-PR-EM-ADJ CAP-002</td>
+                    <td>BOM-PR-EM-ADJ CAP-002</td>
                     <td>Active</td>
                     <td class="text-black-50">Insert Type</td>
                     <td class="text-black-50">Insert Date</td>
                     <td>Insert MOP</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
                 <tr>
@@ -115,7 +115,7 @@
                     <td class="text-black-50">Insert Date</td>
                     <td>Insert MOP</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
                 <tr>
@@ -130,7 +130,7 @@
                     <td class="text-black-50">Insert Date</td>
                     <td>Insert MOP</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
                 <tr>
@@ -145,7 +145,7 @@
                     <td class="text-black-50">Insert Date</td>
                     <td>Insert MOP</td>
                     <td class="text-black-50">Insert ID</td>
-                    
+
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
             </tbody>

@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Price List</h2>
@@ -8,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Menu
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -45,7 +44,7 @@
                         <input type="text" class="form-control" placeholder="PHP">
                     </div>
                 </div>
-                 
+
             </div>
         </div>
         <div class="card-body filter">
@@ -64,7 +63,7 @@
             </div>
         </div>
         <hr>
- <table class="table table-bom border-bottom">
+        <table class="table table-bom border-bottom">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -87,42 +86,42 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td >Standard Selling</td>
+                    <td>Standard Selling</td>
                     <td>Enabled</td>
                     <td class="text-black-50">PHP</td>
-                    <td class="text-black-50">                        
+                    <td class="text-black-50">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
                     <td>✔</td>
-                    <td class="text-black-50">                        
+                    <td class="text-black-50">
                         Standard Selling 10M
                     </td>
 
                 </tr>
-                 <tr>
+                <tr>
                     <td>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td >Standard Buying</td>
+                    <td>Standard Buying</td>
                     <td>Enabled</td>
                     <td class="text-black-50">PHP</td>
                     <td class="text-black-50" style="text-align:left;">
-                                                
+
                         <div class="form-check">
                             ✔
                         </div>
-                        
+
                     </td>
-                    <td>                  
+                    <td>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
-                     </td>
-                    <td class="text-black-50">                        
+                    </td>
+                    <td class="text-black-50">
                         Standard Buying 10M
                     </td>
 
@@ -137,7 +136,7 @@
 
 
 <style>
-    .conContent{
+    .conContent {
         padding: 200px;
     }
 </style>

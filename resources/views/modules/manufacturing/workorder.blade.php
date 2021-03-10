@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Work Order</h2>
@@ -80,7 +79,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td ><a name="Emulsifier Component 1" href='javascript:onclick=loadWorkOrderInfo();'>Emulsifier Component 1</a></td>
+                    <td><a name="Emulsifier Component 1" href='javascript:onclick=loadWorkOrderInfo();'>Emulsifier Component 1</a></td>
                     <td>Not Started</td>
                     <td class="text-black-50">IFG-WO-2020-00003</td>
                     <td class="text-black-50">Emulsifier B</td>
@@ -93,7 +92,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td ><a name="Emulsifier Component 2" href='javascript:onclick=loadWorkOrderInfo();'>Emulsifier Component 2</a></td>
+                    <td><a name="Emulsifier Component 2" href='javascript:onclick=loadWorkOrderInfo();'>Emulsifier Component 2</a></td>
                     <td>Not Started</td>
                     <td class="text-black-50">IFG-WO-2020-00003</td>
                     <td class="text-black-50">Emulsifier B</td>

@@ -102,7 +102,7 @@
                 </div>
             </div>
         </div>
-              <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Cost Center and Budgeting</div>
                 <div class="card-body">
@@ -116,7 +116,7 @@
                 </div>
             </div>
         </div>
-             <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Financial Statements</div>
                 <div class="card-body">
@@ -130,7 +130,7 @@
                 </div>
             </div>
         </div>
-              <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Opening and Closing</div>
                 <div class="card-body">
@@ -142,7 +142,7 @@
                 </div>
             </div>
         </div>
-              <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Multi Currency</div>
                 <div class="card-body">
@@ -154,7 +154,7 @@
                 </div>
             </div>
         </div>
-            <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Settings</div>
                 <div class="card-body">
@@ -166,7 +166,7 @@
                 </div>
             </div>
         </div>
-            <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Subscription Management</div>
                 <div class="card-body">
@@ -178,7 +178,7 @@
                 </div>
             </div>
         </div>
-            <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Bank Statement</div>
                 <div class="card-body">
@@ -191,7 +191,7 @@
                 </div>
             </div>
         </div>
-            <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Profitability</div>
                 <div class="card-body">
@@ -204,7 +204,7 @@
                 </div>
             </div>
         </div>
-            <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Reports</div>
                 <div class="card-body">
@@ -218,8 +218,8 @@
                     </ul>
                 </div>
             </div>
-        </div>  
-            <div class="col-4">
+        </div>
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Share Management</div>
                 <div class="card-body">
@@ -232,6 +232,6 @@
                     </ul>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
 </div>

@@ -6,17 +6,17 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-bom"><a class="nav-link" href="#">Stock Entry</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Delivery Note</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Purchase Receipt</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Material Request</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Pick List</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Delivery Trip</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Delivery Note</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Purchase Receipt</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Material Request</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Pick List</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Delivery Trip</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="col-4">
-            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;" >
+            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Stock Reports</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="col-4">
-            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;" >
+            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Serial Number and Batch</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
@@ -77,7 +77,7 @@
                         <li class="list-bom"><a class="nav-link" href="#">Serial No. Service Contract Expiry</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Serial No. Status</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Serial No. Warranty Expiry</a></li>
-                        
+
                     </ul>
                 </div>
             </div>
@@ -93,12 +93,12 @@
                         <li class="list-bom"><a class="nav-link" href="#">Quality Inspection</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Quality Inspection Template</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Quick Stock Balance</a></li>
-                        
+
                     </ul>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Key Reports</div>
@@ -112,14 +112,14 @@
                         <li class="list-bom"><a class="nav-link" href="#">Purchase Order Items to be Received</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Item Shortage Report</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Batch-Wise Balance History</a></li>
-                        
+
                     </ul>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-4">
-            <div class="card shadow-card text-dark bg-light mb-3"  style="max-width: 150rem;">
+            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Other Reports</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
@@ -131,11 +131,11 @@
                         <li class="list-bom"><a class="nav-link" href="#">Subcontracted Raw Materials to be Transferred</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Subcontracted Item to be Received</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Stock and Account Value Comparison</a></li>
-                        
+
                     </ul>
                 </div>
             </div>
         </div>
-        
+
     </div>
 </div>

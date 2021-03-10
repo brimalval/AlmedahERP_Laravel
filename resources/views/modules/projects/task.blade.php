@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,22 +78,26 @@
             </div>
         </div>
         <hr>
-<div class="conContent">
-    
-        <center> <p>No Task found</p></center><br>
+        <div class="conContent">
+
+            <center>
+                <p>No Task found</p>
+            </center><br>
 
 
-<div id="contact"><center><button  type="button" class="btn btn-info btn" style="background-color: #007bff;" >Create New Task</button></center></div>
+            <div id="contact">
+                <center><button type="button" class="btn btn-info btn" style="background-color: #007bff;">Create New Task</button></center>
+            </div>
 
 
-    
-</div>
+
+        </div>
     </div>
 
 </div>
 
 <style>
-    .conContent{
+    .conContent {
         padding: 200px;
     }
 </style>

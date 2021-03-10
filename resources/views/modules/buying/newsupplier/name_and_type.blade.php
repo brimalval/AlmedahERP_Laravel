@@ -4,11 +4,11 @@
 			<label for="snewname">Supplier Name</label>
 			<input type="text" id="sname" class="form-control font-weight-bold" value="">
 			<label for="snewcountry">Country</label>
-			<input type="text" id="scountry" class="form-control font-weight-bold" value="" >
+			<input type="text" id="scountry" class="form-control font-weight-bold" value="">
 			<label for="snewbank">Default Bank Account</label>
-			<input type="text" id="sbank" class="form-control font-weight-bold" value="" >
+			<input type="text" id="sbank" class="form-control font-weight-bold" value="">
 			<label for="snewbank">Tax ID</label>
-			<input type="text" id="sbank" class="form-control font-weight-bold" value="" >
+			<input type="text" id="sbank" class="form-control font-weight-bold" value="">
 			<label for="snewbank">Tax Category</label>
 			<input type="text" id="sbank" class="form-control font-weight-bold" value="">
 			<label for="snewbank">Tax Withholding Category</label>

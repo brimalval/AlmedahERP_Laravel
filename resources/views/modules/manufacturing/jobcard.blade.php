@@ -65,7 +65,7 @@
             </div>
         </div>
         <hr>
-   <table class="table table-bom border-bottom">
+        <table class="table table-bom border-bottom">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -79,7 +79,7 @@
                     <td>Work Station</td>
                     <td>For Quantity</td>
                     <td>Refreshing ...</td>
-   
+
                 </tr>
             </thead>
             <tbody class="">
@@ -89,7 +89,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td >Sample Operation</td>
+                    <td>Sample Operation</td>
                     <td>Default</td>
                     <td class="text-black-50">Sample Work Order</td>
                     <td class="text-black-50">Sample Work Station</td>
@@ -97,21 +97,21 @@
                     <td></td>
 
                 </tr>
-             </tbody>
+            </tbody>
         </table>
 
 
 
 
-            <div id="newEmployee-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        
-                        <div class="modal-header">
+        <div id="newEmployee-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-                            <h3>New Job Card</h3>
+                    <div class="modal-header">
 
-                            <div class="row">
+                        <h3>New Job Card</h3>
+
+                        <div class="row">
                             <div class="col-3">
                                 <div class="form-group">
                                     <button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #DEDEDE; color: black;">Close</button>
@@ -120,67 +120,67 @@
                             <div class="col-1">
 
                             </div>
-                             <div class="col-3">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #007bff;">Save</button>
                                 </div>
                             </div>
-                            </div>
-
                         </div>
 
-                        <form id="addJobCard" name="addJobCard" role="form" action="AddJobCard.php">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="workstation">Workstation</label>
-                                            <input type="text" name="workstation" class="form-control">
-                                        </div>
+                    </div>
+
+                    <form id="addJobCard" name="addJobCard" role="form" action="AddJobCard.php">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="workstation">Workstation</label>
+                                        <input type="text" name="workstation" class="form-control">
                                     </div>
-                                    
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="operation">Operation</label>
-                                            <input type="text" name="operation" class="form-control">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="company">Company</label>
-                                            <input name="company" class="form-control" value="Almedah Food Equipments">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="forQty">For Quantity</label>
-                                            <input type="text" name="forQty" class="form-control">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="wipWh">WIP Warehouse</label>
-                                            <input type="text" name="wipWh" class="form-control">
-                                        </div>
-                                    </div>
-                                    
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-name="Add Job Card" data-dismiss="modal" style="float: left;" value="Edit in Full Page" />
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="operation">Operation</label>
+                                        <input type="text" name="operation" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="company">Company</label>
+                                        <input name="company" class="form-control" value="Almedah Food Equipments">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="forQty">For Quantity</label>
+                                        <input type="text" name="forQty" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="wipWh">WIP Warehouse</label>
+                                        <input type="text" name="wipWh" class="form-control">
+                                    </div>
+                                </div>
 
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-name="Add Job Card" data-dismiss="modal" style="float: left;" value="Edit in Full Page" />
+
+                        </div>
+                    </form>
                 </div>
             </div>
-
-
         </div>
+
+
     </div>
+</div>
 
 
 <style>

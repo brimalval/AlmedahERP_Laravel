@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-              <div class="col-4">
+        <div class="col-4">
             <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Other Reports</div>
                 <div class="card-body">

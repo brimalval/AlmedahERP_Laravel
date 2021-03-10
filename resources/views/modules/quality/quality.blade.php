@@ -6,21 +6,21 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-bom"><a class="nav-link menu" href="#">Quality Goal</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Quality Procedure</a></li>
-                        <li class="list-bom"><a class="nav-link menu" href="#" >Tree of Procedures</a></li>
-                        
+                        <li class="list-bom"><a class="nav-link menu" href="#">Quality Procedure</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#">Tree of Procedures</a></li>
+
                     </ul>
                 </div>
             </div>
         </div>
         <div class="col-4">
-            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;" >
+            <div class="card shadow-card text-dark bg-light mb-3" style="max-width: 150rem;">
                 <div class="card-header">Review Action</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-bom"><a class="nav-link" href="#">Quality Review</a></li>
                         <li class="list-bom"><a class="nav-link" href="#">Quality Action</a></li>
-                        
+
                     </ul>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-    
-        
+
+
     </div>
 </div>

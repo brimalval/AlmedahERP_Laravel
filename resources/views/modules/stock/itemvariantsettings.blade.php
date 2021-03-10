@@ -52,7 +52,7 @@
                 </td>
                 <td>item_group</td>
                 <td>
-                    <button type="submit" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                    <button type="submit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
                 </td>
             </tr>
             <tr>
@@ -63,7 +63,7 @@
                 </td>
                 <td>is_item_from_hub</td>
                 <td>
-                    <button type="submit" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                    <button type="submit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
                 </td>
             </tr>
             <tr>
@@ -74,10 +74,10 @@
                 </td>
                 <td>stock_uom</td>
                 <td>
-                    <button type="submit" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                    <button type="submit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
                 </td>
             </tr>
-            <tr >
+            <tr>
                 <td colspan="3"><button type="submit" class="btn btn-light btn-sm">Add Row</button></td>
             </tr>
         </tbody>
@@ -95,12 +95,13 @@
                     <button type="button" class="btn btn-secondary btn-sm">Insert Above</button>
                     <button type="button" class="btn btn-secondary btn-sm">Duplicate</button>
                     <button type="button" class="btn btn-secondary btn-sm">Move</button>
-                    <button type="button" class="btn btn-light btn-sm"  data-bs-dismiss="modal"><span class="fas fa-times"></span></button>
+                    <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal"><span class="fas fa-times"></span></button>
                 </div>
             </div>
             <div class="modal-body">
                 <p class="text-muted">Field Name</p>
-                <select class="form-control" name="" id=""> <!-- note: the default selected must be where the button is selected example row 1 edit button is clicked item_group field name is default selected -->
+                <select class="form-control" name="" id="">
+                    <!-- note: the default selected must be where the button is selected example row 1 edit button is clicked item_group field name is default selected -->
                     <option value="" selected>item_group</option>
                     <option value="">is_item_from_hub</option>
                     <option value="">stock_uom</option>

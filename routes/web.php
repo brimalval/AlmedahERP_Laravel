@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/dashboard', function() {
+    return view('modules.dashboard');
+});
+
 /**BOM ROUTES */
 Route::get('/newBOM', function() { 
     return view('modules.manufacturing.bomsubModules.newbom');
