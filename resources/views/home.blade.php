@@ -659,7 +659,6 @@
     <!-- Main Col END -->
 </div>
 <!-- body-row END -->
-@endsection
-
 <script src="{{ asset('js/side-nav.js') }}"></script>
 <script src="{{ asset('js/tab-nav.js') }}"></script>
+@endsection

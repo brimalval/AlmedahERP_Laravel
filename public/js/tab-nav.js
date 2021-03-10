@@ -1,7 +1,7 @@
 //--> start of Dashboard js <--//
 if ($("#divMain").children().length == 0) {
   $(document).ready(function () {
-    $('#divMain').load('modules.dashboard');
+    $('#divMain').load('/modules/dashboard/dashboard');
   });
 }
 //--> End of Dashboard js <--//
@@ -46,12 +46,13 @@ $(document).ready(function () {
       if (typeof $(this).attr('data-module-url') !== "undefined") {
         $link = $(this).attr('data-module-url');
       }
-
-      $(`#content${menu}`).load("./modules/" + $link.toLowerCase() + "/" + $link.toLowerCase() + ".php", function (responseTxt, statusTxt, xhr) {
+      // Attempts to load /modules/tabname/tabname
+      // if it fails, it loads /modules/parent_tabname/tabname (?)
+      $(`#content${menu}`).load("./modules/" + $link.toLowerCase() + "/" + $link.toLowerCase(), function (responseTxt, statusTxt, xhr) {
         if (statusTxt == "error"){
           console.log("Error: " + xhr.status + ": " + xhr.statusText);
           console.log($parent);
-          $(`#content${menu}`).load("./modules/" + $parent.toLowerCase() + "/" + $link.toLowerCase() + ".php", function (responseTxt, statusTxt, xhr) {
+          $(`#content${menu}`).load("./modules/" + $parent.toLowerCase() + "/" + $link.toLowerCase(), function (responseTxt, statusTxt, xhr) {
             if (statusTxt == "error")
               alert("Error: " + xhr.status + ": " + xhr.statusText);
               
