@@ -1,0 +1,56 @@
+.message-sender {
+    font-size: smaller;
+}
+.m-list{
+	color: #ebf9ff;
+	border: 1px solid black;
+}
+.m-list:hover{
+	color: black;
+	background-color: #d9d9d9;
+}
+
+.message-list-body {
+    padding-top: 10px;
+    margin-right: 50px;
+    border-right: 1px solid grey;
+    width: 25%;
+}
+
+.message-body {
+    width: auto;
+    margin-top: 5%;
+}
+
+.nav-link {
+    color: black;
+    margin-top: 2%;
+}
+
+.fa-star{
+	opacity: .5;
+	margin-left: 67.5px;
+	margin-top: -5px;
+	position: absolute;
+}
+.fa-ellipsis-h{
+	float: right;
+	margin-right: 5%;
+}
+.fa-ellipsis-h:hover{
+	cursor: pointer;
+}
+.dropdown-item:hover{
+	background-color: #d9d9d9;
+	cursor: pointer;
+}
+.fa-backward:hover{
+	cursor: pointer;
+}
+.fa-forward:hover{
+	cursor: pointer;
+}
+
+.fa-backward, .fa-forward{
+	margin: 5px;
+}

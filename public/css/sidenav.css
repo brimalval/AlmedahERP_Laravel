@@ -1,0 +1,125 @@
+#body-row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#sidebar-container {
+    min-height: 100vh;
+    background-color: #343A40;
+    ;
+    padding: 0;
+}
+
+.navbar-bg {
+    background-color: #14213D;
+}
+
+.sidebar-subsub-bg {
+    background-color: #6CA0A0;
+}
+
+/* Sidebar sizes when expanded and expanded */
+.sidebar-expanded {
+    width: 230px;
+}
+
+.sidebar-collapsed {
+    width: 60px;
+}
+
+.smaller {
+    font-size: 13px;
+}
+
+/* Menu item*/
+#sidebar-container .list-group a {
+    height: 40px;
+    color: #E5E5E5;
+
+
+}
+
+/* Submenu item*/
+#sidebar-container .list-group .sidebar-submenu a {
+    height: 35px;
+    padding-left: 30px;
+}
+
+.sidebar-submenu {
+    font-size: 11px;
+}
+
+/* Separators */
+.sidebar-separator-title {
+    background-color: #000000;
+    height: 35px;
+}
+
+.sidebar-separator {
+    background-color: #000000;
+    height: 25px;
+}
+
+.logo-separator {
+    background-color: #000000;
+    height: 60px;
+}
+
+/* Closed submenu icon */
+#sidebar-container .list-group .list-group-item[aria-expanded="false"] .submenu-icon::after {
+    content: " \f0da";
+    font-family: FontAwesome;
+    display: inline;
+    text-align: right;
+    padding-left: 10px;
+    position: sticky;
+}
+
+/* Hovered submenu icon */
+#sidebar-container .list-group .list-group-item .submenu-icon:hover:after {
+    content: " \f0d7";
+    color: #525D5D;
+    font-family: FontAwesome;
+    display: inline;
+    text-align: right;
+    padding-left: 10px;
+    position: sticky;
+
+}
+
+/* Opened submenu icon */
+#sidebar-container .list-group .list-group-item[aria-expanded="true"] .submenu-icon::after {
+    content: " \f0d7";
+    font-family: FontAwesome;
+    display: inline;
+    text-align: right;
+    padding-left: 10px;
+}
+
+.bevel {
+    -moz-box-shadow: inset3px 3px 5px rgba(255, 255, 255, .4), inset -3px -3px 5px rgba(0, 0, 0, .4);
+    -webkit-box-shadow: inset 3px 3px 5px rgba(255, 255, 255, .4), inset -3px -3px 5px rgba(0, 0, 0, .4);
+    box-shadow: inset 3px 3px 5px rgba(255, 255, 255, .4), inset -3px -3px 5px rgba(0, 0, 0, .4);
+}
+
+.bevel_nav {
+    -moz-box-shadow: inset3px 3px 5px rgba(255, 255, 255, .4), inset -3px -3px 5px rgba(255, 255, 255, .4);
+    -webkit-box-shadow: inset 3px 3px 5px rgba(255, 255, 255, .4), inset -3px -3px 5px rgba(255, 255, 255, .4);
+    box-shadow: inset 3px 3px 5px rgba(255, 255, 255, .4), inset -3px -3px 5px rgba(255, 255, 255, .4);
+}
+
+span.menu:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 0;
+    height: 2px;
+    background-color: black;
+    transition: all .5s ease-in-out;
+}
+
+span.menu:hover:after {
+    background-color: #fff;
+    width: 100%;
+}

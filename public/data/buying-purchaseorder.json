@@ -1,0 +1,112 @@
+{
+  "data": [
+  {
+    "id": "602f4c7e5ac3e75064b00676",
+    "title": "Shafting or Round Bar-CRS-5/8",
+    "status": "to pack/processing",
+    "date": "2021-03-11",
+    "grand_total": "6,241.59",
+    "%_received": "0%",
+    "%_billed": "0%"
+  },
+  {
+    "id": "602f4c7e64008b8042d8bb93",
+    "title": "EM Hopper",
+    "status": "shipped",
+    "date": "2020-01-27",
+    "grand_total": "1,608.96",
+    "%_received": "66%",
+    "%_billed": "85%"
+  },
+  {
+    "id": "602f4c7ead55badf2f340941",
+    "title": "Emulsifier Adjusting Cap",
+    "status": "shipped",
+    "date": "2020-11-23",
+    "grand_total": "3,111.83",
+    "%_received": "93%",
+    "%_billed": "40%"
+  },
+  {
+    "id": "602f4c7ed1625351f8693158",
+    "title": "Emulsifier Adjusting Cap",
+    "status": "shipped",
+    "date": "2020-12-06",
+    "grand_total": "3,303.48",
+    "%_received": "95%",
+    "%_billed": "32%"
+  },
+  {
+    "id": "602f4c7e487c8d9932c195ae",
+    "title": "Shafting or Round Bar-CRS-3/4",
+    "status": "to pack/processing",
+    "date": "2021-03-11",
+    "grand_total": "8,512.24",
+    "%_received": "0%",
+    "%_billed": "0%"
+  },
+  {
+    "id": "602f4c7ea3a95896107ee4b7",
+    "title": "Shafting or Round Bar-CRS-5",
+    "status": "to pack/processing",
+    "date": "2021-03-11",
+    "grand_total": "7,422.58",
+    "%_received": "0%",
+    "%_billed": "0%"
+  },
+  {
+    "id": "602f4c7e8bf195d7164e3963",
+    "title": "Shafting or Round Bar-CRS-3/4",
+    "status": "to pack/processing",
+    "date": "2020-03-22",
+    "grand_total": "3,249.46",
+    "%_received": "88%",
+    "%_billed": "70%"
+  },
+  {
+    "id": "602f4c7e6d100ab2229135a8",
+    "title": "Emulsifier Adjusting Cap",
+    "status": "shipped",
+    "date": "2020-08-22",
+    "grand_total": "2,264.31",
+    "%_received": "12%",
+    "%_billed": "59%"
+  },
+  {
+    "id": "602f4c7e26222ad3b34fd3fc",
+    "title": "Shafting or Round Bar-CRS-3/4",
+    "status": "received",
+    "date": "2020-09-15",
+    "grand_total": "3,582.63",
+    "%_received": "83%",
+    "%_billed": "5%"
+  },
+  {
+    "id": "602f4c7e482ebea03c99b3e5",
+    "title": "EM Hopper",
+    "status": "received",
+    "date": "2020-12-26",
+    "grand_total": "3,973.24",
+    "%_received": "90%",
+    "%_billed": "34%"
+  },
+  {
+    "id": "602f4c7e265c99d5b1376fb8",
+    "title": "EM Hopper",
+    "status": "to pack/processing",
+    "date": "2021-01-04",
+    "grand_total": "2,156.29",
+    "%_received": "67%",
+    "%_billed": "66%"
+  },
+  {
+    "id": "602f4c7ec634cadedcd3b54b",
+    "title": "Shafting or Round Bar-CRS-3/4",
+    "status": "to pack/processing",
+    "date": "2020-12-16",
+    "grand_total": "3,768.48",
+    "%_received": "59%",
+    "%_billed": "6%"
+  }
+]
+}
