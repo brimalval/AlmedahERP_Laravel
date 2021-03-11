@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MaterialsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -73,9 +74,13 @@ Route::get('/hr', function() {
 Route::get('/openInventoryInfo', function() {
     return view('modules.manufacturing.inventoryInfo');
 });
-Route::get('/inventory', function() {
-    return view('modules.manufacturing.inventory');
-});
+Route::get('/inventory', [MaterialsController::class, 'index'])->name('inventory');
+Route::get('/inventory/{id}', [MaterialsController::class, 'get'])->name('inventory.specific');
+Route::post('/create-material', [MaterialsController::class, 'store']);
+Route::patch('/update-material/{id}', [MaterialsController::class,'update'])->name('material.update');
+Route::post('/delete-material/{id}', [MaterialsController::class, 'delete']);
+Route::post('/create-categories' , [MaterialsController::class, 'storeCategory']);
+Route::post('/add-stock/{id}', [MaterialsController::class,'addStock'])->name('material.add-stock');
 
 /**ITEM ROUTES */
 Route::get('/item', function() {
