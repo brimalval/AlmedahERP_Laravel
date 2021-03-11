@@ -39,6 +39,10 @@
     <link href="https://unpkg.com/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
 
     <script src="https://unpkg.com/smartwizard@5/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
+    
+    <!-- Select Tag w/ Search Scripts Plugin-->
+    <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
     <!-- vertical timeline -->
     <link rel="stylesheet" type="text/css" href="{{ asset('vendor/vertical-timeline/vertical-timeline.css') }}">

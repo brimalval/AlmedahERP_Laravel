@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MaterialsController;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -83,14 +84,23 @@ Route::post('/create-categories' , [MaterialsController::class, 'storeCategory']
 Route::post('/add-stock/{id}', [MaterialsController::class,'addStock'])->name('material.add-stock');
 
 /**ITEM ROUTES */
-Route::get('/item', function() {
-    return view('modules.manufacturing.item');
-});
+Route::get('/item',[ProductsController::class, 'index']);
+Route::patch('/create-product', [ProductsController::class, 'store']);
+Route::patch('/update-product/{id}', [ProductsController::class, 'update']);
+Route::post('/delete-product/{id}', [ProductsController::class, 'delete']);
+Route::post('/create-item-group', [ProductsController::class, 'add_item_group']);
+Route::post('/create-product-unit', [ProductsController::class ,'add_product_unit']);
+Route::get('/get-attribute/{id}', [ProductsController::class, 'get_attribute']);
+
 
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function() {
     return view('modules.stock.itemvariantsettings');
 });
+Route::post('/create-attribute', [ProductsController::class, 'add_attribute']);
+Route::get('/get-attribute/{id}', [ProductsController::class,' get_attribute']);
+Route::patch('/update-attribute/{id}', [ProductsController::class, 'update_attribute']);
+Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attribute']);
 
 /**JOB SCHEDULING ROUTES */
 Route::get('/loadJobsched', function() {
