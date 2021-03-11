@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\BOMController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,18 +29,18 @@ Route::get('accounting', function() {
 });
 
 /**BOM ROUTES */
-Route::get('/bom', function() {
-    return view('modules.manufacturing.bom');
-});
+Route::get('/bom', [BOMController::class, 'index']);
 Route::get('/newBOM', function() { 
     return view('modules.manufacturing.bomsubModules.newbom');
 });
 Route::get('/subNewBOM', function() {
     return view('modules.newbom');
 });
-Route::get('/openBlueprint', function() {
-    return view('modules.manufacturing.bominfo.bominfo');
-});
+Route::post('/update_status/{bom_id}', [BOMController::class, 'updateStatus']);
+Route::post('/deleteBOM/{bom_id}', [BOMController::class, 'delete']);
+Route::post('/suggest_product', [BOMController::class, 'search']);
+Route::get('/search-product/{product_code}', [BOMController::class, 'search_product']);
+Route::get('/viewbom/{id}', [BOMController::class, 'get']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function() {

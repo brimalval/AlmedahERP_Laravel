@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bom border-bottom">
+        <table class="table table-bom border-bottom" id="BOMTable">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -75,6 +75,44 @@
                 </tr>
             </thead>
             <tbody class="">
+                @foreach ($man_boms as $bom)
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input">
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:onclick=viewBom({{ $bom['id'] }})" name="BOM-{{ $bom['product_code'] }}">
+                            BOM-{{ $bom['product_code'] }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ $bom['bom_status'] }}
+                    </td>
+                    <td class="text-black-50">
+                        {{ $bom['product_code'] }}
+                    </td>
+                    <td class="text-black-50">
+                        @if($bom['is_active']===1)
+                        ✓
+                        @endif
+                    </td>
+                    <td class="text-black-50">
+                        @if($bom['is_default']===1)
+                        ✓
+                        @endif
+                    </td>
+                    <td></td>
+                    <td class="text-black-50">
+                        14 h
+                    </td>
+                    <td>
+                        <span class="fas fa-comments"></span>0
+                    </td>
+                </tr>
+                @endforeach
+                <!--
                 <tr>
                     <td>
                         <div class="form-check">
@@ -87,56 +125,26 @@
                     <td class="text-black-50">✓</td>
                     <td><input type="checkbox"></td>
                     <td></td>
-                    <td class="text-black-50">14 h</td>
+                    <td class="text-black-50"></td>
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>BOM-PR-EM-ADJ CAP-001</td>
-                    <td>Active</td>
-                    <td class="text-black-50">PR-EM-ADJ CAP-001</td>
-                    <td class="text-black-50">✓</td>
-                    <td><input type="checkbox"></td>
-                    <td></td>
-                    <td class="text-black-50">14 h</td>
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>BOM-FG - Emulsifier-2 HP-4 POLE-001</td>
-                    <td>Draft</td>
-                    <td class="text-black-50">Emulsifier-2 HP-4 POLE-00</td>
-                    <td class="text-black-50">✓</td>
-                    <td><input type="checkbox"></td>
-                    <td></td>
-                    <td class="text-black-50">8 M</td>
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>BOM-PR-EM-BLADE HOUSING-001</td>
-                    <td>Active</td>
-                    <td class="text-black-50">PR-EM-BLADE HOUSING-001</td>
-                    <td class="text-black-50">✓</td>
-                    <td><input type="checkbox"></td>
-                    <td></td>
-                    <td class="text-black-50">8 M</td>
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
+                -->
+
             </tbody>
         </table>
+        <script>
+            //$(document).ready(function() {
+            //    $('#BOMTable').dataTable({
+            //        columnDefs: [{
+            //            orderable: false,
+            //            targets: 0
+            //        }],
+            //        order: [
+            //            [1, 'asc']
+            //        ]
+            //    });
+            //});
+        </script>
     </div>
     <div class="row">
         <div class="col-1 text-center">
@@ -150,3 +158,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    function viewBom(bom_id) {
+        $('#contentBOM').load('/viewbom/' + bom_id);
+    }
+</script>

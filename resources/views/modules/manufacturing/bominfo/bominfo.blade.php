@@ -15,28 +15,50 @@
           </a>
         </li>
         <li class="nav-item mt-2">
-          <a href="" class="nav-link bg-light">
-            <span class="fas fa-angle-left"></span>
-          </a>
+          @forelse($prev_bom as $p_bom)
+          <a href="javascript:onclick=loadNextBOM({{ $p_bom->id }});" id="prevBOM" class="nav-link bg-light">
+            @empty
+            <a href="#" id="prevBOM" class="nav-link bg-light">
+              @endforelse
+              <span class="fas fa-angle-left"></span>
+            </a>
         </li>
         <li class="nav-item mt-2">
-          <a href="" class="nav-link bg-light">
-            <span class="fas fa-angle-right"></span>
-          </a>
+          @forelse($next_bom as $n_bom)
+          <a href="javascript:onclick=loadNextBOM({{ $n_bom->id }});" id="nextBOM" class="nav-link bg-light">
+            @empty
+            <a href="#" id="nextBOM" class="nav-link bg-light">
+              @endforelse
+              <span class="fas fa-angle-right"></span>
+            </a>
         </li>
         <li class="nav-item dropdown li-bom">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Menu
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Option 1</a></li>
-            <li><a class="dropdown-item" href="#">Option 2</a></li>
+            @if($bom['bom_status'] == 'Draft')
+            <li><a class="dropdown-item" id="deleteBom" href="javascript:onclick=deleteBOM('{{ $bom['product_code'] }}', {{ $bom['id'] }});">Delete BOM</a></li>
+            @endif
+            <li><a class="dropdown-item" href="#">...</a></li>
           </ul>
         </li>
         </li>
+        @if ($bom['bom_status'] !== 'Cancelled')
         <li class="nav-item li-bom">
-          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;">Save</button>
+          @switch($bom['bom_status'])
+          @case('Draft')
+          <button onclick="updateBOMStatus('{{ $bom['product_code'] }}', {{ $bom['id'] }});" style="background-color: #007bff;" id="btnUpdateStatus" class="btn btn-info btn" style="float: left;">
+            Submit
+          </button>
+          @break
+          @default
+          <button onclick="updateBOMStatus('{{ $bom['product_code'] }}', {{ $bom['id'] }});" style="background-color: lightGrey;" id="btnUpdateStatus" class="btn btn-light" style="float: left;">
+            Cancel
+          </button>
+          @endswitch
         </li>
+        @endif
       </ul>
     </div>
   </div>
@@ -118,43 +140,62 @@
                   <div class="container col-lg-6">
                     <form>
                       <div class="form-group">
-                        <label for="itemprod" class="text-muted">item</label>
-                        <input type="text" class="form-control" id="itemprod" style="font-weight: 800">
+                        <label for="itemprod" class="text-muted">Item</label>
+                        <input type="text" class="form-control" id="itemprod" style="font-weight: 800" value="{{ $bom['product_code'] }}" readonly>
                         <small class="form-text text-muted">Item to be Manufactured or Repacked</small>
                       </div>
+
                       <div class="form-group">
                         <label for="itemquantity" class="text-muted">Quantity</label>
-                        <input type="text" class="form-control" id="itemquantity" style="font-weight: 800">
+                        <input type="text" class="form-control" id="itemquantity" style="font-weight: 800" value="{{ $bom['bom_quantity'] }}" readonly>
                         <small class="form-text text-muted">Quantity of item obtained after manufacturing/repacking from given quantities of raw materials</small>
                       </div>
+
                       <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="check1">
+                        @if($bom['set_rate_assembly_item']==1)
+                        <input type="checkbox" class="form-check-input" id="check1" checked="checked" disabled="disabled">
+                        @else
+                        <input type="checkbox" class="form-check-input" id="check1" disabled="disabled">
+                        @endif
                         <label class="form-check-label" for="check1">Set rate of sub-assembly item based on BOM</label>
                       </div>
-                    </form>
                   </div>
                   <div class="col-lg-6">
                     <form>
                       <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="check1">
+                        @if($bom['is_active']==1)
+                        <input type="checkbox" class="form-check-input" id="check1" checked="checked" disabled="disabled">
+                        @else
+                        <input type="checkbox" class="form-check-input" id="check1" disabled="disabled">
+                        @endif
                         <label class="form-check-label" for="check1">Is Active</label>
                       </div>
                       <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="check1">
+                        @if($bom['is_default']==1)
+                        <input type="checkbox" class="form-check-input" id="check1" checked="checked" disabled="disabled">
+                        @else
+                        <input type="checkbox" class="form-check-input" id="check1" disabled="disabled">
+                        @endif
                         <label class="form-check-label" for="check1">Is Default</label>
                       </div>
                       <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="check1">
+                        @if($bom['allow_alternative_item']==1)
+                        <input type="checkbox" class="form-check-input" id="check1" checked="checked" disabled="disabled">
+                        @else
+                        <input type="checkbox" class="form-check-input" id="check1" disabled="disabled">
+                        @endif
                         <label class="form-check-label" for="check1">Is Active</label>
                       </div>
+
                       <div class="form-group">
-                        <label for="itemname" class="text-muted">item Name</label>
-                        <input type="text" class="form-control" id="itemname" style="font-weight: 800">
+                        <label for="itemname" class="text-muted">Item Name</label>
+                        <input type="text" class="form-control" id="itemname" value="{{ $product_data['product_name'] }}" style="font-weight: 800" readonly>
                         <small class="form-text text-muted">Item to be Manufactured or Repacked</small>
                       </div>
+
                       <div class="form-group">
-                        <label for="itemUOM" class="text-muted">item UOM</label>
-                        <input type="text" class="form-control" id="itemUOM" style="font-weight: 800">
+                        <label for="itemUOM" class="text-muted">Item UOM</label>
+                        <input type="text" class="form-control" id="itemUOM" value="{{ $product_data['unit'] }}" style="font-weight: 800" readonly>
                         <small class="form-text text-muted">Item to be Manufactured or Repacked</small>
                       </div>
                     </form>
@@ -183,7 +224,7 @@
                 <div class="row">
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <input type="text" class="form-control" id="curr" style="font-weight: 800">
+                      <input type="text" class="form-control" id="curr" value="{{ $bom['currency'] }}" style="font-weight: 800">
                     </div>
                     <div class="form-group">
                       <label for="inputState">Rate of Materials Based On</label>
@@ -265,7 +306,37 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <script type="text/javascript">
+                      $(document).ready(function() {
+                        $.ajax({
+                          method: "GET",
+                          url: '/getBomMaterials/' + "{{ $bom->id }}",
+                          data: {
+                            'id': "{{ $bom->id }}"
+                          },
+                          success: function(data) {
+                            var tbl = $("#mat-table tbody");
+                            for (i = 0; i < data.product_mats.length; i++) {
+                              console.log(data.product_mats.length);
+                              tbl.append(
+                                `
+                                <tr>
+                                    <th scope="row"><input type="checkbox">` + (i + 1) + `</th>
+                                    <td><a href="#modmaterials" data-toggle="modal" role="button" style="color: black">` + data.product_mats[i].material.item_code + `</a></td>
+                                    <td>` + data.product_mats[i].qty + `</td>
+                                    <td>Millimiter</td>
+                                    <td><span class="fas fa-ruble-sign"> ` + data.product_mats[i].material.unit_price + `.00</span></td>
+                                    <td><span class="fas fa-ruble-sign text-muted">` + (data.product_mats[i].qty * data.product_mats[i].material.unit_price) + `.00</span></td>
+                                    <td><span class="fas fa-caret-down"></span></td>
+                                </tr>
+                                `
+                              );
+                            }
+                          }
+                        });
+                      });
+                    </script>
+                    <!--<tr>
                       <th scope="row"><input type="checkbox"> 1</th>
                       <td><a href="#modmaterials" data-toggle="modal" role="button" style="color: black">Mtl-Bar-12377sadh123g</a></td>
                       <td>1</td>
@@ -291,7 +362,7 @@
                       <td><span class="fas fa-ruble-sign">. 0.00</span></td>
                       <td><span class="fas fa-ruble-sign text-muted">. 0.00</span></td>
                       <td><span class="fas fa-caret-down"></span></td>
-                    </tr>
+                    </tr>-->
                   </tbody>
                 </table>
 
@@ -453,7 +524,7 @@
                   </div>
                   <div class="form-group" style="width: 50%">
                     <label for="rawcost" class="text-muted">Raw Cost(PHP)</label>
-                    <input type="text" class="form-control" id="rawcost" style="font-weight: 800">
+                    <input type="text" class="form-control" id="rawcost" style="font-weight: 800" value='{{ $bom['total_cost'] }}' readonly>
                   </div>
                   <div class="form-group" style="width: 50%">
                     <label for="scrapmat" class="text-muted">Scrap Material Cost(PHP)</label>
@@ -465,7 +536,8 @@
                 <form>
                   <div class="form-group">
                     <label for="totcost" class="text-muted">Total Cost(PHP)</label>
-                    <input type="text" class="form-control" id="totcost" style="font-weight: 800">
+                    <input type="text" class="form-control" id="totcost" style="font-weight: 800" value='{{ $bom['total_cost'] }}' readonly>
+
                   </div>
                 </form>
               </div>
@@ -480,9 +552,9 @@
             <div class="row">
               <div class="col-lg-8">
                 <form>
-                  <div class="form-group" style="width: 50%">
+                  <div class="form-group" style="width: 100%">
                     <label for="itdesc" class="text-muted">Item Description</label>
-                    <input type="text" class="form-control" id="itdesc">
+                    <input type="text" class="form-control" id="itdesc" value="{{ $product_data['internal_description'] }}" readonly>
                   </div>
                 </form>
               </div>

@@ -1,3 +1,17 @@
+<!-- Icons font CSS-->
+<link href="{{ asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
+<link href="{{ asset('vendor/font-awesome-4.7/css/font-awesome.min.css') }}" rel="stylesheet" media="all">
+<!-- Font special for pages-->
+<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+<!-- Vendor CSS-->
+<link href="{{ asset('../vendor/select2/select2.min.css') }}" rel="stylesheet" media="all">
+<link href="{{ asset('../vendor/datepicker/daterangepicker.css') }}" rel="stylesheet" media="all">
+
+<!-- Main CSS-->
+<link href="{{ asset('css/main.css') }}" rel="stylesheet" media="all">
+<link href="{{ asset('css/bomtab.css') }}" rel="stylesheet" media="all">
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
   <div class="container-fluid">
     <h2 class="navbar-brand tab-list-title">
@@ -41,8 +55,96 @@
       <div class="col-6">
         <div class="input-group">
           <label class="label">Item</label>
-          <input class="input--style-4" type="text" name="item">
+          <input class="input--style-4" id="item-code" type="text" name="item">
         </div>
+        <script type="text/javascript">
+          $(document).ready(function() {
+            $('#item_code').on('keyup', function() {
+              if (!$(this).val()) {
+                $("#to-appear").css('display', 'none');
+                $('#itemtable-item td').remove();
+              } else {
+                var product_code = $(this).val();
+                showNameAndUnit(product_code);
+              }
+            });
+          });
+          var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+          $(document).ready(function() {
+            $('#item_code').autocomplete({
+              source: function(request, response) {
+                $.ajax({
+                  url: '/suggest_product',
+                  type: "POST",
+                  dataType: "json",
+                  data: {
+                    _token: CSRF_TOKEN,
+                    search: request.term
+                  },
+                  success: function(data) {
+                    //console.log(data);
+                    response(data);
+                    //alert(data[0]['product_code']);
+                  }
+                });
+              },
+              select: function(event, ui) {
+                // Set selection
+                $('#itemtable-item td').remove();
+                $('#item_code').val(ui.item.product_code); // save selected id to input
+                //$('#item_id').val(ui.item.product_name);
+                showNameAndUnit(ui.item.product_code);
+                return false;
+              }
+            }).data("ui-autocomplete")._renderItem = function(ul, item) {
+              return $("<li></li>").data("item.autocomplete", item)
+                .append(
+                  "<a class='form-control'>" +
+                  "<strong>" + item.product_code + "</strong> - " + item.product_name + "<br>" +
+                  "</a>"
+                )
+                .appendTo(ul);
+            }
+          });
+
+          function showNameAndUnit(product_code) {
+            $.ajax({
+              method: "GET",
+              url: '/search-product/' + product_code,
+              data: {
+                'product_code': product_code
+              },
+              success: function(data) {
+                if (data.product_name && data.product_unit) {
+                  $("#to-appear").css('display', 'block');
+                  var matTbl = $('#itemtable-item');
+                  //console.log(data.materials);
+                  for (i = 0; i < data.materials.length; i++) {
+                    matTbl.append(
+                      `
+                          <tr id="itemtr-item">
+                          <td><input type="checkbox" name="check2" value=""/></td>
+                          <td>` + data.materials[i].material.item_code + `</td>
+                          <td>` + data.materials[i].qty + `</td>
+                          <td></td>
+                          <td>` + data.materials[i].material.unit_price + `</td>
+                          <td id='subtotal'>` + (data.materials[i].qty * data.materials[i].material.unit_price) + `</td>
+                          <td><select type="text" name="project">
+                              <option></option>
+                              <option></option>
+                              <option></option>
+                            </select></td>
+                          </tr>
+                          `
+                    );
+                  }
+                  $("#item_name").val(data.product_name);
+                  $("#item_uom").val(data.product_unit);
+                }
+              }
+            });
+          }
+        </script>
       </div>
       <div class="col-6">
         <div class="input-group">
@@ -260,7 +362,7 @@
     padding: 8px;
   }
 </style>
-<table id="itemtable">
+<table id="itemtable-item">
   <tr id="itemtr">
     <th><input type="checkbox" name="check2" /></th>
     <th>Item Code</th>
