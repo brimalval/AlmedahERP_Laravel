@@ -310,7 +310,10 @@
                         }],
                         order: [
                             [1, 'asc']
-                        ]
+                        ],
+                        drawCallback: function(){
+                            $('#products-table_wrapper').addClass('col-12');
+                        },
                     });
                 });
             </script>
