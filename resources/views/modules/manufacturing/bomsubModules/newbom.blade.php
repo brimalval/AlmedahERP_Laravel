@@ -55,7 +55,7 @@
       <div class="col-6">
         <div class="input-group">
           <label class="label">Item</label>
-          <input class="input--style-4" id="item-code" type="text" name="item">
+          <input class="input--style-4" id="item_code" type="text" name="item">
         </div>
         <script type="text/javascript">
           $(document).ready(function() {

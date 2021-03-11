@@ -107,7 +107,7 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 Route::get('/loadJobsched', function() {
     return view('modules.manufacturing.jobschedulinginfo');
 });
-Route::get('/loadJobschedhome', function() {
+Route::get('/jobscheduling', function() {
     return view('modules.manufacturing.jobscheduling');
 });
 
@@ -180,6 +180,11 @@ Route::get('/production', function() {
     return view('modules.manufacturing.production');
 });
 
+/**PRODUCT MONTORING ROUTES */
+Route::get('/productmonitoring', function() {
+    return view('modules.manufacturing.productmonitoring');
+});
+
 /**PRODUCTION PLAN ROUTES */
 Route::get('/productionplan', function() {
     return view('modules.manufacturing.productionplan');
@@ -237,11 +242,16 @@ Route::get('/retail', function() {
 Route::get('/openSaleInfo', function() {
     return view('modules.selling.saleInfo');
 });
-Route::get('/loadSalesOrder', function() {
+Route::get('/salesorder', function() {
     return view('modules.selling.salesorder');
 });
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
+});
+
+/**SALES INVOICE ROUTES */
+Route::get('/salesinvoice', function() {
+    return view('modules.selling.salesinvoice');
 });
 
 /**SELLING ROUTES */
@@ -298,7 +308,7 @@ Route::get('/openUOMEdit', function() {
 });
 
 /**WORK ORDER ROUTES*/
-Route::get('/loadWorkOrder', function() {
+Route::get('/workorder', function() {
     return view('modules.manufacturing.workorder');
 });
 Route::get('/openNewWorkorder', function() {

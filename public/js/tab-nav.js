@@ -138,7 +138,7 @@ function loadInv() {
 
 function loadWorkOrder() {
   $(document).ready(function () {
-    $('#contentWorkOrder').load('/loadWorkOrder');
+    $('#contentWorkOrder').load('/workorder');
   });
 }
 
@@ -300,7 +300,7 @@ function loadJobsched(){
 
 function loadJobschedhome(){
   $(document).ready(function () {
-    $('#contentJobScheduling').load('/loadJobschedhome');
+    $('#contentJobScheduling').load('/jobscheduling');
   });
 }
 
