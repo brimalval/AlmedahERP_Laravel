@@ -40,7 +40,7 @@
                         <input type="text" class="form-control" placeholder="Name">
                     </div>
                 </div>
-               
+
             </div>
         </div>
         <div class="card-body filter">
@@ -49,7 +49,7 @@
                     <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
                         Add Filter
                     </button>
-                    
+
                 </div>
                 <div class=" ml-auto float-right">
                     <span class="text-muted ">Last Modified On</span>
@@ -68,11 +68,11 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td>Name  </td>
+                    <td>Name </td>
                     <td>Project Type</td>
                     <td>Refreshing</td>
-                    
-                    
+
+
                     <td></td>
                 </tr>
             </thead>
@@ -83,10 +83,10 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td >BOM-PR-EM-ADJ CAP-002</td>
+                    <td>BOM-PR-EM-ADJ CAP-002</td>
                     <td>Active</td>
                     <td></td>
-                    
+
                 </tr>
                 <tr>
                     <td>
@@ -96,8 +96,8 @@
                     </td>
                     <td>BOM-PR-EM-ADJ CAP-001</td>
                     <td>Default</td>
-                   <td></td>
-                
+                    <td></td>
+
                 </tr>
                 <tr>
                     <td>
@@ -108,8 +108,8 @@
                     <td>BOM-FG - Emulsifier-2 HP-4 POLE-001</td>
                     <td>Default</td>
                     <td></td>
-                    
-                   
+
+
                 </tr>
                 <tr>
                     <td>
@@ -120,8 +120,8 @@
                     <td>BOM-PR-EM-BLADE HOUSING-001</td>
                     <td>Active</td>
                     <td></td>
-                    
-                    
+
+
                 </tr>
             </tbody>
         </table>

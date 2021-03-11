@@ -6,7 +6,7 @@
 					<input type="checkbox" class="form-check-input" id="hasVariant">
 				</div>
 				<label for="hasVariant" class="form-check-label">Is purchase Item</label>
-				
+
 			</div>
 		</div>
 		<div class="col-6">

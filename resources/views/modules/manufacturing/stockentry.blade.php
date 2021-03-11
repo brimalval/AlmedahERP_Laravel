@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Stock Entry</h2>
@@ -41,16 +40,16 @@
                     </div>
                 </div>
                 <div class="col-2">
-                  <input type="text" class="form-control" placeholder="Title">
+                    <input type="text" class="form-control" placeholder="Title">
                 </div>
                 <div class="col-2">
-                  <input type="text" class="form-control" placeholder="Stock Entry Type">
+                    <input type="text" class="form-control" placeholder="Stock Entry Type">
                 </div>
                 <div class="col-3">
-                  <input type="text" class="form-control" placeholder="Default Source Warehouse">
+                    <input type="text" class="form-control" placeholder="Default Source Warehouse">
                 </div>
                 <div class="col-3">
-                  <input type="text" class="form-control" placeholder="Default Target Workhouse">
+                    <input type="text" class="form-control" placeholder="Default Target Workhouse">
                 </div>
             </div>
         </div>
@@ -103,7 +102,7 @@
                     <td></td>
                     <td></td>
                 </tr>
-              </tbody>
+            </tbody>
         </table>
     </div>
     <div class="row">

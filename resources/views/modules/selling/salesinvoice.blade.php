@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Sales Invoice</h2>
@@ -8,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Menu
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -45,21 +44,21 @@
                         <input type="text" class="form-control" placeholder="Title">
                     </div>
                 </div>
-                 <div class="col-2">
+                <div class="col-2">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Customer">
                     </div>
                 </div>
-                 <div class="col-3">
+                <div class="col-3">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Almedah Food Equipment">
                     </div>
                 </div>
-                 <div class="col-2">
+                <div class="col-2">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="">
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
         <div class="card-body filter">
@@ -78,7 +77,7 @@
             </div>
         </div>
         <hr>
- <table class="table table-bom border-bottom">
+        <table class="table table-bom border-bottom">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -98,7 +97,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td >Emulsifier</td>
+                    <td>Emulsifier</td>
                     <td class="text-success">Complete</td>
                     <td class="text-black-50">P 30,000</td>
                 </tr>
@@ -108,7 +107,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td >Emulsifier</td>
+                    <td>Emulsifier</td>
                     <td class="text-primary">Active</td>
                     <td class="text-black-50">P 30,000</td>
                 </tr>
@@ -130,7 +129,7 @@
 
 
 <style>
-    .conContent{
+    .conContent {
         padding: 200px;
     }
 </style>

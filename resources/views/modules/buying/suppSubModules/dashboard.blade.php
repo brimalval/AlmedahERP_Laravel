@@ -1,10 +1,9 @@
-
 <div class="row">
 	<div class="col-6">
 		<div class="group-link">
 			<h5 class="font-weight-bold">Procurement</h5>
 			<a class="link" href="#">Request for Quotation<span class="badge text-muted">1</span>
-			<span class="badge bg-danger badge-pill text-light"></span><i class="fas fa-plus ml-1 mt-2"> </i>
+				<span class="badge bg-danger badge-pill text-light"></span><i class="fas fa-plus ml-1 mt-2"> </i>
 			</a><br>
 			<a class="link" href="#">Supplier Quotation<span class="badge text-muted">1</span><span class="badge bg-danger badge-pill text-light"></span><i class="fas fa-plus ml-1 mt-2"> </i></a><br>
 		</div>

@@ -71,7 +71,8 @@
                     <td>Installment Status</td>
                     <td>Payment Balance</td>
                     <td>Date</td>
-                    <td><td>
+                    <td>
+                    <td>
                 </tr>
             </thead>
             <tbody class="custom-input">
@@ -126,7 +127,7 @@
                     <button type="submit" class="btn btn-primary m-1" data-target="#newSalePrompt" id="saveSaleOrder1">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
-                        </a> 
+                        </a>
                     </button>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" data-target="#newSalePrompt" id="closeSaleOrderModal">
                         Close
@@ -140,9 +141,9 @@
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                 <div class="modal-footer">
-                <a class="nav-link menu" href="javascript:onclick=closeSaleTab;" data-parent="selling" data-name="New Sale Order" data-dismiss="modal">
-                    Edit in full page
-                </a>
+                    <a class="nav-link menu" href="javascript:onclick=closeSaleTab;" data-parent="selling" data-name="New Sale Order" data-dismiss="modal">
+                        Edit in full page
+                    </a>
                 </div>
             </div>
         </div>

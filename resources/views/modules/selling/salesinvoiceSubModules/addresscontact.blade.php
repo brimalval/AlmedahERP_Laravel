@@ -21,7 +21,7 @@
 <div class="row">
   <div class="col">
     <label for="">Territory</label>
-    <input type="text" class="form-control" placeholder="All territories"> 
+    <input type="text" class="form-control" placeholder="All territories">
   </div>
   <div class="col">
 

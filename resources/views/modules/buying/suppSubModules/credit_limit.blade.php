@@ -7,7 +7,7 @@
 		<div class="col-6">
 			<div class="d-flex">
 				<div class="form-check">
-					<input type="checkbox" class="form-check-input" id="sblocksupp" >
+					<input type="checkbox" class="form-check-input" id="sblocksupp">
 				</div>
 				<label for="sblocksupp">Block Supplier</label>
 			</div>

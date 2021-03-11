@@ -73,7 +73,7 @@
         </div>
         <hr>
 
-            <table class="table table-bom border-bottom">
+        <table class="table table-bom border-bottom">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -102,71 +102,71 @@
                     <td></td>
             </tbody>
         </table>
-            
-            <div id="newEmployee-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
 
-                            <a class="close" data-dismiss="modal"><i class="fa fa-times"></i></a>
+        <div id="newEmployee-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
 
-                        </div>
-                        <div class="modal-header">
+                        <a class="close" data-dismiss="modal"><i class="fa fa-times"></i></a>
 
-                            <h3>New Project</h3>
+                    </div>
+                    <div class="modal-header">
 
-                            <button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #007bff;">Save</button>
+                        <h3>New Project</h3>
 
-                        </div>
+                        <button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #007bff;">Save</button>
 
-                        <form id="contactForm" name="contact" role="form" action="AddEmployee.php">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="fname">Project Name</label>
-                                            <input type="text" name="projname" class="form-control">
-                                        </div>
+                    </div>
+
+                    <form id="contactForm" name="contact" role="form" action="AddEmployee.php">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="fname">Project Name</label>
+                                        <input type="text" name="projname" class="form-control">
                                     </div>
-                                    
-                                    <div class="col-12">
-                                        <div class="input-group">
-                                            <label class="label">Status</label>
-                                            <select class="input--style-4" type="text" name="status" style="width:500px;height:38px;">
-                                                <option>Option 1</option>
-                                                <option>Option 2</option>
-                                                <option>Option 3</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                </div>
 
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="fname">For Template</label>
-                                            <input type="text" name="projname" class="form-control">
-                                        </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <label class="label">Status</label>
+                                        <select class="input--style-4" type="text" name="status" style="width:500px;height:38px;">
+                                            <option>Option 1</option>
+                                            <option>Option 2</option>
+                                            <option>Option 3</option>
+                                        </select>
                                     </div>
+                                </div>
 
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="fname">Expected End Date</label>
-                                            <input type="text" name="fname" class="form-control">
-                                        </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="fname">For Template</label>
+                                        <input type="text" name="projname" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="fname">Expected End Date</label>
+                                        <input type="text" name="fname" class="form-control">
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-parent="projects" data-name="Add Project" data-dismiss="modal" style="float: left;" value="Edit in Full Page" />
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-parent="projects" data-name="Add Project" data-dismiss="modal" style="float: left;" value="Edit in Full Page" />
 
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-
         </div>
+
+
     </div>
+</div>
 
 </div>
 

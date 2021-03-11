@@ -21,5 +21,5 @@
 			</div>
 			<label for="sale-item">Is Sales Item</label>
 		</div>
-	</divs>
-</div>
+		</divs>
+	</div>

@@ -233,9 +233,9 @@
                 <tbody>
                   <tr>
                     <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
                     </td>
                     <td class="text-center">
                       Emulsifier Component 1
@@ -255,9 +255,9 @@
                   </tr>
                   <tr>
                     <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
                     </td>
                     <td class="text-center">
                       Emulsifier Component 2
@@ -277,9 +277,9 @@
                   </tr>
                   <tr>
                     <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
                     </td>
                     <td class="text-center">
                       Bar Shaft
@@ -314,10 +314,10 @@
             </div>
             <div class="col">
               <button type="button" class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
-              <a class="" href="#" style="text-decoration: none;color:white">
+                <a class="" href="#" style="text-decoration: none;color:white">
                   Save and Proceed to Work Order
-              </a>
-            </div>  
+                </a>
+            </div>
           </div>
         </div>
       </div>

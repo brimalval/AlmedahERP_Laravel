@@ -17,33 +17,70 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/modules/dashboard/dashboard', function(){
+Route::get('/dashboard', function() {
     return view('modules.dashboard');
 });
 
+Route::get('accounting', function() {
+    return view('modules.accounting.accounting');
+});
+
 /**BOM ROUTES */
+Route::get('/bom', function() {
+    return view('modules.manufacturing.bom');
+});
 Route::get('/newBOM', function() { 
     return view('modules.manufacturing.bomsubModules.newbom');
 });
 Route::get('/subNewBOM', function() {
     return view('modules.newbom');
 });
-Route::get('/loadBOM', function() {
-    return view('modules.manufacturing.bom');
-});
 Route::get('/openBlueprint', function() {
     return view('modules.manufacturing.bominfo.bominfo');
+});
+
+/**BUYING ROUTES */
+Route::get('/buying', function() {
+    return view('modules.buying.Buying');
+});
+
+/**CRM ROUTES */
+Route::get('/contacts', function() {
+    return view('modules.crm.contacts');
+});
+Route::get('/crm', function() {
+    return view('modules.crm.crm');
+});
+Route::get('/customers', function() {
+    return view('modules.crm.customers');
+});
+Route::get('/leads', function() {
+    return view('modules.crm.leads');
+});
+Route::get('/objectives', function() {
+    return view('modules.crm.objectives');
+});
+Route::get('/opportunities', function() {
+    return view('modules.crm.opportunities');
+});
+
+/**HR ROUTES */
+Route::get('/hr', function() {
+    return view('modules.hr.hr');
 });
 
 /**INVENTORY ROUTES */
 Route::get('/openInventoryInfo', function() {
     return view('modules.manufacturing.inventoryInfo');
 });
-Route::get('/loadInv', function() {
+Route::get('/inventory', function() {
     return view('modules.manufacturing.inventory');
 });
 
 /**ITEM ROUTES */
+Route::get('/item', function() {
+    return view('modules.manufacturing.item');
+});
 
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function() {
@@ -58,16 +95,13 @@ Route::get('/loadJobschedhome', function() {
     return view('modules.manufacturing.jobscheduling');
 });
 
-/**PRODUCTION PLAN ROUTES */
-Route::get('/loadManufacturingProductionPlan', function() {
-    return view('modules.manufacturing.productionplan');
-});
-Route::get('/openManufacturingProductionPlanForm', function() {
-    return view('modules.manufacturing.productionplanform');
+/**MANUFACTURING ROUTES */
+Route::get('/manufacturing', function() {
+    return view('modules.manufacturing.manufacturing');
 });
 
 /**MANUFACTURING ITEM ATTRIBUTE ROUTES */
-Route::get('/loadManufacturingItemAttribute', function() {
+Route::get('/itemattribute', function() {
     return view('modules.manufacturing.itemattribute');
 });
 Route::get('/openManufacturingItemAttributeForm', function() {
@@ -75,7 +109,7 @@ Route::get('/openManufacturingItemAttributeForm', function() {
 });
 
 /**MANUFACTURING ITEM PRICE ROUTES */
-Route::get('/loadManufacturingItemPrice', function() {
+Route::get('/itemprice', function() {
     return view('modules.manufacturing.itemprice');
 });
 Route::get('/openManufacturingItemPriceForm', function() {
@@ -83,7 +117,7 @@ Route::get('/openManufacturingItemPriceForm', function() {
 });
 
 /**MANUFACTURING ROUTING ROUTES */
-Route::get('/loadManufacturingRouting', function() {
+Route::get('/routing', function() {
     return view('modules.manufacturing.routing');
 });
 Route::get('/openManufacturingRoutingForm', function(){
@@ -91,7 +125,7 @@ Route::get('/openManufacturingRoutingForm', function(){
 });
 
 /**MATERIAL REQUEST ROUTES */
-Route::get('/loadMaterialRequest', function() {
+Route::get('/materialrequest', function() {
     return view('modules.buying.materialrequest');
 });
 Route::get('/openNewMaterialRequest', function(){
@@ -101,12 +135,49 @@ Route::get('/openMaterialRequestInfo', function() {
     return view('modules.buying.MaterialRequestInfo');
 });
 
+/**MESSAGING ROUTES */
+Route::get('/inbox', function() {
+    return view('modules.messaging.inbox');
+});
+Route::get('/important', function() {
+    return view('modules.messaging.important');
+});
+Route::get('/archived', function() {
+    return view('modules.messaging.archived');
+});
+
+/**PAYMENT ENTRY ROUTES*/
+Route::get('/paymententry', function() {
+    return view('modules.accounting.paymententry');
+});
+
 /**PRICE LIST ROUTES */
 Route::get('/openNewPriceList', function() {
     return view('modules/selling/pricelistitem.php');
 });
 Route::get('/loadPriceList', function() {
     return view('modules.selling.pricelist');
+});
+
+/**PRODUCTION ROUTES */
+Route::get('/production', function() {
+    return view('modules.manufacturing.production');
+});
+
+/**PRODUCTION PLAN ROUTES */
+Route::get('/productionplan', function() {
+    return view('modules.manufacturing.productionplan');
+});
+Route::get('/openManufacturingProductionPlanForm', function() {
+    return view('modules.manufacturing.productionplanform');
+});
+
+/**PROJECTS ROUTES */
+Route::get('/projects', function() {
+    return view('modules.projects.projects');
+});
+Route::get('/task', function() {
+    return view('modules.projects.task');
 });
 
 /**PROJECT TEMPLATE */
@@ -118,15 +189,20 @@ Route::get('/loadProjectTemplate', function() {
 });
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/loadPurchaseOrder', function() {
+Route::get('/purchaseorder', function() {
     return view('modules.buying.purchaseorder');
 });
 Route::get('/openNewPurchaseOrder', function() {
     return view('modules.buying.newpurchaseorder');
 });
 
+/**QUALITY ROUTES */
+Route::get('/quality', function() {
+    return view('modules.quality.quality');
+});
+
 /**REPORTS ROUTES*/
-Route::get('/loadReportsBuilder', function() {
+Route::get('/reportsbuilder', function() {
     return view('modules.reports.reportsbuilder');
 });
 Route::get('/loadReportsBuilderShowReport', function() {
@@ -135,6 +211,11 @@ Route::get('/loadReportsBuilderShowReport', function() {
 Route::get('/openReportsBuilderForm', function() {
     return view('modules.reports.reportsbuilderform');
 }); 
+
+/**RETAIL ROUTES */
+Route::get('/retail', function() {
+    return view('modules.retail.retail');
+});
 
 /**SALES ORDER ROUTES */
 Route::get('/openSaleInfo', function() {
@@ -147,6 +228,16 @@ Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
 
+/**SELLING ROUTES */
+Route::get('/selling', function() {
+    return view('modules.selling.selling');
+});
+
+/**STOCK ROUTES */
+Route::get('/stock', function() {
+    return view('modules.stock.stock');
+});
+
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function() {
     return view('modules.manufacturing.NewStockEntry');
@@ -156,7 +247,7 @@ Route::get('/loadStockEntry', function() {
 });
 
 /**SUPPLIER ROUTES */
-Route::get('/loadSupplier', function() {
+Route::get('/supplier', function() {
     return view('modules.buying.supplier');
 });
 Route::get('/openSupplierInfo', function() {
@@ -213,7 +304,7 @@ Route::get('/openWarehouseEdit', function() {
 });
 
 /**WORKSTATION ROUTES */
-Route::get('/loadManufacturingWorkstation', function() {
+Route::get('/workstation', function() {
     return view('modules.manufacturing.workstation');
 });
 Route::get('/openManufacturingWorkstationForm', function() {

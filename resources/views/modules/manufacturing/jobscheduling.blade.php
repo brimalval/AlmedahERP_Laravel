@@ -59,7 +59,7 @@
                     <td>Start Time</td>
                     <td>End Time</td>
                     <td>JS Status</td>
-     
+
                 </tr>
             </thead>
             <tbody class="">

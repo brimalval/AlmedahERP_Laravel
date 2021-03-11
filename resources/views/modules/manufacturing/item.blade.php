@@ -14,15 +14,13 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Item</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         More
                     </a>
                     <ul class="dropdown-menu" style="left:-50px;" aria-labelledby="navbarDropdownMenuLink">
@@ -31,8 +29,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#addProduct">New</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProduct">New</button>
                 </li>
             </ul>
         </div>
@@ -57,11 +54,8 @@
                         </div>
                         <div class="col-4">
                             <label class="btn">
-                                <img class="imagePreview"
-                                    src="http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg"
-                                    alt="">
-                                <input type="file" class="uploadFile img" value="Upload Photo"
-                                    style="width: 0px;height: 0px;overflow: hidden;">
+                                <img class="imagePreview" src="http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg" alt="">
+                                <input type="file" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
                             </label>
                         </div>
                     </div>
@@ -71,8 +65,7 @@
                         <option value=""><button>+ Add new</button></option>
                     </select>
                     <label for="proddescription">Description</label>
-                    <input class="form-control" type="text" name="" id="proddescription"
-                        placeholder="Description on sales forms">
+                    <input class="form-control" type="text" name="" id="proddescription" placeholder="Description on sales forms">
                     <div class="row">
                         <div class="col-6">
                             <label for="salesrate">Sales price/rate</label>
@@ -110,8 +103,7 @@
                             </div>
                             <div class="col-2">
                                 <div class="dropdown">
-                                    <button class="btn dropdown-toggle fas fa-filter" type="button" id="dropdownMenuButton"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn dropdown-toggle fas fa-filter" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     </button>
                                     <ul class="dropdown-menu" style="width:300px;" aria-labelledby="dropdownMenuButton">
                                         <form>
@@ -144,148 +136,146 @@
                     <div class=" ml-auto float-right dropdown">
                         <button class="fas fa-print"></button>
                         <button class="fas fa-download mx-3"></button>
-                        <button class="fas fa-cog dropdown-toggle" type="button" id="dropdownMenuButton4"
-                            data-bs-toggle="dropdown" aria-expanded="false"></button>
-                            <ul class="dropdown-menu mx-auto dropdown-menu-dark" style="width:300px;" aria-labelledby="dropdownMenuButton4">
-                                <form>
-                                    <div class="mx-3 mt-2 mb-1 font-weight-bold">
-                                        Columns
-                                    </div>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="incomeSet">
-                                        <label class="form-check-label" for="incomeSet">
-                                            Income Account
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="ExpenseSet">
-                                        <label class="form-check-label" for="ExpenseSet">
-                                            Expense Account
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="PurchaseSet">
-                                        <label class="form-check-label" for="PurchaseSet">
-                                            Purchase Description
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="SKUSet">
-                                        <label class="form-check-label" for="SKUSet">
-                                            SKU
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="TypeSet">
-                                        <label class="form-check-label" for="TypeSet">
-                                            Type
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="SalesSet">
-                                        <label class="form-check-label" for="SalesSet">
-                                            Sales Description
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="PriceSet">
-                                        <label class="form-check-label" for="PriceSet">
-                                            Sales Price
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="CostSet">
-                                        <label class="form-check-label" for="CostSet">
-                                            Cost
-                                        </label>
-                                    </li>
-                                    <li class="m-3 ">
-                                        <label for="settingRows" class="font-weight-bold">Rows</label>
-                                        <select class="form-control" id="settingRows">
-                                            <option value="">50</option>
-                                            <option value="">100</option>
-                                            <option value="">150</option>
-                                            <option value="">200</option>
-                                            <option value="">250</option>
-                                        </select>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="CompactSet">
-                                        <label class="form-check-label" for="CompactSet">
-                                            Compact
-                                        </label>
-                                    </li>
-                                    <li class="mx-3 form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="GroupSet">
-                                        <label class="form-check-label" for="GroupSet">
-                                            Group by Category
-                                        </label>
-                                    </li>
-                                    <li class="dropdown-divider"></li>
-                                    <li class="m-3">
-                                        <button class="btn btn-success">Apply</button>
-                                        <button class="btn btn-secondary float-right">Reset</button>
-                                    </li>
-                                </form>
-                            </ul>
-                        </div>
+                        <button class="fas fa-cog dropdown-toggle" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                        <ul class="dropdown-menu mx-auto dropdown-menu-dark" style="width:300px;" aria-labelledby="dropdownMenuButton4">
+                            <form>
+                                <div class="mx-3 mt-2 mb-1 font-weight-bold">
+                                    Columns
+                                </div>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="incomeSet">
+                                    <label class="form-check-label" for="incomeSet">
+                                        Income Account
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="ExpenseSet">
+                                    <label class="form-check-label" for="ExpenseSet">
+                                        Expense Account
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="PurchaseSet">
+                                    <label class="form-check-label" for="PurchaseSet">
+                                        Purchase Description
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="SKUSet">
+                                    <label class="form-check-label" for="SKUSet">
+                                        SKU
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="TypeSet">
+                                    <label class="form-check-label" for="TypeSet">
+                                        Type
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="SalesSet">
+                                    <label class="form-check-label" for="SalesSet">
+                                        Sales Description
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="PriceSet">
+                                    <label class="form-check-label" for="PriceSet">
+                                        Sales Price
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="CostSet">
+                                    <label class="form-check-label" for="CostSet">
+                                        Cost
+                                    </label>
+                                </li>
+                                <li class="m-3 ">
+                                    <label for="settingRows" class="font-weight-bold">Rows</label>
+                                    <select class="form-control" id="settingRows">
+                                        <option value="">50</option>
+                                        <option value="">100</option>
+                                        <option value="">150</option>
+                                        <option value="">200</option>
+                                        <option value="">250</option>
+                                    </select>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="CompactSet">
+                                    <label class="form-check-label" for="CompactSet">
+                                        Compact
+                                    </label>
+                                </li>
+                                <li class="mx-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="GroupSet">
+                                    <label class="form-check-label" for="GroupSet">
+                                        Group by Category
+                                    </label>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="m-3">
+                                    <button class="btn btn-success">Apply</button>
+                                    <button class="btn btn-secondary float-right">Reset</button>
+                                </li>
+                            </form>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <table class="table table-bom border-bottom">
-                <thead class="border-top border-bottom bg-light">
-                    <tr class="text-muted">
-                        <td>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input">
-                            </div>
-                        </td>
-                        <td>Name</td>
-                        <td>SKU</td>
-                        <td>Sales Description</td>
-                        <td>Sales Price</td>
-                        <td>Cost</td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-                <tbody class="">
-                    <tr>
-                        <td class="align-middle">
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input">
-                            </div>
-                        </td>
-                        <td><img src="./images/imgsample.png" alt="" style="width: 100px; height: 100px;">Name of
-                            Products</td>
-                        <td class="test_black-50"></td>
-                        <td class="text-black-50"></td>
-                        <td class="text-black-50"></td>
-                        <td class="text-black-50"></td>
-                        <td class="align-middle">
-                            <div class="dropdown">
-                                <a href="" data-bs-toggle="modal" data-bs-target="#addProduct">Edit</a>
-                                <button class=" dropdown-toggle" type="button" id="dropdownMenuButton2"
-                                    data-bs-toggle="dropdown" aria-expanded="false"> </button>
-                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                                    <li><a class="dropdown-item active" href="#">Make inactive</a></li>
-                                    <li><a class="dropdown-item" href="#">Run Report</a></li>
-                                    <li><a class="dropdown-item" href="#">Duplicate</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
-        <div class="row">
-            <div class="col-1 text-center">
-                <button type="submit" class=""> <span class="fas fa-chevron-left"></span></button>
-            </div>
-            <div class="col-1 text-center">
-                <p>1 of 1</p>
-            </div>
-            <div class="col-1 text-center">
-                <button type="submit" class=""> <span class="fas fa-chevron-right"></span></button>
-            </div>
+        <table class="table table-bom border-bottom">
+            <thead class="border-top border-bottom bg-light">
+                <tr class="text-muted">
+                    <td>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input">
+                        </div>
+                    </td>
+                    <td>Name</td>
+                    <td>SKU</td>
+                    <td>Sales Description</td>
+                    <td>Sales Price</td>
+                    <td>Cost</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody class="">
+                <tr>
+                    <td class="align-middle">
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input">
+                        </div>
+                    </td>
+                    <td><img src="./images/imgsample.png" alt="" style="width: 100px; height: 100px;">Name of
+                        Products</td>
+                    <td class="test_black-50"></td>
+                    <td class="text-black-50"></td>
+                    <td class="text-black-50"></td>
+                    <td class="text-black-50"></td>
+                    <td class="align-middle">
+                        <div class="dropdown">
+                            <a href="" data-bs-toggle="modal" data-bs-target="#addProduct">Edit</a>
+                            <button class=" dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"> </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                <li><a class="dropdown-item active" href="#">Make inactive</a></li>
+                                <li><a class="dropdown-item" href="#">Run Report</a></li>
+                                <li><a class="dropdown-item" href="#">Duplicate</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-1 text-center">
+            <button type="submit" class=""> <span class="fas fa-chevron-left"></span></button>
+        </div>
+        <div class="col-1 text-center">
+            <p>1 of 1</p>
+        </div>
+        <div class="col-1 text-center">
+            <button type="submit" class=""> <span class="fas fa-chevron-right"></span></button>
         </div>
     </div>
+</div>

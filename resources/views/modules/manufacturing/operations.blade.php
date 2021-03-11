@@ -58,9 +58,9 @@
             </div>
         </div>
         <hr>
-        
 
-                    <table class="table table-bom border-bottom">
+
+        <table class="table table-bom border-bottom">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -85,16 +85,16 @@
                     <td></td>
             </tbody>
         </table>
-            <div id="newEmployee-modal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        </div>
-                        <div class="modal-header">
+        <div id="newEmployee-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-header">
 
-                            <h3>New Operation</h3>
-                            
-                            <div class="row">
+                        <h3>New Operation</h3>
+
+                        <div class="row">
                             <div class="col-3">
                                 <div class="form-group">
                                     <button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #DEDEDE; color: black;">Close</button>
@@ -103,38 +103,38 @@
                             <div class="col-1">
 
                             </div>
-                             <div class="col-3">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #007bff;">Save</button>
                                 </div>
                             </div>
-                            </div>
-                            
                         </div>
 
-                        <form id="addOperation" name="addOp" role="form" action="AddOperation.php">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="operationName">Operation Name</label>
-                                            <input type="text" name="opName" class="form-control">
-                                        </div>
+                    </div>
+
+                    <form id="addOperation" name="addOp" role="form" action="AddOperation.php">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="operationName">Operation Name</label>
+                                        <input type="text" name="opName" class="form-control">
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-name="Add Operation" data-dismiss="modal" style="float: left;" value="Edit in Full Page" />
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" style="background-color: #007bff;" class="btn btn-info btn menu" data-name="Add Operation" data-dismiss="modal" style="float: left;" value="Edit in Full Page" />
 
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-
         </div>
+
+
     </div>
+</div>
 
 
 

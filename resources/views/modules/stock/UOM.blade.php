@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">UOM</h2>
@@ -28,26 +27,27 @@
                     <button class="btn btn-primary" type="submit" onclick="" data-toggle="modal" data-target="#myModal">New</button>
 
 
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+                    <!-- Modal -->
+                    <div id="myModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">New UOM</h4> <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Save</button>
-      </div>
-      <div class="modal-body">
-          <input type="text" class="form-control" placeholder="UOM Name">
-            <input type="checkbox" class="form-check-input"> <p>Must be Whole Number</p>
-      </div>
-      <div class="modal-footer">
-        <a class="nav-link menu" href="#" data-parent="stock" data-name="UOMNEW" data-dismiss="modal">Edit in full page</a>
-      </div>
-    </div>
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">New UOM</h4> <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Save</button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" class="form-control" placeholder="UOM Name">
+                                    <input type="checkbox" class="form-check-input">
+                                    <p>Must be Whole Number</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="nav-link menu" href="#" data-parent="stock" data-name="UOMNEW" data-dismiss="modal">Edit in full page</a>
+                                </div>
+                            </div>
 
-  </div>
-</div>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -106,7 +106,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td ><a name="Millimeter" href='javascript:onclick=openUOMEdit()'>Millimeter</a></td>
+                    <td><a name="Millimeter" href='javascript:onclick=openUOMEdit()'>Millimeter</a></td>
                     <td>Millimeter</td>
                     <td class="text-black-50"></td>
                     <td class="text-black-50"></td>
@@ -156,7 +156,7 @@
                     <td class="text-black-50"></td>
                     <td class="text-black-50"></td>
                     <td></td>
-                    <td >Parts Per Million</td>
+                    <td>Parts Per Million</td>
                     <td class="text-black-50">10 M</td>
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
