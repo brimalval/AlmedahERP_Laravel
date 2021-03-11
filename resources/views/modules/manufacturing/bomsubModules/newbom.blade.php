@@ -114,159 +114,237 @@
       </div>
     </div>
     <hr><br>
-    <?php include 'newbomtable.php'; ?>
-    <br>
-    <hr><br>
-    <h4>OPERATIONS</h4>
-    <div class="col-6">
-      <div class="input-group">
-        <table>
-          <tr>
-            <td><input type="checkbox" name="check2" id="operations2" onclick="operations();" /></td>
-            <td>
-              <p>With Operations</p>
-            </td>
-          </tr>
-        </table>
-      </div>
+    <!-- Tab links -->
+    <div class="tab">
+      <div class="tablinks btn" onclick="openTab(event, 'Components')">Components</div>
+      <div class="tablinks btn" onclick="openTab(event, 'Cost')">Cost</div>
+      <div class="tablinks btn" onclick="openTab(event, 'Note')">Note</div>
     </div>
-    <div class="col-6">
-      <div class="input-group" id="operations" style="display:none">
-        <label class="label">Transfer Material Against</label>
-        <select class="input--style-4" type="text" name="project" style="width:570px;height:50px;">
-          <option>Option 1</option>
-          <option>Option 2</option>
-          <option>Option 3</option>
-        </select>
-        <br>
-        <br>
-        <label class="label">Routing</label>
-        <input class="input--style-4" type="text" name="Unit">
-      </div>
-    </div>
-    <hr><br>
-    <h4>MATERIALS</h4>
-    <div class="col-6">
-      <div class="input-group">
-        <table>
-          <tr>
-            <td><input type="checkbox" name="check2" id="qualInspect" onclick="qual();" /></td>
-            <td>
-              <p>Quality Inspection Required</p>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="input-group" id="qual2" style="display:none">
-        <label class="label">Quality Inspection Template</label>
-        <input class="input--style-4" type="text" name="Unit">
-      </div>
-    </div>
-    <h5>ITEMS</h5><br>
-    <style>
-      /* Component's Table */
-      table {
-        border-collapse: collapse;
-        width: 100%;
-      }
 
-      #itemtable,
-      #itemtr {
-        border: 1px solid black;
-      }
+    <!-- Tab content -->
+    <div id="Components" class="tabcontent">
+      <style>
+        /* Component's Table */
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
 
-      th,
-      td {
-        text-align: left;
-        padding: 8px;
-      }
-    </style>
-    <table id="itemtable">
-      <tr id="itemtr">
-        <th><input type="checkbox" name="check2" /></th>
-        <th>Item Code</th>
-        <th>Quantity</th>
-        <th>UOM</th>
-        <th>Rate</th>
-        <th>Amount</th>
-        <th></th>
-      </tr>
-      <tr id="itemtr">
-        <td><input type="checkbox" name="check2" /></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><select type="text" name="project">
-            <option></option>
-            <option></option>
-            <option></option>
-          </select></td>
+        th,
+        td {
+          text-align: left;
+          padding: 8px;
+        }
+      </style>
+      <table>
+        <tr>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Item Image</th>
+          <th>Category ID</th>
+          <th>Unit Price</th>
+          <th>Total Amount</th>
+          <th>RM Status</th>
+        </tr>
+
+        <tr>
+          <td>0001</td>
+          <td>Material 1</td>
+          <td>Image 1</td>
+          <td>1000</td>
+          <td>P1000</td>
+          <td>P5000</td>
+          <td>To Purchase</td>
+        </tr>
+
+        <tr>
+          <td>0002</td>
+          <td>Material 2</td>
+          <td>Image 2</td>
+          <td>1000</td>
+          <td>P1000</td>
+          <td>P5000</td>
+          <td>Available</td>
+        </tr>
+
+        <tr>
+          <td>0003</td>
+          <td>Material 3</td>
+          <td>Image 3</td>
+          <td>1000</td>
+          <td>P1000</td>
+          <td>P5000</td>
+          <td>Not Available</td>
+        </tr>
+
+      </table>
+    </div>
+
+    <div id="Cost" class="tabcontent">
+      <h3>Item 2</h3>
+      <p>Include some details of Item 2.</p>
+    </div>
+
+    <div id="Note" class="tabcontent">
+      <h3>Item 3</h3>
+      <p>Include some details of Item 3.</p>
+    </div>
+
+</div>
+
+<br>
+<hr><br>
+<h4>OPERATIONS</h4>
+<div class="col-6">
+  <div class="input-group">
+    <table>
+      <tr>
+        <td><input type="checkbox" name="check2" id="operations2" onclick="operations();" /></td>
+        <td>
+          <p>With Operations</p>
+        </td>
       </tr>
     </table>
+  </div>
+</div>
+<div class="col-6">
+  <div class="input-group" id="operations" style="display:none">
+    <label class="label">Transfer Material Against</label>
+    <select class="input--style-4" type="text" name="project" style="width:570px;height:50px;">
+      <option>Option 1</option>
+      <option>Option 2</option>
+      <option>Option 3</option>
+    </select>
     <br>
-    <button class="btn" style="background-color:#d3d3d3">Add Multiple</button>
-    <button class="btn" style="background-color:#d3d3d3">Add Row</button>
-    <hr>
     <br>
-    <h5>SCRAP</h5>
-    <br>
-    <table id="itemtable">
-      <tr id="itemtr">
-        <th><input type="checkbox" name="check2" /></th>
-        <th>Item Code</th>
-        <th>Item Name</th>
-        <th>Quantity</th>
-        <th>Rate</th>
-        <th></th>
-      </tr>
-      <tr id="itemtr">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+    <label class="label">Routing</label>
+    <input class="input--style-4" type="text" name="Unit">
+  </div>
+</div>
+<hr><br>
+<h4>MATERIALS</h4>
+<div class="col-6">
+  <div class="input-group">
+    <table>
+      <tr>
+        <td><input type="checkbox" name="check2" id="qualInspect" onclick="qual();" /></td>
+        <td>
+          <p>Quality Inspection Required</p>
+        </td>
       </tr>
     </table>
-    <br>
-    <button class="btn" style="background-color:#d3d3d3">Add Row</button>
-    <hr><br>
-    <h5>WEBSITES</h5>
-    <br>
-    <div class="col-6">
-      <div class="input-group">
-        <table>
-          <tr>
-            <td><input type="checkbox" name="check2" id="website" onclick="showWeb();" /></td>
-            <td>
-              <p>Show in Website</p>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="input-group" id="attach" style="display:none">
-        <label class="label">Image</label>
-        <input class="input--style-4" type="file">
-      </div>
-    </div>
-    <br>
-    <label>Route</label><br>
-    <input class="input--style-4" type="text" id="route" style="width:570px;height:150px;">
-    <input class="" </form>
-    <br><br>
+  </div>
+</div>
+<div class="col-6">
+  <div class="input-group" id="qual2" style="display:none">
+    <label class="label">Quality Inspection Template</label>
+    <input class="input--style-4" type="text" name="Unit">
+  </div>
+</div>
+<h5>ITEMS</h5><br>
+<style>
+  /* Component's Table */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  #itemtable,
+  #itemtr {
+    border: 1px solid black;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+  }
+</style>
+<table id="itemtable">
+  <tr id="itemtr">
+    <th><input type="checkbox" name="check2" /></th>
+    <th>Item Code</th>
+    <th>Quantity</th>
+    <th>UOM</th>
+    <th>Rate</th>
+    <th>Amount</th>
+    <th></th>
+  </tr>
+  <tr id="itemtr">
+    <td><input type="checkbox" name="check2" /></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><select type="text" name="project">
+        <option></option>
+        <option></option>
+        <option></option>
+      </select></td>
+  </tr>
+</table>
+<br>
+<button class="btn" style="background-color:#d3d3d3">Add Multiple</button>
+<button class="btn" style="background-color:#d3d3d3">Add Row</button>
+<hr>
+<br>
+<h5>SCRAP</h5>
+<br>
+<table id="itemtable">
+  <tr id="itemtr">
+    <th><input type="checkbox" name="check2" /></th>
+    <th>Item Code</th>
+    <th>Item Name</th>
+    <th>Quantity</th>
+    <th>Rate</th>
+    <th></th>
+  </tr>
+  <tr id="itemtr">
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+<br>
+<button class="btn" style="background-color:#d3d3d3">Add Row</button>
+<hr><br>
+<h5>WEBSITES</h5>
+<br>
+<div class="col-6">
+  <div class="input-group">
+    <table>
+      <tr>
+        <td><input type="checkbox" name="check2" id="website" onclick="showWeb();" /></td>
+        <td>
+          <p>Show in Website</p>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="col-6">
+  <div class="input-group" id="attach" style="display:none">
+    <label class="label">Image</label>
+    <input class="input--style-4" type="file">
+  </div>
+</div>
+<br>
+<label>Route</label><br>
+<input class="input--style-4" type="text" id="route" style="width:570px;height:150px;">
+<input class="">
+</form>
+<br><br>
 </div>
 </div>
 
 <!-- Main JS-->
-<script src="js/global.js"></script>
-<script src="js/bomtab.js"></script>
-<script src="vendor/select2/select2.min.js"></script>
+<script src="{{ asset('js/global.js') }}"></script>
+<script src="{{ asset('js/bomtab.js') }}"></script>
+<script src="{{ asset('vendor/select2/select2.min.js') }}"></script>
 
 <style>
   /* Component's Table */
@@ -321,5 +399,10 @@
     }
   }
 </script>
+
+<!-- Main JS-->
+<script src="{{ asset('js/global.js') }}"></script>
+
+<script src="{{ asset('js/bomtab.js') }}"></script>
 
 <!-- end document-->

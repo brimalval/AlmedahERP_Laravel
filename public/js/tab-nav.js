@@ -109,7 +109,7 @@ function subloadNewBOM() {
 
 function loadBOM() {
   $(document).ready(function () {
-    $('#contentBOM').load('/loadBOM');
+    $('#contentBOM').load('/bom');
   });
 }
 
@@ -132,7 +132,7 @@ function openInventoryInfo() {
 
 function loadInv() {
     $(document).ready(function () {
-    $('#contentInventory').load('/loadInv');
+    $('#contentInventory').load('/inventory');
   });
 }
 
@@ -150,7 +150,7 @@ function loadWorkOrderInfo() {
 
 function loadReportsBuilder() {
   $(document).ready(function () {
-    $('#contentReportsBuilder').load('/loadReportsBuilder');
+    $('#contentReportsBuilder').load('/reportsbuilder');
   });
 }
 function loadReportsBuilderShowReport() {
@@ -167,7 +167,7 @@ function openReportsBuilderForm() {
 
 function loadManufacturingProductionPlan() {
   $(document).ready(function () {
-    $('#contentProductionPlan').load('/loadManufacturingProductionPlan');
+    $('#contentProductionPlan').load('/productionplan');
   });
 }
 
@@ -179,7 +179,7 @@ function openManufacturingProductionPlanForm() {
 
 function loadManufacturingWorkstation() {
   $(document).ready(function () {
-    $('#contentWorkstation').load('/loadManufacturingWorkstation');
+    $('#contentWorkstation').load('/workstation');
   });
 }
 function openManufacturingWorkstationForm() {
@@ -190,7 +190,7 @@ function openManufacturingWorkstationForm() {
 
 function loadManufacturingRouting() {
   $(document).ready(function () {
-    $('#contentRouting').load('/loadManufacturingRouting');
+    $('#contentRouting').load('/routing');
   });
 }
 function openManufacturingRoutingForm() {
@@ -213,7 +213,7 @@ function openManufacturingTimesheetForm() {
 
 function loadManufacturingItemAttribute() {
   $(document).ready(function () {
-    $('#contentItemAttribute').load('/loadManufacturingItemAttribute');
+    $('#contentItemAttribute').load('/itemattribute');
   });
 }
 function openManufacturingItemAttributeForm() {
@@ -224,7 +224,7 @@ function openManufacturingItemAttributeForm() {
 
 function loadManufacturingItemPrice() {
   $(document).ready(function () {
-    $('#contentItemPrice').load('/loadManufacturingItemPrice');
+    $('#contentItemPrice').load('/itemprice');
   });
 }
 function openManufacturingItemPriceForm () {
@@ -264,7 +264,7 @@ function openNewSaleOrder(x) {
 
 function loadPurchaseOrder(){
   $(document).ready(function () {
-    $('#contentPurchaseOrder').load('/loadPurchaseOrder');
+    $('#contentPurchaseOrder').load('/purchaseorder');
   });
 }
 
@@ -276,7 +276,7 @@ function openNewPurchaseOrder(){
 
 function loadMaterialRequest(){
   $(document).ready(function () {
-    $('#contentMaterialRequest').load('/loadMaterialRequest');
+    $('#contentMaterialRequest').load('/materialrequest');
   });
 }
 

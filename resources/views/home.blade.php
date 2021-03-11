@@ -185,7 +185,7 @@
             <!-- Submenu Accounting content -->
             <div id='submenuAccounting' class="collapse sidebar-submenu">
                 <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
-                    <span class="menu-collapsed align-middle">Sales Invoce</span>
+                    <span class="menu-collapsed align-middle">Sales Invoice</span>
                 </a>
                 <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
                     <span class="menu-collapsed align-middle">Customer</span>

@@ -44,10 +44,6 @@
         <div class="modal-content" style="width:780px;">
             <div class="modal-header">
                 <h3>Select Material Request</h3>
-
-
-
-
                 <h3></h3>
                 <div class="col-6">
                     <div class="form-group">

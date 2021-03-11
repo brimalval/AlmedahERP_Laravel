@@ -55,7 +55,80 @@
     </div>
     <div id="Dashboard" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqmodules/dashboard.php' ?>
+        <!--dashboard contents-->
+        <div class="container">
+          <form id="contactForm" name="contact" role="form">
+            <div class="row">
+              <div class="col-6">
+                <div class="input-group">
+                  <label class="label">Series</label>
+                  <select class="input--style-4" type="text" name="project" style="width:512px;height:38px;">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Required Date</label>
+
+                  <input type="text" name="company" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="input-group">
+                  <label class="label">Type</label>
+                  <select class="input--style-4" type="text" name="project" style="width:512px;height:38px;">
+                    <option>Purchase</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <hr>
+              </div>
+              <br>
+              <label>Item</label>
+              <table class="table border-bottom table-hover table-bordered">
+                <thead class="border-top border-bottom bg-light">
+                  <tr class="text-muted">
+                    <td>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
+                    </td>
+
+                    <td>Item Code</td>
+                    <td>Quantity</td>
+                    <td>UOM ID</td>
+                    <td>Purpose</td>
+
+                  </tr>
+                </thead>
+                <tbody class="">
+                  <tr>
+                    <td colspan="7" style="text-align: center;">
+                      NO DATA
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" rowspan="5">
+                      <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                      <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+          </form>
+
+        </div>
+        <!--end contents-->
       </div>
     </div>
   </div>
@@ -69,7 +142,39 @@
     </div>
     <div id="Item" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqmodules/moreinfo.php' ?>
+        <!--moreinfo contents-->
+        <div class="container">
+          <form id="contactForm" name="contact" role="form">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Requested For</label>
+
+                  <input type="text" name="company" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="input-group">
+                  <label class="label">Status</label>
+                  <select class="input--style-4" type="text" name="project" style="width:512px;height:38px;">
+                    <option>Draft</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Transaction Date</label>
+
+                  <input type="text" name="company" class="form-control">
+                </div>
+              </div>
+          </form>
+        </div>
+        <!--end contents-->
       </div>
     </div>
   </div>
@@ -84,12 +189,36 @@
     </div>
     <div id="Currency" class="collapse" aria-labelledby="headingthree" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqmodules/printingdetails.php' ?>
+        <!--printingdetails content-->
+        <div class="container">
+          <form id="contactForm" name="contact" role="form">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Letter Head</label>
+
+                  <input type="text" name="letter head" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-6">
+
+              </div>
+
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Print Heading</label>
+
+                  <input type="text" name="Status" class="form-control">
+                </div>
+              </div>
+              <br>
+          </form>
+        </div>
+        <!--end contents-->
       </div>
     </div>
   </div>
-
-
 
   <div class="card">
     <div class="card-header" id="headingthree">
@@ -101,7 +230,32 @@
     </div>
     <div id="comm" class="collapse" aria-labelledby="headingthree" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqmodules/terms.php' ?>
+        <!--terms content-->
+        <div class="container">
+          <form id="contactForm" name="contact" role="form">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Terms</label>
+
+                  <input type="text" name="letter head" class="form-control">
+                </div>
+              </div>
+              <div class="col-6">
+              </div>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col">
+                    <label for="summernote">Terms and Conditions Content</label>
+                    <textarea id="summernote" name="editordata"></textarea>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <script src="{{ asset('js/inventory.js') }}"></script>
+          </form>
+        </div>
+        <!--end content-->
       </div>
     </div>
   </div>
