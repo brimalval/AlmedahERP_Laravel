@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <h2 class="navbar-brand tab-list-title">
       <a href='javascript:onclick=loadBOM();' class="fas fa-arrow-left back-button"><span></span></a>
-      <h2 class="navbar-brand" style="font-size: 35px;">BOM-PR-EM-ADJ CAP-002</h2>
+      <h2 class="navbar-brand" style="font-size: 35px;">BOM-{{ $bom['product_code'] }}</h2>
     </h2>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#responsive">
       <span class="navbar-toggler-icon"></span>

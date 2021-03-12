@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary ml-1" href="#">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" href="#">New</button>
+                <button type="button" class="btn btn-info ml-1" onclick="openManufacturingWorkstationForm()" href="#">New</button>
             </div>
         </div>
     </div>
@@ -75,6 +75,33 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($stations as $station)
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                            <label class="custom-control-label" for="customCheck1">&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fa fa-heart fa-fw" style="vertical-align: middle;">
+                                    </td>
+                                    <td>
+                                        <span>{{ $station->station_name }}</span>
+                                    </td>
+                                    <td>{{ $station->station_name }}</td>
+                                    <td>{{ $station->description }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="text-center" style="padding-top: 100px; padding-bottom: 100px;">
+                                            <h4>No Workstation Found</h4><br>
+                                            <button class="btn btn-primary" onclick="openManufacturingWorkstationForm()">Create a new Workstation</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
                             <!--
                             <?php for ($i = 1; $i <= 10; $i++) : ?>
                                 <tr>
@@ -95,14 +122,6 @@
                                 </tr>
                             <?php endfor; ?>
                             -->
-                            <tr>
-                                <td colspan="8">
-                                    <div class="text-center" style="padding-top: 100px; padding-bottom: 100px;">
-                                        <h4>No Workstation Found</h4><br>
-                                        <button class="btn btn-primary" onclick="openManufacturingWorkstationForm()">Create a new Workstation</button>
-                                    </div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>

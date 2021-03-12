@@ -3,6 +3,9 @@
 use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
+use App\Http\Controllers\MatRequestController;
+use App\Http\Controllers\StationController;
+use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -141,9 +144,7 @@ Route::get('/openManufacturingRoutingForm', function(){
 });
 
 /**MATERIAL REQUEST ROUTES */
-Route::get('/materialrequest', function() {
-    return view('modules.buying.materialrequest');
-});
+Route::get('/materialrequest', [MatRequestController::class, 'index']);
 Route::get('/openNewMaterialRequest', function(){
     return view('modules.buying.newMaterialRequest');
 });
@@ -308,9 +309,7 @@ Route::get('/openUOMEdit', function() {
 });
 
 /**WORK ORDER ROUTES*/
-Route::get('/workorder', function() {
-    return view('modules.manufacturing.workorder');
-});
+Route::get('/workorder', [WorkOrderController::class, 'index']);
 Route::get('/openNewWorkorder', function() {
     return view('modules.manufacturing.workordersubModules.NewWorkorder');
 });
@@ -330,9 +329,7 @@ Route::get('/openWarehouseEdit', function() {
 });
 
 /**WORKSTATION ROUTES */
-Route::get('/workstation', function() {
-    return view('modules.manufacturing.workstation');
-});
+Route::get('/workstation', [StationController::class, 'index']);
 Route::get('/openManufacturingWorkstationForm', function() {
     return view('modules.manufacturing.workstationform');
 });
