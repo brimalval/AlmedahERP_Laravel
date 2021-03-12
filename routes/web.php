@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MaterialsController;
+use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
 use App\Http\Controllers\MatRequestController;
@@ -182,9 +183,9 @@ Route::get('/production', function() {
 });
 
 /**PRODUCT MONTORING ROUTES */
-Route::get('/productmonitoring', function() {
-    return view('modules.manufacturing.productmonitoring');
-});
+// Route::get('/productmonitoring', [ProductMonitoringController::class, 'index']);
+// Route::post('/create-monitor-entry', [ProductMonitoringController::class, 'store']);
+Route::resource('/productmonitoring', ProductMonitoringController::class);
 
 /**PRODUCTION PLAN ROUTES */
 Route::get('/productionplan', function() {
@@ -333,3 +334,5 @@ Route::get('/workstation', [StationController::class, 'index']);
 Route::get('/openManufacturingWorkstationForm', function() {
     return view('modules.manufacturing.workstationform');
 });
+
+Route::get('/debug', [DebugController::class, 'index']);
