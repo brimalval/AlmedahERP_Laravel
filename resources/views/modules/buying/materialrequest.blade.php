@@ -88,21 +88,24 @@
                 </tr>
             </thead>
             <tbody class="">
+            @foreach($mat_requests as $mat_request)
                 <tr>
                     <td>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openMaterialRequestInfo();'>MTL-BAR-SHAFT-CRS-3/4"</a></td>
-                    <td>400</td>
-                    <td class="text-black-50">03-11-2021</td>
-                    <td class="text-black-50">Insert Purpose</td>
-                    <td>10923</td>
-                    <td class="text-black-50">Insert ID</td>
+                    <td><a name="{{ $mat_request->request_id }}" href='javascript:onclick=openMaterialRequestInfo();'>{{ $mat_request->item_code }}</a></td>
+                    <td>{{ $mat_request->quantity }}</td>
+                    <td class="text-black-50">{{ $mat_request->required_date }}</td>
+                    <td class="text-black-50">{{ $mat_request->purpose }}</td>
+                    <td>{{ $mat_request->uom_id }}</td>
+                    <td class="text-black-50">{{ $mat_request->station_id }}</td>
 
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
+            @endforeach
+                <!--
                 <tr>
                     <td>
                         <div class="form-check">
@@ -148,6 +151,7 @@
 
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
+                -->
             </tbody>
         </table>
     </div>

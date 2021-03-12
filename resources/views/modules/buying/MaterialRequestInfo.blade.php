@@ -46,12 +46,9 @@
 
 <div class="card">
   <div class="card-body ml-auto">
-
-
     <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Create
     </a>
-
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
       <a class="dropdown-item" href="#">Purchase Order</a>
       <a class="dropdown-item" href="#">Request for Quotation</a>
@@ -72,7 +69,62 @@
     </div>
     <div id="Dashboard" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqInfo/dashboard.php' ?>
+        <!--dashboard-->
+        <div class="container">
+          <form id="contactForm" name="contact" role="form">
+            <div class="row">
+              <div class="col-6">
+                <div class="input-group">
+                  <label class="label">Type</label>
+                  <select class="input--style-4" type="text" name="project" style="width:512px;height:38px;">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Required Date</label>
+
+                  <input type="text" name="company" class="form-control">
+                </div>
+              </div>
+              <div class="col-12">
+                <hr>
+              </div>
+              <br>
+              <label>Item</label>
+              <table class="table border-bottom table-hover table-bordered">
+                <thead class="border-top border-bottom bg-light">
+                  <tr class="text-muted">
+                    <td>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
+                    </td>
+                    <td>Item Code</td>
+                    <td>Quantity</td>
+                    <td>UOM ID</td>
+                    <td>Purpose</td>
+                  </tr>
+                </thead>
+                <tbody class="">
+                  <tr>
+                    <td colspan="7" style="text-align: center;">
+                      NO DATA
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" rowspan="5">
+                      <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          </form>
+        </div>
+        <!--end-->
       </div>
     </div>
   </div>
@@ -86,7 +138,42 @@
     </div>
     <div id="Item" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqInfo/moreinfo.php' ?>
+        <!--more info-->
+        <div class="container">
+          <form id="contactForm" name="contact" role="form">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Transaction Date</label>
+                  <input type="text" name="Transaction Date" class="form-control">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Status</label>
+                  <input type="text" name="Status" class="form-control">
+                </div>
+              </div>
+              <div class="col-6">
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">% Ordered</label>
+                  <input type="text" name="pcordered" class="form-control">
+                </div>
+              </div>
+              <div class="col-6">
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">% Received</label>
+                  <input type="text" name="pcreceived" class="form-control">
+                </div>
+              </div>
+              <br>
+          </form>
+        </div>
+        <!--end-->
       </div>
     </div>
   </div>
@@ -101,7 +188,29 @@
     </div>
     <div id="Currency" class="collapse" aria-labelledby="headingthree" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqInfo/printingdetails.php' ?>
+        <!--printing details-->
+        <div class="container">
+          <form id="contactForm" name="contact" role="form">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Letter Head</label>
+                  <input type="text" name="letter head" class="form-control">
+                </div>
+              </div>
+              <div class="col-6">
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="compnay">Print Heading</label>
+
+                  <input type="text" name="Status" class="form-control">
+                </div>
+              </div>
+              <br>
+          </form>
+        </div>
+        <!--end-->
       </div>
     </div>
   </div>
@@ -118,7 +227,22 @@
     </div>
     <div id="comm" class="collapse" aria-labelledby="headingthree" data-parent="#accordion">
       <div class="card-body">
-        <?php include 'materialReqInfo/comment.php' ?>
+        <!--comment-->
+        <label>Add Comment</label>
+        <div class="container-fluid">
+          <div class="card">
+
+            <div class="card-body">
+              <form>
+                <div class="form-group">
+                  <textarea class="form-control" rows="5" id="comment" style="resize: none;"></textarea>
+                </div>
+                <a href="#" class="btn btn-light" role="button">Comment</a>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!--end-->
       </div>
     </div>
   </div>

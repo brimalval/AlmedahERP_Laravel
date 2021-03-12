@@ -2,8 +2,12 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaterialsController;
+use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
+use App\Http\Controllers\MatRequestController;
+use App\Http\Controllers\StationController;
+use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -145,9 +149,7 @@ Route::get('/openManufacturingRoutingForm', function(){
 });
 
 /**MATERIAL REQUEST ROUTES */
-Route::get('/materialrequest', function() {
-    return view('modules.buying.materialrequest');
-});
+Route::get('/materialrequest', [MatRequestController::class, 'index']);
 Route::get('/openNewMaterialRequest', function(){
     return view('modules.buying.newMaterialRequest');
 });
@@ -185,9 +187,9 @@ Route::get('/production', function() {
 });
 
 /**PRODUCT MONTORING ROUTES */
-Route::get('/productmonitoring', function() {
-    return view('modules.manufacturing.productmonitoring');
-});
+// Route::get('/productmonitoring', [ProductMonitoringController::class, 'index']);
+// Route::post('/create-monitor-entry', [ProductMonitoringController::class, 'store']);
+Route::resource('/productmonitoring', ProductMonitoringController::class);
 
 /**PRODUCTION PLAN ROUTES */
 Route::get('/productionplan', function() {
@@ -312,9 +314,7 @@ Route::get('/openUOMEdit', function() {
 });
 
 /**WORK ORDER ROUTES*/
-Route::get('/workorder', function() {
-    return view('modules.manufacturing.workorder');
-});
+Route::get('/workorder', [WorkOrderController::class, 'index']);
 Route::get('/openNewWorkorder', function() {
     return view('modules.manufacturing.workordersubModules.NewWorkorder');
 });
@@ -334,9 +334,9 @@ Route::get('/openWarehouseEdit', function() {
 });
 
 /**WORKSTATION ROUTES */
-Route::get('/workstation', function() {
-    return view('modules.manufacturing.workstation');
-});
+Route::get('/workstation', [StationController::class, 'index']);
 Route::get('/openManufacturingWorkstationForm', function() {
     return view('modules.manufacturing.workstationform');
 });
+
+Route::get('/debug', [DebugController::class, 'index']);
