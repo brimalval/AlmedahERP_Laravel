@@ -72,6 +72,7 @@
                 </tr>
             </thead>
             <tbody class="">
+                <!-- Demo row -->
                 <tr>
                     <td>
                         <div class="form-check">
@@ -85,6 +86,21 @@
                     <td class="text-black-50">0%</td>
 
                 </tr>
+                <!-- End of demo row -->
+                @foreach ($monitoring_rows as $row)
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input">
+                        </div>
+                    </td>
+                    <td>{{ $row->product->product_name }}</td>
+                    <td>{{ "<INSERT STATION NAME HERE>" }}</td>
+                    <td>{{ \Carbon\Carbon::parse($row->planned_start_date)->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($row->planned_end_date)->format('d/m/Y') }}</td>
+                    <td class="text-black-50">0%</td>
+                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
