@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
@@ -119,6 +120,9 @@ Route::get('/jobscheduling', function() {
 Route::get('/manufacturing', function() {
     return view('modules.manufacturing.manufacturing');
 });
+Route::get('/customer', [CustomerController::class, 'index']);
+Route::post('/create-customer', [CustomerController::class, 'store'])->name('customer');
+Route::put('/update-customer/{id}', [CustomerController::class, 'update']);
 
 /**MANUFACTURING ITEM ATTRIBUTE ROUTES */
 Route::get('/itemattribute', function() {
