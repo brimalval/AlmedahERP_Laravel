@@ -6,6 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Back-end Stuff</title>
     <style>
+        .invalid{
+            outline: 1px solid red;
+        }
+
         .form{
             border: 1px solid black;
         }
@@ -35,42 +39,45 @@
     <body>
         <div class="form">
             <div class="form-title">
-                Production Monitoring
+                Production Monitoring <h6>(POST submits to {{ _(route('productmonitoring.store')) }})</h6>
             </div>
-                <form action="/create-monitor-entry" method="post">
+                <form action="{{ route('productmonitoring.store') }}" method="post" id="create-product-monitoring">
                     @csrf
                     <div class="form-body">
                         <div class="form-field">
                             <label for="">Customer ID</label>
-                            <input type="number" min="0" name="customer_id" id="customer_id">
+                            <input type="number" min="0" name="customer_id" id="customer_id" value="{{ old('customer_id') }}">
                         </div>
                         <div class="form-field">
                             <label for="product_code">Product Code</label>
-                            <input type="text" name="product_code" id="product_code">
+                            <input type="text" name="product_code" id="product_code" class="@error('product_code') invalid @enderror" value="{{ old('product_code') }}">
+                            @error('product_code')
+                                {{ $message }}
+                            @enderror
                         </div>
                         <div class="form-field">
                             <label for="station_id">Station ID</label>
-                            <input type="number" name="station_id" id="station_id">
+                            <input type="number" name="station_id" id="station_id" value="{{ old('customer_id') }}">
                         </div>
                         <div class="form-field">
                             <label for="planned_start_date">Planned Start Date</label>
-                            <input type="date" name="planned_start_date" id="planned_start_date">
+                            <input type="date" name="planned_start_date" id="planned_start_date" value="{{ old('planned_start_date') }}">
                         </div>
                         <div class="form-field">
                             <label for="planned_end_date">Planned End Date</label>
-                            <input type="date" name="planned_end_date" id="planned_end_date">
+                            <input type="date" name="planned_end_date" id="planned_end_date" value="{{ old('planned_end_date') }}">
                         </div>
                         <div class="form-field">
                             <label for="real_start_date">Real Start Date</label>
-                            <input type="date" name="real_start_date" id="real_start_date">
+                            <input type="date" name="real_start_date" id="real_start_date" value="{{ old('real_start_date') }}">
                         </div>
                         <div class="form-field">
                             <label for="real_end_date">Real End Date</label>
-                            <input type="date" name="real_end_date" id="real_end_date">
+                            <input type="date" name="real_end_date" id="real_end_date" value="{{ old('real_end_date') }}">
                         </div>
                         <div class="form-field">
                             <label for="pm_status">PM Status</label>
-                            <input type="text" name="pm_status" id="pm_status">
+                            <input type="text" name="pm_status" id="pm_status" value="{{ old('pm_status') }}">
                         </div>
                         <div class="form-field">
                             <button type="submit">Submit</button>

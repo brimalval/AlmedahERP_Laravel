@@ -8,20 +8,44 @@ use Illuminate\Http\Request;
 
 class ProductMonitoringController extends Controller
 {
-    public function index(){
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
         $monitoring_rows = ProductMonitoring::with('product')->get();
         return view('modules.manufacturing.productmonitoring', [
             'monitoring_rows' => $monitoring_rows,
         ]);
     }
 
-    public function store(Request $request){
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
         // Validation rules
         $rules = [
+            // Identifies whether the specified product_code exists in the
+            // product_code column of man_products
+            "product_code" => "required|alpha_dash|exists:man_products",
             // REMEMBER TO ADD FOREIGN KEY VALIDATION RULES TO THESE FIELDS
             "customer_id" => "required|integer|numeric",
-            "product_code" => "required|alpha_dash",
             "station_id" => "required|integer|numeric",
             // ############################################################
             "planned_start_date" => "required|date",
@@ -44,8 +68,54 @@ class ProductMonitoringController extends Controller
         } catch(Exception $e){
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => $e,
             ]);
         }
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\ProductMonitoring  $productMonitoring
+     * @return \Illuminate\Http\Response
+     */
+    public function show(ProductMonitoring $productMonitoring)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\ProductMonitoring  $productMonitoring
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(ProductMonitoring $productMonitoring)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\ProductMonitoring  $productMonitoring
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, ProductMonitoring $productMonitoring)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\ProductMonitoring  $productMonitoring
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(ProductMonitoring $productMonitoring)
+    {
+        //
     }
 }

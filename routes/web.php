@@ -183,8 +183,9 @@ Route::get('/production', function() {
 });
 
 /**PRODUCT MONTORING ROUTES */
-Route::get('/productmonitoring', [ProductMonitoringController::class, 'index']);
-Route::post('/create-monitor-entry', [ProductMonitoringController::class, 'store']);
+// Route::get('/productmonitoring', [ProductMonitoringController::class, 'index']);
+// Route::post('/create-monitor-entry', [ProductMonitoringController::class, 'store']);
+Route::resource('/productmonitoring', ProductMonitoringController::class);
 
 /**PRODUCTION PLAN ROUTES */
 Route::get('/productionplan', function() {
