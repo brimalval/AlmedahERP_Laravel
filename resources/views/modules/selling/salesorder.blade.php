@@ -155,8 +155,8 @@
                                                 Customer ID
                                             </label>
                                             <div class="d-flex">
-                                                <input type="number" class="form-input form-control" max="6" value="0000001" disabled id="custId" required>
-                                                <button class="btn btn-primary">
+                                                <input type="number"  class="form-input form-control" max="6" value="0000001" id="custId">
+                                                <button id="idBtn" class="btn btn-primary">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -164,34 +164,34 @@
                                             <label class=" text-nowrap align-middle">
                                                 First Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="fName" required>
+                                            <input type="text" class="form-input form-control" id="fName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Last Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="lName">
+                                            <input type="text" class="form-input form-control" id="lName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Contact Number
                                             </label>
-                                            <input type="number" required class="form-input form-control" max="11" id="contactNum">
+                                            <input type="number" class="form-input form-control" min="0" id="contactNum">
                                         </div>
                                         <div class="col">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Email Address
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="custEmail">
+                                            <input type="text" class="form-input form-control" id="custEmail">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Branch Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="branchName">
+                                            <input type="text" class="form-input form-control" id="branchName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Company Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="companyName">
+                                            <input type="text" class="form-input form-control" id="companyName">
                                             <br>
                                             <label>Address</label>
                                             <input class="form-control" id="custAddress"></input>

@@ -116,7 +116,7 @@
               },
               success: function(data) {
                 if (data.product_name && data.product_unit) {
-                  $("#to-appear").css('display', 'block');
+                  //$("#to-appear").css('display', 'block');
                   var matTbl = $('#itemtable-item');
                   //console.log(data.materials);
                   for (i = 0; i < data.materials.length; i++) {
@@ -149,13 +149,13 @@
       <div class="col-6">
         <div class="input-group">
           <label class="label">Item Name</label>
-          <input class="input--style-4" type="text" name="item_name">
+          <input class="input--style-4" type="text" name="item_name" id="item_name">
         </div>
       </div>
       <div class="col-6">
         <div class="input-group">
           <label class="label">Item UOM</label>
-          <input class="input--style-4" type="text" name="item_uom">
+          <input class="input--style-4" type="text" name="item_uom" id="item_uom">
         </div>
       </div>
       <div class="col-3">

@@ -16,7 +16,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadBOM()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadWorkOrder();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-primary" type="submit" onclick="openNewWorkorder();">New</button>
@@ -25,6 +25,7 @@
         </div>
     </div>
 </nav>
+
 <div class="container">
     <div class="card my-2">
         <div class="card-header bg-light">

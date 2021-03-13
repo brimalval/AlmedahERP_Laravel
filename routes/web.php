@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\ProductMonitoringController;
+use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -186,7 +188,7 @@ Route::get('/production', function() {
     return view('modules.manufacturing.production');
 });
 
-/**PRODUCT MONTORING ROUTES */
+/**PRODUCT MONITORING ROUTES */
 // Route::get('/productmonitoring', [ProductMonitoringController::class, 'index']);
 // Route::post('/create-monitor-entry', [ProductMonitoringController::class, 'store']);
 Route::resource('/productmonitoring', ProductMonitoringController::class);
@@ -254,6 +256,7 @@ Route::get('/salesorder', function() {
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
+Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {

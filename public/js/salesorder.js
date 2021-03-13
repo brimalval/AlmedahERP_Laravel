@@ -3,6 +3,23 @@
 $(document).ready(function () {
   $("#notif").hide();
 });
+$("#idBtn").on('click', function() {
+  var id = $("#custId").val();
+  $.ajax({
+    url: '/search-customer/' + id,
+    type: "GET",
+    data : {'id' : id},
+    success: function(data) {
+      $("#fName").val(data.customer_data[0].customer_fname);
+      $("#lName").val(data.customer_data[0].customer_lname);
+      $("#contactNum").val(data.customer_data[0].contact_number);
+      $("#branchName").val(data.customer_data[0].branch_name);
+      $("#companyName").val(data.customer_data[0].company_name);
+      $("#custEmail").val(data.customer_data[0].email_address);
+      $("#custAddress").val(data.customer_data[0].address);
+    }
+  });
+});
 $("#saveSaleOrder").click(function () {
   continueToWorkOrder("#saveSaleOrder");
 });
