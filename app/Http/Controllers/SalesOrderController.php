@@ -4,43 +4,52 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sales;
+use App\Models\Customer;
 
 class SalesOrderController extends Controller
 {
     //
     function index(){
         $salesorders = Sales::get();
-        return view('modules.selling.salesorder', ['sales' =>$salesorders]);
+        $customers = Customer::get();
+        return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers]);
     }
 
     function store(Request $request){
+
         $request->validate([
-            'material_code' => 'required|alpha_dash',
-            'material_name' => 'required|alpha_dash',
-            'material_category' => 'required|alpha_dash',
-            'unit_price' => 'required|integer|numeric|min:0',
-            'total_amount' => 'required|integer|numeric|min:1',
-            'rm_status' => 'required',
-            'material_image' => 'required',
-            'material_image.*' => 'image' 
+            'costPrice' => 'required|numeric|min:0',
+            'saleSupplyMethod' => 'nullable|alpha_dash',
+            'saleQuantity' => 'required|numeric|min:1',
+            'saleStockUnit' => 'required|alpha_dash',
+            'productLaunchDate' => 'required|date',
+            'productPulledMarket' => 'required|date',
+            'saleDate' => 'required|date',
+            'saleUnrenewed' => 'nullable|integer',
+            'saleVersion' => 'required|alpha_dash',
+            'saleDescription' => 'required|alpha_dash',
+            'saleProductCode' => 'required|alpha_dash',
+            'saleQuantity' => 'required|numeric|min:1',
+            'salesUnit' => 'required|alpha_dash',
+            'salePaymentMethod' => 'required|alpha_dash',
+            'saleVersion' => 'required|alpha_dash',
+            'saleDescription' => 'required|alpha_dash',
+            'saleDownpaymentCost' => 'nullable|numeric',
+
+            'lName' => 'required|alpha_dash',
+            'fName' => 'required|alpha_dash',
+            'branchName' => 'required|alpha_dash',
+            'contactNum' => 'required|alpha_dash',
+            'custAddress' => 'required|alpha_dash',
+            'custEmail' => 'required|alpha_dash',
+            'companyName' => 'required|alpha_dash',
         ]);
 
         try{
+
             $form_data = $request->input();
-            $data = Customer::where('id', "=", request('customer_id'))->first();
-            if(!$data){
-                $data = new Customer();
-                $data->customer_lname = $form_data['lName'];
-                $data->customer_fname = $form_data['fName'];
-                $data->branch_name = $form_data['branchName'];
-                $data->contact_number = $form_data['contactNum'];
-                $data->address = $form_data['custAddress'];
-                $data->email_address = $form_data['custEmail'];
-                $data->company_name = $form_data['companyName'];
-                $data->save();
-            }
+
             $data = new Sales();
-            $data->customer_id = $form_data['salesId'];
             $data->cost_price = $form_data['costPrice'];
             $data->sale_supply_method = $form_data['saleSupplyMethod'];
             $data->quantity = $form_data['saleQuantity'];
@@ -55,16 +64,44 @@ class SalesOrderController extends Controller
             $data->sales_unit = $form_data['salesUnit'];
             //Payment method if installment has a initialpayment
             $data->payment_mode = $form_data['salePaymentMethod'];
-            $data->initial_payment = $form_data['saleDownpaymentCost'];
+            
 
             //Calculate total cost of material then minus initial payment or full payment
-            $data->payment_balance = 1+1;
-            //Calculate payment track. I think should be in json
-            $data->payment_track = "First payment: 500" + "Second Payment: 600";
-            //Payment status. Complete, in bank, etc
-            $data->payment_status = "Complete";
-            //ship, shipped, in assembly, waiting for payment, or completed.  
-            $data->sales_status = "Assembly";
+            // @TODO Balanced out to zero if full payment
+            if($form_data['salePaymentMethod'] == "Full Payment(Cash)"){
+                $data->payment_balance = 0;
+            }else{
+                $data->initial_payment = $form_data['saleDownpaymentCost'];
+                // $product_price = ManufacturingProducts::where('product_code', '=', request('saleProductCode'))->first();
+                $data->payment_balance = ($form_data['costPrice'] * $form_data['saleQuantity']) - $data->initial_payment;
+                //Calculate payment track. I think should be in json
+                // Should contain installment type
+                $data->payment_track = " ";
+                //Payment status. Complete, in bank, etc
+                $data->payment_status = "Waiting for approval";
+            }
+            //Ship, shipped, in assembly, waiting for payment, or completed.  
+            $data->sales_status = "Waiting for Assembly";
+
+
+            $customerCheck = Customer::where('id', "=", request('customer_id'))->first();
+            if(!$customerCheck){
+                $customerCheck = new Customer();
+                $customerCheck->customer_lname = $form_data['lName'];
+                $customerCheck->customer_fname = $form_data['fName'];
+                $customerCheck->branch_name = $form_data['branchName'];
+                $customerCheck->contact_number = $form_data['contactNum'];
+                $customerCheck->address = $form_data['custAddress'];
+                $customerCheck->email_address = $form_data['custEmail'];
+                $customerCheck->company_name = $form_data['companyName'];
+                $customerCheck->save();
+                #Get id
+                $data->customer_id = $customerCheck->id;
+                
+            }else{
+                $data->customer_id = $form_data['custId'];
+            }
+            $data->save();
 
         }catch(Exception $e){
             return $e;

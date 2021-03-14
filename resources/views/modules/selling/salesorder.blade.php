@@ -3,6 +3,7 @@
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Sales Order</h2>
@@ -57,7 +58,9 @@
                 <td><button type="button" class="btn btn-primary btn-sm" disabled>Release</button></td>
             </tr>
             @endforeach
+        </tbody>
 </table>
+
 <script>
     $(document).ready(function() {
         $('#salestable').DataTable();
@@ -101,12 +104,15 @@
                                             <label class=" text-nowrap align-middle">
                                                 Customer ID
                                             </label>
-                                            <div class="d-flex">
-                                                <input type="number" class="form-input form-control" max="6" value="0000001" id="custId" name="custId" required>
-                                                <button class="btn btn-primary">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
+                                        
+                                            <input list="customers" class="form-input form-control" onchange= customeridselector(value)>
+                                            <datalist id="customers">
+                                            @foreach ($customers as $row)
+                                              <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
+                                            @endforeach
+                                              <option value=" + Add new"> 
+                                            </datalist> 
+                                        
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 First Name
@@ -121,7 +127,7 @@
                                             <label class=" text-nowrap align-middle">
                                                 Contact Number
                                             </label>
-                                            <input type="number" required class="form-input form-control" max="11" id="contactNum" name="contactNum">
+                                            <input type="text" required class="form-input form-control" max="11" id="contactNum" name="contactNum">
                                         </div>
                                         <div class="col">
                                             <br>
@@ -222,7 +228,7 @@
                                                 <input class="form-control" type="date" value="2021-01-01" id="productPulledMarket">
                                                 <br>
                                                 <label class="text-nowrap align-middle">
-                                                    Date
+                                                    Transaction Date
                                                 </label>
                                                 <input class="form-control" type="date" value="2021-01-01" id="saleDate">
                                                 <br>
@@ -426,3 +432,45 @@
         </div>
     </div>
 </div>
+
+<script>
+
+function customeridselector(value){
+    if(value == " + Add new" || value==""){
+        document.getElementById('fName').value = "";
+        document.getElementById('lName').value = "";
+        document.getElementById('contactNum').value = "";
+        document.getElementById('custEmail').value = "";
+        document.getElementById('branchName').value = "";
+        document.getElementById('companyName').value = "";
+        document.getElementById('custAddress').value = "";
+    }else{
+        customerDict = findRow(value);
+        document.getElementById('fName').value = customerDict['customer_fname'];
+        document.getElementById('lName').value = customerDict['customer_lname'];
+        document.getElementById('contactNum').value = customerDict['contact_number'];
+        document.getElementById('custEmail').value = customerDict['email_address'];
+        document.getElementById('branchName').value = customerDict['branch_name'];
+        document.getElementById('companyName').value = customerDict['company_name'];
+        document.getElementById('custAddress').value = customerDict['address'];
+    }
+}
+// Finds the row of thee given id
+function findRow(value){
+    @foreach ($customers as $rows)
+        test1={
+            "customer_lname": "{{ $rows->customer_lname}}",
+            "customer_fname": "{{ $rows->customer_fname }}",
+            "contact_number": "{{ $rows->contact_number }}",
+            "email_address": "{{ $rows->email_address }}",
+            "branch_name": "{{ $rows->branch_name}}",
+            "company_name": "{{ $rows->company_name }}",
+            "address": "{{ $rows->address}}"};
+
+        if ({{$rows->id}} == value){
+            return test1;
+        }
+    @endforeach
+}
+
+</script>
