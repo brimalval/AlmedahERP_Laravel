@@ -6,9 +6,9 @@ use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
 use App\Http\Controllers\MatRequestController;
+use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\StationController;
-use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
@@ -44,10 +44,10 @@ Route::get('/newBOM', function() {
 Route::get('/subNewBOM', function() {
     return view('modules.newbom');
 });
-Route::post('/createBOM', 'BOMController@store');
+Route::post('/createBOM', [BOMController::class , 'store']);
 Route::post('/update_status/{bom_id}', [BOMController::class, 'updateStatus']);
-Route::get('/checkBOM/{bom_id}', 'BOMController@checkIfBOMExists');
-Route::get('/getBomMaterials/{bom_id}', 'BOMController@getMaterials');
+Route::get('/checkBOM/{bom_id}', [BOMController::class, 'checkIfBOMExists']);
+Route::get('/getBomMaterials/{bom_id}', [BOMController::class, 'getMaterials']);
 Route::post('/deleteBOM/{bom_id}', [BOMController::class, 'delete']);
 Route::post('/suggest_product', [BOMController::class, 'search']);
 Route::get('/search-product/{product_code}', [BOMController::class, 'search_product']);
@@ -121,6 +121,8 @@ Route::get('/loadJobsched', function() {
 Route::get('/jobscheduling', function() {
     return view('modules.manufacturing.jobscheduling');
 });
+
+Route::resource('/jobscheduling/part', PartsController::class);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function() {
