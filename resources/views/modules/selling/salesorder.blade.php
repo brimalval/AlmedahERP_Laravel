@@ -1,13 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Sales Order</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         More
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -16,7 +18,8 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                        onclick="">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
@@ -118,7 +121,8 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="newSalePrompt" tabindex="-1" role="dialog" aria-labelledby="newSalePromptTitle" aria-hidden="true">
+<div class="modal fade" id="newSalePrompt" tabindex="-1" role="dialog" aria-labelledby="newSalePromptTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -129,7 +133,8 @@
                             Save
                         </a>
                     </button>
-                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" data-target="#newSalePrompt" id="closeSaleOrderModal">
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
+                        data-target="#newSalePrompt" id="closeSaleOrderModal">
                         Close
                     </button>
                 </div>
@@ -140,7 +145,8 @@
                     <div class="card">
                         <div class="card-header" id="heading1">
                             <h2 class="mb-0">
-                                <button class="btn btn-link d-flex w-100" type="button" data-toggle="collapse" data-target="#salesOrderCard1" aria-expanded="true">
+                                <button class="btn btn-link d-flex w-100" type="button" data-toggle="collapse"
+                                    data-target="#salesOrderCard1" aria-expanded="true">
                                     CUSTOMER INFORMATION
                                 </button>
                             </h2>
@@ -155,8 +161,9 @@
                                                 Customer ID
                                             </label>
                                             <div class="d-flex">
-                                                <input type="number" class="form-input form-control" max="6" value="0000001" disabled id="custId" required>
-                                                <button class="btn btn-primary">
+                                                <input type="number" class="form-input form-control" max="6"
+                                                    value="0000001" id="custId">
+                                                <button id="idBtn" type="button" class="btn btn-primary">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -164,34 +171,35 @@
                                             <label class=" text-nowrap align-middle">
                                                 First Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="fName" required>
+                                            <input type="text" class="form-input form-control" id="fName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Last Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="lName">
+                                            <input type="text" class="form-input form-control" id="lName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Contact Number
                                             </label>
-                                            <input type="number" required class="form-input form-control" max="11" id="contactNum">
+                                            <input type="number" class="form-input form-control" min="0"
+                                                id="contactNum">
                                         </div>
                                         <div class="col">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Email Address
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="custEmail">
+                                            <input type="text" class="form-input form-control" id="custEmail">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Branch Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="branchName">
+                                            <input type="text" class="form-input form-control" id="branchName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Company Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="companyName">
+                                            <input type="text" class="form-input form-control" id="companyName">
                                             <br>
                                             <label>Address</label>
                                             <input class="form-control" id="custAddress"></input>
@@ -204,7 +212,8 @@
                     <div class="card">
                         <div class="card-header">
                             <h2 class="mb-0">
-                                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard2" aria-expanded="false">
+                                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                                    data-target="#salesOrderCard2" aria-expanded="false">
                                     SALES
                                 </button>
                             </h2>
@@ -219,32 +228,39 @@
                                                 <label class="text-nowrap align-middle">
                                                     Sales ID
                                                 </label>
-                                                <input type="number" class="form-input form-control" max="20" id="salesId">
+                                                <input type="number" class="form-input form-control" max="20"
+                                                    id="salesId">
                                                 <br>
                                                 <label class="text-nowrap align-middle">
                                                     Sales Unit
                                                 </label>
-                                                <input type="text" class="form-input form-control" max="20" id="salesUnit">
+                                                <input type="text" class="form-input form-control" max="20"
+                                                    id="salesUnit">
                                                 <div class="row ml-1">
                                                     <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="isSellable" onclick="sellable();">
+                                                        <input type="checkbox" class="form-check-input" id="isSellable"
+                                                            onclick="sellable();">
                                                     </div>
-                                                    <label for="isSellable" class="form-check-label" style="font-size: 14px;">Is Sellable</label>
+                                                    <label for="isSellable" class="form-check-label"
+                                                        style="font-size: 14px;">Is Sellable</label>
                                                 </div>
                                                 <label class="text-nowrap align-middle">
                                                     Cost Price
                                                 </label>
-                                                <input type="number" class="form-input form-control sellable" max="6" id="costPrice" disabled>
+                                                <input type="number" class="form-input form-control sellable" max="6"
+                                                    id="costPrice" disabled>
                                                 <br>
                                                 <label class="text-nowrap align-middle">
                                                     Sale Currency
                                                 </label>
-                                                <input type="text" class="form-input form-control sellable" max="20" id="saleCurrency" disabled>
+                                                <input type="text" class="form-input form-control sellable" max="20"
+                                                    id="saleCurrency" disabled>
                                                 <br>
                                                 <label class=" text-nowrap align-middle">
                                                     Sales Supply Method
                                                 </label>
-                                                <select class="form-control sellable" id="saleSupplyMethod" onchange="selectSalesMethod();" disabled>
+                                                <select class="form-control sellable" id="saleSupplyMethod"
+                                                    onchange="selectSalesMethod();" disabled>
                                                     <option selected disabled>Please Select</option>
                                                     <option value="Produce">Produce</option>
                                                     <option value="Purchase">Purchase</option>
@@ -254,7 +270,8 @@
                                                 <label class="text-nowrap align-middle">
                                                     Payment Method
                                                 </label>
-                                                <select class="form-control sellable" id="salePaymentMethod" onchange="selectPaymentMethod();" disabled>
+                                                <select class="form-control sellable" id="salePaymentMethod"
+                                                    onchange="selectPaymentMethod();" disabled>
                                                     <option selected disabled>Please Select</option>
                                                     <option value="Cash">Full Payment(Cash)</option>
                                                     <option value="Installment">Installment</option>
@@ -263,7 +280,8 @@
                                                 <label class="text-nowrap align-middle">
                                                     Unrenewed
                                                 </label>
-                                                <input type="text" class="form-input form-control sellable" max="20" id="saleUnrenewed" disabled>
+                                                <input type="text" class="form-input form-control sellable" max="20"
+                                                    id="saleUnrenewed" disabled>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -272,17 +290,20 @@
                                                 <label class=" text-nowrap align-middle">
                                                     Product Pulled Off Market
                                                 </label>
-                                                <input class="form-control" type="date" value="2021-01-01" id="productPulledMarket">
+                                                <input class="form-control" type="date" value="2021-01-01"
+                                                    id="productPulledMarket">
                                                 <br>
                                                 <label class="text-nowrap align-middle">
                                                     Date
                                                 </label>
-                                                <input class="form-control" type="date" value="2021-01-01" id="saleDate">
+                                                <input class="form-control" type="date" value="2021-01-01"
+                                                    id="saleDate">
                                                 <br>
                                                 <label class=" text-nowrap align-middle">
                                                     Product Launch Date
                                                 </label>
-                                                <input class="form-control" type="date" value="2021-01-01" id="productLaunchDate">
+                                                <input class="form-control" type="date" value="2021-01-01"
+                                                    id="productLaunchDate">
                                                 <br>
                                                 <label class=" text-nowrap align-middle">
                                                     Product Code
@@ -297,17 +318,20 @@
                                                 <label class=" text-nowrap align-middle">
                                                     Version
                                                 </label>
-                                                <input type="text" class="form-input form-control" max="20" id="saleVersion">
+                                                <input type="text" class="form-input form-control" max="20"
+                                                    id="saleVersion">
                                                 <br>
                                                 <label class="text-nowrap align-middle">
                                                     Quantity
                                                 </label>
-                                                <input type="text" class="form-input form-control" max="20" id="saleQuantity">
+                                                <input type="text" class="form-input form-control" max="20"
+                                                    id="saleQuantity">
                                                 <br>
                                                 <label class=" text-nowrap align-middle">
                                                     Stock Unit
                                                 </label>
-                                                <input type="text" class="form-input form-control" max="20" id="saleStockUnit">
+                                                <input type="text" class="form-input form-control" max="20"
+                                                    id="saleStockUnit">
                                             </div>
                                         </div>
                                     </div>
@@ -316,7 +340,8 @@
                                             <label>
                                                 Description
                                             </label>
-                                            <input type="text" class="form-input form-control" max="300" id="saleDescription">
+                                            <input type="text" class="form-input form-control" max="300"
+                                                id="saleDescription">
                                         </div>
                                     </div>
                                     <br>
@@ -325,7 +350,8 @@
                                             <label class="text-nowrap align-middle">
                                                 Initial Payment(Downpayment)
                                             </label>
-                                            <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" placeholder="0.00">
+                                            <input type="number" class="form-input form-control sellable"
+                                                id="saleDownpaymentCost" placeholder="0.00">
                                         </div>
                                         <div class="col">
                                             <div class="form-group">
@@ -348,7 +374,8 @@
                         <div class="card" id="cardComponent" style="display:none;">
                             <div class="card-header">
                                 <h2 class="mb-0">
-                                    <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard3" aria-expanded="false">
+                                    <button class="btn btn-link d-flex w-100 collapsed" type="button"
+                                        data-toggle="collapse" data-target="#salesOrderCard3" aria-expanded="false">
                                         COMPONENTS
                                     </button>
                                 </h2>
@@ -443,15 +470,19 @@
                                         <div class="col">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input">
-                                                <label class="form-check-label text-muted">Add Selected to Work Order</label>
+                                                <label class="form-check-label text-muted">Add Selected to Work
+                                                    Order</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input">
-                                                <label class="form-check-label text-muted">Re-Order Selected Raw Materials</label>
+                                                <label class="form-check-label text-muted">Re-Order Selected Raw
+                                                    Materials</label>
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <button type="button" class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
+                                            <button type="button" class="btn btn-primary m-1 float-right menu"
+                                                data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order"
+                                                data-parent="manufacturing">
                                                 <a class="" href="#" style="text-decoration: none;color:white">
                                                     Save and Proceed to Work Order
                                                 </a>
@@ -470,7 +501,8 @@
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                 <div class="modal-footer">
-                    <a class="nav-link menu" href="javascript:onclick=closeSaleTab;" data-parent="selling" data-name="New Sale Order" data-dismiss="modal">
+                    <a class="nav-link menu" href="javascript:onclick=closeSaleTab;" data-parent="selling"
+                        data-name="New Sale Order" data-dismiss="modal">
                         Edit in full page
                     </a>
                 </div>
