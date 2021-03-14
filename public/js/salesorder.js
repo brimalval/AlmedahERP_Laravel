@@ -58,10 +58,13 @@ function sellable() {
     document.querySelectorAll('.sellable').forEach(function (input) {
       input.removeAttribute("disabled");
     });
+    document.getElementById("isSellable").value = 1;
+   
   } else {
     document.querySelectorAll('.sellable').forEach(function (input) {
       input.setAttribute("disabled", "");
     });
+    document.getElementById("isSellable").value = 0;
   }
 }
 

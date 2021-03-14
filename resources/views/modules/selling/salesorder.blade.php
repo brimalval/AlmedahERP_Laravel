@@ -177,10 +177,10 @@
                                                 <label class="text-nowrap align-middle">
                                                     Sales Unit
                                                 </label>
-                                                <input type="text" class="form-input form-control" max="20" id="salesUnit">
+                                                <input type="text" class="form-input form-control" max="20" id="salesUnit" placeholder="Unit of Measurement">
                                                 <div class="row ml-1">
                                                     <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="isSellable" onclick="sellable();">
+                                                        <input type="checkbox" value=0 class="form-check-input" id="isSellable" onclick="sellable();">
                                                     </div>
                                                     <label for="isSellable" class="form-check-label" style="font-size: 14px;">Is Sellable</label>
                                                 </div>
