@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\DebugController;
@@ -77,6 +78,11 @@ Route::get('/opportunities', function() {
 Route::get('/hr', function() {
     return view('modules.hr.hr');
 });
+Route::get('/employee', [EmployeeController::class, 'index']);
+Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
+Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
+Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
+Route::put('/update-employee-status/{id}/{stat}', [EmployeeController::class, 'toggle']);
 
 /**INVENTORY ROUTES */
 Route::get('/openInventoryInfo', function() {
@@ -255,6 +261,7 @@ Route::get('/createsalesorder',[SalesOrderController::class, 'store']);
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
+Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {

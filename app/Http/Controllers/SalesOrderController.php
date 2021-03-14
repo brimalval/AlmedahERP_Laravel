@@ -5,14 +5,34 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sales;
 use App\Models\Customer;
-
+use App\Models\ManufacturingProducts;
+use App\Models\ManufacturingMaterials;
+use App\Models\MaterialCategory;
 class SalesOrderController extends Controller
 {
     //
     function index(){
         $salesorders = Sales::get();
         $customers = Customer::get();
-        return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers]);
+        $products = ManufacturingProducts::get();
+        return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
+    }
+
+    function getComponents($selected){
+        $product = ManufacturingProducts::where('product_code', $selected)->first();
+        $material = json_decode($product->materials, true);
+        $components = array();
+        for ($x = 0; $x < count($material); $x++) {
+            $material_id = $material[$x]['material_id'];
+            $material_qty = $material[$x]['material_qty'];
+            $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
+            $raw_material_name = $raw_material->item_name;
+            $raw_material_category_id = $raw_material->category_id;
+            $category = MaterialCategory::where('id', $raw_material_category_id)->first();
+            $raw_material_category = $category->category_title;
+            array_push($components, [$material_qty, $raw_material_category, $raw_material_name]);
+        }
+        return response($components);
     }
 
     function store(Request $request){

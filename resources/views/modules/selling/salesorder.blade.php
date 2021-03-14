@@ -241,10 +241,12 @@
                                                     Product Code
                                                 </label>
                                                 <select class="form-control" id="saleProductCode">
-                                                    <option>PRODUCT-CODE-SAMPLE-1</option>
-                                                    <option>PRODUCT-CODE-SAMPLE-2</option>
-                                                    <option>PRODUCT-CODE-SAMPLE-3</option>
-                                                    <option>PRODUCT-CODE-SAMPLE-4</option>
+                                                    <option value="none" selected disabled hidden> 
+                                                        Select an Option 
+                                                    </option>
+                                                    @foreach ($products as $row)
+                                                        <option value="{{$row->id}}">{{$row->product_code}}</option>
+                                                    @endforeach
                                                 </select>
                                                 <br>
                                                 <label class=" text-nowrap align-middle">
@@ -321,73 +323,8 @@
                                                         <td>Status</td>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input">
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            Emulsifier Component 1
-                                                        </td>
-                                                        <td class="text-center">
-                                                            Component
-                                                        </td>
-                                                        <td class="text-center">
-                                                            2
-                                                        </td>
-                                                        <td class="text-center">
-                                                            2
-                                                        </td>
-                                                        <td class="text-primary text-center">
-                                                            Available
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input">
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            Emulsifier Component 2
-                                                        </td>
-                                                        <td class="text-center">
-                                                            Component
-                                                        </td>
-                                                        <td class="" style="text-align: center;">
-                                                            0
-                                                        </td>
-                                                        <td class="text-center">
-                                                            3
-                                                        </td>
-                                                        <td class="text-danger text-center">
-                                                            Out of stock
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input">
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            Bar Shaft
-                                                        </td>
-                                                        <td class="text-center">
-                                                            Raw Materials
-                                                        </td>
-                                                        <td class="" style="text-align: center;">
-                                                            3
-                                                        </td>
-                                                        <td class="text-center">
-                                                            10
-                                                        </td>
-                                                        <td class="text-danger text-center">
-                                                            Insufficient
-                                                        </td>
-                                                    </tr>
+                                                <tbody class="components">
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
