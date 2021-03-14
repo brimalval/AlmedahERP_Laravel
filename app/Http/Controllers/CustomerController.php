@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\Customer;
+use DB;
+use Exception;
+use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {
     public function index(){

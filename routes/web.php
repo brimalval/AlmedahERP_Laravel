@@ -9,6 +9,7 @@ use App\Http\Controllers\BOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\WorkOrderController;
+use App\Http\Controllers\SalesOrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -254,9 +255,9 @@ Route::get('/retail', function() {
 Route::get('/openSaleInfo', function() {
     return view('modules.selling.saleInfo');
 });
-Route::get('/salesorder', function() {
-    return view('modules.selling.salesorder');
-});
+
+Route::get('/salesorder',[SalesOrderController::class, 'index']);
+Route::get('/createsalesorder',[SalesOrderController::class, 'store']);
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });

@@ -1,3 +1,9 @@
+<!-- Datatable links -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Sales Order</h2>
@@ -27,96 +33,39 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <div class="card my-2">
-        <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Name">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Item">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body filter">
-            <div class="row">
-                <div class="float-left">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Add Filter
-                    </button>
-                </div>
-                <div class=" ml-auto float-right">
-                    <span class="text-muted ">Last Modified On</span>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <table class="table table-bom border-bottom">
-            <thead class="border-top border-bottom bg-light">
-                <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Product Code</td>
-                    <td>Payment Status</td>
-                    <td>Installment Status</td>
-                    <td>Payment Balance</td>
-                    <td>Date</td>
-                    <td>
-                    <td>
-                </tr>
-            </thead>
-            <tbody class="custom-input">
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openSaleInfo();'>Emulsifier</a></td>
-                    <td class="text-danger">Pending</td>
-                    <td>4th/6</td>
-                    <td class="text-bold">10,000.00</td>
-                    <td class="text-bold">2021-01-01</td>
-                    <td><button type="button" class="btn btn-primary btn-sm" disabled>Release</button></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openSaleInfo();'>Emulsifier</a></td>
-                    <td class="text-success">Complete</td>
-                    <td>6th/6</td>
-                    <td class="text-bold">0.00</td>
-                    <td class="text-bold">2021-01-01</td>
-                    <td><button type="button" class="btn btn-primary btn-sm">Release</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <div class="col-1 text-center">
-            <button type="submit" class="custom-input"> <span class="fas fa-chevron-left"></span></button>
-        </div>
-        <div class="col-1 text-center">
-            <p>4 of 4</p>
-        </div>
-        <div class="col-1 text-center">
-            <button type="submit" class="custom-input"> <span class="fas fa-chevron-right"></span></button>
-        </div>
-    </div>
-</div>
+
+<table id="salestable" class="table table-striped table-bordered hover" style="width:100%">
+        <thead>
+            <tr>
+                <th>Sales ID</th>
+                <th>Product Code</th>
+                <th>Payment Status</th>
+                <th>Installment Status</th>
+                <th>Payment Balance</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($sales as $row)
+            <tr>
+                <td class= "text-bold"> {{$row->id}}</td>
+                <td>    <a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openSaleInfo();'>{{$row->product_code}}</a>    </td>
+                <td class="text-danger">{{$row->payment_status}}</td>
+                <td>{{$row->payment_track}}</td>
+                <td class="text-bold">{{$row->payment_balance}}</td>
+                <td class="text-bold">{{$row->date}}</td>
+                <td><button type="button" class="btn btn-primary btn-sm" disabled>Release</button></td>
+            </tr>
+            @endforeach
+        </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+        $('#salestable').DataTable();
+    });
+</script>
 <!-- Modal -->
 <div class="modal fade" id="newSalePrompt" tabindex="-1" role="dialog" aria-labelledby="newSalePromptTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -136,6 +85,7 @@
             </div>
             <div class="modal-body p-5">
                 <!--Sales Order Form-->
+                <form action="sales_form">
                 <div class="accordion" id="accordion">
                     <div class="card">
                         <div class="card-header" id="heading1">
@@ -154,44 +104,47 @@
                                             <label class=" text-nowrap align-middle">
                                                 Customer ID
                                             </label>
-                                            <div class="d-flex">
-                                                <input type="number" class="form-input form-control" max="6" value="0000001" disabled id="custId" required>
-                                                <button class="btn btn-primary">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
+                                        
+                                            <input list="customers" class="form-input form-control" onchange= customeridselector(value)>
+                                            <datalist id="customers">
+                                            @foreach ($customers as $row)
+                                              <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
+                                            @endforeach
+                                              <option value=" + Add new"> 
+                                            </datalist> 
+                                        
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 First Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="fName" required>
+                                            <input type="text" required class="form-input form-control" id="fName" required name ="fName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Last Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="lName">
+                                            <input type="text" required class="form-input form-control" id="lName" name="lName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Contact Number
                                             </label>
-                                            <input type="number" required class="form-input form-control" max="11" id="contactNum">
+                                            <input type="text" required class="form-input form-control" max="11" id="contactNum" name="contactNum">
                                         </div>
                                         <div class="col">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Email Address
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="custEmail">
+                                            <input type="text" required class="form-input form-control" id="custEmail" name="custEmail">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Branch Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="branchName">
+                                            <input type="text" required class="form-input form-control" id="branchName" name="branchName">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Company Name
                                             </label>
-                                            <input type="text" required class="form-input form-control" id="companyName">
+                                            <input type="text" required class="form-input form-control" id="companyName" name="companyName">
                                             <br>
                                             <label>Address</label>
                                             <input class="form-control" id="custAddress"></input>
@@ -219,7 +172,7 @@
                                                 <label class="text-nowrap align-middle">
                                                     Sales ID
                                                 </label>
-                                                <input type="number" class="form-input form-control" max="20" id="salesId">
+                                                <input type="text" class="form-input form-control" max="20" id="salesId" value="Automatically Assigned" disabled>
                                                 <br>
                                                 <label class="text-nowrap align-middle">
                                                     Sales Unit
@@ -275,7 +228,7 @@
                                                 <input class="form-control" type="date" value="2021-01-01" id="productPulledMarket">
                                                 <br>
                                                 <label class="text-nowrap align-middle">
-                                                    Date
+                                                    Transaction Date
                                                 </label>
                                                 <input class="form-control" type="date" value="2021-01-01" id="saleDate">
                                                 <br>
@@ -464,6 +417,7 @@
                 </div>
 
                 <script src="{{ asset('js/salesorder.js') }}"></script>
+                </form>
                 <!--End Form-->
             </div>
             <div class="modal-footer d-flex">
@@ -478,3 +432,45 @@
         </div>
     </div>
 </div>
+
+<script>
+
+function customeridselector(value){
+    if(value == " + Add new" || value==""){
+        document.getElementById('fName').value = "";
+        document.getElementById('lName').value = "";
+        document.getElementById('contactNum').value = "";
+        document.getElementById('custEmail').value = "";
+        document.getElementById('branchName').value = "";
+        document.getElementById('companyName').value = "";
+        document.getElementById('custAddress').value = "";
+    }else{
+        customerDict = findRow(value);
+        document.getElementById('fName').value = customerDict['customer_fname'];
+        document.getElementById('lName').value = customerDict['customer_lname'];
+        document.getElementById('contactNum').value = customerDict['contact_number'];
+        document.getElementById('custEmail').value = customerDict['email_address'];
+        document.getElementById('branchName').value = customerDict['branch_name'];
+        document.getElementById('companyName').value = customerDict['company_name'];
+        document.getElementById('custAddress').value = customerDict['address'];
+    }
+}
+// Finds the row of thee given id
+function findRow(value){
+    @foreach ($customers as $rows)
+        test1={
+            "customer_lname": "{{ $rows->customer_lname}}",
+            "customer_fname": "{{ $rows->customer_fname }}",
+            "contact_number": "{{ $rows->contact_number }}",
+            "email_address": "{{ $rows->email_address }}",
+            "branch_name": "{{ $rows->branch_name}}",
+            "company_name": "{{ $rows->company_name }}",
+            "address": "{{ $rows->address}}"};
+
+        if ({{$rows->id}} == value){
+            return test1;
+        }
+    @endforeach
+}
+
+</script>
