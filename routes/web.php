@@ -6,6 +6,7 @@ use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
 use App\Http\Controllers\MatRequestController;
+use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
