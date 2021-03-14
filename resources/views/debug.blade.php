@@ -171,7 +171,7 @@
         </div>
         <div class="form">
             <div class="form-title">
-                Job Scheduling - Parts <h6>(POST submits to {{ _(route('part.update', ['part' => 1])) }})</h6>
+                Job Scheduling - Parts <h6>(PATCH submits to {{ _(route('part.update', ['part' => 1])) }})</h6>
             </div>
             <form action="{{ route('part.update', ['part' => 1]) }}" method="post" id="monitoring-crud" enctype="multipart/form-data">
                 @method('PATCH');
@@ -192,6 +192,73 @@
                     <div class="form-field">
                         <label for="">Part Description</label>
                         <input type="text" name="part_description" id="part_code">
+                    </div>
+                    <div class="form-field">
+                        <button type="submit">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="form">
+            <div class="form-title">
+                Job Scheduling - Components <h6>(POST submits to {{ _(route('component.store')) }})</h6>
+            </div>
+            <form action="{{ route('component.store') }}" method="post" id="monitoring-crud" enctype="multipart/form-data">
+                @csrf
+                <div class="form-body">
+                    <div class="form-field">
+                        <label for="">Component Code</label>
+                        <input type="text" name="component_code" id="component_code">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Component Name</label>
+                        <input type="text" name="component_name" id="component_name">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Component Image</label>
+                        <input type="file" name="component_image" id="component_image">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Component Description</label>
+                        <input type="text" name="component_description" id="component_description">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Item Code</label>
+                        <input type="text" name="item_code" id="item_code">
+                    </div>
+                    <div class="form-field">
+                        <button type="submit">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="form">
+            <div class="form-title">
+                Job Scheduling - Components <h6>(PATCH submits to {{ _(route('component.update', ['component' => 1])) }})</h6>
+            </div>
+            <form action="{{ route('component.update', ['component' => 1]) }}" method="post" id="monitoring-crud" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
+                <div class="form-body">
+                    <div class="form-field">
+                        <label for="">Component Code</label>
+                        <input type="text" name="component_code" id="component_code">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Component Name</label>
+                        <input type="text" name="component_name" id="component_name">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Component Image</label>
+                        <input type="file" name="component_image" id="component_image">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Component Description</label>
+                        <input type="text" name="component_description" id="component_description">
+                    </div>
+                    <div class="form-field">
+                        <label for="">Item Code</label>
+                        <input type="text" name="item_code" id="item_code">
                     </div>
                     <div class="form-field">
                         <button type="submit">Update</button>

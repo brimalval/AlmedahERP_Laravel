@@ -84,7 +84,6 @@ class PartsController extends Controller
             $part->part_description = $data['part_description'] ?? '';
             $part->save();
 
-            dd($part);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',

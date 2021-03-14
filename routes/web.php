@@ -5,6 +5,7 @@ use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
+use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
@@ -122,7 +123,10 @@ Route::get('/jobscheduling', function() {
     return view('modules.manufacturing.jobscheduling');
 });
 
+// Route for parts needed in a job scheduling entry
 Route::resource('/jobscheduling/part', PartsController::class);
+// Route for the component being made in a job scheduling entry
+Route::resource('/jobscheduling/component', ComponentController::class);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function() {
