@@ -261,6 +261,7 @@ Route::get('/createsalesorder',[SalesOrderController::class, 'store']);
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
+Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {
