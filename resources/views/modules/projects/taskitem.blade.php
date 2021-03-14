@@ -119,7 +119,7 @@
     </div>
     <div id="timeline" class="collapse">
       <div class="card-body">
-        <?php include 'taskSubModules/timeline.php' ?>
+        @include('modules.projects.taskSubModules.timeline')
         <div class="col-12">
           <hr>
         </div>
@@ -143,7 +143,7 @@
           </div>
         </div>
 
-        <script src="js/inventory.js"></script>
+        <script src="{{ asset('js/inventory.js') }}"></script>
 
       </div>
       <div class="col-12"><br></div>
@@ -207,7 +207,7 @@
     </div>
     <div id="moreinfo" class="collapse" aria-labelledby="heading2">
       <div class="card-body">
-        <?php include 'taskSubModules/moreinfo.php' ?>
+        @include('modules.projects.taskSubModules.moreinfo')
       </div>
     </div>
   </div>

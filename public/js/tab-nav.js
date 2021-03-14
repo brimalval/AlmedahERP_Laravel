@@ -339,7 +339,7 @@ function openNewTask(){
 }
 
 function loadTask(){
-    $('#contentTask').load('/loadTask');
+    $('#contentTask').load('/task');
 }
 
 function openNewPriceList(){

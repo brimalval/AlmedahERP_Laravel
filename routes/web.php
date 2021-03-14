@@ -5,6 +5,8 @@ use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobSchedulingController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\ProductMonitoringController;
@@ -117,9 +119,7 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 Route::get('/loadJobsched', function() {
     return view('modules.manufacturing.jobschedulinginfo');
 });
-Route::get('/jobscheduling', function() {
-    return view('modules.manufacturing.jobscheduling');
-});
+Route::get('/jobscheduling', [JobSchedulingController::class, 'index']);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function() {
@@ -213,6 +213,9 @@ Route::get('/task', function() {
 });
 
 /**PROJECT TEMPLATE */
+Route::get('/project', function() {
+    return view('modules.projects.project');
+});
 Route::get('/openNewProjectTemplate', function() {
     return view('modules.projects.newprojecttemplate');
 });
@@ -296,9 +299,7 @@ Route::get('/openSupplierInfo', function() {
 Route::get('/openNewTask', function() {
     return view('modules.projects.taskitem');
 });
-Route::get('/loadTask', function() {
-    return view('modules.projects.task');
-});
+Route::get('/task', [JobController:: class, 'index']);
 
 /**TIMESHEETS ROUTES */
 Route::get('/loadProjectsTimesheet', function() {
