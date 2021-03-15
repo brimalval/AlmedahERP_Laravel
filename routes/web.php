@@ -8,6 +8,7 @@ use App\Http\Controllers\BOMController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSchedulingController;
 use App\Http\Controllers\ComponentController;
+use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
@@ -231,9 +232,7 @@ Route::get('/loadProjectTemplate', function() {
 });
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/purchaseorder', function() {
-    return view('modules.buying.purchaseorder');
-});
+Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
 Route::get('/openNewPurchaseOrder', function() {
     return view('modules.buying.newpurchaseorder');
 });
