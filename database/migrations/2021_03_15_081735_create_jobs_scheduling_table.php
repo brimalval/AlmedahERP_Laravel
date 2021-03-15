@@ -14,16 +14,20 @@ class CreateJobsSchedulingTable extends Migration
     public function up()
     {
         Schema::create('jobs_scheduling', function (Blueprint $table) {
-            $table->id();
-            $table->string('jobs_sched_id');
+            $table->bigIncrements('id');
+            $table->string('jobs_sched_id')->unique();
             $table->string('wbs_code');
+            $table->foreign('wbs_code')->references('wbs_code')->on('wbs');
             $table->string('predecessor');
             $table->string('successor');
             $table->string('part_code');
+            $table->foreign('part_code')->references('part_code')->on('parts');
             $table->string('component_code');
+            $table->foreign('component_code')->references('component_code')->on('components');
             $table->string('task_id');
             $table->foreign('task_id')->references('task_id')->on('jobs');
             $table->string('machine_code');
+            $table->foreign('machine_code')->references('machine_code')->on('machines_manual');
             $table->time('setup_time');
             $table->float('running_time');
             $table->float('total_hours');
@@ -32,8 +36,9 @@ class CreateJobsSchedulingTable extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('js_status');
-            //id in employees table is an integer...
+            #Cannot reference from employees table for now: id from employees table is an integer
             $table->string('employee_id');
+            #No table to reference yet
             $table->string('mfg_order_no');
             $table->timestamps();
         });
