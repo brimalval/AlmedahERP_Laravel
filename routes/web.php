@@ -299,7 +299,8 @@ Route::get('/openSupplierInfo', function() {
 Route::get('/openNewTask', function() {
     return view('modules.projects.taskitem');
 });
-Route::get('/task', [JobController:: class, 'index']);
+Route::get('/task', [JobController::class, 'index']);
+Route::get('/create-task', [JobController::class, 'store']);
 
 /**TIMESHEETS ROUTES */
 Route::get('/loadProjectsTimesheet', function() {
@@ -345,5 +346,6 @@ Route::get('/workstation', [StationController::class, 'index']);
 Route::get('/openManufacturingWorkstationForm', function() {
     return view('modules.manufacturing.workstationform');
 });
+Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);

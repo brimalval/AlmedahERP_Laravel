@@ -22,6 +22,7 @@ class CreateJobsSchedulingTable extends Migration
             $table->string('part_code');
             $table->string('component_code');
             $table->string('task_id');
+            $table->foreign('task_id')->references('task_id')->on('jobs');
             $table->string('machine_code');
             $table->time('setup_time');
             $table->float('running_time');
@@ -31,6 +32,7 @@ class CreateJobsSchedulingTable extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('js_status');
+            //id in employees table is an integer...
             $table->string('employee_id');
             $table->string('mfg_order_no');
             $table->timestamps();

@@ -89,7 +89,7 @@
                     <p>No Task found</p>
                 </center><br>
                 <div id="contact">
-                    <center><button type="button" class="btn btn-info btn" style="background-color: #007bff;">Create New
+                    <center><button type="button" class="btn btn-info btn" onclick="openNewTask();" style="background-color: #007bff;">Create New
                             Task</button></center>
                 </div>
             @endforelse

@@ -14,7 +14,8 @@ class CreateWbsTable extends Migration
     public function up()
     {
         Schema::create('wbs', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('wbs_code')->unique();
             $table->string('wbs_name');
             $table->string('wbs_image');
             $table->string('wbs_description');

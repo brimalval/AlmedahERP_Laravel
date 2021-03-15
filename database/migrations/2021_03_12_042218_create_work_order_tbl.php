@@ -13,11 +13,14 @@ class CreateWorkOrderTbl extends Migration
      */
     public function up()
     {
-        Schema::create('work_order_tbl', function (Blueprint $table) {
-            $table->id();
+        Schema::create('work_order', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            //foreign key needed
             $table->string('purchase_id');
             $table->integer('materials_qty');
             $table->string('product_code');
+            $table->foreign('product_code')->references('product_code')->on('man_products');
+            //foreign key needed
             $table->string('sales_id');
             $table->string('work_order_status');
             $table->timestamps();

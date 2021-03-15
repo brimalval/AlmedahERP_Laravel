@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h2 class="navbar-brand tab-list-title">
-        <a href='javascript:onclick=loadManufacturingWorkstation();' class="fas fa-arrow-left back-button"><span></span></a>
+        <a href='javascript:onclick=loadManufacturingWorkstation();'
+            class="fas fa-arrow-left back-button"><span></span></a>
         <h2 class="navbar-brand" style="font-size: 35px;">Workstation Form</h2>
     </h2>
 
@@ -8,7 +9,8 @@
         <div class="navbar-nav ml-auto">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Menu
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -16,7 +18,7 @@
                         <a class="dropdown-item" href="#">Dropdown link</a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" href="#">Save</button>
+                <button type="button" class="btn btn-primary ml-1" id="saveBtn">Save</button>
             </div>
         </div>
     </div>
@@ -35,11 +37,11 @@
                 <div class="card-body">
                     <h6><strong>DESCRIPTION</strong></h6>
 
-                    <form>
+                    <form method="POST">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Workstation Name</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
+                                <input type="text" class="form-control" id="station_name" placeholder=""></select>
                             </div>
                             <div class="form-group col-md-6">&nbsp;</div>
                         </div>
@@ -47,7 +49,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="inputPassword4">Description</label>
-                                <textarea class="form-control" rows="10"></textarea>
+                                <textarea class="form-control" rows="10" id="station_desc"></textarea>
                             </div>
                         </div>
                     </form>
@@ -102,20 +104,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for ($i = 0; $i < 1; $i++) : ?>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                            <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
+                                <td class="text-center">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
+                                    </div>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
                                 </tr>
-                            <?php endfor; ?>
+                                <?php endfor; ?>
                         </tbody>
                         <tfoot>
                             <tr>
@@ -147,3 +148,27 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $("#saveBtn").on('click', function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        var formData = new FormData();
+        formData.append('station_id', "sample-id1");
+        formData.append('station_name', $("#station_name").val());
+        formData.append('description', $("#station_desc").val());
+        $.ajax({
+            type: "POST",
+            url: "/create-station",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $("#divMain").load('/workstation');
+            }
+        });
+    });
+
+</script>

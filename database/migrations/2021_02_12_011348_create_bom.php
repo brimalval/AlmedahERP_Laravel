@@ -29,7 +29,7 @@ class CreateBom extends Migration
             $table->integer('allow_alternative_item');
             $table->integer('set_rate_assembly_item');
             $table->float('total_cost', 10, 2); 
-            //$table->foreign('product_code')->references('product_code')->on('man_products');
+            $table->foreign('product_code')->references('product_code')->on('man_products');
             $table->timestamps();
         });
     }

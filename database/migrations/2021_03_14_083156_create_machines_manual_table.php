@@ -14,8 +14,8 @@ class CreateMachinesManualTable extends Migration
     public function up()
     {
         Schema::create('machines_manual', function (Blueprint $table) {
-            $table->id();
-            $table->string('machine_code');
+            $table->bigIncrements('id');
+            $table->string('machine_code')->unique();
             $table->string('machine_image');
             $table->string('machine_desc');
             $table->string('machine_process');
