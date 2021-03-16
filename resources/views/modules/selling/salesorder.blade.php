@@ -424,7 +424,7 @@ $("#sales_order_form").submit(function(e) {
             data['date'],
             "Release"
             ] ).draw();
-
+            $('closeSaleOrderModal').click();
         },
         error: function(data) {
             console.log("error");
