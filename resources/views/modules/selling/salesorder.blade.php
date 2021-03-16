@@ -22,7 +22,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="refresh()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
@@ -40,7 +40,7 @@
                 <th>Sales ID</th>
                 <th>Product Code</th>
                 <th>Payment Status</th>
-                <th>Installment Status</th>
+                <th>Payment Track</th>
                 <th>Payment Balance</th>
                 <th>Date</th>
                 <th>Actions</th>
@@ -50,7 +50,7 @@
             @foreach ($sales as $row)
             <tr>
                 <td class= "text-bold"> {{$row->id}}</td>
-                <td>    <a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openSaleInfo();'>{{$row->product_code}}</a>    </td>
+                <td> <a href='javascript:onclick=openSaleInfo();'>{{$row->product_code}}</a>    </td>
                 <td class="text-danger">{{$row->payment_status}}</td>
                 <td>{{$row->payment_track}}</td>
                 <td class="text-bold">{{$row->payment_balance}}</td>
@@ -61,22 +61,19 @@
         </tbody>
 </table>
 
-<script>
-    $(document).ready(function() {
-        $('#salestable').DataTable();
-    });
-</script>
+
 <!-- Modal -->
 <div class="modal fade" id="newSalePrompt" tabindex="-1" role="dialog" aria-labelledby="newSalePromptTitle" aria-hidden="true">
+    <!--Sales Order Form-->
+    <form method="POST" enctype="multipart/form-data" action="#" id="sales_order_form">
+                @csrf
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">New Order</h5>
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#newSalePrompt" id="saveSaleOrder1">
-                        <a class="" href="#" style="text-decoration: none;color:white">
-                            Save
-                        </a>
+                    <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder1" value="Submit">
+                        Save
                     </button>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" data-target="#newSalePrompt" id="closeSaleOrderModal">
                         Close
@@ -84,8 +81,6 @@
                 </div>
             </div>
             <div class="modal-body p-5">
-                <!--Sales Order Form-->
-                <form action="sales_form">
                 <div class="accordion" id="accordion">
                     <div class="card">
                         <div class="card-header" id="heading1">
@@ -97,60 +92,56 @@
                         </div>
                         <div class="collapse show" id="salesOrderCard1">
                             <div class="card-body">
-                                <form action="" id="saleCustomerForm">
-                                    <div class="row">
-                                        <div class="col">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Customer ID
-                                            </label>
-                                        
-                                            <input list="customers" class="form-input form-control" onchange= customeridselector(value)>
-                                            <datalist id="customers">
-                                            @foreach ($customers as $row)
-                                              <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
-                                            @endforeach
-                                              <option value=" + Add new"> 
-                                            </datalist> 
-                                        
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                First Name
-                                            </label>
-                                            <input type="text" required class="form-input form-control" id="fName" required name ="fName">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Last Name
-                                            </label>
-                                            <input type="text" required class="form-input form-control" id="lName" name="lName">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Contact Number
-                                            </label>
-                                            <input type="text" required class="form-input form-control" max="11" id="contactNum" name="contactNum">
-                                        </div>
-                                        <div class="col">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Email Address
-                                            </label>
-                                            <input type="text" required class="form-input form-control" id="custEmail" name="custEmail">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Branch Name
-                                            </label>
-                                            <input type="text" required class="form-input form-control" id="branchName" name="branchName">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Company Name
-                                            </label>
-                                            <input type="text" required class="form-input form-control" id="companyName" name="companyName">
-                                            <br>
-                                            <label>Address</label>
-                                            <input class="form-control" id="custAddress"></input>
-                                        </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <br>
+                                        <label class=" text-nowrap align-middle">
+                                            Customer ID
+                                        </label>
+                                        <input list="customers" class="form-input form-control" name="customer_id" onchange= customeridselector(value)>
+                                        <datalist id="customers">
+                                        @foreach ($customers as $row)
+                                          <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
+                                        @endforeach
+                                          <option value=" + Add new"> 
+                                        </datalist> 
+                                        <br>
+                                        <label class=" text-nowrap align-middle">
+                                            First Name
+                                        </label>
+                                        <input type="text" required class="form-input form-control" id="fName" required name ="fName">
+                                        <br>
+                                        <label class=" text-nowrap align-middle">
+                                            Last Name
+                                        </label>
+                                        <input type="text" required class="form-input form-control" id="lName" name="lName">
+                                        <br>
+                                        <label class=" text-nowrap align-middle">
+                                            Contact Number
+                                        </label>
+                                        <input type="text" required class="form-input form-control" max="11" id="contactNum" name="contactNum">
                                     </div>
-                                </form>
+                                    <div class="col">
+                                        <br>
+                                        <label class=" text-nowrap align-middle">
+                                            Email Address
+                                        </label>
+                                        <input type="text" required class="form-input form-control" id="custEmail" name="custEmail">
+                                        <br>
+                                        <label class=" text-nowrap align-middle">
+                                            Branch Name
+                                        </label>
+                                        <input type="text" required class="form-input form-control" id="branchName" name="branchName">
+                                        <br>
+                                        <label class=" text-nowrap align-middle">
+                                            Company Name
+                                        </label>
+                                        <input type="text" required class="form-input form-control" id="companyName" name="companyName">
+                                        <br>
+                                        <label>Address</label>
+                                        <input class="form-control" id="custAddress" name="custAddress"> </input>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -164,140 +155,122 @@
                         </div>
                         <div id="salesOrderCard2" class="collapse">
                             <div class="card-body">
-                                <form action="" id="saleFormInfo">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <br>
-                                                <label class="text-nowrap align-middle">
-                                                    Sales ID
-                                                </label>
-                                                <input type="text" class="form-input form-control" max="20" id="salesId" value="Automatically Assigned" disabled>
-                                                <br>
-                                                <label class="text-nowrap align-middle">
-                                                    Sales Unit
-                                                </label>
-                                                <input type="text" class="form-input form-control" max="20" id="salesUnit" placeholder="Unit of Measurement">
-                                                <div class="row ml-1">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" value=0 class="form-check-input" id="isSellable" onclick="sellable();">
-                                                    </div>
-                                                    <label for="isSellable" class="form-check-label" style="font-size: 14px;">Is Sellable</label>
-                                                </div>
-                                                <label class="text-nowrap align-middle">
-                                                    Cost Price
-                                                </label>
-                                                <input type="number" class="form-input form-control sellable" max="6" id="costPrice" disabled>
-                                                <br>
-                                                <label class="text-nowrap align-middle">
-                                                    Sale Currency
-                                                </label>
-                                                <input type="text" class="form-input form-control sellable" max="20" id="saleCurrency" disabled>
-                                                <br>
-                                                <label class=" text-nowrap align-middle">
-                                                    Sales Supply Method
-                                                </label>
-                                                <select class="form-control sellable" id="saleSupplyMethod" onchange="selectSalesMethod();" disabled>
-                                                    <option selected disabled>Please Select</option>
-                                                    <option value="Produce">Produce</option>
-                                                    <option value="Purchase">Purchase</option>
-                                                    <option value="Stock">From Stock</option>
-                                                </select>
-                                                <br>
-                                                <label class="text-nowrap align-middle">
-                                                    Payment Method
-                                                </label>
-                                                <select class="form-control sellable" id="salePaymentMethod" onchange="selectPaymentMethod();" disabled>
-                                                    <option selected disabled>Please Select</option>
-                                                    <option value="Cash">Full Payment(Cash)</option>
-                                                    <option value="Installment">Installment</option>
-                                                </select>
-                                                <br>
-                                                <label class="text-nowrap align-middle">
-                                                    Unrenewed
-                                                </label>
-                                                <input type="text" class="form-input form-control sellable" max="20" id="saleUnrenewed" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <br>
-                                                <label class=" text-nowrap align-middle">
-                                                    Product Pulled Off Market
-                                                </label>
-                                                <input class="form-control" type="date" value="2021-01-01" id="productPulledMarket">
-                                                <br>
-                                                <label class="text-nowrap align-middle">
-                                                    Transaction Date
-                                                </label>
-                                                <input class="form-control" type="date" value="2021-01-01" id="saleDate">
-                                                <br>
-                                                <label class=" text-nowrap align-middle">
-                                                    Product Launch Date
-                                                </label>
-                                                <input class="form-control" type="date" value="2021-01-01" id="productLaunchDate">
-                                                <br>
-                                                <label class=" text-nowrap align-middle">
-                                                    Product Code
-                                                </label>
-                                                <select class="form-control" id="saleProductCode">
-                                                    <option value="none" selected disabled hidden> 
-                                                        Select an Option 
-                                                    </option>
-                                                    @foreach ($products as $row)
-                                                        <option value="{{$row->id}}">{{$row->product_code}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <br>
-                                                <label class=" text-nowrap align-middle">
-                                                    Version
-                                                </label>
-                                                <input type="text" class="form-input form-control" max="20" id="saleVersion">
-                                                <br>
-                                                <label class="text-nowrap align-middle">
-                                                    Quantity
-                                                </label>
-                                                <input type="text" class="form-input form-control" max="20" id="saleQuantity">
-                                                <br>
-                                                <label class=" text-nowrap align-middle">
-                                                    Stock Unit
-                                                </label>
-                                                <input type="text" class="form-input form-control" max="20" id="saleStockUnit">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label>
-                                                Description
-                                            </label>
-                                            <input type="text" class="form-input form-control" max="300" id="saleDescription">
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row" id="paymentInstallment" style="display:none;">
-                                        <div class="col">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <br>
                                             <label class="text-nowrap align-middle">
-                                                Initial Payment(Downpayment)
+                                                Sales ID
                                             </label>
-                                            <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" placeholder="0.00">
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label class="text-nowrap align-middle">
-                                                    Installment Type
-                                                </label>
-                                                <select class="form-control" max="20" id="saleInstallmentNo">
-                                                    <option>Installment 1</option>
-                                                    <option selected>Installment 2</option>
-                                                    <option>Installment 3</option>
-                                                    <option>Installment 4</option>
-                                                    <option>Installment 5</option>
-                                                </select>
+                                            <input type="text" class="form-input form-control" max="20" id="salesId" value="Automatically Assigned" disabled>
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                                Sales Unit
+                                            </label>
+                                            <input type="text" class="form-input form-control" max="20" id="salesUnit" name="salesUnit" placeholder="Unit of Measurement">
+                                            <div class="row ml-1">
+                                                <div class="form-check">
+                                                    <input type="checkbox" value=0 class="form-check-input" id="isSellable" onclick="sellable();">
+                                                </div>
+                                                <label for="isSellable" class="form-check-label" style="font-size: 14px;">Is Sellable</label>
                                             </div>
+                                            <label class="text-nowrap align-middle">
+                                                Cost Price
+                                            </label>
+                                            <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" disabled>
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                                Sale Currency
+                                            </label>
+                                            <input type="text" class="form-input form-control sellable" max="20" id="saleCurrency" name="saleCurrency" disabled>
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Sales Supply Method
+                                            </label>
+                                            <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" onchange="selectSalesMethod();" disabled>
+                                                <option selected disabled>Please Select</option>
+                                                <option value="Produce">Produce</option>
+                                                <option value="Purchase">Purchase</option>
+                                                <option value="Stock">From Stock</option>
+                                            </select>
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                                Payment Method
+                                            </label>
+                                            <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();" disabled>
+                                                <option selected disabled>Please Select</option>
+                                                <option value="Cash">Full Payment(Cash)</option>
+                                                <option value="Installment">Installment</option>
+                                            </select>
+                                            <br>
                                         </div>
                                     </div>
-                                </form>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Product Pulled Off Market
+                                            </label>
+                                            <input class="form-control" type="date" value="2021-01-01" id="productPulledMarket" name="productPulledMarket">
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                                Transaction Date
+                                            </label>
+                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Product Launch Date
+                                            </label>
+                                            <input class="form-control" type="date" value="2021-01-01" id="productLaunchDate" name="productLaunchDate">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Product Code
+                                            </label>
+                                            <select class="form-control" id="saleProductCode" name="saleProductCode">
+                                                <option value="none" selected disabled hidden> 
+                                                    Select an Option 
+                                                </option>
+                                                @foreach ($products as $row)
+                                                    <option value="{{$row->product_code}}">{{$row->product_code}}</option>
+                                                @endforeach
+                                            </select>
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                                Quantity
+                                            </label>
+                                            <input type="text" class="form-input form-control" max="20" id="saleQuantity" name="saleQuantity" placeholder="How many to be made">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Stock Unit
+                                            </label>
+                                            <input type="text" class="form-input form-control" max="20" id="saleStockUnit" name="saleStockUnit" placeholder = "Current number of stock">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <br>
+                                <div class="row" id="paymentInstallment" style="display:none;">
+                                    <div class="col">
+                                        <label class="text-nowrap align-middle">
+                                            Initial Payment(Downpayment)
+                                        </label>
+                                        <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" name="saleDownpaymentCost" placeholder="0.00">
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="text-nowrap align-middle">
+                                                Installment Type
+                                            </label>
+                                            <select class="form-control" id="installmentType" name="installmentType">
+                                                <option selected value = "Installment 1">Installment 1</option>
+                                                <option value = "Installment 2">Installment 2</option>
+                                                <option value = "Installment 3">Installment 3</option>
+                                                <option value = "Installment 4">Installment 4</option>
+                                                <option value = "Installment 5">Installment 5</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card" id="cardComponent" style="display:none;">
@@ -341,7 +314,7 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <button type="button" class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
+                                            <button type="submit" class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
                                                 <a class="" href="#" style="text-decoration: none;color:white">
                                                     Save and Proceed to Work Order
                                                 </a>
@@ -352,10 +325,8 @@
                         </div>
                     </div>
                 </div>
-
                 <script src="{{ asset('js/salesorder.js') }}"></script>
-                </form>
-                <!--End Form-->
+                
             </div>
             <div class="modal-footer d-flex">
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
@@ -368,9 +339,20 @@
             </div>
         </div>
     </div>
+    </form>
+    <!--End Form-->
 </div>
 
+
+
 <script>
+
+var x;
+
+$(document).ready(function() {
+    x = $('#salestable').DataTable();
+});
+
 
 function customeridselector(value){
     if(value == " + Add new" || value==""){
@@ -410,4 +392,48 @@ function findRow(value){
     @endforeach
 }
 
+$("#sales_order_form").submit(function(e) {
+    e.preventDefault();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    
+    var formData = new FormData(this);
+    
+    $.ajax({
+        type: 'POST',
+        url: "/createsalesorder",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            $('#saveSaleOrder1').click(function() {
+                $('#newSalePrompt').modal('hide');
+            });
+
+            x.row.add( [
+            data['id'],
+            data['product_code'],
+            data['payment_status'],
+            data['payment_track'],
+            data['payment_balance'],
+            data['date'],
+            "Release"
+            ] ).draw();
+
+        },
+        error: function(data) {
+            console.log("error");
+            console.log(data);
+        }
+    });
+});
+
+function refresh(){
+    x.draw();
+}
 </script>

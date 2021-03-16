@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sales extends Model
+class SalesOrder extends Model
 {
     use HasFactory;
 
-    protected $table = "sales";
+    protected $table = "salesOrder";
+    public $timestamps = False;
 
     protected $fillable = [
         'customer_id',
@@ -21,18 +22,15 @@ class Sales extends Model
         'product_launch_date',
         'product_pulled_off_market',
         'date',
-        'prototype',
-        'unrenewed',
         'payment_mode',
         'initial_payment',
         'payment_balance',
         'payment_track',
         'payment_status',
         'sales_status',
-        'version',
-        'description',
         'product_code',
-        'sales_unit'       
+        'sales_unit',
+        'installment_type'
     ];
 
     protected $casts = [

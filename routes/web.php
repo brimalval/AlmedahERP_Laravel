@@ -257,7 +257,7 @@ Route::get('/openSaleInfo', function() {
 });
 
 Route::get('/salesorder',[SalesOrderController::class, 'index']);
-Route::get('/createsalesorder',[SalesOrderController::class, 'store']);
+Route::post('/createsalesorder',[SalesOrderController::class, 'create']);
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
