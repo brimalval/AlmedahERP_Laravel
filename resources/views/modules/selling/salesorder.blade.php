@@ -421,7 +421,7 @@ $("#sales_order_form").submit(function(e) {
         success: function(data) {
             $('#saveSaleOrder1').click(function() {
                 $('#newSalePrompt').modal('hide');
-            })
+            });
 
             x.row.add( [
             data['id'],
