@@ -192,6 +192,11 @@ Route::get('/paymententry', function() {
     return view('modules.accounting.paymententry');
 });
 
+/**PENDING ORDERS ROUTES */
+Route::get('/pendingorders', function() {
+    return view('modules.buying.pendingorders');
+});
+
 /**PRICE LIST ROUTES */
 Route::get('/openNewPriceList', function() {
     return view('modules/selling/pricelistitem.php');
@@ -265,10 +270,7 @@ Route::get('/retail', function() {
 });
 
 /**SALES ORDER ROUTES */
-Route::get('/openSaleInfo', function() {
-    return view('modules.selling.saleInfo');
-});
-
+Route::get('/view-sales-order/{id}', [SalesOrderController::class, 'get']);
 Route::get('/salesorder',[SalesOrderController::class, 'index']);
 Route::post('/createsalesorder',[SalesOrderController::class, 'create']);
 Route::get('/openNewSaleOrder', function() {
@@ -324,7 +326,7 @@ Route::get('/openManufacturingTimesheetForm', function(){
 });
 
 /**UOM ROUTES */
-Route::get('/loadUOM', function() {
+Route::get('/uom', function() {
     return view('modules.stock.UOM');
 });
 Route::get('/openUOMNew', function() {

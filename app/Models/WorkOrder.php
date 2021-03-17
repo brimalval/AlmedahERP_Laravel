@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class WorkOrder extends Model
 {
     use HasFactory;
-    protected $table = 'work_order_tbl';
+    protected $table = 'work_order';
     public $timestamps = true;
     protected $fillable = [
         'purchase_id',

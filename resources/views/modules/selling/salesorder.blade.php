@@ -1,5 +1,4 @@
 <!-- Datatable links -->
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
@@ -24,7 +23,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="refresh()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadSalesOrder();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
@@ -52,7 +51,7 @@
             @foreach ($sales as $row)
             <tr>
                 <td class= "text-bold"> {{$row->id}}</td>
-                <td> <a href='javascript:onclick=openSaleInfo();'>{{$row->product_code}}</a>    </td>
+                <td> <a href='javascript:onclick=openSaleInfo({{$row->id}});'>{{$row->product_code}}</a>    </td>
                 <td class="text-danger">{{$row->payment_status}}</td>
                 <td>{{$row->payment_track}}</td>
                 <td class="text-bold">{{$row->payment_balance}}</td>
@@ -353,7 +352,7 @@
 
 
 
-<script>
+<script type="text/javascript">
 
 var x;
 
@@ -415,7 +414,6 @@ $("#sales_order_form").submit(function(e) {
         type: 'POST',
         url: "/createsalesorder",
         data: formData,
-        cache: false,
         contentType: false,
         processData: false,
         success: function(data) {

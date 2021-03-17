@@ -1,13 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Purchase Order</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Menu
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -23,10 +25,12 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onClick="loadNewEmployee()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                        onClick="loadNewEmployee()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-info btn" style="background-color: #007bff;" onclick="openNewPurchaseOrder();">New</button>
+                    <button type="button" class="btn btn-info btn" style="background-color: #007bff;"
+                        onclick="openNewPurchaseOrder();">New</button>
                 </li>
             </ul>
         </div>
@@ -39,7 +43,8 @@
             <div class="row">
                 <div class="col-2">
                     <div class="form-group">
-                        <input type="text" id="buying-purchaseorder-filter-input" class="form-control" placeholder="Name">
+                        <input type="text" id="buying-purchaseorder-filter-input" class="form-control"
+                            placeholder="Name">
                     </div>
                 </div>
                 <div class="col-2">
@@ -101,7 +106,18 @@
                             <th scope="col">% Billed</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        @foreach ($materials_purchased as $material)
+                            <tr>
+                                <th scope="col">{{ $material->item_code }}</th>
+                                <th scope="col">{{ $material->mp_status }}</th>
+                                <th scope="col">{{ $material->purchase_date }}</th>
+                                <th scope="col"></th>
+                                <th scope="col">{{ $material->quantity_received }}</th>
+                                <th scope="col">% Billed</th>
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
             </div>
         </div>
