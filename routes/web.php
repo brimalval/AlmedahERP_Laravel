@@ -274,6 +274,7 @@ Route::post('/createsalesorder',[SalesOrderController::class, 'create']);
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
+Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 
 /**SALES INVOICE ROUTES */
