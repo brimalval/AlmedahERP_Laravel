@@ -5,6 +5,8 @@ $(document).ready(function () {
     $("#notif").hide();
 });
 
+
+
 function sellable() {
   let checked = document.getElementById("isSellable").checked;
   if (checked) {

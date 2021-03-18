@@ -129,4 +129,8 @@ class SalesOrderController extends Controller
             return $e;
         }
     }
+
+    function createJson($installmentType){
+        
+    }
 }
