@@ -168,7 +168,7 @@ Route::get('/openManufacturingRoutingForm', function(){
 });
 
 /**MATERIAL REQUEST ROUTES */
-Route::get('/materialrequest', [MatRequestController::class, 'index']);
+Route::resource('/materialrequest', MatRequestController::class);
 Route::get('/openNewMaterialRequest', function(){
     return view('modules.buying.newMaterialRequest');
 });

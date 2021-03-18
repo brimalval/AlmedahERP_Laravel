@@ -24,4 +24,8 @@ class ManufacturingMaterials extends Model
     public function category(){
         return $this->belongsTo(MaterialCategory::class, 'category_id');
     }
+
+    public function reorder_level(){
+        return $this->hasOne(MaterialReorderLevel::class, 'item_code', 'item_code');
+    }
 }

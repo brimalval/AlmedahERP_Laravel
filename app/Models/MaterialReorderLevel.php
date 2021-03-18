@@ -11,13 +11,12 @@ class MaterialReorderLevel extends Model
     protected $table = 'env_reorder_level';
     protected $fillable = [
         'reorder_id',
-        'category_id',
+        'item_code',
         'reorder_qty',
-        'reorder_level'
     ];
     public $timestamps = false;
     
-    public function category(){
-        return $this->belongsTo(MaterialCategory::class, 'category_id');
+    public function item(){
+        return $this->belongsTo(ManufacturingMaterials::class, 'item_code', 'item_code');
     }
 }
