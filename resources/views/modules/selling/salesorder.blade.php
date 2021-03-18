@@ -320,10 +320,10 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <button type="submit" class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
-                                                <a class="" href="#" style="text-decoration: none;color:white">
-                                                    Save and Proceed to Work Order
-                                                </a>
+                                            <button class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing" id="hiddenworkorder" hidden> </button>
+                                            <button type="submit" class="btn btn-primary m-1" id="gotoworkorder" value="Submit" class="btn btn-primary m-1 float-right menu" id="toWorkOrder">
+                                                Save go to work order
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -359,6 +359,11 @@ var x;
 $(document).ready(function() {
     x = $('#salestable').DataTable();
 });
+
+$("#gotoworkorder").click(function(){
+    console.log("Clicked");
+    $("#hiddenworkorder").click();
+})
 
 
 function customeridselector(value){
@@ -406,10 +411,7 @@ $("#sales_order_form").submit(function(e) {
             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
         }
     });
-    
-    
     var formData = new FormData(this);
-    
     $.ajax({
         type: 'POST',
         url: "/createsalesorder",
@@ -430,7 +432,7 @@ $("#sales_order_form").submit(function(e) {
             data['date'],
             "Release"
             ] ).draw();
-            $('closeSaleOrderModal').click();
+            
         },
         error: function(data) {
             console.log("error");

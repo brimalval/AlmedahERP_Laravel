@@ -67,10 +67,6 @@ $("#closeSaleOrderModal").on('click', function () {
 //    this.remove();
 //  });
 //}
-$("#saveSaleOrder").click(function () {
-  continueToWorkOrder("#saveSaleOrder");
-    $("#notif").hide();
-});
 
 
 
