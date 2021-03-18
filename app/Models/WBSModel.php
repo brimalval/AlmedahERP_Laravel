@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WorkOrder extends Model
+class WBSModel extends Model
 {
     use HasFactory;
-    protected $table = 'work_order';
+    protected $table = 'wbs';
     public $timestamps = true;
     protected $fillable = [
-        'purchase_id',
-        'materials_qty',
-        'product_code',
-        'sales_id',
-        'work_order_status',
+        'wbs_name',
+        'wbs_image',
+        'wbs_description'
     ];
 }

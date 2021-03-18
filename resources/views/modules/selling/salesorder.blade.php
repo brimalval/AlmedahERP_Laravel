@@ -1,5 +1,4 @@
 <!-- Datatable links -->
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
@@ -7,13 +6,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Sales Order</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         More
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -22,7 +23,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="refresh()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadSalesOrder();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
@@ -50,7 +51,7 @@
             @foreach ($sales as $row)
             <tr>
                 <td class= "text-bold"> {{$row->id}}</td>
-                <td> <a href='javascript:onclick=openSaleInfo();'>{{$row->product_code}}</a>    </td>
+                <td> <a href='javascript:onclick=openSaleInfo({{$row->id}});'>{{$row->product_code}}</a>    </td>
                 <td class="text-danger">{{$row->payment_status}}</td>
                 <td>{{$row->payment_track}}</td>
                 <td class="text-bold">{{$row->payment_balance}}</td>
@@ -75,7 +76,8 @@
                     <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder1" value="Submit">
                         Save
                     </button>
-                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" data-target="#newSalePrompt" id="closeSaleOrderModal">
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
+                        data-target="#newSalePrompt" id="closeSaleOrderModal">
                         Close
                     </button>
                 </div>
@@ -85,7 +87,8 @@
                     <div class="card">
                         <div class="card-header" id="heading1">
                             <h2 class="mb-0">
-                                <button class="btn btn-link d-flex w-100" type="button" data-toggle="collapse" data-target="#salesOrderCard1" aria-expanded="true">
+                                <button class="btn btn-link d-flex w-100" type="button" data-toggle="collapse"
+                                    data-target="#salesOrderCard1" aria-expanded="true">
                                     CUSTOMER INFORMATION
                                 </button>
                             </h2>
@@ -276,7 +279,8 @@
                         <div class="card" id="cardComponent" style="display:none;">
                             <div class="card-header">
                                 <h2 class="mb-0">
-                                    <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard3" aria-expanded="false">
+                                    <button class="btn btn-link d-flex w-100 collapsed" type="button"
+                                        data-toggle="collapse" data-target="#salesOrderCard3" aria-expanded="false">
                                         COMPONENTS
                                     </button>
                                 </h2>
@@ -306,11 +310,13 @@
                                         <div class="col">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input">
-                                                <label class="form-check-label text-muted">Add Selected to Work Order</label>
+                                                <label class="form-check-label text-muted">Add Selected to Work
+                                                    Order</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input">
-                                                <label class="form-check-label text-muted">Re-Order Selected Raw Materials</label>
+                                                <label class="form-check-label text-muted">Re-Order Selected Raw
+                                                    Materials</label>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -332,7 +338,8 @@
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                 <div class="modal-footer">
-                    <a class="nav-link menu" href="javascript:onclick=closeSaleTab;" data-parent="selling" data-name="New Sale Order" data-dismiss="modal">
+                    <a class="nav-link menu" href="javascript:onclick=closeSaleTab;" data-parent="selling"
+                        data-name="New Sale Order" data-dismiss="modal">
                         Edit in full page
                     </a>
                 </div>
@@ -345,7 +352,7 @@
 
 
 
-<script>
+<script type="text/javascript">
 
 var x;
 
@@ -407,7 +414,6 @@ $("#sales_order_form").submit(function(e) {
         type: 'POST',
         url: "/createsalesorder",
         data: formData,
-        cache: false,
         contentType: false,
         processData: false,
         success: function(data) {

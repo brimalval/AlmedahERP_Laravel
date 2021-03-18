@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStationsTable extends Migration
+class CreatePartsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateStationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('station_id')->unique();
-            $table->string('station_name');
-            $table->string('description');
+        Schema::create('parts', function (Blueprint $table) {
+            $table->id();
+            $table->string('part_code')->unique();
+            $table->string('part_name');
+            $table->text('part_image');
+            $table->string('part_description', 100);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateStationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stations');
+        Schema::dropIfExists('parts');
     }
 }

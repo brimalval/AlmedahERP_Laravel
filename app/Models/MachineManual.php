@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WorkOrder extends Model
+class MachineManual extends Model
 {
     use HasFactory;
-    protected $table = 'work_order';
+    protected $table = 'machines_manual';
     public $timestamps = true;
     protected $fillable = [
-        'purchase_id',
-        'materials_qty',
-        'product_code',
-        'sales_id',
-        'work_order_status',
+        'machine_name',
+        'machine_image',
+        'machine_desc',
+        'machine_process'
     ];
 }

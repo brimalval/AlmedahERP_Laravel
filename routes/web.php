@@ -6,10 +6,16 @@ use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobSchedulingController;
+use App\Http\Controllers\ComponentController;
+use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MatRequestController;
+use App\Http\Controllers\PartsController;
+use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\StationController;
-use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\SalesOrderController;
+use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +37,7 @@ Route::get('/dashboard', function() {
     return view('modules.dashboard');
 });
 
-Route::get('accounting', function() {
+Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 
@@ -43,7 +49,10 @@ Route::get('/newBOM', function() {
 Route::get('/subNewBOM', function() {
     return view('modules.newbom');
 });
+Route::post('/createBOM', [BOMController::class , 'store']);
 Route::post('/update_status/{bom_id}', [BOMController::class, 'updateStatus']);
+Route::get('/checkBOM/{bom_id}', [BOMController::class, 'checkIfBOMExists']);
+Route::get('/getBomMaterials/{bom_id}', [BOMController::class, 'getMaterials']);
 Route::post('/deleteBOM/{bom_id}', [BOMController::class, 'delete']);
 Route::post('/suggest_product', [BOMController::class, 'search']);
 Route::get('/search-product/{product_code}', [BOMController::class, 'search_product']);
@@ -119,9 +128,12 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 Route::get('/loadJobsched', function() {
     return view('modules.manufacturing.jobschedulinginfo');
 });
-Route::get('/jobscheduling', function() {
-    return view('modules.manufacturing.jobscheduling');
-});
+Route::get('/jobscheduling', [JobSchedulingController::class, 'index']);
+
+// Route for parts needed in a job scheduling entry
+Route::resource('/jobscheduling/part', PartsController::class);
+// Route for the component being made in a job scheduling entry
+Route::resource('/jobscheduling/component', ComponentController::class);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function() {
@@ -180,6 +192,11 @@ Route::get('/paymententry', function() {
     return view('modules.accounting.paymententry');
 });
 
+/**PENDING ORDERS ROUTES */
+Route::get('/pendingorders', function() {
+    return view('modules.buying.pendingorders');
+});
+
 /**PRICE LIST ROUTES */
 Route::get('/openNewPriceList', function() {
     return view('modules/selling/pricelistitem.php');
@@ -193,7 +210,7 @@ Route::get('/production', function() {
     return view('modules.manufacturing.production');
 });
 
-/**PRODUCT MONTORING ROUTES */
+/**PRODUCT MONITORING ROUTES */
 // Route::get('/productmonitoring', [ProductMonitoringController::class, 'index']);
 // Route::post('/create-monitor-entry', [ProductMonitoringController::class, 'store']);
 Route::resource('/productmonitoring', ProductMonitoringController::class);
@@ -215,6 +232,9 @@ Route::get('/task', function() {
 });
 
 /**PROJECT TEMPLATE */
+Route::get('/project', function() {
+    return view('modules.projects.project');
+});
 Route::get('/openNewProjectTemplate', function() {
     return view('modules.projects.newprojecttemplate');
 });
@@ -223,9 +243,7 @@ Route::get('/loadProjectTemplate', function() {
 });
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/purchaseorder', function() {
-    return view('modules.buying.purchaseorder');
-});
+Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
 Route::get('/openNewPurchaseOrder', function() {
     return view('modules.buying.newpurchaseorder');
 });
@@ -252,15 +270,13 @@ Route::get('/retail', function() {
 });
 
 /**SALES ORDER ROUTES */
-Route::get('/openSaleInfo', function() {
-    return view('modules.selling.saleInfo');
-});
-
+Route::get('/view-sales-order/{id}', [SalesOrderController::class, 'get']);
 Route::get('/salesorder',[SalesOrderController::class, 'index']);
 Route::post('/createsalesorder',[SalesOrderController::class, 'create']);
 Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
+Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 
 /**SALES INVOICE ROUTES */
@@ -298,9 +314,8 @@ Route::get('/openSupplierInfo', function() {
 Route::get('/openNewTask', function() {
     return view('modules.projects.taskitem');
 });
-Route::get('/loadTask', function() {
-    return view('modules.projects.task');
-});
+Route::get('/task', [JobController::class, 'index']);
+Route::get('/create-task', [JobController::class, 'store']);
 
 /**TIMESHEETS ROUTES */
 Route::get('/loadProjectsTimesheet', function() {
@@ -311,7 +326,7 @@ Route::get('/openManufacturingTimesheetForm', function(){
 });
 
 /**UOM ROUTES */
-Route::get('/loadUOM', function() {
+Route::get('/uom', function() {
     return view('modules.stock.UOM');
 });
 Route::get('/openUOMNew', function() {
@@ -346,5 +361,6 @@ Route::get('/workstation', [StationController::class, 'index']);
 Route::get('/openManufacturingWorkstationForm', function() {
     return view('modules.manufacturing.workstationform');
 });
+Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);

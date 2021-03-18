@@ -8,6 +8,8 @@ use App\Models\Customer;
 use App\Models\ManufacturingProducts;
 use App\Models\ManufacturingMaterials;
 use App\Models\MaterialCategory;
+use DB;
+use Exception;
 class SalesOrderController extends Controller
 {
     //
@@ -16,6 +18,14 @@ class SalesOrderController extends Controller
         $customers = Customer::get();
         $products = ManufacturingProducts::get();
         return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
+    }
+
+    function get($sales_order_id) {
+        $sales_order = SalesOrder::find($sales_order_id);
+        $product = ManufacturingProducts::where('product_code', $sales_order->product_code)->first();
+        $customer_info = Customer::find($sales_order->customer_id);
+        return view('modules.selling.saleInfo', 
+        ['sales_order' => $sales_order, 'product' => $product, 'customer' => $customer_info]);
     }
 
     function getComponents($selected){
@@ -37,34 +47,35 @@ class SalesOrderController extends Controller
 
     function create(Request $request){
 
-        $request->validate([
-            'costPrice' => 'nullable|numeric',
-            'saleCurrency' => 'nullable|alpha_dash',
-            'saleSupplyMethod' => 'nullable|alpha_dash',
-            
-            'saleQuantity' => 'required|numeric|min:1',
-            'saleStockUnit' => 'required|alpha_dash',
-            'productLaunchDate' => 'required|date',
-            'productPulledMarket' => 'required|date',
-            'saleDate' => 'required|date',
-            'salePaymentMethod' => 'required|alpha_dash',
-
-            'saleProductCode' => 'required|alpha_dash',
-            'saleQuantity' => 'required|numeric|min:1',
-            'salesUnit' => 'required|alpha_dash',
-            
-            # initial_payment
-            'saleDownpaymentCost' => 'nullable|numeric',
-            
-            'customer_id' => 'nullable|numeric',
-            'lName' => 'required|alpha_dash',
-            'fName' => 'required|alpha_dash',
-            'branchName' => 'required|alpha_dash',
-            'contactNum' => 'required|alpha_dash',
-            'custAddress' => 'required|alpha_dash',
-            'custEmail' => 'required|alpha_dash',
-            'companyName' => 'required|alpha_dash',
-        ]);
+        #Comment ko muna yung validation, nahihirapan akong mag-enter ng data para sa testing eh hahah
+        //$request->validate([
+        //    'costPrice' => 'nullable|numeric',
+        //    'saleCurrency' => 'nullable|alpha_dash',
+        //    'saleSupplyMethod' => 'nullable|alpha_dash',
+        //    
+        //    'saleQuantity' => 'required|numeric|min:1',
+        //    'saleStockUnit' => 'required|alpha_dash',
+        //    'productLaunchDate' => 'required|date',
+        //    'productPulledMarket' => 'required|date',
+        //    'saleDate' => 'required|date',
+        //    'salePaymentMethod' => 'required|alpha_dash',
+//
+        //    'saleProductCode' => 'required|alpha_dash',
+        //    'saleQuantity' => 'required|numeric|min:1',
+        //    'salesUnit' => 'required|alpha_dash',
+        //    
+        //    # initial_payment
+        //    'saleDownpaymentCost' => 'nullable|numeric',
+        //    
+        //    'customer_id' => 'nullable|numeric',
+        //    'lName' => 'required|alpha_dash',
+        //    'fName' => 'required|alpha_dash',
+        //    'branchName' => 'required|alpha_dash',
+        //    'contactNum' => 'required|alpha_dash',
+        //    'custAddress' => 'required|alpha_dash',
+        //    'custEmail' => 'required|alpha_dash',
+        //    'companyName' => 'required|alpha_dash',
+        //]);
 
         try{
 

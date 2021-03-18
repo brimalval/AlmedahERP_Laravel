@@ -245,15 +245,15 @@ function openSupplierInfo() {
   });
 }
 
-function openSaleInfo() {
+function openSaleInfo(id) {
   $(document).ready(function () {
-    $('#contentSalesOrder').load('/openSaleInfo');
+    $('#contentSalesOrder').load('/view-sales-order/' + id);
   });
 }
 
 function loadSalesOrder() {
   $(document).ready(function () {
-    $('#contentSalesOrder').load('/loadSalesOrder');
+    $('#contentSalesOrder').load('/salesorder');
   });
 }
 function openNewSaleOrder(x) {
@@ -306,7 +306,7 @@ function loadJobschedhome(){
 
 function loadUOM(){
   $(document).ready(function () {
-    $('#contentUOM').load('/loadUOM');
+    $('#contentUOM').load('/uom');
   });
 }
 
@@ -339,7 +339,7 @@ function openNewTask(){
 }
 
 function loadTask(){
-    $('#contentTask').load('/loadTask');
+    $('#contentTask').load('/task');
 }
 
 function openNewPriceList(){

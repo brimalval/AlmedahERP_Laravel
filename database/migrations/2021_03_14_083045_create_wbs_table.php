@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStationsTable extends Migration
+class CreateWbsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateStationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stations', function (Blueprint $table) {
+        Schema::create('wbs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('station_id')->unique();
-            $table->string('station_name');
-            $table->string('description');
+            $table->string('wbs_code')->unique();
+            $table->string('wbs_name');
+            $table->string('wbs_image');
+            $table->string('wbs_description');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateStationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stations');
+        Schema::dropIfExists('wbs');
     }
 }
