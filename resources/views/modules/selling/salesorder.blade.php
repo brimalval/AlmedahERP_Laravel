@@ -320,7 +320,7 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <button type="submit" class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
+                                            <button type="submit" class="btn btn-primary m-1 float-right menu" data-dismiss="modal" id="saveWorkOrder" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
                                                 <a class="" href="#" style="text-decoration: none;color:white">
                                                     Save and Proceed to Work Order
                                                 </a>
@@ -414,6 +414,7 @@ $("#sales_order_form").submit(function(e) {
         type: 'POST',
         url: "/createsalesorder",
         data: formData,
+        cache: false,
         contentType: false,
         processData: false,
         success: function(data) {

@@ -10,6 +10,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSchedulingController;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\MaterialsPurchasedController;
+use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
@@ -326,9 +327,8 @@ Route::get('/openManufacturingTimesheetForm', function(){
 });
 
 /**UOM ROUTES */
-Route::get('/uom', function() {
-    return view('modules.stock.UOM');
-});
+Route::get('/uom', [MaterialUOMController::class, 'index']);
+Route::post('/create-mat-uom', [MaterialUOMController::class, 'store']);
 Route::get('/openUOMNew', function() {
     return view('modules.stock.UOMNEW');
 });

@@ -114,7 +114,7 @@
                                 <th scope="col">{{ $material->purchase_date }}</th>
                                 <th scope="col"></th>
                                 <th scope="col">{{ $material->quantity_received }}</th>
-                                <th scope="col">% Billed</th>
+                                <th scope="col"></th>
                             </tr>
                         @endforeach
                     </tbody>
@@ -127,29 +127,29 @@
         $(document).ready(function() {
             var modalCrmLeadsForm = $("#modal-buying-purchaseorder-form");
 
-            var oTable = $('#tbl-buying-purchaseorder').DataTable({
-                sDom: 'rt',
-                ajax: "data/buying-purchaseorder.json", // test data only
-                columns: [{
-                        data: 'title'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: 'date'
-                    },
-                    {
-                        data: 'grand_total'
-                    },
-                    {
-                        data: '%_received'
-                    },
-                    {
-                        data: '%_billed'
-                    }
-                ]
-            });
+            //var oTable = $('#tbl-buying-purchaseorder').DataTable({
+            //    sDom: 'rt',
+            //    ajax: "data/buying-purchaseorder.json", // test data only
+            //    columns: [{
+            //            data: 'title'
+            //        },
+            //        {
+            //            data: 'status'
+            //        },
+            //        {
+            //            data: 'date'
+            //        },
+            //        {
+            //            data: 'grand_total'
+            //        },
+            //        {
+            //            data: '%_received'
+            //        },
+            //        {
+            //            data: '%_billed'
+            //        }
+            //    ]
+            //});
 
             $(document).on('click', '#btn-buying-purchaseorder-add', function(e) {
                 e.preventDefault();

@@ -1,13 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">UOM</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         More
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -21,10 +23,12 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                        onclick="">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-primary" type="submit" onclick="" data-toggle="modal" data-target="#myModal">New</button>
+                    <button class="btn btn-primary" type="submit" onclick="" data-toggle="modal"
+                        data-target="#myModal">New</button>
 
 
                     <!-- Modal -->
@@ -34,15 +38,26 @@
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">New UOM</h4> <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Save</button>
+                                    <h4 class="modal-title">New UOM</h4> <button type="button" class="btn btn-default"
+                                        data-dismiss="modal">Close</button> <button type="submit"
+                                        class="btn btn-primary" id="saveBtn">Save</button>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="text" class="form-control" placeholder="UOM Name">
-                                    <input type="checkbox" class="form-check-input">
-                                    <p>Must be Whole Number</p>
+                                    <form method="POST">
+                                        @csrf
+                                        <input type="text" class="form-control" id="name" name="name"
+                                            placeholder="UOM Name"><br>
+                                        <!--<input type="checkbox" class="form-check-input">
+                                    <p>Must be Whole Number</p>-->
+                                        <input type="text" class="form-control" id="conv" name="conv"
+                                            placeholder="Conversion Value..."><br>
+                                        <input type="text" id="price" name="price" placeholder="Price of UOM"
+                                            class="form-control">
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <a class="nav-link menu" href="#" data-parent="stock" data-name="UOMNEW" data-dismiss="modal">Edit in full page</a>
+                                    <a class="nav-link menu" href="#" data-parent="stock" data-name="UOMNEW"
+                                        data-dismiss="modal">Edit in full page</a>
                                 </div>
                             </div>
 
@@ -115,6 +130,7 @@
                     <td class="text-black-50">9 M</td>
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
+                <!--
                 <tr>
                     <td>
                         <div class="form-check">
@@ -159,7 +175,7 @@
                     <td>Parts Per Million</td>
                     <td class="text-black-50">10 M</td>
                     <td><span class="fas fa-comments"></span>0</td>
-                </tr>
+                </tr>-->
             </tbody>
         </table>
     </div>
@@ -175,3 +191,36 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $("#saveBtn").on('click', function() {
+        var formData = new FormData();
+
+        formData.append("name", $("#name").val());
+        formData.append("conv", $("#conv").val());
+        formData.append("price", $("#price").val());
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: '/create-mat-uom',
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                for (var key of formData.entries()) {
+                    console.log(key[0] + ', ' + key[1])
+                }
+                return true;
+
+            }
+
+        });
+    });
+
+</script>
