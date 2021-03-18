@@ -1,4 +1,51 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <script>
+    function addRow(){
+
+      if($('#no-data')[0]){
+        $('#no-data').remove();
+      }
+      let table = $('#material-request-input-rows');
+      let lastRow = table[0].rows.length;
+      table.append(
+      `<tr>
+          <td>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input">
+            </div>
+          </td>
+          <td><input class="form-control" type="text" name="item_code" id="mr-code-input-row-${lastRow}"></td>
+          <td><input class="form-control" min="0" type="number" name="quantity_requested" id="mr-qty-input-row-${lastRow}"></td>
+          <td><input class="form-control" type="number" name="uom_id" id="mr-uom-input-row-${lastRow}"></td>
+          <td><input class="form-control" type="text" name="purpose" id="mr-purp-input-row-${lastRow}"></td>
+        </tr>`);
+    }
+    $(document).ready(function(){
+      // Making sure that none of the buttons inside the form submit it,
+      // only the button outside of the form ("save" button) can submit
+      $('#mat-req button').each(function(index){
+        $(this).attr('type', 'button');
+      });
+      $('#mat-req').submit(function(){
+        $.ajax({
+           type: 'POST',
+           url: this.action,
+           data: new FormData(this),
+           contentType: false,
+           processData: false,
+           cache: false,
+           success: function(data){
+             console.log(data);
+           },
+           error: function(data){
+             console.log("error");
+             console.log(data);
+           }
+        });
+        return false;
+      });
+    });
+  </script>
   <div class="container-fluid">
     <h2 class="navbar-brand" style="font-size: 35px;">New Material Request</h2>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#responsive">
@@ -20,7 +67,7 @@
           <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadMaterialRequest();">Cancel</button>
         </li>
         <li class="nav-item li-bom">
-          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;">Save</button>
+          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" onclick="$('#mat-req').submit();">Save</button>
         </li>
       </ul>
     </div>
@@ -44,6 +91,8 @@
   </div>
 </div>
 
+<form action="/materialrequest" method="post" id="mat-req">
+@csrf
 <div id="accordion">
   <div class="card">
     <div class="card-header" id="headingOne">
@@ -57,7 +106,8 @@
       <div class="card-body">
         <!--dashboard contents-->
         <div class="container">
-          <form id="contactForm" name="contact" role="form">
+          {{-- <form id="contactForm" name="contact" role="form">
+            @csrf --}}
             <div class="row">
               <div class="col-6">
                 <div class="input-group">
@@ -72,9 +122,9 @@
 
               <div class="col-6">
                 <div class="form-group">
-                  <label for="compnay">Required Date</label>
+                  <label for="required_date">Required Date</label>
 
-                  <input type="text" name="company" class="form-control">
+                  <input type="date" name="required_date" id="required_date" class="form-control">
                 </div>
               </div>
 
@@ -110,22 +160,19 @@
 
                   </tr>
                 </thead>
-                <tbody class="">
+                <tbody class="" id="material-request-input-rows">
                   <tr>
-                    <td colspan="7" style="text-align: center;">
+                    <td id="no-data" colspan="7" style="text-align: center;">
                       NO DATA
                     </td>
                   </tr>
-                  <tr>
-                    <td colspan="7" rowspan="5">
-                      <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                      <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>
-                    </td>
-
-                  </tr>
                 </tbody>
               </table>
-          </form>
+              <td colspan="7" rowspan="5">
+                <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>
+              </td>
+          {{-- </form> --}}
 
         </div>
         <!--end contents-->
@@ -144,7 +191,7 @@
       <div class="card-body">
         <!--moreinfo contents-->
         <div class="container">
-          <form id="contactForm" name="contact" role="form">
+          {{-- <form id="contactForm" name="contact" role="form"> --}}
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
@@ -167,12 +214,29 @@
 
               <div class="col-6">
                 <div class="form-group">
-                  <label for="compnay">Transaction Date</label>
+                  <label for="transaction_date">Transaction Date</label>
 
-                  <input type="text" name="company" class="form-control">
+                  <input type="date" name="transaction_date" id="transaction_date" class="form-control">
                 </div>
               </div>
-          </form>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="station_id">Station ID</label>
+
+                  <input type="text" name="station_id" id="station_id" class="form-control">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="">Procurement Method</label>
+                  <select class="form-control" name="procurement_method" id="procurement_method">
+                    <option value="buy">Buy</option>
+                    <option value="produce">Produce</option>
+                    <option value="buyproduce">Buy & Produce</option>
+                  </select>
+                </div>
+              </div>
+          {{-- </form> --}}
         </div>
         <!--end contents-->
       </div>
@@ -232,7 +296,7 @@
       <div class="card-body">
         <!--terms content-->
         <div class="container">
-          <form id="contactForm" name="contact" role="form">
+          {{-- <form id="contactForm" name="contact" role="form"> --}}
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
@@ -253,7 +317,7 @@
               </div>
               <br>
               <script src="{{ asset('js/inventory.js') }}"></script>
-          </form>
+          {{-- </form> --}}
         </div>
         <!--end content-->
       </div>
@@ -261,4 +325,5 @@
   </div>
 
 </div>
+</form>
 </div>

@@ -14,6 +14,7 @@ class MaterialRequest extends Model
     protected $fillable = [
         'request_id',
         'item_code',
+        'procurement_method',
         'quantity',
         'required_date',
         'reorder_id',
@@ -21,4 +22,8 @@ class MaterialRequest extends Model
         'uom_id',
         'station_id'
     ]; 
+
+    protected $casts = [
+        'required_date' => 'date',
+    ];
 }
