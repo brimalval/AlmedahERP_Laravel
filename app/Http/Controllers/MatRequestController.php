@@ -61,7 +61,10 @@ class MatRequestController extends Controller
             $matRequest->purpose = request('purpose');
             $matRequest->uom_id = request('uom_id');
             $matRequest->station_id = request('station_id');
-            $nextId = MaterialRequest::orderby('created_at', 'desc')->first()->id + 1;
+            $lastRequest = MaterialRequest::orderby('created_at', 'desc')->first();
+            $nextId = ($lastRequest)
+                        ? MaterialRequest::orderby('created_at', 'desc')->first()->id + 1 
+                        : 1;
             $matRequest->request_id = "REQ" . $nextId;
             $matRequest->save();
             return response()->json([
