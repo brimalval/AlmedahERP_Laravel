@@ -14,11 +14,11 @@ class CreateEnvReorderLevel extends Migration
     public function up()
     {
         Schema::create('env_reorder_level', function(Blueprint $table){
-            
-            $table->string('reorder_id', 50)->primary();
-            $table->string('category_id',50);
+            $table->id();
+            $table->string('reorder_id', 50)->unique();
+            $table->string('item_code', 50);
+            $table->foreign('item_code')->references('item_code')->on('env_raw_materials');
             $table->integer('reorder_qty');
-            $table->string('reorder_level');
         });
     }
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSchedulingController;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\MaterialsPurchasedController;
+use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
@@ -81,6 +82,14 @@ Route::get('/objectives', function() {
 });
 Route::get('/opportunities', function() {
     return view('modules.crm.opportunities');
+});
+
+/**DELIVERY ROUTES */
+Route::get('/delivery', function() {
+    return view('modules.productreleasing.delivery');
+});
+Route::get('/view-delivery-info', function() {
+    return view('modules.productreleasing.deliveryinfo');
 });
 
 /**HR ROUTES */
@@ -168,7 +177,7 @@ Route::get('/openManufacturingRoutingForm', function(){
 });
 
 /**MATERIAL REQUEST ROUTES */
-Route::get('/materialrequest', [MatRequestController::class, 'index']);
+Route::resource('/materialrequest', MatRequestController::class);
 Route::get('/openNewMaterialRequest', function(){
     return view('modules.buying.newMaterialRequest');
 });
@@ -195,6 +204,9 @@ Route::get('/paymententry', function() {
 /**PENDING ORDERS ROUTES */
 Route::get('/pendingorders', function() {
     return view('modules.buying.pendingorders');
+});
+Route::get('/view-pending-order', function() {
+    return view('modules.buying.pendingordersinfo');
 });
 
 /**PRICE LIST ROUTES */
@@ -283,6 +295,9 @@ Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getCompone
 Route::get('/salesinvoice', function() {
     return view('modules.selling.salesinvoice');
 });
+Route::get('/sales-invoice-item', function() {
+    return view('modules.selling.salesinvoiceitem');
+});
 
 /**SELLING ROUTES */
 Route::get('/selling', function() {
@@ -326,9 +341,8 @@ Route::get('/openManufacturingTimesheetForm', function(){
 });
 
 /**UOM ROUTES */
-Route::get('/uom', function() {
-    return view('modules.stock.UOM');
-});
+Route::get('/uom', [MaterialUOMController::class, 'index']);
+Route::post('/create-mat-uom', [MaterialUOMController::class, 'store']);
 Route::get('/openUOMNew', function() {
     return view('modules.stock.UOMNEW');
 });

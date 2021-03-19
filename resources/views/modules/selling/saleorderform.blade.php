@@ -17,7 +17,7 @@
                 Customer ID
               </label>
               <div class="d-flex">
-                <input type="number" class="form-input form-control" max="6" value="0000001" disabled id="custId" required>
+                <input type="number" class="form-input form-control" max="6" value="0000001" id="custId" required>
                 <button class="btn btn-primary">
                   <i class="fas fa-search"></i>
                 </button>
@@ -87,45 +87,11 @@
                   Sales Unit
                 </label>
                 <input type="text" class="form-input form-control" max="20" id="salesUnit">
-                <div class="row ml-1">
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="isSellable" onclick="sellable();">
-                  </div>
-                  <label for="isSellable" class="form-check-label" style="font-size: 14px;">Is Sellable</label>
-                </div>
+                <br>
                 <label class="text-nowrap align-middle">
                   Cost Price
                 </label>
-                <input type="number" class="form-input form-control sellable" max="6" id="costPrice" disabled>
-                <br>
-                <label class="text-nowrap align-middle">
-                  Sale Currency
-                </label>
-                <input type="text" class="form-input form-control sellable" max="20" id="saleCurrency" disabled>
-                <br>
-                <label class=" text-nowrap align-middle">
-                  Sales Supply Method
-                </label>
-                <select class="form-control sellable" id="saleSupplyMethod" onchange="selectSalesMethod();" disabled>
-                  <option selected disabled>Please Select</option>
-                  <option value="Produce">Produce</option>
-                  <option value="Purchase">Purchase</option>
-                  <option value="Stock">From Stock</option>
-                </select>
-                <br>
-                <label class="text-nowrap align-middle">
-                  Payment Method
-                </label>
-                <select class="form-control sellable" id="salePaymentMethod" onchange="selectPaymentMethod();" disabled>
-                  <option selected disabled>Please Select</option>
-                  <option value="Cash">Full Payment(Cash)</option>
-                  <option value="Installment">Installment</option>
-                </select>
-                <br>
-                <label class="text-nowrap align-middle">
-                  Unrenewed
-                </label>
-                <input type="text" class="form-input form-control sellable" max="20" id="saleUnrenewed" disabled>
+                <input type="number" class="form-input form-control sellable" max="6" id="costPrice">
               </div>
             </div>
             <div class="col">
@@ -142,11 +108,6 @@
                 <input class="form-control" type="date" value="2021-01-01" id="saleDate">
                 <br>
                 <label class=" text-nowrap align-middle">
-                  Product Launch Date
-                </label>
-                <input class="form-control" type="date" value="2021-01-01" id="productLaunchDate">
-                <br>
-                <label class=" text-nowrap align-middle">
                   Product Code
                 </label>
                 <select class="form-control" id="saleProductCode">
@@ -156,21 +117,96 @@
                   <option>PRODUCT-CODE-SAMPLE-4</option>
                 </select>
                 <br>
-                <label class=" text-nowrap align-middle">
-                  Version
-                </label>
-                <input type="text" class="form-input form-control" max="20" id="saleVersion">
-                <br>
-                <label class="text-nowrap align-middle">
-                  Quantity
-                </label>
-                <input type="text" class="form-input form-control" max="20" id="saleQuantity">
-                <br>
-                <label class=" text-nowrap align-middle">
-                  Stock Unit
-                </label>
-                <input type="text" class="form-input form-control" max="20" id="saleStockUnit">
               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 form-group">
+              <table class="table border-bottom table-hover table-bordered table-sm">
+                <thead class="border-top border-bottom bg-light">
+                  <tr class="text-muted">
+                    <td></td>
+                    <td class="font-weight-bold text-center">Product Code</td>
+                    <td class="font-weight-bold text-center">Quantity Purchased</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      EM181204
+                    </td>
+                    <td class="text-center d-flex justify-content-center">
+                      <input type="text" class="form-control w-25 text-center " value="10">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      GR102346
+                    </td>
+                    <td class="d-flex justify-content-center">
+                      <input type="text" class="form-control w-25 text-center " value="10">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      RB678023
+                    </td>
+                    <td class="text-center d-flex justify-content-center">
+                      <input type="text" class="form-control w-25 text-center " value="10">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label class="text-nowrap align-middle">
+                Unrenewed
+              </label>
+              <input type="text" class="form-input form-control sellable" max="20" id="saleUnrenewed">
+              <br>
+              <label class="text-nowrap align-middle">
+                Payment Method
+              </label>
+              <select class="form-control sellable" id="salePaymentMethod" onchange="selectPaymentMethod();">
+                <option selected>Please Select</option>
+                <option value="Cash">Full Payment(Cash)</option>
+                <option value="Installment">Installment</option>
+              </select>
+              <br>
+            </div>
+            <div class="col">
+              <label class="text-nowrap align-middle">
+                Sale Currency
+              </label>
+              <input type="text" class="form-input form-control sellable" max="20" id="saleCurrency">
+              <br>
+              <label class=" text-nowrap align-middle">
+                Sales Supply Method
+              </label>
+              <select class="form-control sellable" id="saleSupplyMethod" onchange="selectSalesMethod();">
+                <option selected>Please Select</option>
+                <option value="Produce">Produce</option>
+                <option value="Purchase">Purchase</option>
+                <option value="Stock">From Stock</option>
+              </select>
+              <br>
             </div>
           </div>
           <div class="row">
@@ -323,6 +359,161 @@
       </div>
     </div>
   </div>
+  <div class="card" id="cardPayments">
+    <div class="card-header">
+      <h2 class="mb-0">
+        <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard4" aria-expanded="false">
+          PAYMENTS
+        </button>
+      </h2>
+    </div>
+    <div id="salesOrderCard4" class="collapse">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <table class="table border-bottom table-hover table-bordered">
+              <thead class="border-top border-bottom bg-light">
+                <tr class="text-muted">
+                  <td></td>
+                  <td class="text-center">Description</td>
+                  <td class="text-center">Amount Due</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input append-check">
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    First Installment
+                  </td>
+                  <td class="text-center">
+                    5000.00
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input append-check">
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    Second Installment
+                  </td>
+                  <td class="text-center">
+                    5000.00
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input append-check">
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    Third Installment
+                  </td>
+                  <td class="text-center">
+                    5000.00
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input append-check">
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    Fourth Installment
+                  </td>
+                  <td class="text-center">
+                    5000.00
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input append-check">
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    Fifth Installment
+                  </td>
+                  <td class="text-center">
+                    5000.00
+                  </td>
+                </tr>
+                <tr id="rowTotal">
+                  <td></td>
+                  <td class="font-weight-bold text-center">TOTAL AMOUNT:</td>
+                  <td class="text-center">
+                    <input class="form-control" type="text" id="" placeholder="0.00">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 d-flex justify-content-center">
+            <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
+              <a class="" href="#" style="text-decoration: none;color:white">
+                Save Payment
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="cardPaymentLogs">
+    <div class="card-header">
+      <h2 class="mb-0">
+        <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard5" aria-expanded="false">
+          PAYMENT LOGS
+        </button>
+      </h2>
+    </div>
+    <div id="salesOrderCard5" class="collapse">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <table class="table border-bottom table-hover">
+              <thead class="border-top border-bottom bg-light">
+                <tr class="text-muted">
+                  <td class="text-center font-weight-bold">Payment ID</td>
+                  <td class="text-center font-weight-bold">Date Paid</td>
+                  <td class="text-center font-weight-bold">Amount Paid</td>
+                  <td class="text-center font-weight-bold">Description</td>
+                  <td class="text-center font-weight-bold">Payment Method</td>
+                  <td class="text-center font-weight-bold">Status</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center">PID-000000001</td>
+                  <td class="text-center">February 20, 2021</td>
+                  <td class="text-center">5000.00</td>
+                  <td class="text-center">Downpayment</td>
+                  <td class="text-center">Cash</td>
+                  <td class="text-center">Paid</td>
+                </tr>
+                <tr>
+                  <td class="text-center">PID-000000001</td>
+                  <td class="text-center">March 1, 2021</td>
+                  <td class="text-center">5000.00</td>
+                  <td class="text-center">Downpayment</td>
+                  <td class="text-center">Check</td>
+                  <td class="text-center">Pending</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<script src="./js/salesorder.js"></script>
+<script src="{{ asset('js/salesorder.js') }}"></script>

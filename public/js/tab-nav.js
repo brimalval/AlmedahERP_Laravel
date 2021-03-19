@@ -346,6 +346,18 @@ function openNewPriceList(){
     $('#contentPriceList').load('/openNewPriceList');
 }
 
+function openSalesInvoiceItem(){
+  $(document).ready(function () {
+    $('#contentSalesInvoice').load('/sales-invoice-item');
+  });
+}
+
+function loadSalesInvoice(){
+  $(document).ready(function () {
+    $('#contentSalesInvoice').load('/salesinvoice');
+  });
+}
+
 function loadPriceList(){
     $('#contentPriceList').load('/loadPriceList');
 }
@@ -378,6 +390,30 @@ function openWarehouseEdit(){
 
 function openItemVariantSettings() {
   $(document).ready(function () {
-    $('#contentItemVariantSetting').load('/openItemVariantSettings')
+    $('#contentItemVariantSetting').load('/openItemVariantSettings');
+  });
+}
+
+function loadPendingOrders(){
+  $(document).ready(function () {
+    $('#contentPendingOrders').load('/pendingorders');
+  });
+}
+
+function openPendingOrdersInfo(){
+  $(document).ready(function () {
+    $('#contentPendingOrders').load('/view-pending-order');
+  });
+}
+
+function openDeliveryInfo(){
+  $(document).ready(function () {
+    $('#contentDelivery').load('/view-delivery-info');
+  });
+}
+
+function loadDelivery(){
+  $(document).ready(function () {
+    $('#contentDelivery').load('/delivery');
   });
 }

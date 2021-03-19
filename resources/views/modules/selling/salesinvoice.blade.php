@@ -1,13 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Sales Invoice</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Menu
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -21,7 +23,8 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadBOM()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                        onclick="loadBOM()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-primary" type="submit" onclick="o()">New</button>
@@ -97,7 +100,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td>Emulsifier</td>
+                    <td><a href='javascript:onclick=openSalesInvoiceItem();'>Emulsifier</a></td>
                     <td class="text-success">Complete</td>
                     <td class="text-black-50">P 30,000</td>
                 </tr>
@@ -107,7 +110,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td>Emulsifier</td>
+                    <td><a href='javascript:onclick=openSalesInvoiceItem();'>Emulsifier</a></td>
                     <td class="text-primary">Active</td>
                     <td class="text-black-50">P 30,000</td>
                 </tr>
@@ -132,4 +135,5 @@
     .conContent {
         padding: 200px;
     }
+
 </style>

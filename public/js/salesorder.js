@@ -2,35 +2,35 @@
 
 // on the modal in salesorder.php
 $(document).ready(function () {
-  $("#notif").hide();
+    $("#notif").hide();
 });
 $("#idBtn").on('click', function () {
-  var id = $("#custId").val();
-  $.ajax({
-    url: '/search-customer/' + id,
-    type: "GET",
-    data: { 'id': id },
-    success: function (data) {
-      $("#fName").val(data.customer_data[0].customer_fname);
-      $("#lName").val(data.customer_data[0].customer_lname);
-      $("#contactNum").val(data.customer_data[0].contact_number);
-      $("#branchName").val(data.customer_data[0].branch_name);
-      $("#companyName").val(data.customer_data[0].company_name);
-      $("#custEmail").val(data.customer_data[0].email_address);
-      $("#custAddress").val(data.customer_data[0].address);
-    }
-  });
+    var id = $("#custId").val();
+    $.ajax({
+        url: '/search-customer/' + id,
+        type: "GET",
+        data: { 'id': id },
+        success: function (data) {
+            $("#fName").val(data.customer_data[0].customer_fname);
+            $("#lName").val(data.customer_data[0].customer_lname);
+            $("#contactNum").val(data.customer_data[0].contact_number);
+            $("#branchName").val(data.customer_data[0].branch_name);
+            $("#companyName").val(data.customer_data[0].company_name);
+            $("#custEmail").val(data.customer_data[0].email_address);
+            $("#custAddress").val(data.customer_data[0].address);
+        }
+    });
 });
 
 $("#closeSaleOrderModal").on('click', function () {
-  $('#custId').val("0000001");
-  $('#fName').val(null);
-  $('#lName').val(null);
-  $('#contactNum').val(null);
-  $('#custEmail').val(null);
-  $('#branchName').val(null);
-  $('#companyName').val(null);
-  $('#custAddress').val(null);
+    $('#custId').val("0000001");
+    $('#fName').val(null);
+    $('#lName').val(null);
+    $('#contactNum').val(null);
+    $('#custEmail').val(null);
+    $('#branchName').val(null);
+    $('#companyName').val(null);
+    $('#custAddress').val(null);
 });
 
 // Creating a custom reset method since the native reset
@@ -67,24 +67,58 @@ $("#closeSaleOrderModal").on('click', function () {
 //    this.remove();
 //  });
 //}
+$("#saveSaleOrder").click(function () {
+    continueToWorkOrder("#saveSaleOrder");
+    $("#notif").hide();
+});
 
 
+//from old version of front-end js file
+$("#saveSaleOrder1").click(function () {
+    continueToWorkOrder("#saveSaleOrder1");
+});
+$(".form-check > .append-check").click(function () {
+    $rowElement = $(this).parent().parent().parent();
+    if ($(this).prop("checked") == true) {
+        $rowElement.next().show();
+    }
+    else {
+        $rowElement.nextAll().find("input").prop('checked', false);
+        $rowElement.nextUntil("#rowTotal").hide();
+    }
+});
+
+/**
+ * function continueToWorkOrder(x) {
+  if (saveSaleOrder(document.getElementById("saleCustomerForm"), document.getElementById("saleFormInfo"))) {
+    $(`${x} > a`).attr("data-name", "Work Order");
+    $(`${x} > a`).attr("data-parent", "manufacturing");
+    $(`${x} > a`).attr("data-dismiss", "modal");
+    $(`${x} > a`).addClass("nav-link menu");
+    let myVar = setTimeout(function () {
+      $(`${x} > a`).removeClass("nav-link menu");
+    },
+      100);
+  }
+}
+ */
+//end
 
 function sellable() {
-  let checked = document.getElementById("isSellable").checked;
-  if (checked) {
-    let x = 0;
-    document.querySelectorAll('.sellable').forEach(function (input) {
-      input.removeAttribute("disabled");
-    });
-    document.getElementById("isSellable").value = 1;
-   
-  } else {
-    document.querySelectorAll('.sellable').forEach(function (input) {
-      input.setAttribute("disabled", "");
-    });
-    document.getElementById("isSellable").value = 0;
-  }
+    let checked = document.getElementById("isSellable").checked;
+    if (checked) {
+        let x = 0;
+        document.querySelectorAll('.sellable').forEach(function (input) {
+            input.removeAttribute("disabled");
+        });
+        document.getElementById("isSellable").value = 1;
+
+    } else {
+        document.querySelectorAll('.sellable').forEach(function (input) {
+            input.setAttribute("disabled", "");
+        });
+        document.getElementById("isSellable").value = 0;
+    }
 }
 
 function selectSalesMethod() {
@@ -107,6 +141,8 @@ function selectPaymentMethod() {
         document.getElementById("paymentInstallment").style.display = "none";
     }
 }
+
+//For getting details of product
 $("#saleProductCode").change(function () {
     $(".components").html("");
     selected = $("#saleProductCode option:selected").text();
@@ -141,26 +177,26 @@ $("#saleProductCode").change(function () {
               </td>
               <td class="text-center">
                   ` +
-                        component[2] +
-                        `
+                    component[2] +
+                    `
               </td>
               <td class="text-center">
                   ` +
-                        component[1] +
-                        `
+                    component[1] +
+                    `
               </td>
               <td class="mt-available" style="text-align: center;">` +
-                        component[0] +
-                        `</td>
+                    component[0] +
+                    `</td>
               <td class="mt-needed text-center">
                   ` +
-                        $("#saleQuantity").val() * component[0] +
-                        `
+                    $("#saleQuantity").val() * component[0] +
+                    `
               </td>
               <td class="text-danger text-center">
                   ` +
-                        status +
-                        `
+                    status +
+                    `
               </td>
           </tr>`
                 );

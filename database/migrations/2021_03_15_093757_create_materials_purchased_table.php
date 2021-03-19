@@ -22,7 +22,8 @@ class CreateMaterialsPurchasedTable extends Migration
             $table->foreign('item_code')->references('item_code')->on('env_raw_materials');
             # No table yet to reference uom_id
             $table->string('uom_id');
-            $table->integer('quantity_received');
+            $table->integer('quantity_received')->default(0);
+            $table->float('percentage_received')->default(0);
             $table->date('purchase_date');
             # No table yet for req_quotation_id
             $table->integer('req_quotation_id');
