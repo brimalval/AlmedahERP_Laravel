@@ -1,30 +1,31 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
   <div class="container-fluid">
-    <h2 class="navbar-brand" style="font-size: 35px;">New Sales Invoice 1</h2>
+    <h2 class="navbar-brand tab-list-title">
+      <a href='javascript:onclick=loadSalesOrder();' class="fas fa-arrow-left back-button"><span></span></a>
+      <h2 class="navbar-brand" style="font-size: 35px;">Emulsifier</h2>
+    </h2>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav ml-auto">
-
         <li class="nav-item dropdown li-bom">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Get Items From
+            More
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Sales Order</a></li>
-            <li><a class="dropdown-item" href="#">Delivery Note</a></li>
-            <li><a class="dropdown-item" href="#">Quotation</a></li>
-            <li><a class="dropdown-item" href="#">Sales Order</a></li>
-            <li><a class="dropdown-item" href="#">Delivery Note</a></li>
-            <li><a class="dropdown-item" href="#">Sales Order</a></li>
-            <li><a class="dropdown-item" href="#">Delivery Note</a></li>
+            <li><a class="dropdown-item" href="#">Edit</a></li>
+            <li><a class="dropdown-item" href="#">Delete</a></li>
           </ul>
         </li>
         <li class="nav-item li-bom">
-          <button class="btn btn-primary" type="submit" onclick="loadNewBOM()">Save</button>
+          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="">Refresh</button>
         </li>
-        <li></li>
+        <li>
+          <button type="button" class="btn btn-primary" data-target="#saveSale">
+            Save
+          </button>
+        </li>
       </ul>
     </div>
   </div>
@@ -130,7 +131,7 @@
     </div>
     <div id="accountingD" class="collapse">
       <div class="card-body">
-        <?php include 'salesinvoiceSubModules/accountingdimensions.php' ?>
+        @include('modules.selling.salesinvoiceSubModules.accountingdimensions')
       </div>
     </div>
   </div>
@@ -144,7 +145,7 @@
     </div>
     <div id="customerPO" class="collapse" aria-labelledby="heading2">
       <div class="card-body">
-        <?php include 'salesinvoiceSubModules/customerPo.php' ?>
+        @include('modules.selling.salesinvoiceSubModules.customerPo')
       </div>
     </div>
   </div>
@@ -158,7 +159,7 @@
     </div>
     <div id="addresscontact" class="collapse">
       <div class="card-body">
-        <?php include 'salesinvoiceSubModules/addresscontact.php' ?>
+        @include('modules.selling.salesinvoiceSubModules.addresscontact')
         <div class="col-12"><br></div>
         <div class="col-12">
           <hr>
@@ -234,7 +235,7 @@
     </div>
     <div id="timesheet" class="collapse">
       <div class="card-body">
-        <?php include 'salesinvoiceSubModules/timesheet.php' ?>
+        @include('modules.selling.salesinvoiceSubModules.timesheet')
       </div>
     </div>
 
@@ -356,7 +357,7 @@
       </div>
       <div id="loyaltypoints" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/loyaltypoints.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.loyaltypoints')
         </div>
       </div>
     </div>
@@ -370,7 +371,7 @@
       </div>
       <div id="additionaldisc" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/adddiscounts.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.adddiscounts')
         </div>
       </div>
 
@@ -439,7 +440,7 @@
       </div>
       <div id="advancepayments" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/advancepayments.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.advancepayments')
         </div>
       </div>
     </div>
@@ -453,7 +454,7 @@
       </div>
       <div id="paymentterms" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/paymentterms.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.paymentterms')
         </div>
       </div>
     </div>
@@ -467,7 +468,7 @@
       </div>
       <div id="termsconditions" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/termsconditions.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.termsconditions')
         </div>
       </div>
     </div>
@@ -481,7 +482,7 @@
       </div>
       <div id="printingsettings" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/printingsettings.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.printingsettings')
         </div>
       </div>
     </div>
@@ -495,7 +496,7 @@
       </div>
       <div id="accountingdetails" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/accountingdetails.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.accountingdetails')
         </div>
       </div>
     </div>
@@ -509,7 +510,7 @@
       </div>
       <div id="commission" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/commission.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.commission')
         </div>
       </div>
     </div>
@@ -523,7 +524,7 @@
       </div>
       <div id="salesteam" class="collapse">
         <div class="card-body">
-          <?php include 'salesinvoiceSubModules/salesteam.php' ?>
+          @include('modules.selling.salesinvoiceSubModules.salesteam')
           <div class="col-12">
             <hr>
           </div>

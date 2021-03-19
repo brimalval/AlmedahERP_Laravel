@@ -84,6 +84,14 @@ Route::get('/opportunities', function() {
     return view('modules.crm.opportunities');
 });
 
+/**DELIVERY ROUTES */
+Route::get('/delivery', function() {
+    return view('modules.productreleasing.delivery');
+});
+Route::get('/view-delivery-info', function() {
+    return view('modules.productreleasing.deliveryinfo');
+});
+
 /**HR ROUTES */
 Route::get('/hr', function() {
     return view('modules.hr.hr');
@@ -197,6 +205,9 @@ Route::get('/paymententry', function() {
 Route::get('/pendingorders', function() {
     return view('modules.buying.pendingorders');
 });
+Route::get('/view-pending-order', function() {
+    return view('modules.buying.pendingordersinfo');
+});
 
 /**PRICE LIST ROUTES */
 Route::get('/openNewPriceList', function() {
@@ -283,6 +294,9 @@ Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getCompone
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {
     return view('modules.selling.salesinvoice');
+});
+Route::get('/sales-invoice-item', function() {
+    return view('modules.selling.salesinvoiceitem');
 });
 
 /**SELLING ROUTES */

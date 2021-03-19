@@ -237,6 +237,22 @@
                 </a>
             </div>
             <!-- End of Submenu Item Selling -->
+            <!-- Menu Item Product Releasing -->
+            <a href="#submenuProductReleasing" data-toggle="collapse" aria-expanded="false" class="bg-dark bevel list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fas fa-shipping-fast fa-fw mr-3"></span>
+                    <span class="menu-collapsed align-middle smaller">Product Releasing</span>
+                    <span class="submenu-icon ml-auto"></span>
+                </div>
+            </a>
+            <!-- End of Menu Item Product Releasing -->
+            <!-- Submenu Item Product Releasing -->
+            <div id='submenuProductReleasing' class="collapse sidebar-submenu">
+                <a href="#" data-parent="productreleasing" class="menu list-group-item list-group-item-action bg-secondary">
+                    <span class="menu-collapsed align-middle">Delivery</span>
+                </a>
+            </div>
+            <!-- End of Submenu Item Product Releasing -->
             <!-- Menu Item Stock -->
             <a href="#submenuStock" data-toggle="collapse" aria-expanded="false" class="bg-dark bevel list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-start align-items-center">
