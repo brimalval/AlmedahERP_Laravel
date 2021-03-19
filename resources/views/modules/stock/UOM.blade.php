@@ -194,17 +194,18 @@
 
 <script type="text/javascript">
     $("#saveBtn").on('click', function() {
-        var formData = new FormData();
-
-        formData.append("name", $("#name").val());
-        formData.append("conv", $("#conv").val());
-        formData.append("price", $("#price").val());
 
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        var formData = new FormData();
+
+        formData.append("name", $("#name").val());
+        formData.append("conv", $("#conv").val());
+        formData.append("price", $("#price").val());
 
         $.ajax({
             url: '/create-mat-uom',
