@@ -18,7 +18,7 @@
                         <a class="dropdown-item" href="#">Settings</a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" href="#">Refresh</button>
+                <button type="button" class="btn btn-primary ml-1" href="#" onclick="loadManufacturingWorkstation();">Refresh</button>
                 <button type="button" class="btn btn-info ml-1" onclick="openManufacturingWorkstationForm()" href="#">New</button>
             </div>
         </div>

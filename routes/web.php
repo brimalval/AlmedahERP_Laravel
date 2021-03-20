@@ -324,6 +324,9 @@ Route::get('/supplier', function() {
 Route::get('/openSupplierInfo', function() {
     return view('modules.buying.supplierInfo');
 });
+Route::get('/createnewsupplier', function() {
+    return view('modules.buying.createnewsupplier');
+});
 
 /**TASK ROUTES */
 Route::get('/openNewTask', function() {

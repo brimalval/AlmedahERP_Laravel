@@ -24,7 +24,7 @@
         </div>
         <div id="description" class="collapse show" aria-labelledby="heading2">
             <div class="card-body">
-                <?php include 'newsupplier/name_and_type.php' ?>
+                @include('modules.buying.newsupplier.name_and_type')
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
         </div>
         <div id="inventory" class="collapse">
             <div class="card-body">
-                <?php include 'newsupplier/currency_and_pricelist.php' ?>
+                @include('modules.buying.newsupplier.currency_and_pricelist')
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
         </div>
         <div id="auto-re" class="collapse">
             <div class="card-body">
-                <?php include 'newsupplier/credit_limit.php' ?>
+                @include('modules.buying.newsupplier.credit_limit')
             </div>
         </div>
     </div>
@@ -66,7 +66,7 @@
         </div>
         <div id="units-measure" class="collapse">
             <div class="card-body">
-                <?php include 'newsupplier/default-payable-accounts.php' ?>
+                @include('modules.buying.newsupplier.default-payable-accounts')
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
         </div>
         <div id="serial-nos" class="collapse">
             <div class="card-body">
-                <?php include 'newsupplier/more-information.php' ?>
+                @include('modules.buying.newsupplier.more-information')
             </div>
         </div>
     </div>

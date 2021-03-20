@@ -156,7 +156,6 @@
             }
         });
         var formData = new FormData();
-        formData.append('station_id', "sample-id1");
         formData.append('station_name', $("#station_name").val());
         formData.append('description', $("#station_desc").val());
         $.ajax({
@@ -166,7 +165,7 @@
             processData: false,
             contentType: false,
             success: function(data) {
-                $("#divMain").load('/workstation');
+                loadManufacturingWorkstation();
             }
         });
     });

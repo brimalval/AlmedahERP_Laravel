@@ -24,7 +24,7 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="">Refresh</button>
+                        onclick="loadUOM();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-primary" type="submit" onclick="" data-toggle="modal"
@@ -40,7 +40,7 @@
                                 <div class="modal-header">
                                     <h4 class="modal-title">New UOM</h4> <button type="button" class="btn btn-default"
                                         data-dismiss="modal">Close</button> <button type="submit"
-                                        class="btn btn-primary" id="saveBtn">Save</button>
+                                        class="btn btn-primary" data-dismiss="modal" id="saveBtn">Save</button>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST">
@@ -96,7 +96,7 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bom border-bottom">
+        <table class="table table-bom border-bottom" id="UOMTable">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -104,78 +104,34 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td>Name</td>
+                    <td>UOM_ID</td>
                     <td>UOM Name</td>
                     <td></td>
+                    <td>Conversion Factor</td>
                     <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>Price</td>
                     <td>4 of 4</td>
                     <td></td>
                 </tr>
             </thead>
             <tbody class="">
+                @foreach ($uoms as $uom)
                 <tr>
                     <td>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="Millimeter" href='javascript:onclick=openUOMEdit()'>Millimeter</a></td>
-                    <td>Millimeter</td>
+                    <td><a name="{{ $uom->uom_id }}" href='javascript:onclick=openUOMEdit()'>{{ $uom->uom_id }}</a></td>
+                    <td>{{ $uom->item_uom }}</td>
                     <td class="text-black-50"></td>
-                    <td class="text-black-50"></td>
+                    <td>{{ $uom->conversion_factor }}</td>
                     <td></td>
-                    <td>Millimeter</td>
+                    <td>{{ $uom->price }}</td>
                     <td class="text-black-50">9 M</td>
                     <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <!--
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Feet</td>
-                    <td>Feet</td>
-                    <td class="text-black-50"></td>
-                    <td class="text-black-50"></td>
-                    <td></td>
-                    <td>Feet</td>
-                    <td class="text-black-50">9 M</td>
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Piece</td>
-                    <td>Piece</td>
-                    <td class="text-black-50"></td>
-                    <td class="text-black-50"></td>
-                    <td></td>
-                    <td text-align="right">Piece</td>
-                    <td class="text-black-50">9 M</td>
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Parts Per Million</td>
-                    <td>Parts Per Million</td>
-                    <td class="text-black-50"></td>
-                    <td class="text-black-50"></td>
-                    <td></td>
-                    <td>Parts Per Million</td>
-                    <td class="text-black-50">10 M</td>
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>-->
+                </tr>  
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -193,7 +149,13 @@
 </div>
 
 <script type="text/javascript">
-    $("#saveBtn").on('click', function() {
+    function clearForm() {
+        $("#name").val(null);
+        $("#conv").val(null);
+        $("#price").val(null);
+    }
+
+    $("#saveBtn").click(function() {
 
         $.ajaxSetup({
             headers: {
@@ -214,14 +176,31 @@
             contentType: false,
             processData: false,
             success: function(data) {
-                for (var key of formData.entries()) {
-                    console.log(key[0] + ', ' + key[1])
-                }
-                return true;
-
+                clearForm();
+                var uomTbl = $("#UOMTable tbody");
+                uomTbl.append(
+                    `
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                        </td>
+                        <td><a name="` + data.id + `" href='javascript:onclick=openUOMEdit()'>` + data.id + `</a></td>
+                        <td>` + data.name + `</td>
+                        <td></td>
+                        <td>` + data.conversion_factor + `</td>
+                        <td class="text-black-50"></td>
+                        <td>` + data.price + `</td>
+                        <td class="text-black-50">9 M</td>
+                        <td><span class="fas fa-comments"></span>0</td>
+                    </tr>
+                    `
+                );
             }
 
         });
+
     });
 
 </script>

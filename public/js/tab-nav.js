@@ -235,7 +235,7 @@ function openManufacturingItemPriceForm () {
 
 function loadSupplier() {
   $(document).ready(function () {
-    $('#contentSupplier').load('/loadSupplier');
+    $('#contentSupplier').load('/supplier');
   });
 }
 
