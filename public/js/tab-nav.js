@@ -57,6 +57,7 @@ $(document).ready(function () {
               
           });
         }
+        //console.log("/" + $link.toLowerCase());
       });
       $(`#tab${menu}`).tab("show");
     }

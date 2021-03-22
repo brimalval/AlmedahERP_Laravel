@@ -276,6 +276,11 @@ Route::get('/openReportsBuilderForm', function() {
     return view('modules.reports.reportsbuilderform');
 }); 
 
+/**REQUEST FOR QUOTATION ROUTES */
+Route::get('/requestforquotation', function() {
+    return view('modules.buying.requestforquotation');
+});
+
 /**RETAIL ROUTES */
 Route::get('/retail', function() {
     return view('modules.retail.retail');

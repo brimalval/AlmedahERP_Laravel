@@ -173,7 +173,7 @@
                 <a href="#" data-parent="buying" class="list-group-item list-group-item-action bg-secondary">
                     <span class="menu-collapsed align-middle">Purchase Invoice</span>
                 </a>
-                <a href="#" data-parent="buying" class="list-group-item list-group-item-action bg-secondary">
+                <a href="#" data-parent="buying" id="inbox-toggle" class="list-group-item list-group-item-action bg-secondary">
                     <span class="menu-collapsed align-middle">Request for Quotation</span>
                 </a>
                 <a href="#" data-parent="buying" id="inbox-toggle" data-parent="manufacturing" class="menu list-group-item list-group-item-action bg-secondary">
