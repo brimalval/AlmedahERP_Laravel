@@ -59,7 +59,7 @@ class SalesOrderController extends Controller
         //    'productPulledMarket' => 'required|date',
         //    'saleDate' => 'required|date',
         //    'salePaymentMethod' => 'required|alpha_dash',
-//
+        //
         //    'saleProductCode' => 'required|alpha_dash',
         //    'saleQuantity' => 'required|numeric|min:1',
         //    'salesUnit' => 'required|alpha_dash',

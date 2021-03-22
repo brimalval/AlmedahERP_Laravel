@@ -125,8 +125,6 @@ function selectSalesMethod() {
     var selected = document.getElementById("saleSupplyMethod").value;
     if (selected == "Produce") {
         document.getElementById("cardComponent").style.display = "block";
-    } else if (selected == "Purchase") {
-        document.getElementById("cardComponent").style.display = "none";
     } else {
         console.log(selected);
         document.getElementById("cardComponent").style.display = "none";
@@ -142,9 +140,22 @@ function selectPaymentMethod() {
     }
 }
 
+var totalValue = 0;
+var ultimateComponentTable = {};
+
+function componentAdder(name, val){
+    if (name in ultimateComponentTable){
+        ultimateComponentTable[name]["qty"] +=  val;
+    }else{
+        ultimateComponentTable[name] = {"qty": val}
+    }
+}
+
+
 //For getting details of product
 $("#saleProductCode").change(function () {
     $(".components").html("");
+    document.getElementById("btnAddProduct").disabled= false;
     selected = $("#saleProductCode option:selected").text();
     $.ajax({
         url: "/getComponents/" + selected,
@@ -221,3 +232,14 @@ $("#saleQuantity").keyup(function () {
         );
 });
 
+
+function addToTable(){
+    $('#ProductsTable').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  EM181204</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="10"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>' );
+}
+
+function deleteRow(r) {
+    // Index of row
+    console.log(r.parentNode.parentNode.rowIndex);
+
+    $(r).parent().parent().remove();
+}

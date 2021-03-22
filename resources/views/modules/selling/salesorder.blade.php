@@ -273,36 +273,12 @@
                                             <label class="text-nowrap align-middle">
                                                 Sales ID
                                             </label>
-                                            <input type="text" class="form-input form-control" max="20" id="salesId">
-                                            <br>
-                                            <label class="text-nowrap align-middle">
-                                                Sales Unit
-                                            </label>
-                                            <input type="text" class="form-input form-control" max="20" id="salesUnit" name="salesUnit" placeholder="Unit of Measurement">
-                                            <br>
-                                            <label class="text-nowrap align-middle">
-                                                Cost Price
-                                            </label>
-                                            <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Product Pulled Off Market
-                                            </label>
-                                            <input class="form-control" type="date" value="2021-01-01" id="productPulledMarket" name="productPulledMarket">
-                                            <br>
-                                            <label class="text-nowrap align-middle">
-                                                Date
-                                            </label>
-                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate">
+                                            <input type="text" class="form-input form-control" max="20" id="salesId" disabled placeholder="Automatically Generated">
                                             <br>
                                             <label class=" text-nowrap align-middle">
                                                 Product Code
                                             </label>
-                                            <select class="form-control" id="saleProductCode" name="saleProductCode">
+                                            <select class="form-control" id="saleProductCode" name="saleProductCode" >
                                                 <option value="none" selected disabled hidden> 
                                                     Select an Option 
                                                 </option>
@@ -311,6 +287,36 @@
                                                 @endforeach
                                             </select>
                                             <br>
+                                            <label class="text-nowrap align-middle">
+                                                Cost Price
+                                            </label>
+                                            <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" placeholder=0 disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                                Transaction Date
+                                            </label>
+                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" disabled id="currentDate">
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                            Sale Currency
+                                            </label>
+                                            <select class="form-control" id="saleCurrency" name="saleCurrency">
+                                                <option value="none" selected disabled hidden> 
+                                                    Select an Option 
+                                                </option>
+                                                  <option value="Peso">Peso</option>
+                                                  <option value="Euro">Euro</option>
+                                                  <option value="Dollar">Dollar</option>
+                                            </select>
+                                            <br>
+                                            <label class="text-nowrap align-middle">
+                                                Add to list
+                                            </label>
+                                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="addToTable()" id="btnAddProduct" disabled>Add Product</button>
                                         </div>
                                     </div>
                                 </div>
@@ -322,48 +328,13 @@
                                               <td></td>
                                               <td class="font-weight-bold text-center">Product Code</td>
                                               <td class="font-weight-bold text-center">Quantity Purchased</td>
+                                              <td class="font-weight-bold text-center">Actions</td>
                                             </tr>
                                           </thead>
-                                          <tbody>
-                                            <tr>
-                                              <td>
-                                                <div class="form-check">
-                                                  <input type="checkbox" class="form-check-input">
-                                                </div>
-                                              </td>
-                                              <td class="text-center">
-                                                EM181204
-                                              </td>
-                                              <td class="text-center d-flex justify-content-center">
-                                                <input type="text" class="form-control w-25 text-center " value="10">
-                                              </td>
-                                            </tr>
-                                            <tr>
-                                              <td>
-                                                <div class="form-check">
-                                                  <input type="checkbox" class="form-check-input">
-                                                </div>
-                                              </td>
-                                              <td class="text-center">
-                                                GR102346
-                                              </td>
-                                              <td class="d-flex justify-content-center">
-                                                <input type="text" class="form-control w-25 text-center " value="10">
-                                              </td>
-                                            </tr>
-                                            <tr>
-                                              <td>
-                                                <div class="form-check">
-                                                  <input type="checkbox" class="form-check-input">
-                                                </div>
-                                              </td>
-                                              <td class="text-center">
-                                                RB678023
-                                              </td>
-                                              <td class="text-center d-flex justify-content-center">
-                                                <input type="text" class="form-control w-25 text-center " value="10">
-                                              </td>
-                                            </tr>
+                                          <tbody id= "ProductsTable">
+                                            <!-- @TODO Replace this body with materials from current product -->
+                                            
+
                                           </tbody>
                                         </table>
                                     </div>
@@ -371,14 +342,9 @@
                                 <div class="row">
                                     <div class="col">
                                         <label class="text-nowrap align-middle">
-                                            Unrenewed
-                                        </label>
-                                        <input type="text" class="form-input form-control sellable" max="20" id="saleUnrenewed">
-                                        <br>
-                                        <label class="text-nowrap align-middle">
                                             Payment Method
                                         </label>
-                                        <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();" disabled>
+                                        <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
                                             <option selected disabled>Please Select</option>
                                             <option value="Cash">Full Payment(Cash)</option>
                                             <option value="Installment">Installment</option>
@@ -386,29 +352,15 @@
                                         <br>
                                     </div>
                                     <div class="col">
-                                        <label class="text-nowrap align-middle">
-                                            Sale Currency
-                                        </label>
-                                        <input type="text" class="form-input form-control sellable" max="20" id="saleCurrency" name="saleCurrency">
-                                        <br>
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" onchange="selectSalesMethod();" disabled>
+                                        <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" onchange="selectSalesMethod();">
                                             <option selected disabled>Please Select</option>
-                                            <option value="Produce">Produce</option>
-                                            <option value="Purchase">Purchase</option>
-                                            <option value="Stock">From Stock</option>
+                                            <option value="Produce">Instock</option>
+                                            <option value="Purchase">Produce</option>
                                         </select>
                                         <br>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label>
-                                            Description
-                                        </label>
-                                        <input type="text" class="form-input form-control" max="300" id="saleDescription">
                                     </div>
                                 </div>
                                 <div class="row" id="paymentInstallment" style="display:none;">
@@ -424,11 +376,10 @@
                                                 Installment Type
                                             </label>
                                             <select class="form-control" id="installmentType" name="installmentType">
-                                                <option selected value = "Installment 1">Installment 1</option>
-                                                <option value = "Installment 2">Installment 2</option>
-                                                <option value = "Installment 3">Installment 3</option>
-                                                <option value = "Installment 4">Installment 4</option>
-                                                <option value = "Installment 5">Installment 5</option>
+                                                <option selected disabled>Please Select</option>
+                                                <option value = "3 months">Installment 3 months</option>
+                                                <option value = "6 months">Installment 6 months</option>
+                                                <option value = "12 months">Installment 12 months</option>
                                             </select>
                                         </div>
                                     </div>
@@ -741,6 +692,15 @@ var x;
 // From back-end: to show that data can be shown in table
 $(document).ready(function() {
     x = $('#salestable').DataTable();
+
+    // Gets Current date today
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+    document.getElementById('currentDate').value = today;
 });
 
 $("#gotoworkorder").click(function(){
@@ -829,4 +789,8 @@ $("#sales_order_form").submit(function(e) {
 function refresh(){
     x.draw();
 }
+
+
+
+
 </script>

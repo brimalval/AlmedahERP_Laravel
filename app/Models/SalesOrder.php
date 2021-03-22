@@ -17,26 +17,17 @@ class SalesOrder extends Model
         'cost_price',
         'sales_currency',
         'sale_supply_method',
-        'quantity',
-        'stock_unit',
-        'product_launch_date',
-        'product_pulled_off_market',
-        'date',
+        'transaction_date',
         'payment_mode',
+
         'initial_payment',
-        'payment_balance',
-        'payment_track',
-        'payment_status',
+        'installment_type',
         'sales_status',
-        'product_code',
-        'sales_unit',
-        'installment_type'
+        'sales'
     ];
 
     protected $casts = [
-        'product_launch_date' => 'date',
-        'product_pulled_off_market' => 'date', 
-        'date' => 'date', 
+        'transaction_date' => 'date',
     ];
 
 }
