@@ -61,9 +61,7 @@
                     <form>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <!-- display when NEW button is clicked-->
-                                <label for="inputEmail4">Series</label>
-                                <select class="form-control"></select>
+                                &nbsp;
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Date</label>
@@ -105,15 +103,6 @@
                                 </tr>
                                 <?php endfor; ?>
                         </tbody>
-
-                        <tfoot>
-                            <tr>
-                                <td colspan="7 p-5">
-                                    <button class="btn btn-secondary btn-sm">Add Row</button>
-                                </td>
-                            </tr>
-                        </tfoot>
-
                     </table>
 
                     <button class="btn btn-secondary btn-sm">Get Suppliers</button>
@@ -152,68 +141,23 @@
                                 </tr>
                                 <?php endfor; ?>
                         </tbody>
-
-                        <tfoot>
-                            <tr>
-                                <td colspan="7 p-5">
-                                    <button class="btn btn-secondary btn-sm">Add Multiple Row</button>
-                                    <button class="btn btn-secondary btn-sm">Add Row</button>
-                                </td>
-                            </tr>
-                        </tfoot>
-
                     </table>
-
-
-                    <button class="btn btn-secondary btn-sm">Link to Material Requests</button>
-
                 </div>
                 <div class="card-body">
                     <!-- <hr class="mt-2 mb-5">
                     <h6><strong>Message for Supplier</strong></h6> -->
 
                     <form>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Email Template</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                            </div>
-                            <div class="form-group col-md-6">&nbsp;</div>
-                        </div>
-
                         <div class="form-row">
 
                             <div class="form-group col-md-12">
                                 <label for="inputEmail4">Message for Supplier</label>
-                                <textarea id="notes" class="summernote" name="notes"></textarea>
-                            </div>
-
-                        </div>
-                    </form>
-                </div>
-
-                <div class="card-body">
-                    <hr class="mt-2 mb-5">
-                    <h6><strong>Terms and Conditions</strong></h6>
-
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Terms</label>
                                 <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
                             </div>
-                            <div class="form-group col-md-6">&nbsp;</div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="inputEmail4">Terms and Conditions</label>
-                                <textarea id="notes" class="summernote" name="notes"></textarea>
-                            </div>
+
                         </div>
                     </form>
                 </div>
-
                 <div class="card-body">
                     <hr class="mt-2 mb-5">
                     <h6><strong>PRINTING SETTINGS</strong></h6>
@@ -256,6 +200,42 @@
                         </div>
                     </form>
                 </div>
+
+
+                <div class="card-body">
+                    <hr class="mt-5">
+
+                    <form>
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="float-left">Add a comment</span>
+                                <button class="btn btn-secondary btn-sm float-right">Comment</button>
+                            </div>
+                            <div class="card-body p-0">
+                                <textarea id="notes" class="summernote" name="notes"></textarea>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="myTimeline">
+                        <div data-vtdate="February 2020">
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque reprehenderit magnam
+                            fuga iure. Rerum repudiandae blanditiis harum eius fuga voluptatibus illum qui, natus
+                            aliquam et. Porro sequi veritatis aspernatur culpa!
+                        </div>
+                        <div data-vtdate="March 2020">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia eius veniam nulla quia
+                            ipsam a itaque dolorum optio perferendis dolore corporis magnam eligendi facere repellat
+                            fugit, harum voluptatum voluptatibus autem?
+                        </div>
+                        <div data-vtdate="April 2020">
+                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt, quis voluptatibus nulla
+                            odit voluptate omnis a ducimus impedit quasi modi sed esse! Eius repudiandae cumque pariatur
+                            saepe, nemo voluptatibus modi!
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card-footer">
                     <!-- <div class="btn-group" role="group">
                         <button type="button" class="btn btn-dark" href="#">20</button>

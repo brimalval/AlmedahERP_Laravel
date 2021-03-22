@@ -241,12 +241,12 @@ function loadBuyingRequestForQuotation() {
 }
 function openBuyingRequestForQuotationForm() {
   $(document).ready(function () {
-    $('#contentRequestforQuotation').load('modules/buying/requestforquotationform.php?form_type=1');
+    $('#contentRequestforQuotation').load('/new-quotation');
   });
 }
 function viewBuyingRequestForQuotationForm() {
   $(document).ready(function () {
-    $('#contentRequestforQuotation').load('modules/buying/requestforquotationform.php?form_type=2');
+    $('#contentRequestforQuotation').load('/view-quotation');
   });
 }
 

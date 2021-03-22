@@ -280,6 +280,12 @@ Route::get('/openReportsBuilderForm', function() {
 Route::get('/requestforquotation', function() {
     return view('modules.buying.requestforquotation');
 });
+Route::get('/new-quotation', function() {
+    return view('modules.buying.requestforquotationform');
+});
+Route::get('/view-quotation', function() {
+    return view('modules.buying.requestforquotationinfo');
+});
 
 /**RETAIL ROUTES */
 Route::get('/retail', function() {
