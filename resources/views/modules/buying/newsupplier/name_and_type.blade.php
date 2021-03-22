@@ -9,10 +9,8 @@
 			<input type="text" id="sbank" class="form-control font-weight-bold" value="">
 			<label for="snewbank">Tax ID</label>
 			<input type="text" id="sbank" class="form-control font-weight-bold" value="">
-			<label for="snewbank">Tax Category</label>
-			<input type="text" id="sbank" class="form-control font-weight-bold" value="">
-			<label for="snewbank">Tax Withholding Category</label>
-			<input type="text" id="sbank" class="form-control font-weight-bold" value="">
+			<label for="snewaddress">Address</label>
+			<input type="text" id="snewaddress" class="form-control font-weight-bold" value="">
 			<div class="d-flex">
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" id="istransporter">
@@ -34,10 +32,10 @@
 				<option value="Company" selected>Company</option>
 				<option value="Individual">Individual</option>
 			</select>
-			<label for="snewupppan">PAN</label>
-			<input type="text" id="supppan" class="form-control font-weight-bold" value="">
-			<label for="snewlanguage">Print Language</label>
-			<input type="text" id="snewlanguage" class="form-control font-weight-bold" value=""><br>
+			<label for="snewemail">Email</label>
+			<input type="email" id="snewemail" class="form-control font-weight-bold" value="">
+			<label for="snewcontact">Contact No.</label>
+			<input type="text" id="snewcontact" class="form-control font-weight-bold" value=""><br>
 			<div class="d-flex">
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" id="sdisabled">

@@ -239,7 +239,7 @@
                             <label class="text-nowrap align-middle">
                                 Sale Currency
                             </label>
-                            <input type="text" class="form-input form-control sellable" value="{{ $sales_order->sale_currency }}"max="20" id="saleCurrency">
+                            <input type="text" class="form-input form-control sellable" value="{{ $sales_order->sale_currency }}" id="saleCurrency">
                             <br>
                             <label class=" text-nowrap align-middle">
                                 Sales Supply Method

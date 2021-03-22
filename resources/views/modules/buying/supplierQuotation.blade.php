@@ -1,5 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <h2 class="navbar-brand" style="font-size: 35px;">Workstation</h2>
+
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <h2 class="navbar-brand" style="font-size: 35px;">Supplier Quotation</h2>
 
     <div class="collapse navbar-collapse float-right" id="navbarSupportedContent">
         <div class="navbar-nav ml-auto">
@@ -8,18 +9,18 @@
                     <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Menu
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
                         <a class="dropdown-item" href="#">Import</a>
                         <a class="dropdown-item" href="#">User Permissions</a>
-                        <a class="dropdown-item" href="#">Role Permissions Manager</a>
+						<a class="dropdown-item" href="#">Role Permissions Manager</a>
                         <a class="dropdown-item" href="#">Customize</a>
-                        <a class="dropdown-item" href="#">Toggle Sidebar</a>
-                        <a class="dropdown-item" href="#">Share URL</a>
+						<a class="dropdown-item" href="#">Toggle Sidebar</a>
+						<a class="dropdown-item" href="#">Share URL</a>
                         <a class="dropdown-item" href="#">Settings</a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" href="#" onclick="loadManufacturingWorkstation();">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="openManufacturingWorkstationForm()" href="#">New</button>
+                <button type="button" class="btn btn-primary ml-1" href="#">Refresh</button>
+                <button type="button" class="btn btn-info ml-1" onclick="openNewSupplierQuotation();">New</button>
             </div>
         </div>
     </div>
@@ -35,20 +36,22 @@
                             <div class="col-2">
                                 <input type="text" class="form-control" placeholder="Name">
                             </div>
-                            <div class="col-2">
-                                <input type="text" class="form-control" placeholder="Ref DocType">
+							<div class="col-2">
+                                <input type="text" class="form-control" placeholder="Title">
                             </div>
-                            <div class="col-2">
-                                <input type="text" class="form-control" placeholder="">
+							<div class="col-2">
+                                <input type="text" class="form-control" placeholder="Supplier">
+                            </div>
+							<div class="col-2">
+                                <input type="text" class="form-control" placeholder="Title">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="card-body filter align-middle">
-                    <div class="float-left d-flex justify-content-start">
-                        <button class="btn btn-secondary btn-sm ml-1">Add Filter</button>
+                    <div class="float-left">
+                        <button class="btn btn-secondary btn-sm">Add Filter</button>
                     </div>
-
                     <div class="float-right">
                         <span class="text-muted">Last Modified</span>
                         <button class="btn btn-secondary btn-sm">
@@ -56,8 +59,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-display">
-                    <table class="table table-hover h-100">
+				<div class="card-body table-display">
+                    <table class="table table-hover">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="text-center" style="width: 0%;">
@@ -67,15 +70,18 @@
                                     </div>
                                 </th>
                                 <th scope="col" class="text-center" style="width: 0%;">
-                                    <span class="fa fa-heart fa-fw"></span>
                                 </th>
-                                <th scope="col" style="width: 40%;">Name</th>
-                                <th scope="col" style="width: 20%;">Workstation Name</th>
-                                <th scope="col" style="width: 40%;">Description</th>
+                                <th scope="col" style="width: 15%;">Name</th>
+                                <th scope="col" style="width: 10%;">Status</th>
+                                <th scope="col" style="width: 30%;">Grand Total</th>
+                                <th scope="col" style="width: 20%;">&nbsp;</th>
+                                <th scope="col" style="width: 5%;">&nbsp;</th>
+                                <th scope="col" style="width: 0%;">&nbsp;</th>
+                                <th scope="col" style="width: 5%;">&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($stations as $station)
+                            <?php for ($i = 1; $i <= 1; $i++) : ?>
                                 <tr>
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
@@ -84,44 +90,37 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <span class="fa fa-heart fa-fw" style="vertical-align: middle;">
+                                       
                                     </td>
                                     <td>
-                                        <span>{{ $station->station_name }}</span>
-                                    </td>
-                                    <td>{{ $station->station_name }}</td>
-                                    <td>{{ $station->description }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8">
-                                        <div class="text-center" style="padding-top: 100px; padding-bottom: 100px;">
-                                            <h4>No Workstation Found</h4><br>
-                                            <button class="btn btn-primary" onclick="openManufacturingWorkstationForm()">Create a new Workstation</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                            <!--
-                            <?php for ($i = 1; $i <= 10; $i++) : ?>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                            <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="fa fa-heart fa-fw" style="vertical-align: middle;">
+                                        <span onclick='loadSupplierQuotationInfo();' style="cursor: pointer;">
+                                            <?= 'Hi Top ' . $i ?>
+                                        </span>
                                     </td>
                                     <td>
-                                        <span><?= 'Name ' . $i ?></span>
+                                       
+										Submitted
                                     </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                                   <td class="text-right">
+                                       
+                                    </td>
+                                    <td class="text-right">
+                                       R-SQTN-2021-00001
+                                    </td>
+                                    <td class="text-center">
+                                        <span>10 M</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fa fa-square-o fa-2x"></span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <span class="fa fa-comments fa-fw"></span>
+                                            <span>0</span>
+                                        </span>
+                                    </td>
                                 </tr>
                             <?php endfor; ?>
-                            -->
                         </tbody>
                     </table>
                 </div>
@@ -132,7 +131,7 @@
                         <button type="button" class="btn btn-secondary" href="#">500</button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 </div>

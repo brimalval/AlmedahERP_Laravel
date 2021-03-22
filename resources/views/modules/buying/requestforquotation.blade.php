@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <h2 class="navbar-brand" style="font-size: 35px;">Workstation</h2>
+    <h2 class="navbar-brand" style="font-size: 35px;">Request for Quotation</h2>
 
     <div class="collapse navbar-collapse float-right" id="navbarSupportedContent">
         <div class="navbar-nav ml-auto">
@@ -18,8 +18,8 @@
                         <a class="dropdown-item" href="#">Settings</a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" href="#" onclick="loadManufacturingWorkstation();">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="openManufacturingWorkstationForm()" href="#">New</button>
+                <button type="button" class="btn btn-primary ml-1">Refresh</button>
+                <button type="button" class="btn btn-info ml-1" onclick="openBuyingRequestForQuotationForm()">New</button>
             </div>
         </div>
     </div>
@@ -69,13 +69,13 @@
                                 <th scope="col" class="text-center" style="width: 0%;">
                                     <span class="fa fa-heart fa-fw"></span>
                                 </th>
-                                <th scope="col" style="width: 40%;">Name</th>
-                                <th scope="col" style="width: 20%;">Workstation Name</th>
-                                <th scope="col" style="width: 40%;">Description</th>
+                                <th scope="col" style="width: 30%;">Title</th>
+                                <th scope="col" style="width: 20%;">Status</th>
+                                <th scope="col" style="width: 50%;" colspan="4">Grand Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($stations as $station)
+                            <?php for ($i = 1; $i <= 1; $i++) : ?>
                                 <tr>
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
@@ -87,41 +87,39 @@
                                         <span class="fa fa-heart fa-fw" style="vertical-align: middle;">
                                     </td>
                                     <td>
-                                        <span>{{ $station->station_name }}</span>
-                                    </td>
-                                    <td>{{ $station->station_name }}</td>
-                                    <td>{{ $station->description }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8">
-                                        <div class="text-center" style="padding-top: 100px; padding-bottom: 100px;">
-                                            <h4>No Workstation Found</h4><br>
-                                            <button class="btn btn-primary" onclick="openManufacturingWorkstationForm()">Create a new Workstation</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                            <!--
-                            <?php for ($i = 1; $i <= 10; $i++) : ?>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                            <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="fa fa-heart fa-fw" style="vertical-align: middle;">
+                                        <a href="#" onclick="javascript:viewBuyingRequestForQuotationForm();"><?= 'Hi-top' ?></a>
                                     </td>
                                     <td>
-                                        <span><?= 'Name ' . $i ?></span>
+                                        <span>
+                                            <span class="fa fa-circle"></span>
+                                            Submitted
+                                        </span>
                                     </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                                    <td class="text-center" style="width: 40%;">
+                                        <span><?= 'R-SQTN-2021-00001' ?></span>
+                                    </td>
+                                    <td class="text-right" style="width: 5%;">
+                                        <span><?= "$i M" ?></span>
+                                    </td>
+                                    <td class="text-center" style="width: 0%;">
+                                        <span class="fa fa-square-o fa-2x"></span>
+                                    </td>
+                                    <td class="text-center" style="width: 5%;">
+                                        <span>
+                                            <span class="fa fa-comments fa-fw"></span>
+                                            <span>0</span>
+                                        </span>
+                                    </td>
                                 </tr>
                             <?php endfor; ?>
-                            -->
+                            <!-- <tr>
+                                <td colspan="8">
+                                    <div class="text-center" style="padding-top: 100px; padding-bottom: 100px;">
+                                        <h4>No Request for Quotation Found</h4><br>
+                                        <button class="btn btn-primary" onclick="openBuyingRequestForQuotationForm()">Create a new Request for Quotation</button>
+                                    </div>
+                                </td>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>

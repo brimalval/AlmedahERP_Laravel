@@ -22,9 +22,17 @@ class StationController extends Controller
         try {
             $form_data = $request->input();
             $data = new Station();
-            $data->station_id = $form_data["station_id"];
             $data->station_name = $form_data["station_name"];
             $data->description = $form_data["description"];
+
+            // Generate ID for UOM
+            // Based from schema documentation
+            $lastStation = Station::orderby('created_at', 'desc')->first();
+            $nextId = ($lastStation)
+                        ? Station::orderby('created_at', 'desc')->first()->id + 1 
+                        : 1;
+            $data->station_id = "Station_" . $nextId;
+
             $data->save();
         } catch (Exception $e) {
         }

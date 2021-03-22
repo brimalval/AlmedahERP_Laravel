@@ -69,7 +69,7 @@
         </div>
         <div id="dashboard" class="collapse show">
             <div class="card-body">
-                <?php include 'suppSubModules/dashboard.php' ?>
+                @include('modules.buying.suppSubModules.dashboard')
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@
         </div>
         <div id="description" class="collapse" aria-labelledby="heading2">
             <div class="card-body">
-                <?php include 'suppSubModules/name_and_type.php' ?>
+                @include('modules.buying.suppSubModules.name_and_type')
             </div>
         </div>
     </div>
@@ -97,7 +97,7 @@
         </div>
         <div id="inventory" class="collapse">
             <div class="card-body">
-                <?php include 'suppSubModules/currency_and_pricelist.php' ?>
+                @include('modules.buying.suppSubModules.currency_and_pricelist')
             </div>
         </div>
     </div>
@@ -111,7 +111,7 @@
         </div>
         <div id="auto-re" class="collapse">
             <div class="card-body">
-                <?php include 'suppSubModules/credit_limit.php' ?>
+                @include('modules.buying.suppSubModules.credit_limit')
             </div>
         </div>
     </div>
@@ -140,7 +140,7 @@
         </div>
         <div id="units-measure" class="collapse">
             <div class="card-body">
-                <?php include 'suppSubModules/default-payable-accounts.php' ?>
+                @include('modules.buying.suppSubModules.default-payable-accounts')
             </div>
         </div>
     </div>
@@ -154,7 +154,7 @@
         </div>
         <div id="serial-nos" class="collapse">
             <div class="card-body">
-                <?php include 'suppSubModules/more-information.php' ?>
+                @include('modules.buying.suppSubModules.more-information')
             </div>
         </div>
     </div>

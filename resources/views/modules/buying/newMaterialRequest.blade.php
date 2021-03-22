@@ -16,7 +16,7 @@
           </td>
           <td><input class="form-control" type="text" name="item_code" id="mr-code-input-row-${lastRow}"></td>
           <td><input class="form-control" min="0" type="number" name="quantity_requested" id="mr-qty-input-row-${lastRow}"></td>
-          <td><input class="form-control" type="number" name="uom_id" id="mr-uom-input-row-${lastRow}"></td>
+          <td><input class="form-control" type="text" name="uom_id" id="mr-uom-input-row-${lastRow}"></td>
           <td><input class="form-control" type="text" name="purpose" id="mr-purp-input-row-${lastRow}"></td>
         </tr>`);
     }

@@ -9,8 +9,9 @@ class MaterialUOM extends Model
 {
     use HasFactory;
     protected $table = "materials_uom";
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
+        'uom_id',
         'item_uom',
         'conversion_factor',
         'price'

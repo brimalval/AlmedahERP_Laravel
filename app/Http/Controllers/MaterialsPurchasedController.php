@@ -16,4 +16,8 @@ class MaterialsPurchasedController extends Controller
         $materials_purchased = MaterialPurchased::all();
         return view('modules.buying.purchaseorder', ['materials_purchased' => $materials_purchased]);
     }
+
+    function store() {
+        
+    }
 }

@@ -167,7 +167,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">New Order</h5>
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder1" value="Submit">
+                    <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder" value="Submit">
                         Save
                     </button>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
@@ -337,6 +337,14 @@
 
                                           </tbody>
                                         </table>
+                                        <div class="row">
+                                          <div class="col-12 d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary m-1" name='btnSalesCalcualte' id='btnSalesCalcualte'>
+                                              <a class="" href="#" style="text-decoration: none;color:white">
+                                                Calculate
+                                              </a>
+                                          </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -606,6 +614,15 @@
                         </div>
                         <div class="row">
                           <div class="col-12 d-flex justify-content-center">
+                            <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentMethod();">
+                                <option selected disabled>Please Select Payment Type...</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Cheque">Cheque</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12 d-flex justify-content-center">
                             <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
                               <a class="" href="#" style="text-decoration: none;color:white">
                                 Save Payment
@@ -646,6 +663,7 @@
                                   <td class="text-center">Downpayment</td>
                                   <td class="text-center">Cash</td>
                                   <td class="text-center">Paid</td>
+                                  <td class="text-center">Juan Dela Curz</td>
                                 </tr>
                                 <tr>
                                   <td class="text-center">PID-000000001</td>
@@ -654,6 +672,7 @@
                                   <td class="text-center">Downpayment</td>
                                   <td class="text-center">Check</td>
                                   <td class="text-center">Pending</td>
+                                  <td class="text-center">Juan Dela Curz</td>
                                 </tr>
                               </tbody>
                             </table>
