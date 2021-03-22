@@ -68,7 +68,7 @@ $("#closeSaleOrderModal").on('click', function () {
 //  });
 //}
 $("#saveSaleOrder").click(function () {
-    continueToWorkOrder("#saveSaleOrder");
+    //continueToWorkOrder("#saveSaleOrder");
     $("#notif").hide();
 });
 

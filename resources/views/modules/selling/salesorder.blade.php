@@ -167,7 +167,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">New Order</h5>
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder1" value="Submit">
+                    <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder" value="Submit">
                         Save
                     </button>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
@@ -283,7 +283,7 @@
                                             <label class="text-nowrap align-middle">
                                                 Cost Price
                                             </label>
-                                            <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" disabled>
+                                            <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice">
                                         </div>
                                     </div>
                                     <div class="col">
@@ -378,7 +378,7 @@
                                         <label class="text-nowrap align-middle">
                                             Payment Method
                                         </label>
-                                        <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();" disabled>
+                                        <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
                                             <option selected disabled>Please Select</option>
                                             <option value="Cash">Full Payment(Cash)</option>
                                             <option value="Installment">Installment</option>
@@ -394,7 +394,7 @@
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" onchange="selectSalesMethod();" disabled>
+                                        <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" onchange="selectSalesMethod();">
                                             <option selected disabled>Please Select</option>
                                             <option value="Produce">Produce</option>
                                             <option value="Purchase">Purchase</option>

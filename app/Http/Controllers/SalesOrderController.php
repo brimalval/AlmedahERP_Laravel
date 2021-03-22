@@ -85,9 +85,9 @@ class SalesOrderController extends Controller
             $data->cost_price = $form_data['costPrice'];
             $data->sale_supply_method = $form_data['saleSupplyMethod'];
             $data->sale_currency = $form_data['saleCurrency'];
-            $data->quantity = $form_data['saleQuantity'];
-            $data->stock_unit = $form_data['saleStockUnit'];
-            $data->product_launch_date = $form_data['productLaunchDate'];
+            $data->quantity = 1;
+            $data->stock_unit = 'kg';
+            //$data->product_launch_date = $form_data['productLaunchDate'];
             $data->product_pulled_off_market = $form_data['productPulledMarket'];
             $data->date = $form_data['saleDate'];
             $data->product_code = $form_data['saleProductCode'];
@@ -103,7 +103,7 @@ class SalesOrderController extends Controller
             }else{
                 $data->initial_payment = $form_data['saleDownpaymentCost'];
                 // $product_price = ManufacturingProducts::where('product_code', '=', request('saleProductCode'))->first();
-                $data->payment_balance = ($form_data['costPrice'] * $form_data['saleQuantity']) - $data->initial_payment;
+                //$data->payment_balance = ($form_data['costPrice'] * $form_data['saleQuantity']) - $data->initial_payment;
                 //Calculate payment track. I think should be in json
                 // @TODO Json File
                 $data->payment_track = NULL;
