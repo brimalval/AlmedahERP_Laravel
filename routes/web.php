@@ -16,6 +16,7 @@ use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -329,9 +330,7 @@ Route::get('/loadStockEntry', function() {
 });
 
 /**SUPPLIER ROUTES */
-Route::get('/supplier', function() {
-    return view('modules.buying.supplier');
-});
+Route::get('/supplier', [SupplierController::class, 'index']);
 Route::get('/openSupplierInfo', function() {
     return view('modules.buying.supplierInfo');
 });

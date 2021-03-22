@@ -17,5 +17,7 @@ class MaterialsPurchasedController extends Controller
         return view('modules.buying.purchaseorder', ['materials_purchased' => $materials_purchased]);
     }
 
-    function store() {}
+    function store() {
+        
+    }
 }
