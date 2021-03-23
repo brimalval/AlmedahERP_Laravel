@@ -16,19 +16,10 @@ class CreateMatRequestsTable extends Migration
         Schema::create('env_material_requests', function (Blueprint $table) {
             $table->id();
             $table->string('request_id')->unique();
-            $table->string('item_code');
-            $table->foreign('item_code')->references('item_code')->on('env_raw_materials');
-            $table->integer('quantity');
+            $table->date('request_date');
             $table->date('required_date');
-            //foreign key needed here
-            $table->string('reorder_id');
-            //
             $table->string('purpose');
-            //foreign key needed for uom
-            $table->string('uom_id');
-            $table->string('station_id');
-            $table->string('procurement_method');
-            $table->foreign('station_id')->references('station_id')->on('stations');
+            $table->string('mr_status');
             $table->timestamps();
         });
     }

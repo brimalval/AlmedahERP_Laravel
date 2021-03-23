@@ -1,3 +1,10 @@
+<script>
+    function loadEdit(url){
+        $('#modal-form').html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
+        $('#modal-form').load(url);
+    }
+</script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" >
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Material Request</h2>
@@ -25,51 +32,12 @@
         </div>
     </div>
 </nav>
-
+<br>
 <div class="container">
-    <div class="card my-2">
-        <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Name">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Title">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Requested For">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body filter">
-            <div class="row">
-                <div class="float-left">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Add Filter
-                    </button>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Clear Filters
-                    </button>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Status = Active
-                    </button>
-                </div>
-                <div class=" ml-auto float-right">
-                    <span class="text-muted ">Last Modified On</span>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+    
         <hr>
-        <table class="table table-bom border-bottom">
+        <table id="mat-req-table" class="table table-bom border-bottom">
+        
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -77,13 +45,11 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td>Item Code</td>
-                    <td>Quantity</td>
+                    <td>Request ID</td>
+                    <td>Status</td>
                     <td>Required Date</td>
                     <td>Purpose</td>
-                    <td>UOM ID</td>
-                    <td>Station ID</td>
-
+                    <td>Action</td>
                     <td></td>
                 </tr>
             </thead>
@@ -95,13 +61,21 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="{{ $mat_request->request_id }}" href='javascript:onclick=openMaterialRequestInfo();'>{{ $mat_request->item_code }}</a></td>
-                    <td>{{ $mat_request->quantity }}</td>
+                    <td><a name="{{ $mat_request->request_id }}" href='javascript:onclick=openMaterialRequestInfo();'>{{ $mat_request->request_id }}</a></td>
+                    <td>{{ $mat_request->mr_status }}</td>
                     <td class="text-black-50">{{ $mat_request->required_date }}</td>
                     <td class="text-black-50">{{ $mat_request->purpose }}</td>
-                    <td>{{ $mat_request->uom_id }}</td>
-                    <td class="text-black-50">{{ $mat_request->station_id }}</td>
-
+                    <td>
+                    <button class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
+                    {{-- <a href="{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}" class="btn btn-outline-warning" ><i class="fa fa-edit"></i></a> --}}
+                    <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-outline-danger" ><i class="fa fa-trash"></i></a>
+                    </form>
+                    
+                    
+                    </td>
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
             @endforeach
@@ -158,8 +132,16 @@
 
 </div>
 
+
+@include('modules.buying.materialReqmodules.edit_matreq')
 <style>
     .conContent {
         padding: 200px;
     }
 </style>
+
+<script>
+$(document).ready(function() {
+    $('#mat-req-table').DataTable();
+} );
+</script>
