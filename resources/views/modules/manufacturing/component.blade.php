@@ -110,13 +110,15 @@ var i = 1;
         var tableBody = $("#rawMats");
         tableBody.append(
             `
-                <tr class="center"><input type="checkbox" name="" id="check` + i + `"></tr>
-                <tr><input type="text" name="rawMat` + i + `" id="rawMat` + i + `"></tr>
-                <tr><input type="number" name="qty` + i + `" id="qty` + i + `"></tr>
+                <tr class="center">
+                    <td><input type="checkbox" name="" id="check${i}"></td>
+                    <td><input class="form-control" type="text" name="rawMat${i}" id="rawMat${i}"></td>
+                    <td><input class="form-control" type="number" name="qty${i}" id="qty${i}" min="1"></td>
+                </tr>
             `
         );
         i++;
-        console.log('added!');
+        console.log('added!' + i);
 
     }
 
