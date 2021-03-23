@@ -336,9 +336,8 @@ Route::get('/loadStockEntry', function() {
 
 /**SUPPLIER ROUTES */
 Route::get('/supplier', [SupplierController::class, 'index']);
-Route::get('/openSupplierInfo', function() {
-    return view('modules.buying.supplierInfo');
-});
+Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
+Route::post('/create-supplier', [SupplierController::class, 'store']);
 Route::get('/createnewsupplier', function() {
     return view('modules.buying.createnewsupplier');
 });

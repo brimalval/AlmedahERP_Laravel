@@ -263,9 +263,9 @@ function loadSupplier() {
   });
 }
 
-function openSupplierInfo() {
+function openSupplierInfo(id) {
   $(document).ready(function () {
-    $('#contentSupplier').load('/openSupplierInfo');
+    $('#contentSupplier').load('/view-supplier/' + id);
   });
 }
 
