@@ -168,7 +168,7 @@ class MatRequestController extends Controller
             }
             return response()->json([
                 'status' => 'success',
-                'request' => $request->all(),
+                'update' => true,
                 'materialrequest' => $materialrequest,
             ]);
         }catch(Exception $e){
@@ -177,12 +177,6 @@ class MatRequestController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
-
-        return response()->json([
-            'status' => 'dd',
-            'request' => $request->all(),
-            'materialrequest' => $materialrequest,
-        ]);
     }
 
     /**
@@ -193,6 +187,19 @@ class MatRequestController extends Controller
      */
     public function destroy(MaterialRequest $materialrequest)
     {
-        //
+        $id = $materialrequest->id;
+        try{
+            RequestedRawMat::where('request_id', '=', $materialrequest->request_id)->delete();
+            $materialrequest->delete();
+            return response()->json([
+                'status' => 'success',
+                'id' => $id,
+            ]);
+        } catch(Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }

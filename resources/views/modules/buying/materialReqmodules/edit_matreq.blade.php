@@ -16,7 +16,7 @@
         <div id="modal-form">
 
         </div>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" onclick="$('#editModal').modal('hide')">Close</button>
         <button type="button" onclick="$('#mat-req').submit()" class="btn btn-primary">Save</button>
       </div>
     </div>

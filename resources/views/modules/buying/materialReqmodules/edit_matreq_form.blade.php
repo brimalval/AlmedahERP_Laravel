@@ -47,6 +47,7 @@
               </div>
               <br>
               <label>Item</label>
+              <div id="items-border-div" class="mb-3">
               <table class="table border-bottom table-hover table-bordered" id="items-tbl">
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
@@ -102,6 +103,7 @@
                     @endforeach
                 </tbody>
               </table>
+              </div>
               <td colspan="7" rowspan="5">
                 <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
                 <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>

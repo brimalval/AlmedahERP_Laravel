@@ -1,5 +1,4 @@
 function addRow(){
-
     if($('#no-data')[0]){
     $('#no-data').remove();
     }
@@ -31,16 +30,37 @@ function addRow(){
     $('#selects select[name="item_code[]"]').clone().appendTo(`#items-tbl tr:last .mr-code-input`);
     $('#selects select[name="station_id[]"]').clone().appendTo(`#items-tbl tr:last .mr-target-input`);
 }
+// Delete form submission
+$(document).on('submit', 'form.mr-delete-form', function(){
+    let row = $(this).parents('tr');
+    $.ajax({
+        type: 'POST',
+        url: this.action,
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function(data){
+            console.log(data);
+            row.remove();
+        },
+        error: function(data){
+            console.log("error");
+            console.log(data);
+        }
+    });
+    return false;
+});
 $(document).ready(function(){
     // Item row delete button functionality
     $('body').on('click', '.delete-btn', function(e){
-    e.preventDefault();
-    $(this).parents('tr').remove();
+        e.preventDefault();
+        $(this).parents('tr').remove();
     });
     // Making sure that none of the buttons inside the form submit it,
     // only the button outside of the form ("save" button) can submit
     $('#mat-req button').each(function(index){
-    $(this).attr('type', 'button');
+        $(this).attr('type', 'button');
     });
     $('#mat-req').submit(function(){
     $.ajax({
@@ -52,8 +72,26 @@ $(document).ready(function(){
         cache: false,
         success: function(data){
             console.log(data);
+            if(data.status == 'success'){ 
+                // If the form's objective is to update, update the row
+                if(data.update){
+                    let row = $(`#mr-row-${data.materialrequest.id}`);
+                    row.children('td.mr-req-date').text(data.materialrequest.required_date);
+                    row.children('td.mr-purpose').text(data.materialrequest.purpose);
+                    $('#editModal').modal('hide');
+                    $('#mat-req').remove();
+                }
+                // Otherwise, go back
+                else{
+                    loadMaterialRequest();
+                }
+             } else{
+                 alert('Error! Please ensure that all fields are filled in and valid!');
+             }
         },
         error: function(data){
+            // REMEMBER TO REPLACE THIS WITH BETTER ERROR INDICATION
+            alert(`Error! Make sure all fields are filled in and have valid data!`);
             console.log("error");
             console.log(data);
         }
@@ -61,3 +99,9 @@ $(document).ready(function(){
     return false;
     });
 });
+
+// Clicking the edit button for each of the rows invokes this function
+function loadEdit(url){
+    $('#modal-form').html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
+    $('#modal-form').load(url);
+}

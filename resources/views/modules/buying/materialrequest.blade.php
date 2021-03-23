@@ -1,9 +1,3 @@
-<script>
-    function loadEdit(url){
-        $('#modal-form').html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
-        $('#modal-form').load(url);
-    }
-</script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" >
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
@@ -55,23 +49,23 @@
             </thead>
             <tbody class="">
             @foreach($mat_requests as $mat_request)
-                <tr>
+                <tr id="mr-row-{{ $mat_request->id }}">
                     <td>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="{{ $mat_request->request_id }}" href='javascript:onclick=openMaterialRequestInfo();'>{{ $mat_request->request_id }}</a></td>
-                    <td>{{ $mat_request->mr_status }}</td>
-                    <td class="text-black-50">{{ $mat_request->required_date }}</td>
-                    <td class="text-black-50">{{ $mat_request->purpose }}</td>
+                    <td class="mr-request-id"><a name="{{ $mat_request->request_id }}" href='javascript:onclick=openMaterialRequestInfo();'>{{ $mat_request->request_id }}</a></td>
+                    <td class="mr-rq-status">{{ $mat_request->mr_status }}</td>
+                    <td class="text-black-50 mr-req-date">{{ $mat_request->required_date }}</td>
+                    <td class="text-black-50 mr-purpose">{{ $mat_request->purpose }}</td>
                     <td>
                     <button class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
                     {{-- <a href="{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}" class="btn btn-outline-warning" ><i class="fa fa-edit"></i></a> --}}
-                    <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}">
+                    <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-outline-danger" ><i class="fa fa-trash"></i></a>
+                        <button type="submit" class="mr-delete-btn btn btn-outline-danger" onclick="return confirm('Are you sure? you want to delete this request?')"><i class="fa fa-trash"></i></a>
                     </form>
                     
                     
