@@ -119,6 +119,7 @@ Route::patch('/update-material/{id}', [MaterialsController::class,'update'])->na
 Route::post('/delete-material/{id}', [MaterialsController::class, 'delete']);
 Route::post('/create-categories' , [MaterialsController::class, 'storeCategory']);
 Route::post('/add-stock/{id}', [MaterialsController::class,'addStock'])->name('material.add-stock');
+Route::post('/search-item', [MaterialsController::class, 'searchMaterial']);
 
 /**ITEM ROUTES */
 Route::get('/item',[ProductsController::class, 'index']);
@@ -338,8 +339,15 @@ Route::get('/loadStockEntry', function() {
 Route::get('/supplier', [SupplierController::class, 'index']);
 Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
 Route::post('/create-supplier', [SupplierController::class, 'store']);
+Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
+Route::get('/search/{supplier_id}', [SupplierController::class, 'getBySuppID']);
 Route::get('/createnewsupplier', function() {
     return view('modules.buying.createnewsupplier');
+});
+
+/**SUPPLIER QUOTATION ROUTES */ 
+Route::get('/supplierquotation', function() {
+    return view('modules.buying.supplierQuotation');
 });
 
 /**TASK ROUTES */

@@ -98,9 +98,12 @@
                                         <label class="custom-control-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </td>
-                                <td><input class="form-control" type="text" name="supp1" id="supp1"></td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
+                                <td><input class="form-control" type="text" name="supp1" id="supp1"
+                                        onkeyup="searchSupplier(1);"></td>
+                                <td><input class="form-control" type="text" name="suppCont1" id="suppCont1" disabled>
+                                </td>
+                                <td><input class="form-control" type="text" name="suppEmail1" id="suppEmail1" disabled>
+                                </td>
                                 <td>&nbsp;</td>
                             </tr>
                         </tbody>
@@ -123,19 +126,79 @@
                                     <tr>
                                         <td class="text-center">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck` + suppNo + `">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck` +
+                                    suppNo + `">
                                                 <label class="custom-control-label" for="customCheck` + suppNo + `">&nbsp;</label>
                                             </div>
                                         </td>
-                                        <td><input class="form-control" type="text" name="supp` + suppNo + `" id="supp` + suppNo + `"></td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
+                                        <td><input class="form-control" type="text" name="supp` + suppNo +
+                                    `" id="supp` + suppNo + `" onkeyup="searchSupplier(` + suppNo + `)"></td>
+                                        <td><input class="form-control" type="text" name="suppCont` + suppNo +
+                                    `" id="suppCont` + suppNo + `" disabled></td>
+                                        <td><input class="form-control" type="text" name="suppEmail` + suppNo +
+                                    `" id="suppEmail` + suppNo + `" disabled></td>
                                         <td>&nbsp;</td>    
                                     </tr>
                                     `
                                 );
                                 suppNo++;
                             });
+
+                            function searchSupplier(id) {
+                                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                                var input_id = "#supp" + id;
+                                console.log(input_id);
+                                $(document).ready(function() {
+                                    $(input_id).autocomplete({
+                                        source: function(request, response) {
+                                            $.ajax({
+                                                url: '/search-supplier',
+                                                type: 'POST',
+                                                dataType: 'json',
+                                                data: {
+                                                    _token: CSRF_TOKEN,
+                                                    search: request.term
+                                                },
+                                                success: function(data) {
+                                                    response(data);
+                                                }
+                                            });
+                                        },
+                                        select: function(event, ui) {
+                                            //Set selection
+                                            $(input_id).val(ui.item.supplier_id);
+                                            showSupplierDetails(id, ui.item.supplier_id);
+                                            return false;
+                                        }
+                                    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+                                        return $("<li></li>").data("item.autocomplete", item)
+                                            .append(
+                                                `
+                                                <a class='form-control'>
+                                                    <strong> ` + item.company_name + `</strong> - ` + item
+                                                .supplier_id + `
+                                                </a>
+                                                `
+                                            ).appendTo(ul);
+                                    }
+                                });
+                            }
+
+                            function showSupplierDetails(index, supp_id) {
+                                var suppCont = "#suppCont" + index;
+                                var suppEmail = "#suppEmail" + index;
+                                $.ajax({
+                                    method: "GET",
+                                    url: '/search/' + supp_id,
+                                    data: {
+                                        'supp_id': supp_id
+                                    },
+                                    success: function(data) {
+                                        $(suppCont).val(data.supplier[0].phone_number);
+                                        $(suppEmail).val(data.supplier[0].supplier_email);
+                                    }
+                                });
+                            }
 
                         </script>
 
@@ -170,10 +233,12 @@
                                         <label class="custom-control-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </td>
-                                <td><input class="form-control" type="text" name="item1" id="item1"></td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
+                                <td><input class="form-control" type="text" name="item1" id="item1"
+                                        onkeyup="searchMaterial(1);"></td>
+                                <td><input class="form-control" type="number" min="1" name="itemQty1" id="itemQty1">
+                                </td>
+                                <td><input class="form-control" type="date" name="itemDate1" id="itemDate1"></td>
+                                <td><input class="form-control" type="text" name="itemWH1" id="itemWH1"></td>
                             </tr>
                         </tbody>
 
@@ -196,19 +261,63 @@
                                     <tr>
                                         <td class="text-center">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck` + itemNo + `">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck` +
+                                    itemNo + `">
                                                 <label class="custom-control-label" for="customCheck` + itemNo + `">&nbsp;</label>
                                             </div>
                                         </td>
-                                        <td><input class="form-control" type="text" name="item` + itemNo + `" id="item` + itemNo + `"></td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>    
+                                        <td><input class="form-control" type="text" name="item` + itemNo +
+                                    `" id="item` + itemNo + `" onkeyup="searchMaterial(` + itemNo + `);"></td>
+                                        <td><input class="form-control" type="number" min="1" name="itemQty` + itemNo +
+                                    `" id="itemQty` + itemNo + `"></td>
+                                        <td><input class="form-control" type="date" name="itemDate` + itemNo +
+                                    `" id="itemDate` + itemNo + `"></td>
+                                        <td><input class="form-control" type="text" name="itemWH` + itemNo +
+                                    `" id="itemWH` + itemNo + `"></td>    
                                     </tr>
                                     `
                                 );
                                 itemNo++;
                             });
+
+                            function searchMaterial(id) {
+                                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                                var input_id = "#item" + id;
+                                console.log(input_id);
+                                $(document).ready(function() {
+                                    $(input_id).autocomplete({
+                                        source: function(request, response) {
+                                            $.ajax({
+                                                url: '/search-item',
+                                                type: 'POST',
+                                                dataType: 'json',
+                                                data: {
+                                                    _token: CSRF_TOKEN,
+                                                    search: request.term
+                                                },
+                                                success: function(data) {
+                                                    response(data);
+                                                }
+                                            });
+                                        },
+                                        select: function(event, ui) {
+                                            //Set selection
+                                            $(input_id).val(ui.item.item_code);
+                                            return false;
+                                        }
+                                    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+                                        return $("<li></li>").data("item.autocomplete", item)
+                                            .append(
+                                                `
+                                                <a class='form-control'>
+                                                    <strong> ` + item.item_name + `</strong> - ` + item
+                                                .item_code + `
+                                                </a>
+                                                `
+                                            ).appendTo(ul);
+                                    }
+                                });
+                            }
 
                         </script>
 
