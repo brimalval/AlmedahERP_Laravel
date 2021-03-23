@@ -137,6 +137,12 @@ function loadInv() {
   });
 }
 
+function loadComponent() {
+  $(document).ready(function () {
+    $('#contentComponent').load('/component');
+  });
+}
+
 function loadWorkOrder() {
   $(document).ready(function () {
     $('#contentWorkOrder').load('/workorder');

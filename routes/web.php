@@ -65,6 +65,11 @@ Route::get('/buying', function() {
     return view('modules.buying.Buying');
 });
 
+/**COMPONENTS ROUTES */
+Route::get('/component', function() {
+    return view('modules.manufacturing.component');
+});
+
 /**CRM ROUTES */
 Route::get('/contacts', function() {
     return view('modules.crm.contacts');

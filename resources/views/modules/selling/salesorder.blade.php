@@ -275,41 +275,20 @@
                                             </label>
                                             <input type="text" class="form-input form-control" max="20" id="salesId">
                                             <br>
-                                            <label class="text-nowrap align-middle">
-                                                Sales Unit
+                                            <label class=" text-nowrap align-middle">
+                                                Product Code
                                             </label>
-                                            <input type="text" class="form-input form-control" max="20" id="salesUnit" name="salesUnit" placeholder="Unit of Measurement">
+                                            <input type="text" class="form-input form-control" id="saleProductCode" name="saleProductCode" >
                                             <br>
-                                            <label class="text-nowrap align-middle">
-                                                Cost Price
-                                            </label>
-                                            <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Product Pulled Off Market
-                                            </label>
-                                            <input class="form-control" type="date" value="2021-01-01" id="productPulledMarket" name="productPulledMarket">
-                                            <br>
                                             <label class="text-nowrap align-middle">
                                                 Date
                                             </label>
                                             <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Product Code
-                                            </label>
-                                            <select class="form-control" id="saleProductCode" name="saleProductCode">
-                                                <option value="none" selected disabled hidden> 
-                                                    Select an Option 
-                                                </option>
-                                                @foreach ($products as $row)
-                                                    <option value="{{$row->product_code}}">{{$row->product_code}}</option>
-                                                @endforeach
-                                            </select>
                                             <br>
                                         </div>
                                     </div>
@@ -322,6 +301,7 @@
                                               <td></td>
                                               <td class="font-weight-bold text-center">Product Code</td>
                                               <td class="font-weight-bold text-center">Quantity Purchased</td>
+                                              <td class="font-weight-bold text-center">Cost Per Unit</td>
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -337,6 +317,7 @@
                                               <td class="text-center d-flex justify-content-center">
                                                 <input type="text" class="form-control w-25 text-center " value="10">
                                               </td>
+                                              <td class="text-center">5000.00</td>
                                             </tr>
                                             <tr>
                                               <td>
@@ -350,6 +331,7 @@
                                               <td class="d-flex justify-content-center">
                                                 <input type="text" class="form-control w-25 text-center " value="10">
                                               </td>
+                                              <td class="text-center">5000.00</td>
                                             </tr>
                                             <tr>
                                               <td>
@@ -363,6 +345,7 @@
                                               <td class="text-center d-flex justify-content-center">
                                                 <input type="text" class="form-control w-25 text-center " value="10">
                                               </td>
+                                              <td class="text-center">5000.00</td>
                                             </tr>
                                           </tbody>
                                         </table>
@@ -379,9 +362,9 @@
                                 <div class="row">
                                     <div class="col">
                                         <label class="text-nowrap align-middle">
-                                            Unrenewed
+                                            Cost Price
                                         </label>
-                                        <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" disabled>
+                                        <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice">
                                         <br>
                                         <label class="text-nowrap align-middle">
                                             Payment Method
@@ -394,11 +377,6 @@
                                         <br>
                                     </div>
                                     <div class="col">
-                                        <label class="text-nowrap align-middle">
-                                            Sale Currency
-                                        </label>
-                                        <input type="text" class="form-input form-control sellable" max="20" id="saleCurrency" name="saleCurrency">
-                                        <br>
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
@@ -411,6 +389,7 @@
                                         <br>
                                     </div>
                                 </div>
+                                
                                 <div class="row">
                                     <div class="col">
                                         <label>
@@ -663,13 +642,67 @@
                         </div>
                         <div class="row">
                           <div class="col-12 d-flex justify-content-center">
-                            <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentMethod();">
+                            <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentType(this);">
                                 <option selected disabled>Please Select Payment Type...</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Cheque">Cheque</option>
                             </select>
                           </div>
                         </div>
+                        <!-- CASH FORM -->
+                        <div class="row mt-2 mb-2" style="display:none" id="cashForm">
+                          <div class="col mt-2 mb-2">
+                            <label class=" text-nowrap align-middle">
+                                Transaction Handler
+                            </label>
+                            <input type="text" class="form-input form-control" id="salesCashHandler" name="salesCashHandler" >
+                          </div>
+                          <div class="col mt-2 mb-2">
+                            <label class=" text-nowrap align-middle">
+                                Amount Paid
+                            </label>
+                            <input type="number" class="form-input form-control" id="salesCashAmountPaid" name="salesCashAmountPaid" >
+                          </div>
+                        </div>
+                        <!-- END OF CASH FORM -->
+                        <!-- CHEQUE FROM -->
+                        <div class="row mt-2 mb-2" style="display:none" id="chequeForm">
+                          <div class="col mt-2 mb-2">
+                            <label class="text-nowrap align-middle">
+                                Date
+                            </label>
+                            <input class="form-control" type="date" value="2021-01-01" id="saleChequeDate" name="saleChequeDate">
+                            <label class=" text-nowrap align-middle">
+                              Transaction Handler
+                            </label>
+                            <input type="text" class="form-input form-control" id="salesChequeHandler" name="salesChequeHandler" >
+                          </div>
+                          <div class="col mt-2 mb-2">
+                            <label class=" text-nowrap align-middle">
+                                Account Number
+                            </label>
+                            <input type="number" class="form-input form-control" id="salesAccountNumber" name="salesAccountNumber" >
+                            <label class=" text-nowrap align-middle">
+                                Amount Paid
+                            </label>
+                            <input type="number" class="form-input form-control" id="salesChequeAmountPaid" name="salesChequeAmountPaid" >
+                          </div>
+                        </div>
+                        <!-- END CHEQUE FROM -->
+                        <script>
+                          function selectPaymentType(select){
+                            if(select.value== "Cash"){
+                              document.getElementById('cashForm').style.display = "";
+                            } else {
+                              document.getElementById('cashForm').style.display = "none";
+                            }
+                            if(select.value== "Cheque"){
+                              document.getElementById('chequeForm').style.display = "";
+                            } else {
+                              document.getElementById('chequeForm').style.display = "none";
+                            }
+                          }
+                        </script>
                         <div class="row">
                           <div class="col-12 d-flex justify-content-center">
                             <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
@@ -702,6 +735,7 @@
                                   <td class="text-center font-weight-bold">Description</td>
                                   <td class="text-center font-weight-bold">Payment Method</td>
                                   <td class="text-center font-weight-bold">Status</td>
+                                  <td class="text-center font-weight-bold">Transaction Handler</td>
                                 </tr>
                               </thead>
                               <tbody>
@@ -754,14 +788,11 @@
 
 
 <script type="text/javascript">
-
 var x;
-
 // From back-end: to show that data can be shown in table
 $(document).ready(function() {
     x = $('#salestable').DataTable();
 });
-
 // For the search suggestion of customer
 function customeridselector(value){
     if(value == " + Add new" || value==""){
@@ -794,13 +825,11 @@ function findRow(value){
             "branch_name": "{{ $rows->branch_name}}",
             "company_name": "{{ $rows->company_name }}",
             "address": "{{ $rows->address}}"};
-
         if ({{$rows->id}} == value){
             return test1;
         }
     @endforeach
 }
-
 // For creation of sales order
 $("#sales_order_form").submit(function(e) {
     e.preventDefault();
@@ -824,7 +853,6 @@ $("#sales_order_form").submit(function(e) {
             $('#saveSaleOrder1').click(function() {
                 $('#newSalePrompt').modal('hide');
             });
-
             x.row.add( [
             data['id'],
             data['product_code'],
@@ -842,7 +870,6 @@ $("#sales_order_form").submit(function(e) {
         }
     });
 });
-
 function refresh(){
     x.draw();
 }
