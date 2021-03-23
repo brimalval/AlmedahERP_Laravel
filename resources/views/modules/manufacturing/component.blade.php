@@ -79,13 +79,13 @@
                         </div>
                     </div>
                     <div class="row mt-2 m-1 d-flex justify-content-center">
-                        <table id="newCompnentTable" class="table table-striped table-bordered hover">
+                        <table id="newComponentTable" class="table table-striped table-bordered hover">
                             <thead>
                                 <th class="center"><input type="checkbox" name="" id=""></th>
                                 <th>Raw Materials Name</th>
                                 <th>Qty</th>
                             </thead>
-                            <tbody>
+                            <tbody id="rawMats">
 
                             </tbody>
                         </table>
@@ -103,6 +103,24 @@
 </div>
 <!-- End of Modal -->
 <script>
+
+var i = 1;
+
+    function addRowNewComponent() {
+        var tableBody = $("#rawMats");
+        tableBody.append(
+            `
+                <tr class="center"><input type="checkbox" name="" id="check` + i + `"></tr>
+                <tr><input type="text" name="rawMat` + i + `" id="rawMat` + i + `"></tr>
+                <tr><input type="number" name="qty` + i + `" id="qty` + i + `"></tr>
+            `
+        );
+        i++;
+        console.log('added!');
+
+    }
+
+
     $(document).ready(function () {
         $('#componentTable').DataTable();
     });
