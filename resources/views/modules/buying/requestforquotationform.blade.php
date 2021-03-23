@@ -67,15 +67,15 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Date</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
+                                <input type="date" class="form-control" id="inputEmail4" placeholder=""></select>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="card-body">
                     <hr class="mt-2 mb-5">
-                    <h6><strong>Supplier Detail</strong></h6>
-                    <table class="table table-hover table-bordered">
+                    <h6><strong>Supplier Detail</strong></h6><br>
+                    <table class="table table-hover table-bordered" id="suppTbl">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-center" style="width: 0%;">
@@ -91,28 +91,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
+                            <tr>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1">
                                         <label class="custom-control-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </td>
+                                <td><input class="form-control" type="text" name="supp1" id="supp1"></td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                </tr>
-                                <?php endfor; ?>
+                            </tr>
                         </tbody>
 
                         <tfoot>
                             <tr>
                                 <td colspan="7 p-5">
-                                    <button class="btn btn-secondary btn-sm">Add Row</button>
+                                    <button class="btn btn-secondary btn-sm" id="addSupp">Add Row</button>
                                 </td>
                             </tr>
                         </tfoot>
+
+                        <script type="text/javascript">
+                            var suppNo = 2;
+
+                            $("#addSupp").click(function() {
+                                var suppTblBody = $("#suppTbl tbody");
+                                suppTblBody.append(
+                                    `
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck` + suppNo + `">
+                                                <label class="custom-control-label" for="customCheck` + suppNo + `">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td><input class="form-control" type="text" name="supp` + suppNo + `" id="supp` + suppNo + `"></td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>    
+                                    </tr>
+                                    `
+                                );
+                                suppNo++;
+                            });
+
+                        </script>
 
                     </table>
 
@@ -121,7 +146,7 @@
                 <div class="card-body">
                     <hr class="mt-2 mb-5">
                     <h6><strong>Items</strong></h6>
-                    <table class="table table-hover table-bordered">
+                    <table class="table table-hover table-bordered" id="itemTbl">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-center" style="width: 0%;">
@@ -138,29 +163,54 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
+                            <tr>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1">
                                         <label class="custom-control-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </td>
+                                <td><input class="form-control" type="text" name="item1" id="item1"></td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                </tr>
-                                <?php endfor; ?>
+                            </tr>
                         </tbody>
 
                         <tfoot>
                             <tr>
                                 <td colspan="7 p-5">
                                     <button class="btn btn-secondary btn-sm">Add Multiple Row</button>
-                                    <button class="btn btn-secondary btn-sm">Add Row</button>
+                                    <button class="btn btn-secondary btn-sm" id="itemBtn">Add Row</button>
                                 </td>
                             </tr>
                         </tfoot>
+
+                        <script type="text/javascript">
+                            var itemNo = 2;
+
+                            $("#itemBtn").click(function() {
+                                var itemTblBody = $("#itemTbl tbody");
+                                itemTblBody.append(
+                                    `
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck` + itemNo + `">
+                                                <label class="custom-control-label" for="customCheck` + itemNo + `">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td><input class="form-control" type="text" name="item` + itemNo + `" id="item` + itemNo + `"></td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>    
+                                    </tr>
+                                    `
+                                );
+                                itemNo++;
+                            });
+
+                        </script>
 
                     </table>
 
