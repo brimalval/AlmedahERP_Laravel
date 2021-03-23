@@ -103,15 +103,14 @@
 </div>
 <!-- End of Modal -->
 <script>
-
-var i = 1;
+    var i = 1;
 
     function addRowNewComponent() {
         var tableBody = $("#rawMats");
         tableBody.append(
             `
                 <tr class="center">
-                    <td><input type="checkbox" name="" id="check${i}"></td>
+                    <td><input type="checkbox" id="check${i}"></td>
                     <td><input class="form-control" type="text" name="rawMat${i}" id="rawMat${i}"></td>
                     <td><input class="form-control" type="number" name="qty${i}" id="qty${i}" min="1"></td>
                 </tr>
@@ -123,7 +122,8 @@ var i = 1;
     }
 
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#componentTable').DataTable();
     });
+
 </script>
