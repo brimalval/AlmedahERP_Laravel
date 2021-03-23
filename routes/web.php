@@ -302,6 +302,7 @@ Route::get('/openNewSaleOrder', function() {
 });
 Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
+Route::post('/componentPrint', [SalesOrderController::class, 'componentPrint']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {

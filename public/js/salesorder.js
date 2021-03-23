@@ -126,7 +126,6 @@ function selectSalesMethod() {
     if (selected == "Produce") {
         document.getElementById("cardComponent").style.display = "block";
     } else {
-        console.log(selected);
         document.getElementById("cardComponent").style.display = "none";
     }
 }
@@ -141,83 +140,212 @@ function selectPaymentMethod() {
 }
 
 var totalValue = 0;
-var ultimateComponentTable = {};
+let ultimateComponentTable = [];
+// 2d Array [ProductCode, Quantity]
+let currentCart = [];
 
-function componentAdder(name, val){
-    if (name in ultimateComponentTable){
-        ultimateComponentTable[name]["qty"] +=  val;
+// Adds component into a 2d array. If it is already init adds value instead
+function componentAdder(name, cat, neededVal, stockVal){
+
+    if(ultimateComponentTable.length <1){
+        ultimateComponentTable.push( [name, cat, neededVal, stockVal])
     }else{
-        ultimateComponentTable[name] = {"qty": val}
+        for(let index = 0; index<ultimateComponentTable.length; index++){
+            if(ultimateComponentTable[index][0] == name ){
+              ultimateComponentTable[index][2] += neededVal;
+            }else{
+              ultimateComponentTable.push( [name, cat, neededVal, stockVal])
+            }
+        }
     }
 }
 
+//Adds product to array
+function addToTable(){
+    currentProduct = document.getElementById('saleProductCode').value
+    currentCart.push([currentProduct,0]);
+
+    $('#ProductsTable').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +currentProduct +'</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>' );
+}
+
+//Quantity inside the products table
+function changeQuantity(r){
+    index = r.parentNode.parentNode.rowIndex -1;
+    productName = currentCart[index][0];
+    currentCart[index] = [productName, r.value];
+
+}
+
+//Deletes product from array
+function deleteRow(r) {
+    // Index of row
+    index = r.parentNode.parentNode.rowIndex -1;
+    // -1 because index is not 0-indexed
+    currentCart.splice(index,1);
+
+    $(r).parent().parent().remove();
+}
+
+
+
+$('#btnSalesCalcualte').click(function (){
+    cost = 0;
+    for (let index = 0; index < currentCart.length; index++) {
+        cost += currentCart[index][1] * getCalculatedPrice(currentCart[index][0])
+    }
+    document.getElementById('costPrice').value = cost;
+    components();
+
+    //@TODO use call back function here instead of timeout. Problematic if huge data is processed
+    // 2ms timeout
+    setTimeout(() => {  finalizer(); }, 2000);
+});
+
+function components(){
+    for (let index = 0; index < currentCart.length; index++) {
+        name = currentCart[index][0];
+        quantity = currentCart[index][1];
+        $.ajax({
+            url: "/getComponents/" + name,
+            type: "GET",
+            success: function (components) {
+                for (component of components) {
+                    componentAdder(component[2], component[1], parseInt(quantity), component[0] )
+                }
+                
+            },
+            error: function (request, error) {
+                alert("Request: " + JSON.stringify(request));
+            },
+        });
+    }
+    //Function here
+}
+
+function finalizer(){
+    console.log(ultimateComponentTable)
+    // @TODO replace named dictionary to 2d array for easier access
+    for (let index = 0; index<ultimateComponentTable.length; index++) {
+        component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2]];
+        quantity = parseInt(ultimateComponentTable[index][3])
+        
+        // set status of each component
+        if (
+            component[2] == 0 &&
+            component[2] < component[2] * quantity
+        ) {
+            status = "Out of stock";
+        } else if (
+            component[2] != 0 &&
+            component[2] < component[2] * quantity
+        ) {
+            status = "Insufficient";
+        } else if (component[2] >= quantity) {
+            status = "Available";
+        }
+        
+        // append each component to the components table
+        $(".components").append(
+            `<tr>
+        <td>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input">
+        </div>
+        </td>
+        <td class="text-center">
+        ` +
+            component[0] +
+            `
+        </td>
+        <td class="text-center">
+        ` +
+            component[1] +
+            `
+        </td>
+        <td class="mt-available" style="text-align: center;">` +
+            component[2] +
+            `</td>
+        <td class="mt-needed text-center">
+        ` +
+            parseInt(quantity * component[2]) +
+            `
+        </td>
+        <td class="mt-needed text-center">
+        ` +
+            status +
+            `
+        </td>
+        </tr>`
+        );
+        console.log(status);
+    }
+}
 
 //For getting details of product
-$("#saleProductCode").change(function () {
-    $(".components").html("");
-    document.getElementById("btnAddProduct").disabled= false;
-    selected = $("#saleProductCode option:selected").text();
-    $.ajax({
-        url: "/getComponents/" + selected,
-        type: "GET",
-        success: function (components) {
-            for (component of components) {
-                // set status of each component
-                if (
-                    component[0] == 0 &&
-                    component[0] < component[0] * $("#saleQuantity").val()
-                ) {
-                    status = "Out of stock";
-                } else if (
-                    component[0] != 0 &&
-                    component[0] < component[0] * $("#saleQuantity").val()
-                ) {
-                    status = "Insufficient";
-                } else if (component[0] >= $("#saleQuantity").val()) {
-                    status = "Available";
-                }
+// $("#saleProductCode").change(function () {
+//     $(".components").html("");
+//     selected = $("#saleProductCode option:selected").text();
+//     $.ajax({
+//         url: "/getComponents/" + selected,
+//         type: "GET",
+//         success: function (components) {
+//             for (component of components) {
+//                 // set status of each component
+//                 if (
+//                     component[0] == 0 &&
+//                     component[0] < component[0] * $("#saleQuantity").val()
+//                 ) {
+//                     status = "Out of stock";
+//                 } else if (
+//                     component[0] != 0 &&
+//                     component[0] < component[0] * $("#saleQuantity").val()
+//                 ) {
+//                     status = "Insufficient";
+//                 } else if (component[0] >= $("#saleQuantity").val()) {
+//                     status = "Available";
+//                 }
 
-                // append each component to the components table
+//                 // append each component to the components table
 
-                $(".components").append(
-                    `<tr>
-              <td>
-                  <div class="form-check">
-                      <input type="checkbox" class="form-check-input">
-                  </div>
-              </td>
-              <td class="text-center">
-                  ` +
-                    component[2] +
-                    `
-              </td>
-              <td class="text-center">
-                  ` +
-                    component[1] +
-                    `
-              </td>
-              <td class="mt-available" style="text-align: center;">` +
-                    component[0] +
-                    `</td>
-              <td class="mt-needed text-center">
-                  ` +
-                    $("#saleQuantity").val() * component[0] +
-                    `
-              </td>
-              <td class="text-danger text-center">
-                  ` +
-                    status +
-                    `
-              </td>
-          </tr>`
-                );
-            }
-        },
-        error: function (request, error) {
-            alert("Request: " + JSON.stringify(request));
-        },
-    });
-});
+//                 $(".components").append(
+//                     `<tr>
+//               <td>
+//                   <div class="form-check">
+//                       <input type="checkbox" class="form-check-input">
+//                   </div>
+//               </td>
+//               <td class="text-center">
+//                   ` +
+//                     component[2] +
+//                     `
+//               </td>
+//               <td class="text-center">
+//                   ` +
+//                     component[1] +
+//                     `
+//               </td>
+//               <td class="mt-available" style="text-align: center;">` +
+//                     component[0] +
+//                     `</td>
+//               <td class="mt-needed text-center">
+//                   ` +
+//                     $("#saleQuantity").val() * component[0] +
+//                     `
+//               </td>
+//               <td class="text-danger text-center">
+//                   ` +
+//                     status +
+//                     `
+//               </td>
+//           </tr>`
+//                 );
+//             }
+//         },
+//         error: function (request, error) {
+//             alert("Request: " + JSON.stringify(request));
+//         },
+//     });
+// });
 
 $("#saleQuantity").keyup(function () {
     new_values = [];
@@ -233,13 +361,7 @@ $("#saleQuantity").keyup(function () {
 });
 
 
-function addToTable(){
-    $('#ProductsTable').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  EM181204</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="10"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>' );
-}
 
-function deleteRow(r) {
-    // Index of row
-    console.log(r.parentNode.parentNode.rowIndex);
-
-    $(r).parent().parent().remove();
+function enableAddtoProduct(){
+    document.getElementById("btnAddProduct").disabled= false;
 }

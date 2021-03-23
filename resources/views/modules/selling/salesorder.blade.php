@@ -278,7 +278,7 @@
                                             <label class=" text-nowrap align-middle">
                                                 Product Code
                                             </label>
-                                            <select class="form-control" id="saleProductCode" name="saleProductCode" >
+                                            <select class="form-control" id="saleProductCode" name="saleProductCode" onchange="enableAddtoProduct()">
                                                 <option value="none" selected disabled hidden> 
                                                     Select an Option 
                                                 </option>
@@ -287,10 +287,7 @@
                                                 @endforeach
                                             </select>
                                             <br>
-                                            <label class="text-nowrap align-middle">
-                                                Cost Price
-                                            </label>
-                                            <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" placeholder=0 disabled>
+                                            
                                         </div>
                                     </div>
                                     <div class="col">
@@ -300,18 +297,6 @@
                                                 Transaction Date
                                             </label>
                                             <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" disabled id="currentDate">
-                                            <br>
-                                            <label class="text-nowrap align-middle">
-                                            Sale Currency
-                                            </label>
-                                            <select class="form-control" id="saleCurrency" name="saleCurrency">
-                                                <option value="none" selected disabled hidden> 
-                                                    Select an Option 
-                                                </option>
-                                                  <option value="Peso">Peso</option>
-                                                  <option value="Euro">Euro</option>
-                                                  <option value="Dollar">Dollar</option>
-                                            </select>
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Add to list
@@ -332,10 +317,18 @@
                                             </tr>
                                           </thead>
                                           <tbody id= "ProductsTable">
-                                            <!-- @TODO Replace this body with materials from current product -->
-                                            
 
                                           </tbody>
+                                          <tfoot>
+                                            <tr>
+                                              <td colspan="4">
+                                                <label class="text-nowrap align-middle">
+                                                    Cost Price
+                                                </label>
+                                                <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" placeholder=0 disabled></td>
+                                              </td>
+                                            </tr>
+                                          </tfoot>
                                         </table>
                                         <div class="row">
                                           <div class="col-12 d-flex justify-content-center">
@@ -419,73 +412,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="components">
-                                                    <!--Sample data for now; will populate data if functionality fully works now-->
-                                                    <tr>
-                                                        <td>
-                                                          <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input">
-                                                          </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                          Emulsifier Component 1
-                                                        </td>
-                                                        <td class="text-center">
-                                                          Component
-                                                        </td>
-                                                        <td class="text-center">
-                                                          2
-                                                        </td>
-                                                        <td class="text-center">
-                                                          2
-                                                        </td>
-                                                        <td class="text-primary text-center">
-                                                          Available
-                                                        </td>
-                                                      </tr>
-                                                      <tr>
-                                                        <td>
-                                                          <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input">
-                                                          </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                          Emulsifier Component 2
-                                                        </td>
-                                                        <td class="text-center">
-                                                          Component
-                                                        </td>
-                                                        <td class="" style="text-align: center;">
-                                                          0
-                                                        </td>
-                                                        <td class="text-center">
-                                                          3
-                                                        </td>
-                                                        <td class="text-danger text-center">
-                                                          Out of stock
-                                                        </td>
-                                                      </tr>
-                                                      <tr>
-                                                        <td>
-                                                          <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input">
-                                                          </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                          Bar Shaft
-                                                        </td>
-                                                        <td class="text-center">
-                                                          Raw Materials
-                                                        </td>
-                                                        <td class="" style="text-align: center;">
-                                                          3
-                                                        </td>
-                                                        <td class="text-center">
-                                                          10
-                                                        </td>
-                                                        <td class="text-danger text-center">
-                                                          Insufficient
-                                                        </td>
-                                                    </tr>
+                                                    <!--Cleared -->
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
@@ -804,6 +732,14 @@ $("#sales_order_form").submit(function(e) {
         }
     });
 });
+
+function getCalculatedPrice($name){
+    @foreach ($products as $row)
+        if ("{{$row->product_code}}" == $name)
+            return {{$row->sales_price_wt}}
+    @endforeach
+
+}
 
 function refresh(){
     x.draw();

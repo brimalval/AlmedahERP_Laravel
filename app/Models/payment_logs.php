@@ -21,6 +21,7 @@ class payment_logs extends Model
         'payment_description',
         'payment_status',
         'payment_balance',
+        'account_no'
     ];
 
     protected $casts = [

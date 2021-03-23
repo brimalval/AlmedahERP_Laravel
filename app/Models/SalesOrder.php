@@ -15,7 +15,6 @@ class SalesOrder extends Model
     protected $fillable = [
         'customer_id',
         'cost_price',
-        'sales_currency',
         'sale_supply_method',
         'transaction_date',
         'payment_mode',
@@ -23,7 +22,6 @@ class SalesOrder extends Model
         'initial_payment',
         'installment_type',
         'sales_status',
-        'sales'
     ];
 
     protected $casts = [
