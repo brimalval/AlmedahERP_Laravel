@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MaterialQuotation extends Model
 {
     use HasFactory;
-    protected $table = 'materials_quotation';
+    protected $table = 'request_quotation';
     public $timestamps = true;
     
     protected $fillable = [
@@ -18,4 +18,12 @@ class MaterialQuotation extends Model
         'item_list',
         'req_status'
     ]; 
+
+    public function getRQEntry() {
+        return $this->hasOne(RequestQuotationSuppliers::class, 'req_quotation_id', 'req_quotation_id');
+    }
+
+    public function getRequest() {
+        return $this->belongsTo(MaterialRequest::class, 'request_id', 'request_id');
+    }
 }

@@ -16,7 +16,7 @@ class CreateRqSuppliersTable extends Migration
         Schema::create('rq_suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('req_quotation_id');
-            $table->foreign('req_quotation_id')->references('req_quotation_id')->on('materials_quotations');
+            $table->foreign('req_quotation_id')->references('req_quotation_id')->on('request_quotation');
             $table->string('supplier_id');
             $table->foreign('supplier_id')->references('supplier_id')->on('suppliers');
             $table->timestamps();
@@ -30,6 +30,11 @@ class CreateRqSuppliersTable extends Migration
      */
     public function down()
     {
+        Schema::table('rq_suppliers', function(Blueprint $table) {
+            $table->dropForeign('rq_suppliers_req_quotation_id_foreign');
+            $table->dropForeign('rq_suppliers_supplier_id_foreign');
+        });
+        
         Schema::dropIfExists('rq_suppliers');
     }
 }

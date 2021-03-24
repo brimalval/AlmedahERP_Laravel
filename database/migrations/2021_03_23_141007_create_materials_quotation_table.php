@@ -13,7 +13,7 @@ class CreateMaterialsQuotationTable extends Migration
      */
     public function up()
     {
-        Schema::create('materials_quotations', function (Blueprint $table) {
+        Schema::create('request_quotation', function (Blueprint $table) {
             $table->id();
             $table->string('req_quotation_id')->unique();
             $table->date('date_created');
@@ -32,6 +32,6 @@ class CreateMaterialsQuotationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('materials_quotations');
+        Schema::dropIfExists('request_quotation');
     }
 }

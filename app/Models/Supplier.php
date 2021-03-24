@@ -19,4 +19,8 @@ class Supplier extends Model
         'supplier_email',
         'supplier_address'
     ];
+
+    public function getRQEntry() {
+        return $this->belongsToMany(RequestQuotationSuppliers::class, 'supplier_id', 'supplier_id');
+    }
 }

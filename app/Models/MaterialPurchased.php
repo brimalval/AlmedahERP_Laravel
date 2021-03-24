@@ -17,4 +17,8 @@ class MaterialPurchased extends Model
         'purchase_date',
         'mp_status'
     ];
+
+    public function getSupplierQuotation() {
+        return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
+    }
 }

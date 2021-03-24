@@ -13,7 +13,7 @@ class CreateRequestedRawMatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('requested_raw_materials', function (Blueprint $table) {
+        Schema::create('requested_rm', function (Blueprint $table) {
             $table->id();
             $table->string('request_id');
             $table->foreign('request_id')->references('request_id')->on('env_material_requests');
@@ -34,6 +34,6 @@ class CreateRequestedRawMatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requested_raw_materials');
+        Schema::dropIfExists('requested_rm');
     }
 }
