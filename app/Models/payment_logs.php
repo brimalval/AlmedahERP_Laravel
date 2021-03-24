@@ -9,7 +9,7 @@ class payment_logs extends Model
 {
     use HasFactory;
     protected $table = "payment_logs";
-    public $timestamps = False;
+    public $timestamps = false;
 
     protected $fillable = [
         'date_of_payment',

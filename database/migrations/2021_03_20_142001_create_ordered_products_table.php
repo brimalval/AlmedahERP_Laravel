@@ -15,8 +15,10 @@ class CreateOrderedProductsTable extends Migration
     {
         Schema::create('ordered_products', function (Blueprint $table) {
             $table->id();
-            $table->integer('sales_id');
+            $table->unsignedBigInteger('sales_id');
+            $table->foreign('sales_id')->references('id')->on('salesOrder');
             $table->string('product_code');
+            $table->foreign('product_code')->references('product_code')->on('man_products');
             $table->integer('quantity_purchased');
         });
     }

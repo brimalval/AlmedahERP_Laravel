@@ -24,7 +24,7 @@ class CustomerController extends Controller
             'contact_number' => 'required|numeric',
             'email_address' => 'required|unique:man_customers,email_address',
             'address' => 'required',
-            'company_name' => 'required|alpha_dash',
+            'company_name' => 'required|string',
         ]);
 
         try {
