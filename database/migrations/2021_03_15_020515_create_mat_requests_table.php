@@ -14,6 +14,7 @@ class CreateMatRequestsTable extends Migration
     public function up()
     {
         Schema::create('env_material_requests', function (Blueprint $table) {
+            //$table->bigIncrements('id');
             $table->id();
             $table->string('request_id')->unique();
             $table->date('request_date');

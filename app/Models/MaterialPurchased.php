@@ -11,12 +11,10 @@ class MaterialPurchased extends Model
     protected $table = 'materials_purchased';
     public $timestamps = true;
     protected $fillable = [
-        'supplier_id',
-        'item_code',
-        'uom_id',
-        'quantity_received',
+        'purchase_id',
+        'supp_quotation_id',
+        'items_list_purchased',
         'purchase_date',
-        'req_quotation_id',
         'mp_status'
     ];
 }

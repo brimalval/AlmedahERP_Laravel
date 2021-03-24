@@ -16,17 +16,9 @@ class CreateMaterialsPurchasedTable extends Migration
         Schema::create('materials_purchased', function (Blueprint $table) {
             $table->id();
             $table->string('purchase_id')->unique();
-            # No table to reference for supplier_id
-            $table->string('supplier_id');
-            $table->string('item_code');
-            $table->foreign('item_code')->references('item_code')->on('env_raw_materials');
-            # No table yet to reference uom_id
-            $table->string('uom_id');
-            $table->integer('quantity_received')->default(0);
-            $table->float('percentage_received')->default(0);
+            $table->string('supp_quotation_id')->references('supp_quotation_id')->on('suppliers_quotation');
+            $table->json('items_list_purchased');
             $table->date('purchase_date');
-            # No table yet for req_quotation_id
-            $table->integer('req_quotation_id');
             $table->string('mp_status');
             $table->timestamps();
         });
