@@ -23,7 +23,8 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadSalesOrder();">Refresh</button>
+                <!-- @TODO -->
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" onclick="load__();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
@@ -529,7 +530,7 @@
                                   <td class="text-center font-weight-bold">Description</td>
                                   <td class="text-center font-weight-bold">Payment Method</td>
                                   <td class="text-center font-weight-bold">Status</td>
-                                  <td class="text-center font-weight-bold">Customer</td>
+                                  <td class="text-center font-weight-bold">Transaction Handler</td>
                                 </tr>
                               </thead>
                               <tbody>
@@ -604,6 +605,8 @@ $("#gotoworkorder").click(function(){
     console.log("Clicked");
     $("#hiddenworkorder").click();
 })
+
+
 function customeridselector(value){
     if(value == " + Add new" || value==""){
         document.getElementById('fName').value = "";
@@ -678,7 +681,8 @@ function getCalculatedPrice($name){
             return {{$row->sales_price_wt}}
     @endforeach
 }
-function refresh(){
-    x.draw();
-}
+
+
+
+
 </script>
