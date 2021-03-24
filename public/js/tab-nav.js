@@ -137,6 +137,12 @@ function loadInv() {
   });
 }
 
+function loadComponent() {
+  $(document).ready(function () {
+    $('#contentComponent').load('/component');
+  });
+}
+
 function loadWorkOrder() {
   $(document).ready(function () {
     $('#contentWorkOrder').load('/workorder');
@@ -257,9 +263,9 @@ function loadSupplier() {
   });
 }
 
-function openSupplierInfo() {
+function openSupplierInfo(id) {
   $(document).ready(function () {
-    $('#contentSupplier').load('/openSupplierInfo');
+    $('#contentSupplier').load('/view-supplier/' + id);
   });
 }
 

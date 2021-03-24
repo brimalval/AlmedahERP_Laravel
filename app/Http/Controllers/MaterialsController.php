@@ -221,4 +221,25 @@ class MaterialsController extends Controller
             ]);
         }
     }
+
+    // Function for search suggestion regarding raw materials.
+    public function searchMaterial(Request $request) {
+        try {
+            $search = $request->search;
+            if($search == '')
+                $materials = ManufacturingMaterials::select('item_name', 'item_code')->orderby('created_at', 'desc')->limit(5)->get();
+            else
+                $materials = ManufacturingMaterials::where('item_name', 'like', '%'.$search.'%')->orderby('created_at', 'desc')->limit(5)->get();
+            $material_data = array();
+            foreach($materials as $material) {
+                $material_data[] = array(
+                    "item_name" => $material->item_name,
+                    "item_code" => $material->item_code
+                );
+            }
+            return response()->json($material_data);
+        } catch(Exception $e) {
+            return $e;
+        }
+    }
 }

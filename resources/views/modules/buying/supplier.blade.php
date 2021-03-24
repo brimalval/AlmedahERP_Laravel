@@ -1,13 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Supplier</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Menu
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -16,10 +18,12 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadBOM()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                        onclick="loadBOM()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">New</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">New</button>
                 </li>
             </ul>
         </div>
@@ -76,7 +80,24 @@
                 </tr>
             </thead>
             <tbody class="">
-
+                @foreach ($suppliers as $supplier)
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                        </td>
+                        <td><a href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a></td>
+                        <td>
+                            <ul>
+                                <li>Enabled</li>
+                            </ul>
+                        </td>
+                        <td class="text-black-50">{{ $supplier->supplier_group }}</td>
+                        <td class="text-black-50">2 M</td>
+                    </tr>
+                @endforeach
+                <!--
                 <tr>
                     <td>
                         <div class="form-check">
@@ -92,6 +113,7 @@
                     <td class="text-black-50">Raw Material</td>
                     <td class="text-black-50">2 M</td>
                 </tr>
+            -->
             </tbody>
         </table>
     </div>
@@ -110,12 +132,14 @@
 
 
 <!-- Modal to generate new supplier -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">New Supplier</h5>
-                <button type="button" class="btn-close fas fa-times" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close fas fa-times" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <label for="snewname">Supplier Name</label>
@@ -135,7 +159,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-info menu" data-name="Create New Supplier" data-parent="buying" data-bs-dismiss="modal" value="Edit in full page">
+                <input type="submit" class="btn btn-info menu" data-name="Create New Supplier" data-parent="buying"
+                    data-bs-dismiss="modal" value="Edit in full page">
                 <button type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
