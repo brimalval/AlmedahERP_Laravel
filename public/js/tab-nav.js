@@ -137,6 +137,12 @@ function loadInv() {
   });
 }
 
+function loadComponent() {
+  $(document).ready(function () {
+    $('#contentComponent').load('/component');
+  });
+}
+
 function loadWorkOrder() {
   $(document).ready(function () {
     $('#contentWorkOrder').load('/workorder');
@@ -257,9 +263,9 @@ function loadSupplier() {
   });
 }
 
-function openSupplierInfo() {
+function openSupplierInfo(id) {
   $(document).ready(function () {
-    $('#contentSupplier').load('/openSupplierInfo');
+    $('#contentSupplier').load('/view-supplier/' + id);
   });
 }
 
@@ -300,7 +306,7 @@ function loadMaterialRequest() {
 
 function openNewMaterialRequest() {
   $(document).ready(function () {
-    $('#contentMaterialRequest').load('/openNewMaterialRequest');
+    $('#contentMaterialRequest').load('/materialrequest/create');
   });
 }
 
@@ -438,18 +444,18 @@ function loadDelivery() {
 
 function loadSupplierQuotationInfo() {
   $(document).ready(function () {
-    $('#contentSupplierQuotation').load('modules/buying/supplierQuotation1.php');
+    $('#contentSupplierQuotation').load('/load-supplier');
   });
 }
 
 function loadSupplierQuotation() {
   $(document).ready(function () {
-    $('#contentSupplierQuotation').load('modules/buying/supplierQuotation.php');
+    $('#contentSupplierQuotation').load('/supplierquotation');
   });
 }
 
 function openNewSupplierQuotation() {
   $(document).ready(function () {
-    $('#contentSupplierQuotation').load('modules/buying/new_supplier_quotation.php')
+    $('#contentSupplierQuotation').load('/new-supplier');
   });
 }

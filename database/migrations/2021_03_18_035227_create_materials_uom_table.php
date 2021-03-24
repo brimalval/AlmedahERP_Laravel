@@ -15,10 +15,9 @@ class CreateMaterialsUomTable extends Migration
     {
         Schema::create('materials_uom', function (Blueprint $table) {
             $table->id();
-            $table->string('uom_id')->nullable();
+            $table->string('uom_id')->unique();
             $table->string('item_uom');
             $table->float('conversion_factor');
-            $table->float('price');
             $table->timestamps();
         });
     }

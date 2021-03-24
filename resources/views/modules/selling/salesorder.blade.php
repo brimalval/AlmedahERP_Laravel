@@ -326,6 +326,7 @@
                                                 </label>
                                                 <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" placeholder=0 ></td>
                                               </td>
+                                              <td class="text-center">5000.00</td>
                                             </tr>
                                           </tfoot>
                                         </table>
@@ -530,7 +531,7 @@
                                   <td class="text-center font-weight-bold">Description</td>
                                   <td class="text-center font-weight-bold">Payment Method</td>
                                   <td class="text-center font-weight-bold">Status</td>
-                                  <td class="text-center font-weight-bold">Customer</td>
+                                  <td class="text-center font-weight-bold">Transaction Handler</td>
                                 </tr>
                               </thead>
                               <tbody>
@@ -589,9 +590,7 @@
 
 
 <script type="text/javascript">
-
 var x;
-
 // From back-end: to show that data can be shown in table
 $(document).ready(function() {
     x = $('#salestable').DataTable();
@@ -643,13 +642,11 @@ function findRow(value){
             "branch_name": "{{ $rows->branch_name}}",
             "company_name": "{{ $rows->company_name }}",
             "address": "{{ $rows->address}}"};
-
         if ({{$rows->id}} == value){
             return test1;
         }
     @endforeach
 }
-
 // For creation of sales order
 $("#sales_order_form").submit(function(e) {
     e.preventDefault();

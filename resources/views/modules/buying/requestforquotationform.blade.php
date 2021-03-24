@@ -63,19 +63,25 @@
                             <div class="form-group col-md-6">
                                 <!-- display when NEW button is clicked-->
                                 <label for="inputEmail4">Series</label>
-                                <select class="form-control"></select>
+                                <select class="form-control">
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Date</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
+                                <input type="date" class="form-control" id="inputEmail4" placeholder=""></select>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="card-body">
                     <hr class="mt-2 mb-5">
-                    <h6><strong>Supplier Detail</strong></h6>
-                    <table class="table table-hover table-bordered">
+                    <h6><strong>Supplier Detail</strong></h6><br>
+                    <table class="table table-hover table-bordered" id="suppTbl">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-center" style="width: 0%;">
@@ -91,28 +97,118 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
+                            <tr>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1">
                                         <label class="custom-control-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </td>
+                                <td><input class="form-control" type="text" name="supp1" id="supp1"
+                                        onkeyup="searchSupplier(1);"></td>
+                                <td><input class="form-control" type="text" name="suppCont1" id="suppCont1" disabled>
+                                </td>
+                                <td><input class="form-control" type="text" name="suppEmail1" id="suppEmail1" disabled>
+                                </td>
                                 <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                </tr>
-                                <?php endfor; ?>
+                            </tr>
                         </tbody>
 
                         <tfoot>
                             <tr>
                                 <td colspan="7 p-5">
-                                    <button class="btn btn-secondary btn-sm">Add Row</button>
+                                    <button class="btn btn-secondary btn-sm" id="addSupp">Add Row</button>
                                 </td>
                             </tr>
                         </tfoot>
+
+                        <script type="text/javascript">
+                            var suppNo = 2;
+
+                            $("#addSupp").click(function() {
+                                var suppTblBody = $("#suppTbl tbody");
+                                suppTblBody.append(
+                                    `
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck` +
+                                    suppNo + `">
+                                                <label class="custom-control-label" for="customCheck` + suppNo + `">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td><input class="form-control" type="text" name="supp` + suppNo +
+                                    `" id="supp` + suppNo + `" onkeyup="searchSupplier(` + suppNo + `)"></td>
+                                        <td><input class="form-control" type="text" name="suppCont` + suppNo +
+                                    `" id="suppCont` + suppNo + `" disabled></td>
+                                        <td><input class="form-control" type="text" name="suppEmail` + suppNo +
+                                    `" id="suppEmail` + suppNo + `" disabled></td>
+                                        <td>&nbsp;</td>    
+                                    </tr>
+                                    `
+                                );
+                                suppNo++;
+                            });
+
+                            // Search suggestion of suppliers for making quotations
+                            function searchSupplier(id) {
+                                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                                var input_id = "#supp" + id;
+                                console.log(input_id);
+                                $(document).ready(function() {
+                                    $(input_id).autocomplete({
+                                        source: function(request, response) {
+                                            $.ajax({
+                                                url: '/search-supplier',
+                                                type: 'POST',
+                                                dataType: 'json',
+                                                data: {
+                                                    _token: CSRF_TOKEN,
+                                                    search: request.term
+                                                },
+                                                success: function(data) {
+                                                    response(data);
+                                                }
+                                            });
+                                        },
+                                        select: function(event, ui) {
+                                            //Set selection
+                                            $(input_id).val(ui.item.supplier_id);
+                                            showSupplierDetails(id, ui.item.supplier_id);
+                                            return false;
+                                        }
+                                    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+                                        return $("<li></li>").data("item.autocomplete", item)
+                                            .append(
+                                                `
+                                                <a class='form-control'>
+                                                    <strong> ` + item.company_name + `</strong> - ` + item
+                                                .supplier_id + `
+                                                </a>
+                                                `
+                                            ).appendTo(ul);
+                                    }
+                                });
+                            }
+
+                            
+                            function showSupplierDetails(index, supp_id) {
+                                var suppCont = "#suppCont" + index;
+                                var suppEmail = "#suppEmail" + index;
+                                $.ajax({
+                                    method: "GET",
+                                    url: '/search/' + supp_id,
+                                    data: {
+                                        'supp_id': supp_id
+                                    },
+                                    success: function(data) {
+                                        $(suppCont).val(data.supplier[0].phone_number);
+                                        $(suppEmail).val(data.supplier[0].supplier_email);
+                                    }
+                                });
+                            }
+
+                        </script>
 
                     </table>
 
@@ -121,7 +217,7 @@
                 <div class="card-body">
                     <hr class="mt-2 mb-5">
                     <h6><strong>Items</strong></h6>
-                    <table class="table table-hover table-bordered">
+                    <table class="table table-hover table-bordered" id="itemTbl">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-center" style="width: 0%;">
@@ -138,29 +234,99 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
+                            <tr>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1">
                                         <label class="custom-control-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                </tr>
-                                <?php endfor; ?>
+                                <td><input class="form-control" type="text" name="item1" id="item1"
+                                        onkeyup="searchMaterial(1);"></td>
+                                <td><input class="form-control" type="number" min="1" name="itemQty1" id="itemQty1">
+                                </td>
+                                <td><input class="form-control" type="date" name="itemDate1" id="itemDate1"></td>
+                                <td><input class="form-control" type="text" name="itemWH1" id="itemWH1"></td>
+                            </tr>
                         </tbody>
 
                         <tfoot>
                             <tr>
                                 <td colspan="7 p-5">
                                     <button class="btn btn-secondary btn-sm">Add Multiple Row</button>
-                                    <button class="btn btn-secondary btn-sm">Add Row</button>
+                                    <button class="btn btn-secondary btn-sm" id="itemBtn">Add Row</button>
                                 </td>
                             </tr>
                         </tfoot>
+
+                        <script type="text/javascript">
+                            var itemNo = 2;
+
+                            $("#itemBtn").click(function() {
+                                var itemTblBody = $("#itemTbl tbody");
+                                itemTblBody.append(
+                                    `
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck` +
+                                    itemNo + `">
+                                                <label class="custom-control-label" for="customCheck` + itemNo + `">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td><input class="form-control" type="text" name="item` + itemNo +
+                                    `" id="item` + itemNo + `" onkeyup="searchMaterial(` + itemNo + `);"></td>
+                                        <td><input class="form-control" type="number" min="1" name="itemQty` + itemNo +
+                                    `" id="itemQty` + itemNo + `"></td>
+                                        <td><input class="form-control" type="date" name="itemDate` + itemNo +
+                                    `" id="itemDate` + itemNo + `"></td>
+                                        <td><input class="form-control" type="text" name="itemWH` + itemNo +
+                                    `" id="itemWH` + itemNo + `"></td>    
+                                    </tr>
+                                    `
+                                );
+                                itemNo++;
+                            });
+
+                            function searchMaterial(id) {
+                                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                                var input_id = "#item" + id;
+                                console.log(input_id);
+                                $(document).ready(function() {
+                                    $(input_id).autocomplete({
+                                        source: function(request, response) {
+                                            $.ajax({
+                                                url: '/search-item',
+                                                type: 'POST',
+                                                dataType: 'json',
+                                                data: {
+                                                    _token: CSRF_TOKEN,
+                                                    search: request.term
+                                                },
+                                                success: function(data) {
+                                                    response(data);
+                                                }
+                                            });
+                                        },
+                                        select: function(event, ui) {
+                                            //Set selection
+                                            $(input_id).val(ui.item.item_code);
+                                            return false;
+                                        }
+                                    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+                                        return $("<li></li>").data("item.autocomplete", item)
+                                            .append(
+                                                `
+                                                <a class='form-control'>
+                                                    <strong> ` + item.item_name + `</strong> - ` + item.item_code + `
+                                                </a>
+                                                `
+                                            ).appendTo(ul);
+                                    }
+                                });
+                            }
+
+                        </script>
 
                     </table>
 

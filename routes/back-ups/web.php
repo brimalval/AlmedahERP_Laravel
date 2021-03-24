@@ -16,7 +16,6 @@ use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
-use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,11 +62,6 @@ Route::get('/viewbom/{id}', [BOMController::class, 'get']);
 /**BUYING ROUTES */
 Route::get('/buying', function() {
     return view('modules.buying.Buying');
-});
-
-/**COMPONENTS ROUTES */
-Route::get('/component', function() {
-    return view('modules.manufacturing.component');
 });
 
 /**CRM ROUTES */
@@ -119,7 +113,6 @@ Route::patch('/update-material/{id}', [MaterialsController::class,'update'])->na
 Route::post('/delete-material/{id}', [MaterialsController::class, 'delete']);
 Route::post('/create-categories' , [MaterialsController::class, 'storeCategory']);
 Route::post('/add-stock/{id}', [MaterialsController::class,'addStock'])->name('material.add-stock');
-Route::post('/search-item', [MaterialsController::class, 'searchMaterial']);
 
 /**ITEM ROUTES */
 Route::get('/item',[ProductsController::class, 'index']);
@@ -185,6 +178,9 @@ Route::get('/openManufacturingRoutingForm', function(){
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
+Route::get('/openNewMaterialRequest', function(){
+    return view('modules.buying.newMaterialRequest');
+});
 Route::get('/openMaterialRequestInfo', function() {
     return view('modules.buying.MaterialRequestInfo');
 });
@@ -305,7 +301,6 @@ Route::get('/openNewSaleOrder', function() {
 });
 Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
-Route::post('/componentPrint', [SalesOrderController::class, 'componentPrint']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {
@@ -334,24 +329,14 @@ Route::get('/loadStockEntry', function() {
 });
 
 /**SUPPLIER ROUTES */
-Route::get('/supplier', [SupplierController::class, 'index']);
-Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
-Route::post('/create-supplier', [SupplierController::class, 'store']);
-Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
-Route::get('/search/{supplier_id}', [SupplierController::class, 'getBySuppID']);
+Route::get('/supplier', function() {
+    return view('modules.buying.supplier');
+});
+Route::get('/openSupplierInfo', function() {
+    return view('modules.buying.supplierInfo');
+});
 Route::get('/createnewsupplier', function() {
     return view('modules.buying.createnewsupplier');
-});
-
-/**SUPPLIER QUOTATION ROUTES */ 
-Route::get('/supplierquotation', function() {
-    return view('modules.buying.supplierQuotation');
-});
-Route::get('/load-supplier', function() {
-    return view('modules.buying.supplierQuotation1');
-});
-Route::get('/new-supplier', function() {
-    return view('modules.buying.new_supplier_quotation');
 });
 
 /**TASK ROUTES */

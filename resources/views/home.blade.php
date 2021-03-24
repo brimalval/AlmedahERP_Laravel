@@ -19,12 +19,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#top"">Menu2</a>
-                </li>
-                <li class=" nav-item">
+                    </li>
+                    <li class=" nav-item">
                         <a class="nav-link" href="#top">Menu3</a>
                 </li>
                 <!-- This menu is hidden in bigger devices with d-sm-none. 
-                The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  -->
+                    The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  -->
                 <li class="nav-item dropdown d-sm-block d-md-none">
                     <a class="nav-link dropdown-toggle" href="#" id="smallerscreenmenu" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false"> Menu </a>
@@ -155,6 +155,12 @@
                     <a href="#" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Inventory</span>
+                    </a>
+                </div>
+                <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Component</span>
                     </a>
                 </div>
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
