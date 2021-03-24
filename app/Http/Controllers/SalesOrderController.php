@@ -8,15 +8,25 @@ use App\Models\Customer;
 use App\Models\ManufacturingProducts;
 use App\Models\ManufacturingMaterials;
 use App\Models\MaterialCategory;
+use App\Models\payment_logs;
+use App\Models\MaterialRequest;
+use App\Models\ordered_products;
 use DB;
 use Exception;
 class SalesOrderController extends Controller
 {
     //
     function index(){
-        $salesorders = SalesOrder::get();
+         
         $customers = Customer::get();
         $products = ManufacturingProducts::get();
+
+        $salesorders = DB::table('salesorder')
+        ->select('*')
+        ->join('payment_logs','payment_logs.sales_id','=','salesorder.id')
+        ->join('ordered_products', 'ordered_products.sales_id', '=', 'salesorder.id')
+        ->get();
+
         return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
     }
 
@@ -50,22 +60,14 @@ class SalesOrderController extends Controller
         #Comment ko muna yung validation, nahihirapan akong mag-enter ng data para sa testing eh hahah
         //$request->validate([
         //    'costPrice' => 'nullable|numeric',
-        //    'saleCurrency' => 'nullable|alpha_dash',
-        //    'saleSupplyMethod' => 'nullable|alpha_dash',
-        //    
-        //    'saleQuantity' => 'required|numeric|min:1',
-        //    'saleStockUnit' => 'required|alpha_dash',
-        //    'productLaunchDate' => 'required|date',
-        //    'productPulledMarket' => 'required|date',
         //    'saleDate' => 'required|date',
+        //    'saleSupplyMethod' => 'nullable|alpha_dash',
         //    'salePaymentMethod' => 'required|alpha_dash',
-//
-        //    'saleProductCode' => 'required|alpha_dash',
-        //    'saleQuantity' => 'required|numeric|min:1',
-        //    'salesUnit' => 'required|alpha_dash',
-        //    
-        //    # initial_payment
         //    'saleDownpaymentCost' => 'nullable|numeric',
+        //    'installmentType' => 'nullable|alpha_dash',
+
+        //    'saleCurrency' => 'nullable|alpha_dash',
+       
         //    
         //    'customer_id' => 'nullable|numeric',
         //    'lName' => 'required|alpha_dash',
@@ -81,39 +83,66 @@ class SalesOrderController extends Controller
 
             $form_data = $request->input();
 
+            $cart = $request->input("cart");
+            $cart = explode(',', $cart);
+            
+            $converter = [];
+            for ($i=0, $diff = []; $i< count($cart); $i++) {
+                if( count($diff) == 2){
+                    array_push($converter, $diff);
+                }else{
+                    array_push($diff, $cart[$i]);
+                }
+                
+            }
+            $cart = $converter;
+            
+            $component = $request->input("component");
+            
             $data = new SalesOrder();
             $data->cost_price = $form_data['costPrice'];
             $data->sale_supply_method = $form_data['saleSupplyMethod'];
-            $data->sale_currency = $form_data['saleCurrency'];
-            $data->quantity = 1;
-            $data->stock_unit = 'kg';
-            //$data->product_launch_date = $form_data['productLaunchDate'];
-            $data->product_pulled_off_market = $form_data['productPulledMarket'];
-            $data->date = $form_data['saleDate'];
-            $data->product_code = $form_data['saleProductCode'];
-            $data->sales_unit = $form_data['salesUnit'];
+
+
+            $data->transaction_date = $form_data['saleDate'];
+
             //Payment method if installment has an initialpayment
             $data->payment_mode = $form_data['salePaymentMethod'];
             
+            $payment_logs = new payment_logs();
+            $payment_logs->date_of_payment = $form_data['saleDate'];
 
             //Calculate total cost of material then minus initial payment or full payment
             // @TODO Balanced out to zero if full payment
-            if($form_data['salePaymentMethod'] == "Full Payment(Cash)"){
-                $data->payment_balance = 0;
+            if($form_data['salePaymentMethod'] == "Cash"){
+                $data->sales_status = "Fully Paid";
+                $payment_logs->payment_balance = 0;
+                $payment_logs->amount_paid = $form_data['costPrice'];
+
+                #@TODO
+                $payment_logs->payment_description = "To be developed";
+                
             }else{
                 $data->initial_payment = $form_data['saleDownpaymentCost'];
-                // $product_price = ManufacturingProducts::where('product_code', '=', request('saleProductCode'))->first();
-                //$data->payment_balance = ($form_data['costPrice'] * $form_data['saleQuantity']) - $data->initial_payment;
-                //Calculate payment track. I think should be in json
-                // @TODO Json File
-                $data->payment_track = NULL;
-                //Payment status. Complete, in bank, etc
-                $data->payment_status = "Waiting for approval";
-                $data->installment_type = $form_data['installmentType'];
-            }
-            //Ship, shipped, in assembly, waiting for payment, or completed.  
-            $data->sales_status = "Waiting for Assembly";
+                
+                $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
 
+                $data->sales_status = "With Outstanding Balance";
+
+                $data->installment_type = $form_data['installmentType'];
+                $payment_logs->amount_paid = $form_data['saleDownPaymentCost'];
+
+                #@TODO
+                $payment_logs->payment_description = "To be developed";
+                
+            }
+
+            if($form_data['paymentType'] == "Cheque"){
+                $payment_logs->account_no = $form_data['account_no'];
+            }
+            $payment_logs->payment_method = $form_data['salePaymentMethod'];
+            $payment_logs->payment_status = "Pending";
+            //Ship, shipped, in assembly, waiting for payment, or completed.  
 
             $customerCheck = Customer::where('id', "=", request('customer_id'))->first();
             if(!$customerCheck){
@@ -130,11 +159,38 @@ class SalesOrderController extends Controller
                 $data->customer_id = $customerCheck->id;
                 
             }else{
-                $data->customer_id = $form_data['customer_id'];
+                $data->customer_id = $form_data['customer_id'] ;
             }
+            //Concat method lmao
+            $payment_logs->customer_rep = $form_data['lName'] . " ". $form_data['fName'];
+            
             $data->save();
+            $payment_logs->sales_id = $data->id;
+            $payment_logs->save();
+            
+            // MATERIAL REQUEST CANNOT CONTINUE DUE TO LACK OF INFO
+            // if ($form_data['saleSupplyMethod'] == "Purchase"){
+            //     foreach ($component as $row){
+            //         $mat_req = new MaterialRequest();
+            //         $mat_req->request_date = $form_data['saleDate'];
+            //         // Should have input from sales order
+            //         $mat_req->required_date = $form_data['saleDate'];
+            //         $purpose->purpose = $data->id;
+            //         $mr_status = "Draft";
+            //     }
+            // }
 
-            return SalesOrder::where('id', "=", $data->id)->first();
+            foreach ($cart as $row){
+
+                $order = new ordered_products();
+                $order->sales_id = $data->id;
+                $order->product_code = $row[0];
+                $order->quantity_purchased = $row[1];
+                
+                $order->save();
+            }
+            
+            return "Sucess";
 
         }catch(Exception $e){
             return $e;
