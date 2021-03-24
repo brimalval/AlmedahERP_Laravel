@@ -17,12 +17,17 @@ class CreateSuppliersQuotationTable extends Migration
             $table->id();
             $table->string('supp_quotation_id')->unique();
             $table->date('date_created');
-            $table->foreign('req_quotation_id')->references('req_quotation_id')->on('materials_quotation');
+            $table->string('req_quotation_id');
+            $table->foreign('req_quotation_id')->references('req_quotation_id')->on('materials_quotations');
             $table->json('items_list_rate_amt');
             $table->float('grand_total');
             $table->string('remarks')->nullable();;
             $table->string('sq_status');
             $table->timestamps();
+        });
+
+        Schema::table('materials_purchased', function(Blueprint $table){
+            $table->foreign('supp_quotation_id')->references('supp_quotation_id')->on('suppliers_quotation');
         });
     }
 
@@ -33,6 +38,10 @@ class CreateSuppliersQuotationTable extends Migration
      */
     public function down()
     {
+        Schema::table('materials_purchased', function(Blueprint $table){
+            $table->dropForeign('supp_quotation_id');
+        });
+
         Schema::dropIfExists('suppliers_quotation');
     }
 }

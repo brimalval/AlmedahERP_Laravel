@@ -16,7 +16,7 @@ class CreateMaterialsPurchasedTable extends Migration
         Schema::create('materials_purchased', function (Blueprint $table) {
             $table->id();
             $table->string('purchase_id')->unique();
-            $table->string('supp_quotation_id')->references('supp_quotation_id')->on('suppliers_quotation');
+            $table->string('supp_quotation_id');
             $table->json('items_list_purchased');
             $table->date('purchase_date');
             $table->string('mp_status');
