@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ManufacturingMaterials;
 use App\Models\MaterialRequest;
+use App\Models\RequestedRawMat;
+use App\Models\Station;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class MatRequestController extends Controller
@@ -17,7 +21,9 @@ class MatRequestController extends Controller
     public function index()
     {
         $mat_requests = MaterialRequest::get();
-        return view('modules.buying.materialrequest', ['mat_requests' => $mat_requests]);
+        return view('modules.buying.materialrequest', [
+            'mat_requests' => $mat_requests,
+        ]);
     }
 
     /**
@@ -27,7 +33,12 @@ class MatRequestController extends Controller
      */
     public function create()
     {
-        //
+        $materials = ManufacturingMaterials::get();
+        $stations = Station::get();
+        return view('modules.buying.newMaterialRequest',[
+            'materials' => $materials,
+            'stations' => $stations,
+        ]);
     }
 
     /**
@@ -39,9 +50,14 @@ class MatRequestController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'item_code' => 'required|string|exists:env_raw_materials',
+            'item_code' => 'required|array',
+            'item_code.*' => 'required|string|exists:env_raw_materials,item_code',
             // MAY NEED TO CHANGE TO STATION_ID INSTEAD OF JUST ID    -v-
-            'station_id' => 'required|string|exists:stations,station_id',
+            'station_id.*' => 'required|string|exists:stations,station_id',
+            'quantity_requested.*' => 'required|integer|min:0',
+            'procurement_method.*' => 'required|string',
+            'required_date' => 'required|date',
+
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -52,25 +68,28 @@ class MatRequestController extends Controller
         }
         try {
             $matRequest = new MaterialRequest();
-            $matRequest->item_code = request('item_code');
-            $matRequest->quantity = request('quantity_requested');
+            $matRequest->request_date = Carbon::now();
             $matRequest->required_date = request('required_date');
-            // REMEMBER TO CHANGE THIS
-            $matRequest->reorder_id = 1;
-            $matRequest->procurement_method = request('procurement_method');
-            $matRequest->purpose = request('purpose');
-            $matRequest->uom_id = request('uom_id');
-            $matRequest->station_id = request('station_id');
-            $lastRequest = MaterialRequest::orderby('created_at', 'desc')->first();
-            $nextId = ($lastRequest)
-                        ? MaterialRequest::orderby('created_at', 'desc')->first()->id + 1 
-                        : 1;
-            $matRequest->request_id = "REQ" . $nextId;
+            $matRequest->purpose = request('purpose') ?? 'No description provided.';
+            $matRequest->mr_status = request('mr_status');
+            $matRequest->request_id = "REQ";
             $matRequest->save();
+            $matRequest->request_id = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
+            $matRequest->save();
+            for($i=0; $i<sizeof(request('item_code')); $i++){
+                $requestItem = new RequestedRawMat();
+                $requestItem->request_id = $matRequest->request_id;
+                $requestItem->item_code = request('item_code')[$i];
+                $requestItem->quantity_requested = request('quantity_requested')[$i];
+                $requestItem->procurement_method = request('procurement_method')[$i];
+                $requestItem->station_id = request('station_id')[$i];
+                $requestItem->save();
+            }
             return response()->json([
                 'status' => 'success',
                 'information' => $request->all(),
                 'request' => $matRequest,
+                'raw_mats_with_qty' => $matRequest->rawMats,
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -99,7 +118,13 @@ class MatRequestController extends Controller
      */
     public function edit(MaterialRequest $materialrequest)
     {
-        //
+        $materials = ManufacturingMaterials::get();
+        $stations = Station::get();
+        return view('modules.buying.materialReqmodules.edit_matreq_form', [
+            'materialRequest' => $materialrequest,
+            'materials' => $materials,
+            'stations' => $stations,
+        ]);
     }
 
     /**
@@ -111,7 +136,47 @@ class MatRequestController extends Controller
      */
     public function update(Request $request, MaterialRequest $materialrequest)
     {
-        //
+        $rules = [
+            'item_code' => 'required|array',
+            'item_code.*' => 'required|string|exists:env_raw_materials,item_code',
+            // MAY NEED TO CHANGE TO STATION_ID INSTEAD OF JUST ID    -v-
+            'station_id.*' => 'required|string|exists:stations,station_id',
+            'quantity_requested.*' => 'required|integer|min:0',
+            'procurement_method.*' => 'required|string',
+            'required_date' => 'required|date',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ]);
+        }
+        try{ 
+            $materialrequest->update($request->all());
+            // Deleting the entries related to this request in the request mats table
+            RequestedRawMat::where('request_id', '=', $materialrequest->request_id)->delete();
+            // Replacing the deleted entries with the updated entries
+            for($i=0; $i<sizeof(request('item_code')); $i++){
+                $requestItem = new RequestedRawMat();
+                $requestItem->request_id = $materialrequest->request_id;
+                $requestItem->item_code = request('item_code')[$i];
+                $requestItem->quantity_requested = request('quantity_requested')[$i];
+                $requestItem->procurement_method = request('procurement_method')[$i];
+                $requestItem->station_id = request('station_id')[$i];
+                $requestItem->save();
+            }
+            return response()->json([
+                'status' => 'success',
+                'update' => true,
+                'materialrequest' => $materialrequest,
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -122,6 +187,19 @@ class MatRequestController extends Controller
      */
     public function destroy(MaterialRequest $materialrequest)
     {
-        //
+        $id = $materialrequest->id;
+        try{
+            RequestedRawMat::where('request_id', '=', $materialrequest->request_id)->delete();
+            $materialrequest->delete();
+            return response()->json([
+                'status' => 'success',
+                'id' => $id,
+            ]);
+        } catch(Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }

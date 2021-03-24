@@ -306,7 +306,7 @@ function loadMaterialRequest() {
 
 function openNewMaterialRequest() {
   $(document).ready(function () {
-    $('#contentMaterialRequest').load('/openNewMaterialRequest');
+    $('#contentMaterialRequest').load('/materialrequest/create');
   });
 }
 

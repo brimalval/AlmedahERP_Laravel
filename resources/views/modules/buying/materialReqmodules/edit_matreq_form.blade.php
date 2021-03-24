@@ -1,52 +1,7 @@
 <script src="{{ asset('js/materialrequest.js') }}"></script>
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-  <div class="container-fluid">
-    <h2 class="navbar-brand" style="font-size: 35px;">New Material Request</h2>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#responsive">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="responsive">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item dropdown li-bom">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Menu
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Option 1</a></li>
-            <li><a class="dropdown-item" href="#">Option 2</a></li>
-          </ul>
-        </li>
-        </li>
-        <li class="nav-item li-bom">
-          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadMaterialRequest();">Cancel</button>
-        </li>
-        <li class="nav-item li-bom">
-          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" onclick="$('#mat-req').submit();">Save</button>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="card">
-  <div class="card-body ml-auto">
-
-
-    <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Get Items from
-    </a>
-
-    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <a class="dropdown-item" href="#">Bill of Materials</a>
-      <a class="dropdown-item" href="#">Sales Order</a>
-      <a class="dropdown-item" href="#">Product Bundle</a>
-    </div>
-
-  </div>
-</div>
-
-<form action="/materialrequest" method="post" id="mat-req" class="create">
+<form  id="mat-req" class="update" action="{{ route('materialrequest.update', ['materialrequest' => $materialRequest->id]) }}">
 @csrf
+@method('PATCH')
 <div id="accordion">
   <div class="card">
     <div class="card-header" id="headingOne">
@@ -67,21 +22,21 @@
                   <div class="form-group">
                     <label for="request_id">Request ID</label>
 
-                    <input type="text" value="MAT-MR-.YYYY.-" readonly id="request_id" class="form-control">
+                    <input type="text" value="{{ $materialRequest->request_id }}" readonly id="request_id" class="form-control">
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="form-group">
                     <label for="required_date">Required Date</label>
 
-                    <input type="date" required="true" name="required_date" id="required_date" class="form-control">
+                    <input value="{{ $materialRequest->required_date }}" type="date" required="true" name="required_date" id="required_date" class="form-control">
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="form-group">
                     <label for="purpose">Purpose</label>
 
-                    <input type="text" name="purpose" id="purpose" class="form-control">
+                    <input value="{{ $materialRequest->purpose }}" type="text" name="purpose" id="purpose" class="form-control">
                   </div>
                 </div>
               </div>
@@ -92,6 +47,7 @@
               </div>
               <br>
               <label>Item</label>
+              <div id="items-border-div" class="mb-3">
               <table class="table border-bottom table-hover table-bordered" id="items-tbl">
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
@@ -109,13 +65,45 @@
                   </tr>
                 </thead>
                 <tbody class="" id="material-request-input-rows">
-                  <tr>
-                    <td id="no-data" colspan="7" style="text-align: center;">
-                      NO DATA
-                    </td>
-                  </tr>
+                    @foreach ($materialRequest->raw_mats as $rq_mat)
+                      <tr>
+                          <td>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input">
+                          </div>
+                          </td>
+                          <td id="mr-code-input-{{ $loop->index }}" class="mr-code-input">
+                            <select required="true" name="item_code[]" class="form-control">
+                              @foreach ($materials as $material)
+                                    <option value="{{ $material->item_code }}" @if ($material->item_code == $rq_mat->item_code) selected="selected" @endif>{{ $material->item_name }}</option>
+                              @endforeach
+                            </select>
+                          </td>
+                          <td style="width: 10%;"><input required value="{{ $rq_mat->quantity_requested }}" class="form-control" min="0" type="number" name="quantity_requested[]" id="mr-qty-input-row-{{ $loop->index }}"></td>
+                          <td id="mr-target-input-{{ $loop->index }}" class="mr-target-input">
+                            <select required="true" selected="{{ $material->station_id }}" name="station_id[]" class="form-control">
+                              @foreach ($stations as $station)
+                                  <option value="{{ $station->station_id }}" @if ($station->station_id == $rq_mat->station_id) selected="selected" @endif>{{ $station->station_name }}</option>
+                              @endforeach
+                            </select>
+                          </td>
+                          <td style="width: 20%">
+                          <select name="procurement_method[]" required class="form-control" selected="{{ $rq_mat->procurement_method }}">
+                              <option value="buy" @if($rq_mat->procurement_method == "buy") selected="selected" @endif>Buy</option>
+                              <option value="produce" @if($rq_mat->procurement_method == "produce") selected="selected" @endif>Produce</option>
+                              <option value="buyproduce" @if($rq_mat->procurement_method == "buyproduce") selected="selected" @endif>Buy & Produce</option>
+                          </select>
+                          </td>
+                          <td>
+                          <a id="" class="btn btn-primary delete-btn" href="#" role="button">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                          </a>
+                          </td>
+                      </tr>
+                    @endforeach
                 </tbody>
               </table>
+              </div>
               <td colspan="7" rowspan="5">
                 <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
                 <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>
@@ -242,8 +230,6 @@
 
 </div>
 </form>
-</div>
-
 <div class="d-none" id="selects">
   <select required="true" name="item_code[]" class="form-control">
     @foreach ($materials as $material)
