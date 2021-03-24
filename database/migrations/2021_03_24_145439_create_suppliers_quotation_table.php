@@ -17,6 +17,7 @@ class CreateSuppliersQuotationTable extends Migration
             $table->id();
             $table->string('supp_quotation_id')->unique();
             $table->date('date_created');
+            $table->string('req_quotation_id');
             $table->foreign('req_quotation_id')->references('req_quotation_id')->on('materials_quotation');
             $table->json('items_list_rate_amt');
             $table->float('grand_total');

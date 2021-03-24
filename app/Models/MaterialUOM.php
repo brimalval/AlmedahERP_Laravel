@@ -14,6 +14,5 @@ class MaterialUOM extends Model
         'uom_id',
         'item_uom',
         'conversion_factor',
-        'price'
     ];
 }
