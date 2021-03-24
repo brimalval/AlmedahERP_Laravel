@@ -444,18 +444,18 @@ function loadDelivery() {
 
 function loadSupplierQuotationInfo() {
   $(document).ready(function () {
-    $('#contentSupplierQuotation').load('modules/buying/supplierQuotation1.php');
+    $('#contentSupplierQuotation').load('/load-supplier');
   });
 }
 
 function loadSupplierQuotation() {
   $(document).ready(function () {
-    $('#contentSupplierQuotation').load('modules/buying/supplierQuotation.php');
+    $('#contentSupplierQuotation').load('/supplierquotation');
   });
 }
 
 function openNewSupplierQuotation() {
   $(document).ready(function () {
-    $('#contentSupplierQuotation').load('modules/buying/new_supplier_quotation.php')
+    $('#contentSupplierQuotation').load('/new-supplier');
   });
 }

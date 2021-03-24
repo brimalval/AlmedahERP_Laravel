@@ -24,32 +24,32 @@
 		<div id="accordion">
 			<!-- -->
 			<div class="card">
-				<?php include 'new supplier/series_nsq.php' ?>
+				@include( 'modules.buying.new supplier.series_nsq' )
 			</div>
 			<!--ADDRESS AND CONTACT-->
 			<div class="card">
-				<?php include 'new supplier/address_contact_nsq.php' ?>
+				@include( 'modules.buying.new supplier.address_contact_nsq' )
 			</div>
 			<!--CURRENCY AND PRICELIST-->
 			<div class="card">
-				<?php include 'new supplier/currency_and_pricelist_nsq.php' ?>
+				@include( 'modules.buying.new supplier.currency_and_pricelist_nsq' )
 			</div>
 			<!--ITEMS TABLE-->
 			<div class="card">
 				<div class="card-body">
-					<?php include 'new supplier/items_table_nsq.php' ?>
+					@include( 'modules.buying.new supplier.items_table_nsq' )
 				</div>
 			</div>
 			<!-- -->
 			<div class="card">
 				<div class="card-body">
-					<?php include 'new supplier/total_quantity_nsq.php' ?>
+					@include( 'modules.buying.new supplier.total_quantity_nsq' )
 				</div>
 			</div>
 			<!-- -->
 			<div class="card">
 				<div class="card-body">
-					<?php include 'new supplier/tax_charges_nsq.php' ?>
+					@include( 'modules.buying.new supplier.tax_charges_nsq' )
 				</div>
 			</div>
 			<!-- -->
@@ -101,33 +101,33 @@
 			
 			<!-- -->
 			<div class="card-body">
-				<?php include 'new supplier/taxes_charges.php' ?>
+				@include( 'modules.buying.new supplier.taxes_charges' )
 			</div>	
 			<!--Additional Discount-->
 			<div class="card">
-				<?php include 'new supplier/add_disc_nsq.php' ?>
+				@include( 'modules.buying.new supplier.add_disc_nsq' )
 			</div>
 			<!-- -->
 			<div class="card-body">
-				<?php include 'new supplier/grand_total.php' ?>
+				@include( 'modules.buying.new supplier.grand_total' )
 			</div>	
 			<!--TERMS AND CONDITIONS-->
 			<div class="card">
-				<?php include 'new supplier/terms_cond_nsq.php' ?>
+				@include( 'modules.buying.new supplier.terms_cond_nsq' )
 			</div>
 			<!--Printing Settings-->
 			<div class="card">
-				<?php include 'new supplier/printing_settings_nsq.php' ?>
+				@include( 'modules.buying.new supplier.printing_settings_nsq' )
 			</div>
 			<!--More Information-->
 			<div class="card">
-				<?php include 'new supplier/more_info_nsq.php' ?>
+				@include( 'modules.buying.new supplier.more_info_nsq' )
 			</div>
 		</div>
 		</div>
 	</div>
 
 	<!--Modals-->
-	<?php include 'new supplier/modals.php' ?>
+	@include( 'modules.buying.new supplier.modals' )
 	
 </div>

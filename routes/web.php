@@ -349,6 +349,12 @@ Route::get('/createnewsupplier', function() {
 Route::get('/supplierquotation', function() {
     return view('modules.buying.supplierQuotation');
 });
+Route::get('/load-supplier', function() {
+    return view('modules.buying.supplierQuotation1');
+});
+Route::get('/new-supplier', function() {
+    return view('modules.buying.new_supplier_quotation');
+});
 
 /**TASK ROUTES */
 Route::get('/openNewTask', function() {

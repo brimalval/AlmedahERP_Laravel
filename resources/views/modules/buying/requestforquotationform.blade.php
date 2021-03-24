@@ -63,7 +63,13 @@
                             <div class="form-group col-md-6">
                                 <!-- display when NEW button is clicked-->
                                 <label for="inputEmail4">Series</label>
-                                <select class="form-control"></select>
+                                <select class="form-control">
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Date</label>
@@ -144,6 +150,7 @@
                                 suppNo++;
                             });
 
+                            // Search suggestion of suppliers for making quotations
                             function searchSupplier(id) {
                                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                                 var input_id = "#supp" + id;
@@ -184,6 +191,7 @@
                                 });
                             }
 
+                            
                             function showSupplierDetails(index, supp_id) {
                                 var suppCont = "#suppCont" + index;
                                 var suppEmail = "#suppEmail" + index;
