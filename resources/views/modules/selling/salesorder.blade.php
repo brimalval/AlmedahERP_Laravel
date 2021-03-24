@@ -23,7 +23,8 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadSalesOrder();">Refresh</button>
+                <!-- @TODO -->
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" onclick="load__();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
