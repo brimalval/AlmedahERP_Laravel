@@ -134,10 +134,9 @@
             <tr>
                 <th>Sales ID</th>
                 <th>Product Code</th>
-                <th>Payment Status</th>
-                <th>Payment Track</th>
+                <th>Sales Status</th>
                 <th>Payment Balance</th>
-                <th>Date</th>
+                <th>Creation Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -146,10 +145,9 @@
             <tr>
                 <td class= "text-bold"> {{$row->id}}</td>
                 <td> <a href='javascript:onclick=openSaleInfo({{$row->id}});'>{{$row->product_code}}</a>    </td>
-                <td class="text-danger">{{$row->payment_status}}</td>
-                <td>{{$row->payment_track}}</td>
+                <td class="text-danger">{{$row->sales_status}}</td>
                 <td class="text-bold">{{$row->payment_balance}}</td>
-                <td class="text-bold">{{$row->date}}</td>
+                <td class="text-bold">{{$row->transaction_date}}</td>
                 <td><button type="button" class="btn btn-primary btn-sm" disabled>Release</button></td>
             </tr>
             @endforeach
@@ -250,7 +248,7 @@
                                         <input type="text" required class="form-input form-control" id="companyName" name="companyName">
                                         <br>
                                         <label>Address</label>
-                                        <input class="form-control" id="custAddress" name="custAddress"> </input>
+                                        <input class="form-control" required id="custAddress" name="custAddress"> </input>
                                     </div>
                                 </div>
                             </div>
@@ -296,7 +294,7 @@
                                             <label class="text-nowrap align-middle">
                                                 Transaction Date
                                             </label>
-                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" disabled id="currentDate">
+                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" >
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Add to list
@@ -325,7 +323,7 @@
                                                 <label class="text-nowrap align-middle">
                                                     Cost Price
                                                 </label>
-                                                <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" placeholder=0 disabled></td>
+                                                <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" placeholder=0 ></td>
                                               </td>
                                             </tr>
                                           </tfoot>
@@ -348,7 +346,7 @@
                                         <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" onchange="selectSalesMethod();">
                                             <option selected disabled>Please Select</option>
                                             <option value="Produce">Instock</option>
-                                            <option value="Purchase">Produce</option>
+                                            <option value="Purchase">Purchase</option>
                                         </select>
                                         <br>
                                     </div>
@@ -433,7 +431,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Type
                                     </label>
-                                      <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentMethod();">
+                                      <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentType();">
                                           <option selected disabled>Payment Type...</option>
                                           <option value="Cash">Cash</option>
                                           <option value="Cheque">Cheque</option>
@@ -442,8 +440,16 @@
                                 <br>
                             </div>
                             <br>
+                            
+                            <div class="col" id="account_no_div" name="account_no_div" style="display:none">
+                                <label >
+                                    Account No.
+                                </label>
+                                <input type="text" class="form-input form-control" id="account_no" name="account_no" placeholder="Account No">
+                            </div>
+                            <br>
 
-                            <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()">
+                            <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()" >
                                 <div class="col">
                                     <label class="text-nowrap align-middle">
                                         Initial Payment(Downpayment)
@@ -474,19 +480,7 @@
                                 </tr>
                               </thead>
                               <tbody id="payments_table_body">
-                                <tr>
-                                  <td>
-                                    <div class="form-check">
-                                      <input type="checkbox" class="form-check-input append-check">
-                                    </div>
-                                  </td>
-                                  <td class="text-center">
-                                    First Installment
-                                  </td>
-                                  <td class="text-center">
-                                    5000.00
-                                  </td>
-                                </tr>
+                                
                               </tbody>
                               <tfoot>
                                 <tr id="rowTotal">
@@ -664,10 +658,13 @@ $("#sales_order_form").submit(function(e) {
         }
     });
     var formData = new FormData(this);
+    formData.append("cart",currentCart );
+    formData.append("component", ultimateComponentTable);
+    formData.append("installmentType", document.getElementById('installmentType').value);
     $.ajax({
         type: 'POST',
         url: "/createsalesorder",
-        data: formData,
+        data: formData, 
         cache: false,
         contentType: false,
         processData: false,
@@ -676,15 +673,7 @@ $("#sales_order_form").submit(function(e) {
                 $('#newSalePrompt').modal('hide');
             });
 
-            x.row.add( [
-            data['id'],
-            data['product_code'],
-            data['payment_status'],
-            data['payment_track'],
-            data['payment_balance'],
-            data['date'],
-            "Release"
-            ] ).draw();
+            
             
         },
         error: function(data) {

@@ -119,6 +119,15 @@ function selectPaymentMethod() {
     
 }
 
+function selectPaymentType(){
+    var paymentType = document.getElementById('paymentType').value;
+    if(paymentType == "Cash"){
+        document.getElementById('account_no_div').style.display = "none"
+    }else{
+        document.getElementById('account_no_div').style.display = "flex"
+    }
+}
+
 //Function for payment type
 function installmentType(){
     
@@ -243,7 +252,6 @@ function components(){
 }
 
 function finalizer(){
-    console.log(ultimateComponentTable)
     for (let index = 0; index<ultimateComponentTable.length; index++) {
         component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2]];
         quantity = parseInt(ultimateComponentTable[index][3])
@@ -296,7 +304,6 @@ function finalizer(){
         </td>
         </tr>`
         );
-        console.log(status);
     }
 }
 

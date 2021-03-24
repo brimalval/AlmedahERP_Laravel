@@ -12,10 +12,11 @@ class ordered_products extends Model
     public $timestamps = False;
 
     protected $fillable = [
-
         'sales_id',
         'product_code',
         'quantity_purchased',
     ];
 
+    protected $casts = [
+    ];
 }
