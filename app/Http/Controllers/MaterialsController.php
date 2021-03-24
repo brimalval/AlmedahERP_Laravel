@@ -225,7 +225,7 @@ class MaterialsController extends Controller
     // Function for search suggestion regarding raw materials.
     public function searchMaterial(Request $request) {
         try {
-            $search = $request->input();
+            $search = $request->search;
             if($search == '')
                 $materials = ManufacturingMaterials::select('item_name', 'item_code')->orderby('created_at', 'desc')->limit(5)->get();
             else

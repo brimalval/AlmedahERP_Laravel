@@ -310,8 +310,7 @@
                                             .append(
                                                 `
                                                 <a class='form-control'>
-                                                    <strong> ` + item.item_name + `</strong> - ` + item
-                                                .item_code + `
+                                                    <strong> ` + item.item_name + `</strong> - ` + item.item_code + `
                                                 </a>
                                                 `
                                             ).appendTo(ul);
