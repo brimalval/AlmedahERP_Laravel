@@ -332,7 +332,7 @@
                                         </table>
                                         <div class="row">
                                           <div class="col-12 d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary m-1" name='btnSalesCalcualte' id='btnSalesCalcualte'>
+                                            <button type="button" class="btn btn-primary m-1" id='btnSalesCalculate'>
                                               <a class="" href="#" style="text-decoration: none;color:white">
                                                 Calculate
                                               </a>
@@ -341,17 +341,6 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
-                                        <label class="text-nowrap align-middle">
-                                            Payment Method
-                                        </label>
-                                        <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
-                                            <option selected disabled>Please Select</option>
-                                            <option value="Cash">Full Payment(Cash)</option>
-                                            <option value="Installment">Installment</option>
-                                        </select>
-                                        <br>
-                                    </div>
                                     <div class="col">
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
@@ -362,27 +351,6 @@
                                             <option value="Purchase">Produce</option>
                                         </select>
                                         <br>
-                                    </div>
-                                </div>
-                                <div class="row" id="paymentInstallment" style="display:none;">
-                                    <div class="col">
-                                        <label class="text-nowrap align-middle">
-                                            Initial Payment(Downpayment)
-                                        </label>
-                                        <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" name="saleDownpaymentCost" placeholder="0.00">
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="text-nowrap align-middle">
-                                                Installment Type
-                                            </label>
-                                            <select class="form-control" id="installmentType" name="installmentType">
-                                                <option selected disabled>Please Select</option>
-                                                <option value = "3 months">Installment 3 months</option>
-                                                <option value = "6 months">Installment 6 months</option>
-                                                <option value = "12 months">Installment 12 months</option>
-                                            </select>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -412,7 +380,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="components">
-                                                    <!--Cleared -->
+                                                    <!--Components Body -->
                                                     
                                                 </tbody>
                                             </table>
@@ -430,12 +398,6 @@
                                                 <label class="form-check-label text-muted">Re-Order Selected Raw
                                                     Materials</label>
                                             </div>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing" id="hiddenworkorder" hidden> </button>
-                                            <button type="submit" class="btn btn-primary m-1" id="gotoworkorder" value="Submit" class="btn btn-primary m-1 float-right menu" id="toWorkOrder">
-                                                Save go to work order
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -455,6 +417,54 @@
                       <div class="card-body">
                         <div class="row">
                           <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="text-nowrap align-middle">
+                                        Payment Method
+                                    </label>
+                                    <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
+                                        <option selected disabled>Please Select</option>
+                                        <option value="Cash">Full Payment(Cash)</option>
+                                        <option value="Installment">Installment</option>
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="col">
+                                    <label class="text-nowrap align-middle">
+                                        Payment Type
+                                    </label>
+                                      <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentMethod();">
+                                          <option selected disabled>Payment Type...</option>
+                                          <option value="Cash">Cash</option>
+                                          <option value="Cheque">Cheque</option>
+                                      </select>
+                                </div>
+                                <br>
+                            </div>
+                            <br>
+
+                            <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()">
+                                <div class="col">
+                                    <label class="text-nowrap align-middle">
+                                        Initial Payment(Downpayment)
+                                    </label>
+                                    <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" name="saleDownpaymentCost" placeholder="0.00">
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="text-nowrap align-middle">
+                                            Installment Type
+                                        </label>
+                                        <select class="form-control" id="installmentType" name="installmentType">
+                                            <option selected disabled>Please Select</option>
+                                            <option value = "3 months">Installment 3 months</option>
+                                            <option value = "6 months">Installment 6 months</option>
+                                            <option value = "12 months">Installment 12 months</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <table class="table border-bottom table-hover table-bordered">
                               <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
@@ -463,7 +473,7 @@
                                   <td class="text-center">Amount Due</td>
                                 </tr>
                               </thead>
-                              <tbody>
+                              <tbody id="payments_table_body">
                                 <tr>
                                   <td>
                                     <div class="form-check">
@@ -477,86 +487,30 @@
                                     5000.00
                                   </td>
                                 </tr>
-                                <tr style="display: none;">
-                                  <td>
-                                    <div class="form-check">
-                                      <input type="checkbox" class="form-check-input append-check">
-                                    </div>
-                                  </td>
-                                  <td class="text-center">
-                                    Second Installment
-                                  </td>
-                                  <td class="text-center">
-                                    5000.00
-                                  </td>
-                                </tr>
-                                <tr style="display: none;">
-                                  <td>
-                                    <div class="form-check">
-                                      <input type="checkbox" class="form-check-input append-check">
-                                    </div>
-                                  </td>
-                                  <td class="text-center">
-                                    Third Installment
-                                  </td>
-                                  <td class="text-center">
-                                    5000.00
-                                  </td>
-                                </tr>
-                                <tr style="display: none;">
-                                  <td>
-                                    <div class="form-check">
-                                      <input type="checkbox" class="form-check-input append-check">
-                                    </div>
-                                  </td>
-                                  <td class="text-center">
-                                    Fourth Installment
-                                  </td>
-                                  <td class="text-center">
-                                    5000.00
-                                  </td>
-                                </tr>
-                                <tr style="display: none;">
-                                  <td>
-                                    <div class="form-check">
-                                      <input type="checkbox" class="form-check-input append-check">
-                                    </div>
-                                  </td>
-                                  <td class="text-center">
-                                    Fifth Installment
-                                  </td>
-                                  <td class="text-center">
-                                    5000.00
-                                  </td>
-                                </tr>
+                              </tbody>
+                              <tfoot>
                                 <tr id="rowTotal">
                                   <td></td>
                                   <td class="font-weight-bold text-center">TOTAL AMOUNT:</td>
                                   <td class="text-center">
-                                    <input class="form-control" type="text" id="" placeholder="0.00">
+                                    <input class="form-control" type="text" id="payment_total_amount" placeholder="0.00" disabled>
                                   </td>
                                 </tr>
-                              </tbody>
+                              </tfoot>
                             </table>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-12 d-flex justify-content-center">
-                            <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentMethod();">
-                                <option selected disabled>Please Select Payment Type...</option>
-                                <option value="Cash">Cash</option>
-                                <option value="Cheque">Cheque</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="row">
+                        
+                        {{--
+                        Uneccessaru
+                         <div class="row">
                           <div class="col-12 d-flex justify-content-center">
                             <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
                               <a class="" href="#" style="text-decoration: none;color:white">
                                 Save Payment
                               </a>
                           </div>
-                        </div>
+                        </div> --}}
                       </div>
                     </div>
                   </div>
@@ -581,6 +535,7 @@
                                   <td class="text-center font-weight-bold">Description</td>
                                   <td class="text-center font-weight-bold">Payment Method</td>
                                   <td class="text-center font-weight-bold">Status</td>
+                                  <td class="text-center font-weight-bold">Customer</td>
                                 </tr>
                               </thead>
                               <tbody>
@@ -615,6 +570,12 @@
             </div>
             <script src="{{ asset('js/salesorder.js') }}"></script>
             <div class="modal-footer d-flex">
+                <div class="col">
+                    <button class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing" id="hiddenworkorder" hidden> </button>
+                    <button type="submit" class="btn btn-primary m-1" id="gotoworkorder" value="Submit" class="btn btn-primary m-1 float-right menu" id="toWorkOrder">
+                        Save go to work order
+                    </button>
+                </div>
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                 <div class="modal-footer">

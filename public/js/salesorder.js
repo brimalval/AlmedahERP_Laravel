@@ -22,16 +22,7 @@ $("#idBtn").on('click', function () {
     });
 });
 
-$("#closeSaleOrderModal").on('click', function () {
-    $('#custId').val("0000001");
-    $('#fName').val(null);
-    $('#lName').val(null);
-    $('#contactNum').val(null);
-    $('#custEmail').val(null);
-    $('#branchName').val(null);
-    $('#companyName').val(null);
-    $('#custAddress').val(null);
-});
+
 
 // Creating a custom reset method since the native reset
 // function also resets the values of the materials in case
@@ -67,26 +58,29 @@ $("#closeSaleOrderModal").on('click', function () {
 //    this.remove();
 //  });
 //}
+
 $("#saveSaleOrder").click(function () {
     //continueToWorkOrder("#saveSaleOrder");
     $("#notif").hide();
 });
 
-
+//Might be unnecessary will check @TODO
 //from old version of front-end js file
 $("#saveSaleOrder1").click(function () {
     continueToWorkOrder("#saveSaleOrder1");
 });
-$(".form-check > .append-check").click(function () {
-    $rowElement = $(this).parent().parent().parent();
-    if ($(this).prop("checked") == true) {
-        $rowElement.next().show();
-    }
-    else {
-        $rowElement.nextAll().find("input").prop('checked', false);
-        $rowElement.nextUntil("#rowTotal").hide();
-    }
-});
+
+//Unecessary
+// $(".form-check > .append-check").click(function () {
+//     $rowElement = $(this).parent().parent().parent();
+//     if ($(this).prop("checked") == true) {
+//         $rowElement.next().show();
+//     }
+//     else {
+//         $rowElement.nextAll().find("input").prop('checked', false);
+//         $rowElement.nextUntil("#rowTotal").hide();
+//     }
+// });
 
 /**
  * function continueToWorkOrder(x) {
@@ -104,22 +98,6 @@ $(".form-check > .append-check").click(function () {
  */
 //end
 
-function sellable() {
-    let checked = document.getElementById("isSellable").checked;
-    if (checked) {
-        let x = 0;
-        document.querySelectorAll('.sellable').forEach(function (input) {
-            input.removeAttribute("disabled");
-        });
-        document.getElementById("isSellable").value = 1;
-
-    } else {
-        document.querySelectorAll('.sellable').forEach(function (input) {
-            input.setAttribute("disabled", "");
-        });
-        document.getElementById("isSellable").value = 0;
-    }
-}
 
 function selectSalesMethod() {
     var selected = document.getElementById("saleSupplyMethod").value;
@@ -136,6 +114,45 @@ function selectPaymentMethod() {
         document.getElementById("paymentInstallment").style.display = "flex";
     } else {
         document.getElementById("paymentInstallment").style.display = "none";
+        installmentType();
+    }
+    
+}
+
+//Function for payment type
+function installmentType(){
+    
+    $('#payments_table_body tr').remove();
+    cost = document.getElementById('costPrice').value;
+    payment_method = document.getElementById('salePaymentMethod').value;
+    divider = 0;
+    if(payment_method == "Cash"){
+        $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Cash</td><td class="text-center">'+cost+'</td></tr>');
+    }else{
+        installment_type = document.getElementById('installmentType').value;
+        saleDownpaymentCost = document.getElementById('saleDownpaymentCost').value;
+        $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Downpayment </td><td class="text-center">'+saleDownpaymentCost+'</td></tr>');
+        cost-=saleDownpaymentCost;
+        switch (installment_type) {
+            case "3 months":
+                divider = Math.round(cost*100.0 /3)/100
+                for (let index = 0; index < 3; index++) {
+                    $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment '+(index+1)+'</td><td class="text-center">'+divider+'</td></tr>'); 
+                }
+                break;
+            case "6 months":
+                divider = Math.round(cost*100.0 /6)/100
+                for (let index = 0; index < 6; index++) {
+                    $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment '+(index+1)+'</td><td class="text-center">'+divider+'</td></tr>'); 
+                }
+                break;
+            case "12 months":
+                divider = Math.round( cost*100.0 /12)/100
+                for (let index = 0; index < 12; index++) {
+                    $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment '+(index+1)+'</td><td class="text-center">'+divider+'</td></tr>'); 
+                }
+                break;
+        }
     }
 }
 
@@ -188,17 +205,20 @@ function deleteRow(r) {
 
 
 
-$('#btnSalesCalcualte').click(function (){
+$('#btnSalesCalculate').click(function (){
     cost = 0;
     for (let index = 0; index < currentCart.length; index++) {
         cost += currentCart[index][1] * getCalculatedPrice(currentCart[index][0])
     }
     document.getElementById('costPrice').value = cost;
+    document.getElementById('payment_total_amount').value = cost;
+
     components();
 
     //@TODO use call back function here instead of timeout. Problematic if huge data is processed
     // 2ms timeout
     setTimeout(() => {  finalizer(); }, 2000);
+    ultimateComponentTable = [];
 });
 
 function components(){
@@ -224,7 +244,6 @@ function components(){
 
 function finalizer(){
     console.log(ultimateComponentTable)
-    // @TODO replace named dictionary to 2d array for easier access
     for (let index = 0; index<ultimateComponentTable.length; index++) {
         component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2]];
         quantity = parseInt(ultimateComponentTable[index][3])
@@ -280,72 +299,6 @@ function finalizer(){
         console.log(status);
     }
 }
-
-//For getting details of product
-// $("#saleProductCode").change(function () {
-//     $(".components").html("");
-//     selected = $("#saleProductCode option:selected").text();
-//     $.ajax({
-//         url: "/getComponents/" + selected,
-//         type: "GET",
-//         success: function (components) {
-//             for (component of components) {
-//                 // set status of each component
-//                 if (
-//                     component[0] == 0 &&
-//                     component[0] < component[0] * $("#saleQuantity").val()
-//                 ) {
-//                     status = "Out of stock";
-//                 } else if (
-//                     component[0] != 0 &&
-//                     component[0] < component[0] * $("#saleQuantity").val()
-//                 ) {
-//                     status = "Insufficient";
-//                 } else if (component[0] >= $("#saleQuantity").val()) {
-//                     status = "Available";
-//                 }
-
-//                 // append each component to the components table
-
-//                 $(".components").append(
-//                     `<tr>
-//               <td>
-//                   <div class="form-check">
-//                       <input type="checkbox" class="form-check-input">
-//                   </div>
-//               </td>
-//               <td class="text-center">
-//                   ` +
-//                     component[2] +
-//                     `
-//               </td>
-//               <td class="text-center">
-//                   ` +
-//                     component[1] +
-//                     `
-//               </td>
-//               <td class="mt-available" style="text-align: center;">` +
-//                     component[0] +
-//                     `</td>
-//               <td class="mt-needed text-center">
-//                   ` +
-//                     $("#saleQuantity").val() * component[0] +
-//                     `
-//               </td>
-//               <td class="text-danger text-center">
-//                   ` +
-//                     status +
-//                     `
-//               </td>
-//           </tr>`
-//                 );
-//             }
-//         },
-//         error: function (request, error) {
-//             alert("Request: " + JSON.stringify(request));
-//         },
-//     });
-// });
 
 $("#saleQuantity").keyup(function () {
     new_values = [];
