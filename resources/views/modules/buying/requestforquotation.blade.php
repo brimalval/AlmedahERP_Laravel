@@ -19,7 +19,7 @@
                         <a class="dropdown-item" href="#">Settings</a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1">Refresh</button>
+                <button type="button" class="btn btn-primary ml-1" onclick="loadBuyingRequestForQuotation()">Refresh</button>
                 <button type="button" class="btn btn-info ml-1"
                     onclick="openBuyingRequestForQuotationForm()">New</button>
             </div>
