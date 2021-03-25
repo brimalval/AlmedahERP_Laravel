@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ManufacturingMaterials;
+use App\Models\MaterialQuotation;
 use App\Models\MaterialRequest;
 use App\Models\RequestedRawMat;
 use App\Models\Station;
@@ -75,6 +76,7 @@ class MatRequestController extends Controller
             $matRequest->request_id = "REQ";
             $matRequest->save();
             $matRequest->request_id = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
+            $id_copy = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
             $matRequest->save();
             for($i=0; $i<sizeof(request('item_code')); $i++){
                 $requestItem = new RequestedRawMat();
@@ -85,6 +87,27 @@ class MatRequestController extends Controller
                 $requestItem->station_id = request('station_id')[$i];
                 $requestItem->save();
             }
+
+
+            $mat_request = MaterialRequest::where('request_id', $id_copy)->first();
+            $quotation = new MaterialQuotation();
+            $quotation->date_created = Carbon::now();
+            $quotation->request_id = $id_copy;
+            
+            $items = $mat_request->raw_mats;
+            $item_array = array();
+            foreach($items as $item) {
+                $item_array[] = array(
+                    'item_code' => $item->item_code,
+                    'qty' => $item->quantity_requested,
+                    'station' => $item->target_station,
+                    'method' => $item->procurement_method
+                );
+            }
+
+            $quotation->item_list = json_encode($item_array);
+            $quotation->save();
+
             return response()->json([
                 'status' => 'success',
                 'information' => $request->all(),
@@ -189,7 +212,7 @@ class MatRequestController extends Controller
     {
         $id = $materialrequest->id;
         try{
-            RequestedRawMat::where('request_id', '=', $materialrequest->request_id)->delete();
+            RequestedRawMat::where('request_id', $materialrequest->request_id)->delete();
             $materialrequest->delete();
             return response()->json([
                 'status' => 'success',

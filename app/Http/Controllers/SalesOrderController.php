@@ -11,7 +11,7 @@ use App\Models\MaterialCategory;
 use App\Models\payment_logs;
 use App\Models\MaterialRequest;
 use App\Models\ordered_products;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 class SalesOrderController extends Controller
 {
@@ -84,18 +84,27 @@ class SalesOrderController extends Controller
             $form_data = $request->input();
 
             $cart = $request->input("cart");
+
             $cart = explode(',', $cart);
-            
+
+            for($i=0; $i<count($cart); $i++) {
+                echo $cart[$i] . "<br>";
+            }
+
             $converter = [];
             for ($i=0, $diff = []; $i< count($cart); $i++) {
                 if( count($diff) == 2){
                     array_push($converter, $diff);
+
                 }else{
                     array_push($diff, $cart[$i]);
                 }
                 
             }
             $cart = $converter;
+
+            //$output = implode(",", $converter);
+            //print_r($output);
             
             $component = $request->input("component");
             
@@ -110,31 +119,6 @@ class SalesOrderController extends Controller
             $data->payment_mode = $form_data['salePaymentMethod'];
             
             $payment_logs = new payment_logs();
-
-            //generate payment id
-            $lastPayment = payment_logs::orderby('date_of_payment', 'desc')->first();
-            $nextId = ($lastPayment)
-                        ? payment_logs::orderby('date_of_payment', 'desc')->first()->id + 1 
-                        : 1;
-
-            $to_append = 0;
-            $digit_flag = 1;
-            while($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
-
-            $payment_id = "PID-";
-
-            for($i=1; $i <= 10 - $to_append; $i++){
-                $payment_id .= "0";
-            }
-
-            $payment_id .= $nextId;
-
-            $payment_logs->payment_id = $payment_id;
-
-            $payment_logs->date_of_payment = $form_data['saleDate'];
 
             //Calculate total cost of material then minus initial payment or full payment
             // @TODO Balanced out to zero if full payment
@@ -154,7 +138,7 @@ class SalesOrderController extends Controller
                 $data->sales_status = "With Outstanding Balance";
 
                 $data->installment_type = $form_data['installmentType'];
-                $payment_logs->amount_paid = $form_data['saleDownPaymentCost'];
+                $payment_logs->amount_paid = $form_data['saleDownpaymentCost'];
 
                 #@TODO
                 $payment_logs->payment_description = "To be developed";
@@ -190,6 +174,32 @@ class SalesOrderController extends Controller
             
             $data->save();
             $payment_logs->sales_id = $data->id;
+
+            //generate payment id
+            $lastPayment = payment_logs::orderby('id', 'desc')->first();
+            $nextId = ($lastPayment)
+                        ? SalesOrder::orderby('id', 'desc')->first()->id + 1 
+                        : SalesOrder::orderby('id', 'desc')->first()->id;
+
+            $to_append = 0;
+            $digit_flag = 1;
+            while($nextId >= $digit_flag) {
+                ++$to_append;
+                $digit_flag *= 10;
+            }
+
+            $payment_id = "PID-";
+
+            for($i=1; $i <= 10 - $to_append; $i++){
+                $payment_id .= "0";
+            }
+
+            $payment_id .= $nextId;
+
+            $payment_logs->payment_id = $payment_id;
+
+            $payment_logs->date_of_payment = date("Y-m-d");
+
             $payment_logs->save();
             
             // MATERIAL REQUEST CANNOT CONTINUE DUE TO LACK OF INFO

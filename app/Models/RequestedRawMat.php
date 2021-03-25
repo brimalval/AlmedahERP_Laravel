@@ -20,7 +20,7 @@ class RequestedRawMat extends Model
     ];
 
     public function request(){
-        return $this->ownedBy(MaterialRequest::class, 'request_id', 'request_id');
+        return $this->belongsTo(MaterialRequest::class, 'request_id', 'request_id');
     }
 
     public function items(){

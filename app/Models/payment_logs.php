@@ -27,4 +27,8 @@ class payment_logs extends Model
     protected $casts = [
         'date_of_payment' => 'date',
     ];
+
+    public function salesOrder() {
+        return $this->belongsTo(SalesOrder::class, 'id', 'sales_id');
+    }
 }

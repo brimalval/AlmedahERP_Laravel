@@ -28,4 +28,11 @@ class SalesOrder extends Model
         'transaction_date' => 'date',
     ];
 
+    public function paymentLogs() {
+        return $this->hasMany(payment_logs::class, 'sales_id', 'id');
+    }
+
+    public function orderedProducts() {
+        return $this->hasMany(ordered_products::class, 'sales_id', 'id');
+    }
 }

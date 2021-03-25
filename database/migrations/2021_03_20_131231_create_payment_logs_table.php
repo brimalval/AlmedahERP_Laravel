@@ -19,7 +19,7 @@ class CreatePaymentLogsTable extends Migration
             $table->date('date_of_payment');
             #Foreign Key
             $table->unsignedBigInteger('sales_id');
-            $table->foreign('sales_id')->references('id')->on('salesorder');
+            $table->foreign('sales_id')->references('id')->on('salesOrder');
             $table->float('amount_paid');
             $table->string('customer_rep')->nullable();
             $table->string('payment_method');
