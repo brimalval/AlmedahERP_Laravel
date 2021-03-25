@@ -5,7 +5,8 @@
         <div class="navbar-nav ml-auto">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Menu
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -19,7 +20,8 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary ml-1">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="openBuyingRequestForQuotationForm()">New</button>
+                <button type="button" class="btn btn-info ml-1"
+                    onclick="openBuyingRequestForQuotationForm()">New</button>
             </div>
         </div>
     </div>
@@ -75,7 +77,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for ($i = 1; $i <= 1; $i++) : ?>
+                            @foreach ($quotations as $quotation)
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                            <label class="custom-control-label" for="customCheck1">&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fa fa-heart fa-fw" style="vertical-align: middle;">
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="javascript:viewBuyingRequestForQuotationForm();">{{ $quotation->request_id }}</a>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <span class="fa fa-circle"></span>
+                                            {{ $quotation->req_status }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center" style="width: 40%;">
+                                        <span>{{ $quotation->request_id }}</span>
+                                    </td>
+                                    <td class="text-right" style="width: 5%;">
+                                        <span>1 M</span>
+                                    </td>
+                                    <td class="text-center" style="width: 0%;">
+                                        <span class="fa fa-square-o fa-2x"></span>
+                                    </td>
+                                    <td class="text-center" style="width: 5%;">
+                                        <span>
+                                            <span class="fa fa-comments fa-fw"></span>
+                                            <span>0</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            
+                            <!---
                                 <tr>
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
@@ -96,10 +136,10 @@
                                         </span>
                                     </td>
                                     <td class="text-center" style="width: 40%;">
-                                        <span><?= 'R-SQTN-2021-00001' ?></span>
+                                        <span></span>
                                     </td>
                                     <td class="text-right" style="width: 5%;">
-                                        <span><?= "$i M" ?></span>
+                                        <span></span>
                                     </td>
                                     <td class="text-center" style="width: 0%;">
                                         <span class="fa fa-square-o fa-2x"></span>
@@ -111,7 +151,7 @@
                                         </span>
                                     </td>
                                 </tr>
-                            <?php endfor; ?>
+                            --->
                             <!-- <tr>
                                 <td colspan="8">
                                     <div class="text-center" style="padding-top: 100px; padding-bottom: 100px;">

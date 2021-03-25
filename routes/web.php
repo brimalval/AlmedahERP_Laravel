@@ -14,6 +14,7 @@ use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
+use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
@@ -281,9 +282,7 @@ Route::get('/openReportsBuilderForm', function() {
 }); 
 
 /**REQUEST FOR QUOTATION ROUTES */
-Route::get('/requestforquotation', function() {
-    return view('modules.buying.requestforquotation');
-});
+Route::get('/requestforquotation', [RequestQuotationController::class, 'index']);
 Route::get('/new-quotation', function() {
     return view('modules.buying.requestforquotationform');
 });
