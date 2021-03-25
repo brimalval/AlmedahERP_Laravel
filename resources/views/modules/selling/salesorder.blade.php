@@ -668,7 +668,7 @@ $("#sales_order_form").submit(function(e) {
                 $('#newSalePrompt').modal('hide');
             });
 
-
+            loadSalesOrder();
             
         },
         error: function(data) {
