@@ -27,6 +27,7 @@ class SalesOrderController extends Controller
         ->join('ordered_products', 'ordered_products.sales_id', '=', 'salesorder.id')
         ->get();
 
+        
         return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
     }
 
@@ -86,16 +87,19 @@ class SalesOrderController extends Controller
             $cart = $request->input("cart");
             $cart = explode(',', $cart);
             
-            $converter = [];
+            // Declares a 2d array because if not it considers it as a dictionary
+            $converter = [ [] ];
             for ($i=0, $diff = []; $i< count($cart); $i++) {
+                array_push($diff, $cart[$i]);
                 if( count($diff) == 2){
                     array_push($converter, $diff);
-                }else{
-                    array_push($diff, $cart[$i]);
+                    $diff = [];
                 }
-                
             }
+            // Pops the first empty element in the array
+            array_shift($converter);
             $cart = $converter;
+
             
             $component = $request->input("component");
             
@@ -181,7 +185,7 @@ class SalesOrderController extends Controller
             // }
 
             foreach ($cart as $row){
-
+            
                 $order = new ordered_products();
                 $order->sales_id = $data->id;
                 $order->product_code = $row[0];
