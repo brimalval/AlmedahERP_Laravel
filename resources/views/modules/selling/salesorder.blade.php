@@ -326,7 +326,6 @@
                                                 </label>
                                                 <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" placeholder=0 ></td>
                                               </td>
-                                              <td class="text-center">5000.00</td>
                                             </tr>
                                           </tfoot>
                                         </table>
@@ -594,17 +593,14 @@ var x;
 // From back-end: to show that data can be shown in table
 $(document).ready(function() {
     x = $('#salestable').DataTable();
-
     // Gets Current date today
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); 
     var yyyy = today.getFullYear();
-
     today = mm + '/' + dd + '/' + yyyy;
     document.getElementById('currentDate').value = today;
 });
-
 $("#gotoworkorder").click(function(){
     console.log("Clicked");
     $("#hiddenworkorder").click();
@@ -680,17 +676,11 @@ $("#sales_order_form").submit(function(e) {
         }
     });
 });
-
 function getCalculatedPrice($name){
     @foreach ($products as $row)
         if ("{{$row->product_code}}" == $name)
             return {{$row->sales_price_wt}}
     @endforeach
-
-}
-
-function refresh(){
-    x.draw();
 }
 
 

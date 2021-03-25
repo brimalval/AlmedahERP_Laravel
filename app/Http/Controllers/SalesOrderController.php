@@ -114,6 +114,30 @@ class SalesOrderController extends Controller
             $data->payment_mode = $form_data['salePaymentMethod'];
             
             $payment_logs = new payment_logs();
+
+            //generate payment id
+            $lastPayment = payment_logs::orderby('date_of_payment', 'desc')->first();
+            $nextId = ($lastPayment)
+                        ? payment_logs::orderby('date_of_payment', 'desc')->first()->id + 1 
+                        : 1;
+
+            $to_append = 0;
+            $digit_flag = 1;
+            while($nextId >= $digit_flag) {
+                ++$to_append;
+                $digit_flag *= 10;
+            }
+
+            $payment_id = "PID-";
+
+            for($i=1; $i <= 10 - $to_append; $i++){
+                $payment_id .= "0";
+            }
+
+            $payment_id .= $nextId;
+
+            $payment_logs->payment_id = $payment_id;
+
             $payment_logs->date_of_payment = $form_data['saleDate'];
 
             //Calculate total cost of material then minus initial payment or full payment
@@ -194,7 +218,7 @@ class SalesOrderController extends Controller
                 $order->save();
             }
             
-            return "Sucess";
+            return "Success";
 
         }catch(Exception $e){
             return $e;

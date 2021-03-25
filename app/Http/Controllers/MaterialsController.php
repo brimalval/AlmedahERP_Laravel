@@ -30,9 +30,9 @@ class MaterialsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'material_code' => 'required|alpha_dash',
-            'material_name' => 'required|alpha_dash',
-            'material_category' => 'required|alpha_dash',
+            'material_code' => 'required|string',
+            'material_name' => 'required|string',
+            'material_category' => 'required|string',
             'unit_price' => 'required|integer|numeric|min:0',
             'total_amount' => 'required|integer|numeric|min:1',
             'rm_status' => 'required',
@@ -101,9 +101,9 @@ class MaterialsController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'material_code' => 'required|alpha_dash',
-            'material_name' => 'required|alpha_dash',
-            'material_category' => 'required|alpha_dash',
+            'material_code' => 'required|string',
+            'material_name' => 'required|string',
+            'material_category' => 'required|string',
             'unit_price' => 'required|integer|numeric|min:0',
             'total_amount' => 'required|integer|numeric|min:1',
             'rm_status' => 'required',

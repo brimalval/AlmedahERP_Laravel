@@ -9,7 +9,7 @@ class RequestedRawMat extends Model
 {
     use HasFactory;
 
-    protected $table = "requested_raw_materials";
+    protected $table = "requested_rm";
 
     protected $fillable = [
         'request_id',

@@ -38,9 +38,9 @@ class ProductsController extends Controller
         // in case the thing we're adding is a variant
         // If it's a variant, it inherits its template's image by default
         $rules = [
-            'product_name' => 'required|alpha',
+            'product_name' => 'required|string',
             // 'product_category' => 'required', **remove comment if added in interface 
-            'product_type' => 'required|alpha_dash',
+            'product_type' => 'required|string',
             'sales_price_wt' => 'required|integer|numeric|min:1',
             'unit' => 'required|alpha',
             'internal_description' => 'required|max:255',
