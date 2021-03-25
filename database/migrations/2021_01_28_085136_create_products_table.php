@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
             $table->string('bar_code');
             $table->json('picture')->nullable();
             $table->json('materials')->nullable();
+            $table->json('components')->nullable();
             $table->timestamps();
         });
     }

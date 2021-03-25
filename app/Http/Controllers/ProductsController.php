@@ -45,7 +45,9 @@ class ProductsController extends Controller
             'unit' => 'required|alpha',
             'internal_description' => 'required|max:255',
             'bar_code' => 'required|alpha_num' ,
-            'materials' => 'required', 
+            // Required to have at least 1 material OR at least 1 component 
+            'materials' => 'required_if:components, {}', 
+            'components' => 'required_if:materials, {}',
         ];
         if(request('product_status') != 'Variant'){
             $rules['picture'] = 'required';
@@ -86,6 +88,8 @@ class ProductsController extends Controller
             $data->bar_code = $form_data['bar_code'];
             $data->internal_description = $form_data['internal_description'];
             $data->materials = $form_data['materials'];
+            // UN-COMMENT THIS WHEN COMPONENTS CAN BE ADDED TO PRODUCTS
+            // $data->components = $form_data['components'];
             $data->picture = json_encode($imagePath);
             $data->product_category = (isset($form_data['product_category'])) ? $form_data['product_category'] : null;
             $data->product_name = $form_data['product_name'];
