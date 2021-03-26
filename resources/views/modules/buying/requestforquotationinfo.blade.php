@@ -32,14 +32,22 @@
             </div>
         </div>
     </div>
+    <br>
+    
 </nav>
 
 <div class="container-fluid" style="margin: 0; padding: 0;">
-    <div class="row mt-2 mb-3">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <div class="float-right">
+
+<script src="{{ asset('js/requestforquotation.js') }}"></script>
+<script src="{{ asset('js/requestforquotationItems.js') }}"></script>
+<form  id="req-forquotation" class="update" action="">
+@csrf
+@method('PATCH')
+<div id="accordion">
+<br>
+  <div class="card">
+  <div class="float-right" id="headingOne">
+      <div class="float-right">
                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                             <div class="btn-group btn-group-sm" role="group">
                                 <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
@@ -54,203 +62,246 @@
                             <button type="button" class="btn btn-secondary btn-sm ml-1">Send Supplier Emails</button>
                         </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <h6><strong>DASHBOARD</strong></h6>
-
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                &nbsp;
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Date</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-body">
-                    <hr class="mt-2 mb-5">
-                    <h6><strong>Supplier Detail</strong></h6>
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 0%;">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </th>
-                                <th scope="col">Supplier</th>
-                                <th scope="col">Contact</th>
-                                <th scope="col">Email Id</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
-                                <td class="text-center">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                </tr>
-                                <?php endfor; ?>
-                        </tbody>
-                    </table>
-
-                    <button class="btn btn-secondary btn-sm">Get Suppliers</button>
-                </div>
-                <div class="card-body">
-                    <hr class="mt-2 mb-5">
-                    <h6><strong>Items</strong></h6>
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 0%;">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </th>
-                                <th scope="col">Item Code</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Required Date</th>
-                                <th scope="col">Warehouse</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
-                                <td class="text-center">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                </tr>
-                                <?php endfor; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-body">
-                    <!-- <hr class="mt-2 mb-5">
-                    <h6><strong>Message for Supplier</strong></h6> -->
-
-                    <form>
-                        <div class="form-row">
-
-                            <div class="form-group col-md-12">
-                                <label for="inputEmail4">Message for Supplier</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                            </div>
-
-                        </div>
-                    </form>
-                </div>
-                <div class="card-body">
-                    <hr class="mt-2 mb-5">
-                    <h6><strong>PRINTING SETTINGS</strong></h6>
-
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Print Heading</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                            </div>
-                            <div class="form-group col-md-6">&nbsp;</div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Letter Head</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                            </div>
-                            <div class="form-group col-md-6">&nbsp;</div>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-body">
-                    <hr class="mt-2 mb-5">
-                    <h6><strong>MORE INFORMATION</strong></h6>
-
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Status</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                            </div>
-                            <div class="form-group col-md-6">&nbsp;</div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Fiscal Year</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                            </div>
-                            <div class="form-group col-md-6">&nbsp;</div>
-                        </div>
-                    </form>
-                </div>
-
-
-                <div class="card-body">
-                    <hr class="mt-5">
-
-                    <form>
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="float-left">Add a comment</span>
-                                <button class="btn btn-secondary btn-sm float-right">Comment</button>
-                            </div>
-                            <div class="card-body p-0">
-                                <textarea id="notes" class="summernote" name="notes"></textarea>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div id="myTimeline">
-                        <div data-vtdate="February 2020">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque reprehenderit magnam
-                            fuga iure. Rerum repudiandae blanditiis harum eius fuga voluptatibus illum qui, natus
-                            aliquam et. Porro sequi veritatis aspernatur culpa!
-                        </div>
-                        <div data-vtdate="March 2020">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia eius veniam nulla quia
-                            ipsam a itaque dolorum optio perferendis dolore corporis magnam eligendi facere repellat
-                            fugit, harum voluptatum voluptatibus autem?
-                        </div>
-                        <div data-vtdate="April 2020">
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt, quis voluptatibus nulla
-                            odit voluptate omnis a ducimus impedit quasi modi sed esse! Eius repudiandae cumque pariatur
-                            saepe, nemo voluptatibus modi!
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-footer">
-                    <!-- <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-dark" href="#">20</button>
-                        <button type="button" class="btn btn-secondary" href="#">100</button>
-                        <button type="button" class="btn btn-secondary" href="#">500</button>
-                    </div> -->
-                </div>
-            </div>
-        </div>
     </div>
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <a href="#" class="btn btn-link" data-toggle="collapse" data-target="#Dashboard" aria-expanded="true" aria-controls="Dashboard">
+          Dashboard
+        </a>
+      </h5>
+    </div>
+    <div id="Dashboard" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        <!--dashboard contents-->
+        <div class="container">
+          {{-- <form id="contactForm" name="contact" role="form">
+            @csrf --}}
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="date_created">Date</label>
+                  <input type="date" name="date_created" id="date_created" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="req_status">Status</label>
+                  <select class="form-control" name="req_status" id="req_status">
+                    <option value="UOM1">status1</option>
+                    <option value="UOM2">status2</option>
+                    <option value="UOM3">status3</option>
+                  </select>
+                </div>
+               </div>
+            </div>
+            </div>
+          {{-- </form> --}}
+
+        </div>
+        <!--end contents-->
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#suppDetail" aria-expanded="false" aria-controls="suppDetail">
+          Supplier Detail
+        </a>
+      </h5>
+    </div>
+    <div id="suppDetail" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        <!--supplier detail contents-->
+        <div class="container">
+          {{-- <form id="contactForm" name="contact" role="form"> --}}
+            
+         
+              <table class="table border-bottom table-hover table-bordered" id="items-tbl">
+                <thead class="border-top border-bottom bg-light">
+                  <tr class="text-muted">
+                    <td>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
+                    </td>
+
+                    <td>Supplier</td>
+                    <td>Contact</td>
+                    <td>Email ID</td>
+                    
+                    <td></td>
+                  </tr>
+                </thead>
+                <tbody class="" id="material-request-input-rows">
+                   
+                      <tr>
+                          <td>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input">
+                          </div>
+                          </td>
+                          <td id="" class="mr-code-input">
+                            <select required="true" name="" class="form-control">
+                            <option value="buy">Supplier1</option>
+                            <option value="produce">Supplier2</option>
+                            <option value="buyproduce">Supplier3</option><option value="" ></option>
+                            </select>
+                          </td>
+
+                          <td style="width: 30%;"><input required value="" class="form-control"  type="number" name="quantity" id="quantity"></td>
+                          
+                          <td id="" class="mr-target-input">
+                            <input required value="" class="form-control"  type="text" name="email_id" id="email_id">
+                          </td>
+                          
+                          <td>
+                          <a id="" class="btn btn-outline-danger delete-btn" href="#" role="button">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                          </a>
+                          </td>
+                      </tr>
+                    
+                </tbody>
+              </table>
+              <td colspan="7" rowspan="5">
+                <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                
+              </td>
+
+              
+          {{-- </form> --}}
+        </div>
+        <!--end contents-->
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#item" aria-expanded="false" aria-controls="item">
+          Items
+        </a>
+      </h5>
+    </div>
+    <div id="item" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        <!--supplier detail contents-->
+        <div class="container">
+          {{-- <form id="contactForm" name="contact" role="form"> --}}
+            
+         
+              <table class="table border-bottom table-hover table-bordered" id="items-tbl">
+                <thead class="border-top border-bottom bg-light">
+                  <tr class="text-muted">
+                    <td>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                      </div>
+                    </td>
+
+                    <td>Item Code</td>
+                    <td>UOM</td>
+                    <td>Quantity</td>
+                    <td>Required Date</td>
+                    <td>Station</td>
+                    
+                    <td></td>
+                  </tr>
+                </thead>
+                <tbody class="" id="items-input-rows">
+                   
+                      <tr>
+                          <td>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input">
+                          </div>
+                          </td>
+
+                          <td id="" class="mr-code-input">
+                          <input required value="" class="form-control"  type="text" name="item_code" id="item_code">
+                          </td>
+
+                          <td id="" class="mr-code-input">
+                            <select required="true" name="" class="form-control">
+                            <option value="UOM1">UOM1</option>
+                            <option value="UOM2">UOM2</option>
+                            <option value="UOM3">UOM3</option><option value="" ></option>
+                            </select>
+                          </td>
+
+                          <td style="width: 10%;"><input required value="" class="form-control"  type="number" min="0" name="quantity" id="quantity"></td>
+                          
+                          <td id="" class="mr-target-input" style="width: 10%;">
+                            <input required value=""  class="form-control"  type="date" name="required_date" id="required_date">
+                          </td>
+                          
+                          <td id="" class="mr-code-input">
+                            <select required="true" name="" class="form-control">
+                            <option value="Station1">Station1</option>
+                            <option value="Station2">Station2</option>
+                            <option value="Station3">Station3</option><option value="" ></option>
+                            </select>
+                          </td>
+
+                          <td>
+                          <a id="" class="btn btn-outline-danger delete-btn2" href="#" role="button">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                          </a>
+                          </td>
+                      </tr>
+                    
+                </tbody>
+              </table>
+              <td colspan="7" rowspan="5">
+                <button type="button" onclick="addRow2()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                
+              </td>
+
+              
+          {{-- </form> --}}
+        </div>
+        <!--end contents-->
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <a href="#" class="btn btn-link collapsed" data-toggle="collapse" data-target="#msg" aria-expanded="false" aria-controls="msg">
+          Message for Supplier
+        </a>
+      </h5>
+    </div>
+    <div id="msg" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        <!--supplier detail contents-->
+        <div class="container">
+          {{-- <form id="contactForm" name="contact" role="form"> --}}
+          <div id="summernote">
+          
+          </div>
+          {{-- </form> --}}
+        </div>
+        <!--end contents-->
+      </div>
+    </div>
+  </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</form>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.summernote').summernote({
+        $('#summernote').summernote({
             height: 200
         });
         $('#myTimeline').verticalTimeline({
