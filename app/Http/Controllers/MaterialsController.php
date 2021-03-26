@@ -74,9 +74,10 @@ class MaterialsController extends Controller
             $data->item_code = $form_data['material_code'];
             $data->item_name = $form_data['material_name'];
             $data->category_id  = $form_data['material_category'];
-            $data->unit_price = $form_data['unit_price'];
+            // Commenting this out for now since unit_price no longer exists
+            // $data->unit_price = $form_data['unit_price'];
             $data->total_amount = $form_data['total_amount'];
-            $data->category-> quantity += $form_data['total_amount'];
+            $data->category->quantity += $form_data['total_amount'];
             $data->category->save();
             $data->rm_status = $form_data['rm_status'];
             $data->item_image = json_encode($imagePath);
