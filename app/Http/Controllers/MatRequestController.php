@@ -213,6 +213,7 @@ class MatRequestController extends Controller
         $id = $materialrequest->id;
         try{
             RequestedRawMat::where('request_id', $materialrequest->request_id)->delete();
+            MaterialQuotation::where('request_id', $materialrequest->request_id)->delete();
             $materialrequest->delete();
             return response()->json([
                 'status' => 'success',
