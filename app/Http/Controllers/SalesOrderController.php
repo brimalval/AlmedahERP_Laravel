@@ -173,9 +173,8 @@ class SalesOrderController extends Controller
 
             //generate payment id
             $lastPayment = payment_logs::orderby('id', 'desc')->first();
-            $nextId = ($lastPayment)
-                        ? SalesOrder::orderby('id', 'desc')->first()->id + 1 
-                        : SalesOrder::orderby('id', 'desc')->first()->id;
+            $to_add = ($lastPayment) ? 1 : 0;
+            $nextId = SalesOrder::orderby('id', 'desc')->first()->id + $to_add; 
 
             $to_append = 0;
             $digit_flag = 1;
@@ -184,13 +183,8 @@ class SalesOrderController extends Controller
                 $digit_flag *= 10;
             }
 
-            $payment_id = "PID-";
-
-            for($i=1; $i <= 10 - $to_append; $i++){
-                $payment_id .= "0";
-            }
-
-            $payment_id .= $nextId;
+            $payment_id = "PID-".str_pad($nextId, 10-$to_append, "0", STR_PAD_LEFT);
+            //end generate payment id
 
             $payment_logs->payment_id = $payment_id;
 

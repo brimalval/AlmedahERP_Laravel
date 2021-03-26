@@ -1,3 +1,5 @@
+<script src="{{ asset('js/purchaseorder.js') }}"></script>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
@@ -37,10 +39,7 @@
 </nav>
 
 <div id="materialrequest-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog" style="  position: absolute;
-  left: 35%;
-  top: 25%;
-  transform: translate(-50%, -50%);">
+    <div class="modal-dialog">
         <div class="modal-content" style="width:780px;">
             <div class="modal-header">
                 <h3>Select Material Request</h3>
@@ -49,7 +48,7 @@
                     <div class="form-group">
                         <table>
                             <tr>
-                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal">Make Material Request</button> </td>
+                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" onclick="">Make Material Request</button> </td>
                                 <td><button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #007bff;">Get Items</button> </td>
                                 <td><a class="close" data-dismiss="modal"><i class="fa fa-times"></i></a></td>
                             </tr>
@@ -58,7 +57,7 @@
                     </div>
                 </div>
             </div><br>
-            <form id="materialrequestform" name="matreqform" role="form" action="newpurchaseorder.php">
+            <form id="materialrequestform" name="matreqform" role="form" method="POST">
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
@@ -94,18 +93,19 @@
                         </tr>
                     </thead>
                     <tbody class="">
+                        @foreach ($material_requests as $request)
                         <tr>
                             <td>
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input">
                                 </div>
                             </td>
-                            <td class="text-black-50">Material 1</td>
+                            <td class="text-black-50">{{ $request->request_id }}</td>
                             <td class="text-black-50">Almedah Food Equipment</td>
-                            <td class="text-black-50">12-FEB-2021</td>
-
-
+                            <td class="text-black-50">{{ $request->request_date }}</td>
                         </tr>
+                        @endforeach
+                        <!--
                         <tr>
                             <td>
                                 <div class="form-check">
@@ -117,7 +117,7 @@
                             <td class="text-black-50">12-MAR-2021</td>
 
                         </tr>
-
+                        -->
                     </tbody>
                 </table>
             </form>
@@ -132,10 +132,8 @@
             <div class="col-6">
                 <div class="input-group">
                     <label class="label">Series</label>
-                    <select class="input--style-4" type="text" name="series" style="width:512px;height:38px;">
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
+                    <select class="input--style-4" type="text" name="series" style="width:512px;height:38px;" disabled>
+                        <option>PUR-ORD-.YYYY.-</option>
                     </select>
                 </div>
             </div>
@@ -144,21 +142,21 @@
                 <div class="form-group">
                     <label for="date">Date</label>
 
-                    <input type="date" name="date" class="form-control" value="Almedah Food Equipments">
+                    <input type="date" id="transDate" name="date" class="form-control">
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="form-group">
                     <label for="supplier">Supplier</label>
-                    <input type="text" name="supplier" class="form-control">
+                    <input type="text" id="supplierField" name="supplier" class="form-control">
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="form-group">
                     <label for="reqdbydate">Reqd by Date</label>
-                    <input type="date" name="reqdbydate" class="form-control" value="Almedah Food Equipments">
+                    <input type="date" name="reqdbydate" id="reqDate" class="form-control" value="Almedah Food Equipments">
                 </div>
             </div>
 

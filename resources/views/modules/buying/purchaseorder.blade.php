@@ -123,7 +123,22 @@
         </div>
 
     </div>
+
     <script type="text/javascript">
+        $(document).ready(function() {
+            $('#tbl-buying-purchaseorder').dataTable({
+                columnDefs: [{
+                    orderable: false,
+                    targets: 0
+                }],
+                order: [
+                    [1, 'asc']
+                ],
+                drawCallback: function() {
+                    $('#products-table_wrapper').addClass('col-12');
+                },
+            });
+        });
         $(document).ready(function() {
             var modalCrmLeadsForm = $("#modal-buying-purchaseorder-form");
 
