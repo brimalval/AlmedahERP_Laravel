@@ -2,7 +2,7 @@
     <h2 class="navbar-brand tab-list-title">
         <a href='javascript:onclick=loadBuyingRequestForQuotation();'
             class="fas fa-arrow-left back-button"><span></span></a>
-        <h2 class="navbar-brand" style="font-size: 35px;">Hello World - Request for Quotation Form</h2>
+        <h2 class="navbar-brand" style="font-size: 35px;">Request for Quotation Form</h2>
     </h2>
 
     <div class="collapse navbar-collapse float-right" id="navbarSupportedContent">
