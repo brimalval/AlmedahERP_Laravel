@@ -13,6 +13,7 @@ function addRow(){
         </td>
         <td id="mr-code-input-${lastRow}" class="mr-code-input"></td>
         <td style="width: 10%;"><input required class="form-control" min="0" type="number" name="quantity_requested[]" id="mr-qty-input-row-${lastRow}"></td>
+        <td class="mr-unit-input"></td>
         <td id="mr-target-input-${lastRow}" class="mr-target-input"></td>
         <td style="width: 20%">
         <select name="procurement_method[]" required class="form-control">
@@ -27,8 +28,10 @@ function addRow(){
         </a>
         </td>
     </tr>`);
-    $('#selects select[name="item_code[]"]').clone().appendTo(`#items-tbl tr:last .mr-code-input`);
-    $('#selects select[name="station_id[]"]').clone().appendTo(`#items-tbl tr:last .mr-target-input`);
+    $('#selects select[data-id="item_code"]').clone().appendTo(`#items-tbl tr:last .mr-code-input`).selectpicker();
+    $('#selects select[data-id="station_id"]').clone().appendTo(`#items-tbl tr:last .mr-target-input`).selectpicker();
+    $('#selects select[data-id="uom_id"]').clone().appendTo(`#items-tbl tr:last .mr-unit-input`).selectpicker();
+    $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
 // Delete form submission
 $(document).on('submit', 'form.mr-delete-form', function(){

@@ -7,6 +7,7 @@ use App\Models\MaterialQuotation;
 use App\Models\MaterialRequest;
 use App\Models\RequestedRawMat;
 use App\Models\Station;
+use App\Models\MaterialUOM;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -36,9 +37,11 @@ class MatRequestController extends Controller
     {
         $materials = ManufacturingMaterials::get();
         $stations = Station::get();
+        $units = MaterialUOM::get();
         return view('modules.buying.newMaterialRequest',[
             'materials' => $materials,
             'stations' => $stations,
+            'units' => $units,
         ]);
     }
 

@@ -95,16 +95,17 @@
               <table class="table border-bottom table-hover table-bordered" id="items-tbl">
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
-                    <td>
+                    <td class="text-center">
                       <div class="form-check">
                         <input type="checkbox" class="form-check-input">
                       </div>
                     </td>
 
-                    <td>Item Code</td>
-                    <td>Quantity</td>
-                    <td>Target Station</td>
-                    <td>Procurement Method</td>
+                    <td class="text-center">Item Code</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-center">Unit</td>
+                    <td class="text-center">Target Station</td>
+                    <td class="text-center"> Procurement Method</td>
                     <td></td>
                   </tr>
                 </thead>
@@ -245,15 +246,21 @@
 </div>
 
 <div class="d-none" id="selects">
-  <select required="true" name="item_code[]" class="form-control">
+  <select required="true" data-id="item_code" data-live-search="true" name="item_code[]" class="form-control selectpicker">
     @foreach ($materials as $material)
         <option value="{{ $material->item_code }}">{{ $material->item_name }}</option>
     @endforeach
   </select>
 
-  <select required="true" name="station_id[]" class="form-control">
+  <select required="true" data-id="station_id" data-live-search="true" name="station_id[]" class="form-control selectpicker">
     @foreach ($stations as $station)
         <option value="{{ $station->station_id }}">{{ $station->station_name }}</option>
+    @endforeach
+  </select>
+
+  <select required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
+    @foreach ($units as $unit)
+        <option value="{{ $unit->uom_id }}" data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</small></option>
     @endforeach
   </select>
 </div>
