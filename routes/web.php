@@ -114,7 +114,7 @@ Route::get('/openInventoryInfo', function() {
     return view('modules.manufacturing.inventoryInfo');
 });
 Route::get('/inventory', [MaterialsController::class, 'index'])->name('inventory');
-Route::get('/inventory/{id}', [MaterialsController::class, 'get'])->name('inventory.specific');
+Route::get('/inventory/{code}', [MaterialsController::class, 'get'])->name('inventory.specific');
 Route::post('/create-material', [MaterialsController::class, 'store']);
 Route::patch('/update-material/{id}', [MaterialsController::class,'update'])->name('material.update');
 Route::post('/delete-material/{id}', [MaterialsController::class, 'delete']);

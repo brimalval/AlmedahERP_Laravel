@@ -56,7 +56,7 @@
         </button>
       </h5>
     </div>
-    <div id="Dashboard" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+    <div id="Dashboard" class="collapse show" aria-labelledby="headingOne">
       <div class="card-body">
         <!--dashboard contents-->
         <div class="container">
@@ -119,7 +119,6 @@
               </table>
               <td colspan="7" rowspan="5">
                 <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>
               </td>
           {{-- </form> --}}
 
@@ -136,7 +135,7 @@
         </button>
       </h5>
     </div>
-    <div id="Item" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+    <div id="Item" class="collapse" aria-labelledby="headingTwo">
       <div class="card-body">
         <!--moreinfo contents-->
         <div class="container">
@@ -244,23 +243,5 @@
 </div>
 </form>
 </div>
-
-<div class="d-none" id="selects">
-  <select required="true" data-id="item_code" data-live-search="true" name="item_code[]" class="form-control selectpicker">
-    @foreach ($materials as $material)
-        <option value="{{ $material->item_code }}">{{ $material->item_name }}</option>
-    @endforeach
-  </select>
-
-  <select required="true" data-id="station_id" data-live-search="true" name="station_id[]" class="form-control selectpicker">
-    @foreach ($stations as $station)
-        <option value="{{ $station->station_id }}">{{ $station->station_name }}</option>
-    @endforeach
-  </select>
-
-  <select required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
-    @foreach ($units as $unit)
-        <option value="{{ $unit->uom_id }}" data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</small></option>
-    @endforeach
-  </select>
-</div>
+@include('modules.buying.materialReqmodules.selectpickers')
+@include('modules.buying.materialReqmodules.edit_item_modal')

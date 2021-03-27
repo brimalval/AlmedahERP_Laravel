@@ -24,10 +24,12 @@ class MaterialsController extends Controller
         ]);
     }
 
-    function get($id)
+    function get($code)
     {
-        $material_details = ManufacturingMaterials::with('category')->find($id);
-        return $material_details;
+        $material = ManufacturingMaterials::with(['uom','category'])->where('item_code', '=', $code)->first();
+        return response()->json([
+            'material' => $material,
+        ]);
     }
 
     public function store(Request $request)

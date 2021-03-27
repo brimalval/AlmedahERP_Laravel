@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 class DebugController extends Controller
 {
     public function index(){
-        dd(MaterialRequest::find(3)->raw_mats);
         return view('debug');
     }
 }

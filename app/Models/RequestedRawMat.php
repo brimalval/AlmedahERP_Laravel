@@ -14,6 +14,7 @@ class RequestedRawMat extends Model
     protected $fillable = [
         'request_id',
         'item_code',
+        'uom_id',
         'quantity_requested',
         'procurement_method',
         'station_id',
@@ -25,5 +26,9 @@ class RequestedRawMat extends Model
 
     public function items(){
         return $this->hasMany(ManufacturingMaterials::class, 'item_code', 'item_code');
+    }
+
+    public function uom(){
+        return $this->hasOne(MaterialUOM::class, 'uom_id', 'uom_id');
     }
 }

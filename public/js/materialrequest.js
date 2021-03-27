@@ -1,21 +1,22 @@
+// Function that is called whenever the user presses "add row" in the materialrequest form
 function addRow(){
     if($('#no-data')[0]){
-    $('#no-data').remove();
+        deleteItemRow($('#no-data').parents('tr'));
     }
-    let table = $('#material-request-input-rows');
-    let lastRow = table[0].rows.length;
-    table.append(
-    `<tr>
+    let lastRow = $('#material-request-input-rows tr:last');
+    let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
+    $('#material-request-input-rows').append(
+    `<tr data-id="${nextID}">
         <td>
         <div class="form-check">
             <input type="checkbox" class="form-check-input">
         </div>
         </td>
-        <td id="mr-code-input-${lastRow}" class="mr-code-input"></td>
-        <td style="width: 10%;"><input required class="form-control" min="0" type="number" name="quantity_requested[]" id="mr-qty-input-row-${lastRow}"></td>
+        <td id="mr-code-input-${nextID}" class="mr-code-input"></td>
+        <td style="width: 10%;" class="mr-qty-input"><input required class="form-control" min="0" type="number" name="quantity_requested[]" id="mr-qty-input-row-${lastRow}"></td>
         <td class="mr-unit-input"></td>
-        <td id="mr-target-input-${lastRow}" class="mr-target-input"></td>
-        <td style="width: 20%">
+        <td id="mr-target-input-${nextID}" class="mr-target-input"></td>
+        <td style="width: 20%" class="mr-procurement-input">
         <select name="procurement_method[]" required class="form-control">
             <option value="buy">Buy</option>
             <option value="produce">Produce</option>
@@ -23,9 +24,12 @@ function addRow(){
         </select>
         </td>
         <td>
-        <a id="" class="btn btn-primary delete-btn" href="#" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-        </a>
+            <a id="" class="btn item-edit-btn" href="#" role="button">
+                <i class="fa fa-caret-up" aria-hidden="true"></i>
+            </a>
+            <a id="" class="btn delete-btn" href="#" role="button">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+            </a>
         </td>
     </tr>`);
     $('#selects select[data-id="item_code"]').clone().appendTo(`#items-tbl tr:last .mr-code-input`).selectpicker();
@@ -33,6 +37,30 @@ function addRow(){
     $('#selects select[data-id="uom_id"]').clone().appendTo(`#items-tbl tr:last .mr-unit-input`).selectpicker();
     $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
+// Opens the modal for editing an item
+function openItemEditModal(row){
+    $('#editItemForm').data('target', row.data('id'));
+    $('#itemEditModal').modal('show');
+    let item_code = $(row).find('.selectpicker').val();
+    $.get(`/inventory/${item_code}`, function(response, status){
+        let uom_cf = response.material.uom.conversion_factor;
+        let final_cf = ($('#edit-uom :selected').data('cf') / uom_cf).toFixed(2);
+        $('#edit-stock-uom').val(response.material.uom.item_uom);
+        $('#edit-stock-uom').data('cf', uom_cf);
+        $('#edit-uom-cf').val(final_cf);
+        $('#edit-stock-quantity').val(0);
+        // Setting the edit fields into the values inputted in the main screen
+        $('#edit-item-code').val(item_code).trigger('change');
+        $('#edit-quantity').val($(row).find('.mr-qty-input input').val());
+        $('#edit-uom').val($(row).find('.mr-unit-input .selectpicker').val()).trigger('change');
+        $('#edit-station').val($(row).find('.mr-target-input .selectpicker').val()).selectpicker('refresh');
+    });
+}
+
+function deleteItemRow(element){
+    element.remove();
+}
+
 // Delete form submission
 $(document).on('submit', 'form.mr-delete-form', function(){
     let row = $(this).parents('tr');
@@ -55,15 +83,58 @@ $(document).on('submit', 'form.mr-delete-form', function(){
     return false;
 });
 $(document).ready(function(){
+    $('.selectpicker').each(function(index){
+        $(this).selectpicker();
+    });
     // Item row delete button functionality
     $('body').on('click', '.delete-btn', function(e){
         e.preventDefault();
-        $(this).parents('tr').remove();
+        deleteItemRow($(this).parents('tr'));
+    });
+    $('body').on('click', '.item-edit-btn', function(e){
+        e.preventDefault();
+        openItemEditModal($(this).parents('tr'));
+    });
+    $('#edit-item-code, #edit-item-name').change(function(){
+        console.log($(this).val());
+        let newVal = $(this).val();
+        $('#edit-item-code, #edit-item-name').each(function(){
+            if($(this).val() != newVal){
+                $(this).val(newVal);
+                $(this).selectpicker('refresh');
+            }
+        }); 
+        $.get(`/inventory/${newVal}`, function(response, status){
+            let uom_cf = response.material.uom.conversion_factor;
+            let selected_cf = $('#edit-uom :selected').data('cf');
+            let final_cf = (selected_cf / uom_cf).toFixed(2);
+            let quantity = ($('#edit-quantity').val() * final_cf).toFixed(2);
+            $('#edit-stock-uom').val(response.material.uom.item_uom);
+            $('#edit-stock-uom').data('cf', uom_cf);
+            $('#edit-uom-cf').val(final_cf);
+            $('#edit-stock-quantity').val(quantity);
+        });
     });
     // Making sure that none of the buttons inside the form submit it,
     // only the button outside of the form ("save" button) can submit
     $('#mat-req button').each(function(index){
         $(this).attr('type', 'button');
+    });
+    $('#edit-uom').change(function(){
+        let quantity = $('#edit-quantity').val();
+        let uom_cf = $('#edit-stock-uom').data('cf');
+        let selected_cf = $('#edit-uom :selected').data('cf');
+        console.log(uom_cf);
+        console.log(selected_cf);
+        let final_cf = (selected_cf / uom_cf).toFixed(2);
+        $('#edit-stock-quantity').val(quantity * final_cf);
+        $('#edit-uom-cf').val(selected_cf / uom_cf);
+    });
+    $('#edit-quantity').focusout(function(){
+        let uom_cf = $('#edit-stock-uom').data('cf');
+        let selected_cf = $('#edit-uom :selected').data('cf');
+        let final_cf = (selected_cf / uom_cf).toFixed(2);
+        $('#edit-stock-quantity').val($(this).val() * final_cf);
     });
     $('#mat-req').submit(function(){
     $.ajax({
@@ -103,8 +174,32 @@ $(document).ready(function(){
     });
 });
 
+$('#editItemForm').submit(function(){
+    let id = $(this).data('target');
+    console.log("SUBMITTING TO " + id);
+    let row = $(`#items-tbl tr[data-id="${id}"]`);
+    $(row).find('.mr-code-input .selectpicker').val($('#edit-item-code').val()).selectpicker('refresh');
+    $(row).find('.mr-qty-input input').val($('#edit-quantity').val());
+    $(row).find('.mr-unit-input .selectpicker').val($('#edit-uom').val()).selectpicker('refresh');
+    $(row).find('.mr-target-input .selectpicker').val($('#edit-station').val()).selectpicker('refresh');
+    $('#itemEditModal').modal('hide');
+    return false;
+});
 // Clicking the edit button for each of the rows invokes this function
 function loadEdit(url){
     $('#modal-form').html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
     $('#modal-form').load(url);
 }
+
+// These two listeners will fix stacking modals
+$(document).on('show.bs.modal', '.modal', function () {
+    var zIndex = 1040 + (10 * $('.modal:visible').length);
+    $(this).css('z-index', zIndex);
+    setTimeout(function() {
+        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+    }, 0);
+});
+
+$(document).on('hidden.bs.modal', '.modal', function () {
+    $('.modal:visible').length && $(document.body).addClass('modal-open');
+});

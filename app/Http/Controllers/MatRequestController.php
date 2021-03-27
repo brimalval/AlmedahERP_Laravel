@@ -87,6 +87,7 @@ class MatRequestController extends Controller
                 $requestItem->item_code = request('item_code')[$i];
                 $requestItem->quantity_requested = request('quantity_requested')[$i];
                 $requestItem->procurement_method = request('procurement_method')[$i];
+                $requestItem->uom_id = request('uom_id')[$i];
                 $requestItem->station_id = request('station_id')[$i];
                 $requestItem->save();
             }
@@ -103,7 +104,8 @@ class MatRequestController extends Controller
                 $item_array[] = array(
                     'item_code' => $item->item_code,
                     'qty' => $item->quantity_requested,
-                    'station' => $item->target_station,
+                    'uom_id' => $item->uom_id,
+                    'station' => $item->station_id,
                     'method' => $item->procurement_method
                 );
             }
@@ -144,12 +146,14 @@ class MatRequestController extends Controller
      */
     public function edit(MaterialRequest $materialrequest)
     {
-        $materials = ManufacturingMaterials::get();
+        $materials = ManufacturingMaterials::with('uom')->get();
         $stations = Station::get();
+        $units = MaterialUOM::get();
         return view('modules.buying.materialReqmodules.edit_matreq_form', [
             'materialRequest' => $materialrequest,
             'materials' => $materials,
             'stations' => $stations,
+            'units' => $units,
         ]);
     }
 
@@ -189,6 +193,7 @@ class MatRequestController extends Controller
                 $requestItem->item_code = request('item_code')[$i];
                 $requestItem->quantity_requested = request('quantity_requested')[$i];
                 $requestItem->procurement_method = request('procurement_method')[$i];
+                $requestItem->uom_id = request('uom_id')[$i];
                 $requestItem->station_id = request('station_id')[$i];
                 $requestItem->save();
             }
@@ -196,6 +201,7 @@ class MatRequestController extends Controller
                 'status' => 'success',
                 'update' => true,
                 'materialrequest' => $materialrequest,
+                'request' => $request->all(),
             ]);
         }catch(Exception $e){
             return response()->json([
