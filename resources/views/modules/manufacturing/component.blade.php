@@ -22,6 +22,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($components as $row)
+                        <tr id="<?=$row["id"]?>">
+                            <td class="text-black-50"><?=$row["component_code"]?></td>
+                            <td class="text-black-50"><?=$row["component_name"]?></td>
+                            <td class="text-black-50"><a href="">View</a></td>
+                            <td class="text-black-50"><?=$row["component_description"]?></td>
+                            <td class="text-black-50"><?=$row["item_code"]?></td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -31,7 +40,7 @@
 <!-- Modal -->
 <div class="modal fade" id="newComponentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <form action="">
+    <form action="" id="addComponentForm">
         @csrf
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -48,14 +57,14 @@
                                 Component Code
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentCode"
-                                name="componentCode">
+                                name="component_code">
                         </div>
                         <div class="col">
                             <label class="text-nowrap align-middle">
                                 Component Name
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentName"
-                                name="componentName">
+                                name="component_name">
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -64,17 +73,17 @@
                                 Item Code
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentItemCode"
-                                name="componentItemCode">
+                                name="item_code">
                         </div>
                         <div class="col">
                             <label for="" class="text-nowrap align-middle">Image</label><br>
-                            <input type="file" name="componentImg[]" id="componentImg[]">
+                            <input type="file" name="component_image[]" id="componentImg[]">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col">
                             <label for="" class="text-nowrap align-middle">Component Description</label><br>
-                            <textarea class="form-input form-control sellable" name="componentDescription"
+                            <textarea class="form-input form-control sellable" name="component_description"
                                 id="componentDescription" cols="" rows="4" style="resize: none;"></textarea>
                         </div>
                     </div>
@@ -120,6 +129,20 @@
 
     }
 
+    $('#addComponentForm').on('submit', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "/create-component",
+            data: $("#addComponentForm").serialize(),
+            success: function (r) {
+                console.log('success');
+            },
+            error: function () {
+                console.log('error');
+            },
+        });
+    });
 
     $(document).ready(function() {
         $('#componentTable').DataTable();

@@ -67,9 +67,8 @@ Route::get('/buying', function() {
 });
 
 /**COMPONENTS ROUTES */
-Route::get('/component', function() {
-    return view('modules.manufacturing.component');
-});
+Route::get('/component', [ComponentController::class, 'index']);
+Route::post('/create-component', [ComponentController::class, 'store']);
 
 /**CRM ROUTES */
 Route::get('/contacts', function() {

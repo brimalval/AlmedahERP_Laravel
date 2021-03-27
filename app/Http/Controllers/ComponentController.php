@@ -16,7 +16,10 @@ class ComponentController extends Controller
      */
     public function index()
     {
-        //
+        $components = Component::get();
+        return view('modules.manufacturing.component', [
+            'components' => $components,
+        ]);
     }
 
     /**
@@ -58,6 +61,8 @@ class ComponentController extends Controller
             if ($request->hasFile('component_image')) {
                 $component_image = $request->file('component_image')->store('uploads/jobscheduling/components', 'public');
                 $component->component_image = $component_image;
+            }else{
+                $component->component_image = '';
             }
 
             if (!$request->component_code) {
