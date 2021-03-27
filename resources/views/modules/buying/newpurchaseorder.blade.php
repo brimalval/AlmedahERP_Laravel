@@ -1,3 +1,7 @@
+<?php 
+    $today = date("Y-m-d");
+?>
+
 <script src="{{ asset('js/purchaseorder.js') }}"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
@@ -31,7 +35,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-primary" id="saveOrder" type="button">Save</button>
                 </li>
             </ul>
         </div>
@@ -127,7 +131,8 @@
 
 
 <div class="container">
-    <form id="newpurchaseorderForm" name="newpurchaseForm" role="form">
+    <form id="newpurchaseorderForm" name="newpurchaseForm" role="form" method="POST">
+        @csrf
         <div class="row">
             <div class="col-6">
                 <div class="input-group">
@@ -142,7 +147,7 @@
                 <div class="form-group">
                     <label for="date">Date</label>
 
-                    <input type="date" id="transDate" name="date" class="form-control">
+                    <input type="date" id="transDate" name="date" value="<?php echo $today; ?>" class="form-control">
                 </div>
             </div>
 
@@ -156,14 +161,14 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="reqdbydate">Reqd by Date</label>
-                    <input type="date" name="reqdbydate" id="reqDate" class="form-control" value="Almedah Food Equipments">
+                    <input type="date" name="reqdbydate" id="reqDate" class="form-control">
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="form-group">
                     <label for="company">Company</label>
-                    <input type="text" name="company" class="form-control">
+                    <input type="text" name="company" id="companyField" class="form-control">
                 </div>
             </div>
         </div>
@@ -184,7 +189,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label for="selectsuppadd">Select Supplier Address</label>
-                        <input type="text" class="form-control">
+                        <input type="text" id="suppAddress" class="form-control">
                     </div>
                 </div>
                 <div class="col-6">
@@ -215,7 +220,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label for="currency">Currency</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" placeholder="PHP" disabled>
                     </div>
                 </div>
 
@@ -254,12 +259,12 @@
                 <hr>
                 <br>
 
-                <table class="table table-bom border-bottom">
+                <table class="table table-bom border-bottom" id="itemTable">
                     <thead class="border-top border-bottom bg-light">
                         <tr class="text-muted">
                             <td>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
+                                    <input type="checkbox" id="masterChk" class="form-check-input">
                                 </div>
                             </td>
                             <td>Item Code</td>
@@ -270,7 +275,37 @@
                             <td></td>
                         </tr>
                     </thead>
-                    <tbody class="">
+                    <tbody class="" id="itemTable-content">
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" id="chk1" class="form-check-input">
+                                </div>
+                            </td>
+                            <td class="text-black-50">
+                                <input type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
+                            </td>
+                            <td class="text-black-50">
+                                <input type="date" name="date1" id="date1">
+                            </td>
+                            <td class="text-black-50">
+                                <input type="number" name="qty1" id="qty1" value="0" min="1" onkeyup="calcPrice(1);">
+                            </td>
+                            <td class="text-black-50">
+                                <input type="number" name="rate1" id="rate1" value="0" min="1" onkeyup="calcPrice(1);">
+                            </td>
+                            <td class="text-black-50">
+                                <input type="text" name="price1" id="price1" value="₱ 0.00" disabled>
+                            </td>
+                            <td class="text-black-50">
+                                <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
+                                    <option></option>
+                                    <option></option>
+                                    <option></option>
+                                </select>
+                            </td>
+                        </tr> 
+                        <!--
                         <tr>
                             <td>
                                 <div class="form-check">
@@ -290,30 +325,32 @@
                                 </select>
                             </td>
                         </tr>
+                    -->
                     </tbody>
-                    <tr>
-                        <td><button id="button1">Add Multiple</button></td>
-                        <td><button id="button1">Add Row</button></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><button id="button1">Download</button></td>
-                        <td><button id="button1">Upload</button></td>
-                    </tr>
+                    <tfoot>
+                        <tr>
+                            <td><button type="button" id="multBtn" style="padding: 5px; background-color: #007bff; color: white;">Add Multiple</button></td>
+                            <td><button type="button" id="rowBtn" style="padding: 5px; background-color: #007bff; color: white;">Add Row</button></td>
+                            <td></td>
+                            <td></td>
+                            <td><button id="button1">Download</button></td>
+                            <td><button id="button1">Upload</button></td>
+                        </tr>
+                    </tfoot>
                 </table>
                 <hr>
                 <br>
                 <div class="col-6">
                     <div class="form-group">
                         <label for="totalQuantity">Total Quantity</label>
-                        <input type="text" class="form-control">
+                        <input type="number" class="form-control" id="totalQty" value="0" disabled>
                     </div>
                 </div>
 
                 <div class="col-6">
                     <div class="form-group">
                         <label for="totalphp">Total (PHP)</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" id="totalPrice" value="₱ 0.00" disabled>
                     </div>
                 </div>
 

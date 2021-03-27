@@ -28,24 +28,35 @@ class MaterialsPurchasedController extends Controller
 
     function store(Request $request)
     {
-        $data = new MaterialPurchased();
+        try {
+            $data = new MaterialPurchased();
 
-        $form_data = $request->input();
+            $form_data = $request->input();
 
-        $lastPayment = MaterialPurchased::orderby('id', 'desc')->first();
-        $to_add = ($lastPayment) ? 1 : 0;
-        $nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
+            $lastPurchase = MaterialPurchased::orderby('id', 'desc')->first();
+            $nextId = ($lastPurchase) ? MaterialPurchased::orderby('id', 'desc')->first()->id + 1 : 1;
+            //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-        $to_append = 0;
-        $digit_flag = 1;
-        while ($nextId >= $digit_flag) {
-            ++$to_append;
-            $digit_flag *= 10;
+            $to_append = 0;
+            $digit_flag = 1;
+            while ($nextId >= $digit_flag) {
+                ++$to_append;
+                $digit_flag *= 10;
+            }
+
+            $purchase_id = "PUR-ORD-" . Carbon::now()->year .'-'. str_pad($nextId, 5 - $to_append, '0', STR_PAD_LEFT);
+
+            $data->purchase_id = $purchase_id;
+
+            //Commented for now; needs supplier quotation module for it to fully work.
+            //$data->supp_quotation_id =
+
+            $data->items_list_purchased = json_encode($form_data['materials_purchased']);
+            $data->purchase_date = $form_data['purchase_date'];
+
+            $data->save();
+        } catch (Exception $e) {
+            return $e;
         }
-
-        $purchase_id = "PUR-ORD-" . Carbon::now()->year() . str_pad($nextId, 5-$to_append, '0', STR_PAD_LEFT);
-
-        $data->purchase_id = $purchase_id;
-        
     }
 }
