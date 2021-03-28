@@ -15,6 +15,7 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('env_employees', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('employee_id')->unique();
             $table->string('last_name');
             $table->string('first_name');
             $table->string('position');
