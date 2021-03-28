@@ -20,6 +20,7 @@ class CreateMaterialsQuotationTable extends Migration
             $table->string('request_id');
             $table->foreign('request_id')->references('request_id')->on('env_material_requests');
             $table->json('item_list');
+            $table->string('message');
             $table->string('req_status');
             $table->timestamps();
         });
