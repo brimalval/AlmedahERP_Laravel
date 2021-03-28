@@ -245,4 +245,13 @@ class SalesOrderController extends Controller
         $ordered = ordered_products::where('sales_id', $id)->get();
         return response($ordered);
     }
+
+    function update(Request $request, $id){
+        $data = payment_logs::find($id);
+        $form_data = $request->input();
+        $data->payment_status = $form_data['status'];
+        $data->save();
+        
+        return "Success";
+    }
 }

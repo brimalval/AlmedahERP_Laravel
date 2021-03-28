@@ -347,7 +347,7 @@ function viewPayments(id){
                         `+ row['id'] +`
                     </td>
                     <td class="text-center">
-                        `+ row['date_of_payment'] +`
+                        `+ row['date_of_payment'].slice(0,10) +`
                     </td>
                     <td class="text-center">
                         `+ row['amount_paid'] +`
@@ -374,8 +374,26 @@ function viewPayments(id){
       });
 }
 
-function updatePayment(id){
+function updatePayment(id, value){
     //@TODO
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var data={};
+    data['status'] = value;
+    $.ajax({
+        url: 'updateStatus/'+id,
+        type: 'patch',
+        data: data,
+        success: function(response){
+            console.log(response);
+        },
+        error: function(response) {
+            console.log(response);
+        }
+    });
 }
 
 
