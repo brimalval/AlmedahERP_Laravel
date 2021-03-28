@@ -60,8 +60,9 @@
                     <td class="text-black-50 mr-req-date">{{ $mat_request->required_date }}</td>
                     <td class="text-black-50 mr-purpose">{{ $mat_request->purpose }}</td>
                     <td>
-                    <button class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
-                    {{-- <a href="{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}" class="btn btn-outline-warning" ><i class="fa fa-edit"></i></a> --}}
+                    @if ($mat_request->mr_status == 'Draft')
+                        <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
+                    @endif
                     <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
                         @csrf
                         @method('DELETE')

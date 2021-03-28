@@ -172,6 +172,35 @@ $(document).ready(function(){
     });
     return false;
     });
+    $('#mr-submit').submit(function(){
+        $.ajax({
+            type: 'POST',
+            url: this.action,
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            cache: false,
+            success: function(data){
+                console.log(data);
+                if(data.status == 'success'){ 
+                    let row = $(`#mr-row-${data.materialrequest.id}`);
+                    row.children('td.mr-rq-status').text(data.materialrequest.mr_status);
+                    row.find('#edit-mr-button').remove();
+                    $('#editModal').modal('hide');
+                    $('#mat-req').remove();
+                } else{
+                    alert('Error! Please ensure that all fields are filled in and valid!');
+                }
+            },
+            error: function(data){
+                // REMEMBER TO REPLACE THIS WITH BETTER ERROR INDICATION
+                alert(`Error! Make sure all fields are filled in and have valid data!`);
+                console.log("error");
+                console.log(data);
+            }
+        });
+        return false;
+    });
 });
 
 $('#editItemForm').submit(function(){

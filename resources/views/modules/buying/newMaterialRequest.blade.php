@@ -148,7 +148,7 @@
                 <div class="form-group">
                   <label for="">Type</label>
                   <select class="form-control" required="true" name="mr_status" readonly id="procurement_method">
-                    <option value="draft">Draft</option>
+                    <option value="Draft">Draft</option>
                   </select>
                 </div>
               </div>

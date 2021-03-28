@@ -1,4 +1,10 @@
 <script src="{{ asset('js/materialrequest.js') }}"></script>
+<form id="mr-submit" action="{{ route('materialrequest.submit', ['materialrequest'=>$materialRequest->id]) }}" method="post">
+  @csrf
+  <button class="btn btn-primary btn-sm ml-4" href="#" role="button">
+    Submit
+  </button>
+</form>
 <form  id="mat-req" class="update" action="{{ route('materialrequest.update', ['materialrequest' => $materialRequest->id]) }}">
 @csrf
 @method('PATCH')
@@ -140,7 +146,7 @@
                 <div class="form-group">
                   <label for="">Type</label>
                   <select class="form-control" required="true" name="mr_status" readonly id="procurement_method">
-                    <option value="draft">Draft</option>
+                    <option value="Draft">Draft</option>
                   </select>
                 </div>
               </div>

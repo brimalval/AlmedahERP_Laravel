@@ -93,25 +93,6 @@ class MatRequestController extends Controller
             }
 
 
-            $mat_request = MaterialRequest::where('request_id', $id_copy)->first();
-            $quotation = new MaterialQuotation();
-            $quotation->date_created = Carbon::now();
-            $quotation->request_id = $id_copy;
-            
-            $items = $mat_request->raw_mats;
-            $item_array = array();
-            foreach($items as $item) {
-                $item_array[] = array(
-                    'item_code' => $item->item_code,
-                    'qty' => $item->quantity_requested,
-                    'uom_id' => $item->uom_id,
-                    'station' => $item->station_id,
-                    'method' => $item->procurement_method
-                );
-            }
-
-            $quotation->item_list = json_encode($item_array);
-            $quotation->save();
 
             return response()->json([
                 'status' => 'success',
@@ -227,6 +208,48 @@ class MatRequestController extends Controller
             return response()->json([
                 'status' => 'success',
                 'id' => $id,
+            ]);
+        } catch(Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Set the status of a material request to "submitted"
+     * 
+     * @param \App\Models\MaterialRequest $materialrequest
+     * @return \Illuminate\Http\Response
+     */
+    public function submit(MaterialRequest $materialrequest){
+        try{
+            $materialrequest->mr_status = "Submitted";
+            $materialrequest->save();
+
+            $quotation = new MaterialQuotation();
+            $quotation->request_id = $materialrequest->request_id;
+            $quotation->date_created = Carbon::now();
+            
+            $items = $materialrequest->raw_mats;
+            $item_array = array();
+            foreach($items as $item) {
+                $item_array[] = array(
+                    'item_code' => $item->item_code,
+                    'qty' => $item->quantity_requested,
+                    'uom_id' => $item->uom_id,
+                    'station' => $item->station_id,
+                    'method' => $item->procurement_method
+                );
+            }
+
+            $quotation->item_list = json_encode($item_array);
+            $quotation->save();
+            return response()->json([
+                'status' => 'success',
+                'materialrequest' => $materialrequest,
+                'message' => 'Submitted ' . $materialrequest->request_id,
             ]);
         } catch(Exception $e){
             return response()->json([
