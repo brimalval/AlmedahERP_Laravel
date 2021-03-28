@@ -26,6 +26,22 @@ class MaterialsPurchasedController extends Controller
         return view('modules.buying.newpurchaseorder', ['material_requests' => $material_requests]);
     }
 
+    function view($index) {
+        $purchase_order = MaterialPurchased::find($index);
+        $material_requests = MaterialRequest::all();
+        $items_purchased = $purchase_order->itemsPurchased();
+        $req_date = $items_purchased[0]['req_date'];
+        $supplier = $items_purchased[0]['supplier'];
+        return view('modules.buying.purchaseorderinfo', 
+        [
+            'purchase_order' => $purchase_order,
+            'material_requests' => $material_requests,
+            'items_purchased' => $items_purchased,
+            'req_date' => $req_date,
+            'supplier' => $supplier
+        ]);
+    }
+
     function store(Request $request)
     {
         try {

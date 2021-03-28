@@ -263,6 +263,7 @@ Route::get('/loadProjectTemplate', function() {
 Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
 Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openOrderForm']);
 Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
+Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function() {

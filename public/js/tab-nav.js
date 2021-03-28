@@ -292,6 +292,12 @@ function loadPurchaseOrder() {
   });
 }
 
+function viewPurchaseOrder(id) {
+  $(document).ready(function() {
+    $('#contentPurchaseOrder').load('/view-order/' + id);
+  })
+}
+
 function openNewPurchaseOrder() {
   $(document).ready(function () {
     $('#contentPurchaseOrder').load('/openNewPurchaseOrder');
