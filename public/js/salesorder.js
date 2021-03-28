@@ -101,7 +101,7 @@ $("#saveSaleOrder1").click(function () {
 
 function selectSalesMethod() {
     var selected = document.getElementById("saleSupplyMethod").value;
-    if (selected == "Produce") {
+    if (selected == "Purchase") {
         document.getElementById("cardComponent").style.display = "block";
     } else {
         document.getElementById("cardComponent").style.display = "none";
@@ -112,6 +112,8 @@ function selectPaymentMethod() {
     var selectedPayment = document.getElementById("salePaymentMethod").value;
     if (selectedPayment == "Installment") {
         document.getElementById("paymentInstallment").style.display = "flex";
+        cost = document.getElementById('costPrice').value;
+        document.getElementById('saleDownpaymentCost').value = cost * 0.25;
     } else {
         document.getElementById("paymentInstallment").style.display = "none";
         installmentType();
@@ -130,7 +132,6 @@ function selectPaymentType(){
 
 //Function for payment type
 function installmentType(){
-    
     $('#payments_table_body tr').remove();
     cost = document.getElementById('costPrice').value;
     payment_method = document.getElementById('salePaymentMethod').value;
@@ -320,6 +321,62 @@ $("#saleQuantity").keyup(function () {
         );
 });
 
+
+function viewOrderedProducts(id){
+    $.ajax({
+        url: 'view/'+id,
+        type: 'get',
+        success: function(response){
+            $('#viewProductsTable tr').remove();
+            response.forEach(row => {
+                $('#viewProductsTable').append('<tr> <td class="text-center">  ' +row['product_code'] +'</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value='+ row['quantity_purchased'] +' disabled></td></tr>' );
+            });
+        }
+      });
+}
+
+function viewPayments(id){
+    $.ajax({
+        url: 'getPaymentLogs/'+id,
+        type: 'get',
+        success: function(response){
+            $('#view_payment_logs tr').remove();
+            response.forEach(row => {
+                $('#view_payment_logs').append(`<tr>
+                    <td class="text-center">
+                        `+ row['id'] +`
+                    </td>
+                    <td class="text-center">
+                        `+ row['date_of_payment'] +`
+                    </td>
+                    <td class="text-center">
+                        `+ row['amount_paid'] +`
+                    </td>
+                    <td class="text-center">
+                        `+ row['payment_description'] +`
+                    </td>
+                    <td class="text-center">
+                        `+ row['payment_method'] +`
+                    </td>
+                    <td class="text-center">
+                        <select class="form-select" onchange="updatePayment( `+ row['id'] +`, value);">
+                                        <option value="" selected disabled> ` + row['payment_status'] +` </option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Completed">Completed</option>
+                        </select>
+                    </td>
+                    <td class="text-center">
+                        `+ row['customer_rep'] +`
+                    </td>
+                </tr>`);
+            });
+        }
+      });
+}
+
+function updatePayment(id){
+    //@TODO
+}
 
 
 function enableAddtoProduct(){

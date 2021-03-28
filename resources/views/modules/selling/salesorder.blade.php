@@ -134,7 +134,8 @@
         <thead>
             <tr>
                 <th>Sales ID</th>
-                <th>Product Code</th>
+                <th> Customer Name </th>
+                <th>Payment Mode </th>
                 <th>Sales Status</th>
                 <th>Payment Balance</th>
                 <th>Creation Date</th>
@@ -144,12 +145,15 @@
         <tbody>
             @foreach ($sales as $row)
             <tr>
-                <td class= "text-bold"> {{$row->id}}</td>
-                <td> <a href='javascript:onclick=openSaleInfo({{$row->id}});'>{{$row->product_code}}</a>    </td>
-                <td class="text-danger">{{$row->sales_status}}</td>
+                <td class= "text-bold"> {{$row->id}} </td>
+                <td class= "text-bold"> {{$row->customer_lname}} {{$row->customer_fname}} </td>
+                <td class= "text-bold"> {{$row->payment_mode}}</td>
+                <td class="text-success"> {{$row->sales_status}} </td>
                 <td class="text-bold">{{$row->payment_balance}}</td>
                 <td class="text-bold">{{$row->transaction_date}}</td>
-                <td><button type="button" class="btn btn-primary btn-sm" disabled>Release</button></td>
+                <td><button type="button" class="btn btn-primary btn-sm" onclick="viewOrderedProducts({{$row->id}})" data-toggle="modal" data-target="#viewOrder">View Orders</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="viewPayments({{$row->id}})" data-toggle="modal" data-target="#viewPayment">Payments</button>
+                </td>
             </tr>
             @endforeach
         </tbody>
@@ -517,47 +521,6 @@
                         </button>
                       </h2>
                     </div>
-                    <div id="salesOrderCard5" class="collapse">
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col">
-                            <table class="table border-bottom table-hover">
-                              <thead class="border-top border-bottom bg-light">
-                                <tr class="text-muted">
-                                  <td class="text-center font-weight-bold">Payment ID</td>
-                                  <td class="text-center font-weight-bold">Date Paid</td>
-                                  <td class="text-center font-weight-bold">Amount Paid</td>
-                                  <td class="text-center font-weight-bold">Description</td>
-                                  <td class="text-center font-weight-bold">Payment Method</td>
-                                  <td class="text-center font-weight-bold">Status</td>
-                                  <td class="text-center font-weight-bold">Transaction Handler</td>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td class="text-center">PID-000000001</td>
-                                  <td class="text-center">February 20, 2021</td>
-                                  <td class="text-center">5000.00</td>
-                                  <td class="text-center">Downpayment</td>
-                                  <td class="text-center">Cash</td>
-                                  <td class="text-center">Paid</td>
-                                  <td class="text-center">Juan Dela Curz</td>
-                                </tr>
-                                <tr>
-                                  <td class="text-center">PID-000000001</td>
-                                  <td class="text-center">March 1, 2021</td>
-                                  <td class="text-center">5000.00</td>
-                                  <td class="text-center">Downpayment</td>
-                                  <td class="text-center">Check</td>
-                                  <td class="text-center">Pending</td>
-                                  <td class="text-center">Juan Dela Curz</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                 </div>
                 <!--
                     'salesorderform.php' contents end here
@@ -585,6 +548,251 @@
     </form>
     <!--End Form-->
 </div>
+
+
+{{-- Modal for view orders --}}
+<div class="modal fade" id="viewOrder" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title">Ordered Products</h5>
+                <div class="d-flex flex-row-reverse">
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
+                        data-target="#viewOrder">
+                        Close
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body p-5">
+        <div class="accordion" id="accordion">
+            <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 form-group">
+                                    <table class="table border-bottom table-hover table-bordered table-sm">
+                                    <thead class="border-top border-bottom bg-light">
+                                        <tr class="text-muted">
+                                        <td class="font-weight-bold text-center">Product Code</td>
+                                        <td class="font-weight-bold text-center">Quantity</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody id= "viewProductsTable">
+                                    </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+    class="modal fade"
+    id="viewPayment"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Payments</h5>
+                <div class="d-flex flex-row-reverse">
+                    <button
+                        type="button"
+                        class="btn btn-secondary m-1"
+                        data-dismiss="modal"
+                        data-target="#viewPayment"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="accordion">
+                    <div class="card" id="cardPaymentLogs">
+                        <div class="card-header">
+                            <h2 class="mb-0">
+                                <button
+                                    class="btn btn-link d-flex w-100 collapsed"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#salesOrderCard5"
+                                    aria-expanded="false"
+                                >
+                                    PAYMENT LOGS
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="salesOrderCard5" class="collapse">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <table
+                                            class="table border-bottom table-hover"
+                                        >
+                                            <thead
+                                                class="border-top border-bottom bg-light"
+                                            >
+                                                <tr class="text-muted">
+                                                    <td
+                                                        class="text-center font-weight-bold"
+                                                    >
+                                                        Payment ID
+                                                    </td>
+                                                    <td
+                                                        class="text-center font-weight-bold"
+                                                    >
+                                                        Date Paid
+                                                    </td>
+                                                    <td
+                                                        class="text-center font-weight-bold"
+                                                    >
+                                                        Amount Paid
+                                                    </td>
+                                                    <td
+                                                        class="text-center font-weight-bold"
+                                                    >
+                                                        Description
+                                                    </td>
+                                                    <td
+                                                        class="text-center font-weight-bold"
+                                                    >
+                                                        Payment Method
+                                                    </td>
+                                                    <td
+                                                        class="text-center font-weight-bold"
+                                                    >
+                                                        Status
+                                                    </td>
+                                                    <td
+                                                        class="text-center font-weight-bold"
+                                                    >
+                                                        Transaction Handler
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody id = "view_payment_logs">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion" id="accordion" aria-expanded="true">
+                    <div class="card" id="cardPayments">
+                    <div class="card-header">
+                      <h2 class="mb-0">
+                        <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard4" aria-expanded="false">
+                          PAYMENTS
+                        </button>
+                      </h2>
+                    </div>
+                    <div id="salesOrderCard4" class="collapse">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="text-nowrap align-middle">
+                                        Payment Method
+                                    </label>
+                                    <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
+                                        <option selected disabled>Please Select</option>
+                                        <option value="Cash">Full Payment(Cash)</option>
+                                        <option value="Installment">Installment</option>
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="col">
+                                    <label class="text-nowrap align-middle">
+                                        Payment Type
+                                    </label>
+                                      <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentType();">
+                                          <option selected disabled>Payment Type...</option>
+                                          <option value="Cash">Cash</option>
+                                          <option value="Cheque">Cheque</option>
+                                      </select>
+                                </div>
+                                <br>
+                            </div>
+                            <br>
+                            
+                            <div class="col" style="display:none">
+                                <label >
+                                    Account No.
+                                </label>
+                                <input type="text" class="form-input form-control" placeholder="Account No">
+                            </div>
+                            <br>
+
+                            <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()" >
+                                <div class="col">
+                                    <label class="text-nowrap align-middle">
+                                        Initial Payment(Downpayment)
+                                    </label>
+                                    <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" name="saleDownpaymentCost" placeholder="0.00">
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="text-nowrap align-middle">
+                                            Installment Type
+                                        </label>
+                                        <select class="form-control" id="installmentType" name="installmentType">
+                                            <option selected disabled>Please Select</option>
+                                            <option value = "3 months">Installment 3 months</option>
+                                            <option value = "6 months">Installment 6 months</option>
+                                            <option value = "12 months">Installment 12 months</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table border-bottom table-hover table-bordered">
+                              <thead class="border-top border-bottom bg-light">
+                                <tr class="text-muted">
+                                  <td></td>
+                                  <td class="text-center">Description</td>
+                                  <td class="text-center">Amount Due</td>
+                                </tr>
+                              </thead>
+                              <tbody id="payments_table_body">
+                                
+                              </tbody>
+                              <tfoot>
+                                <tr id="rowTotal">
+                                  <td></td>
+                                  <td class="font-weight-bold text-center">TOTAL AMOUNT:</td>
+                                  <td class="text-center">
+                                    <input class="form-control" type="text" placeholder="0.00" disabled>
+                                  </td>
+                                </tr>
+                              </tfoot>
+                            </table>
+                          </div>
+                        </div>
+                            <div class="row">
+                              <div class="col-12 d-flex justify-content-center">
+                                <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
+                                  <a class="" href="#" style="text-decoration: none;color:white">
+                                    Save Payment
+                                  </a>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -667,7 +875,7 @@ $("#sales_order_form").submit(function(e) {
                 $('#newSalePrompt').modal('hide');
             });
 
-
+            console.log(data);
             
         },
         error: function(data) {

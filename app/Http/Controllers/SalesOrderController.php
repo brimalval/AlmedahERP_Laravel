@@ -22,12 +22,11 @@ class SalesOrderController extends Controller
         $products = ManufacturingProducts::get();
 
         $salesorders = DB::table('salesorder')
-        ->select('*')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.transaction_date', 'payment_logs.payment_balance', 'man_customers.customer_lname', 'man_customers.customer_fname')
         ->join('payment_logs','payment_logs.sales_id','=','salesorder.id')
-        ->join('ordered_products', 'ordered_products.sales_id', '=', 'salesorder.id')
+        ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
-        
         return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
     }
 
@@ -115,28 +114,28 @@ class SalesOrderController extends Controller
             
             $payment_logs = new payment_logs();
 
-            //generate payment id
-            $lastPayment = payment_logs::orderby('date_of_payment', 'desc')->first();
-            $nextId = ($lastPayment)
-                        ? payment_logs::orderby('date_of_payment', 'desc')->first()->id + 1 
-                        : 1;
+            // //generate payment id
+            // $lastPayment = payment_logs::orderby('date_of_payment', 'desc')->first();
+            // $nextId = ($lastPayment)
+            //             ? payment_logs::orderby('date_of_payment', 'desc')->first()->id + 1 
+            //             : 1;
 
-            $to_append = 0;
-            $digit_flag = 1;
-            while($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
+            // $to_append = 0;
+            // $digit_flag = 1;
+            // while($nextId >= $digit_flag) {
+            //     ++$to_append;
+            //     $digit_flag *= 10;
+            // }
 
-            $payment_id = "PID-";
+            // $payment_id = "PID-";
 
-            for($i=1; $i <= 10 - $to_append; $i++){
-                $payment_id .= "0";
-            }
+            // for($i=1; $i <= 10 - $to_append; $i++){
+            //     $payment_id .= "0";
+            // }
 
-            $payment_id .= $nextId;
+            // $payment_id .= $nextId;
 
-            $payment_logs->payment_id = $payment_id;
+            // $payment_logs->payment_id = $payment_id;
 
             $payment_logs->date_of_payment = $form_data['saleDate'];
 
@@ -147,8 +146,8 @@ class SalesOrderController extends Controller
                 $payment_logs->payment_balance = 0;
                 $payment_logs->amount_paid = $form_data['costPrice'];
 
-                #@TODO
-                $payment_logs->payment_description = "To be developed";
+
+                $payment_logs->payment_description = "Fully Paid";
                 
             }else{
                 $data->initial_payment = $form_data['saleDownpaymentCost'];
@@ -160,8 +159,7 @@ class SalesOrderController extends Controller
                 $data->installment_type = $form_data['installmentType'];
                 $payment_logs->amount_paid = $form_data['saleDownPaymentCost'];
 
-                #@TODO
-                $payment_logs->payment_description = "To be developed";
+                $payment_logs->payment_description = "Downpayment";
                 
             }
 
@@ -218,10 +216,33 @@ class SalesOrderController extends Controller
                 $order->save();
             }
             
-            return "Success";
+
+            //@TODO make a return type so table would be updated
+            // $custId = $data->id;
+
+            // $salesorders = DB::table('salesorder')
+            // ->select('*')
+            // ->join('payment_logs','payment_logs.sales_id','=','salesorder.id')
+            // ->join('ordered_products', 'ordered_products.sales_id', '=', 'salesorder.id')
+            // ->where('salesorder.id', '=' , $custId)
+            // ->get();
+            
+            // return $salesorders;
+
+            return "Sucess";
 
         }catch(Exception $e){
             return $e;
         }
+    }
+
+    function getPaymentLogs($id){
+        $logs = payment_logs::where('sales_id', $id)->get();
+        return response($logs);
+    }
+
+    function viewId($id){
+        $ordered = ordered_products::where('sales_id', $id)->get();
+        return response($ordered);
     }
 }

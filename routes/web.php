@@ -305,6 +305,8 @@ Route::get('/openNewSaleOrder', function() {
 });
 Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
+Route::get('/view/{id}', [SalesOrderController::class, 'viewId']);
+Route::get('/getPaymentLogs/{id}', [SalesOrderController::class, 'getPaymentLogs']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {
