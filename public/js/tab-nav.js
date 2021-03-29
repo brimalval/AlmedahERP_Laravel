@@ -459,3 +459,14 @@ function openNewSupplierQuotation() {
     $('#contentSupplierQuotation').load('/new-supplier');
   });
 }
+
+function openNewShippingRule() {
+  $(document).ready(function () {
+    $('#contentShippingRule').load('/shippingruleinfo');
+  });
+}
+function loadShippingInfo() {
+  $(document).ready(function () {
+    $('#contentShippingRule').load('/shippingrule');
+  });
+}

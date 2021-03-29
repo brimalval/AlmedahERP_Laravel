@@ -735,7 +735,7 @@
                 <!-- End of Menu Item Messages -->
                 <!-- Submenu Messages content -->
                 <div id='submenunewUI' class="collapse sidebar-submenu">
-                    <a href="#" id="address-toggle" data-parent="newUI"
+                    <a href="" id="address-toggle" data-parent="NewUI"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Address</span>
                     </a>
@@ -743,7 +743,7 @@
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Coupon Code</span>
                     </a>
-                    <a href="#" id="Pricingrule-toggle" data-parent="newUI"
+                    <a href="#" data-parent="NewUI"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Pricing Rule</span>
                     </a>
@@ -751,7 +751,7 @@
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Pricing Bundle</span>
                     </a>
-                    <a href="#" id="Shipping-toggle" data-parent="newUI"
+                    <a href="#" id="Shipping_Rule" data-parent="NewUI"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Shipping Rule</span>
                     </a>
