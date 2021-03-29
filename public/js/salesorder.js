@@ -130,6 +130,16 @@ function selectPaymentType(){
     }
 }
 
+//For payment modal
+function selectPaymentType(){
+    var paymentType = document.getElementById('view_paymentType').value;
+    if(paymentType == "Cash"){
+        document.getElementById('viewaccount_no_div').style.display = "none"
+    }else{
+        document.getElementById('viewaccount_no_div').style.display = "flex"
+    }
+}
+
 //Function for payment type
 function installmentType(){
     $('#payments_table_body tr').remove();
@@ -138,6 +148,7 @@ function installmentType(){
     divider = 0;
     if(payment_method == "Cash"){
         $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Cash</td><td class="text-center">'+cost+'</td></tr>');
+        //@TODO disable make payment button
     }else{
         installment_type = document.getElementById('installmentType').value;
         saleDownpaymentCost = document.getElementById('saleDownpaymentCost').value;
@@ -332,15 +343,17 @@ function viewOrderedProducts(id){
                 $('#viewProductsTable').append('<tr> <td class="text-center">  ' +row['product_code'] +'</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value='+ row['quantity_purchased'] +' disabled></td></tr>' );
             });
         }
-      });
+    });
 }
 
+//Get paymentlogs
 function viewPayments(id){
     $.ajax({
         url: 'getPaymentLogs/'+id,
         type: 'get',
         success: function(response){
             $('#view_payment_logs tr').remove();
+            document.getElementById('view_totalamount').value = 0.00;
             response.forEach(row => {
                 $('#view_payment_logs').append(`<tr>
                     <td class="text-center">
@@ -371,9 +384,67 @@ function viewPayments(id){
                 </tr>`);
             });
         }
-      });
+    });
+
+    $.ajax({
+        url: 'getPaymentType/'+id,
+        type: 'get',
+        success: function(response){
+            //Remove options
+            var i, L = document.getElementById('view_salePaymentMethod').options.length - 1;
+            for(i = L; i >= 0; i--) {
+                document.getElementById('view_salePaymentMethod').remove(i);
+            }
+            if (response === "Cash"){
+                ("#view_salePaymentMethod").value = "Already Fully Paid";
+                var o = new Option( "Already Fully Paid", "");
+                $(o).html(" Already Fully Paid");
+                $("#view_salePaymentMethod").append(o);
+                document.getElementById('view_savepayment').disabled = true;
+                document.getElementById('view_paymentType').disabled = true;
+            }else if(response === "Payment still pending"){
+                ("#view_salePaymentMethod").value = "Payment still pending";
+                var o = new Option( "Payment still pending", "");
+                $(o).html("Payment still pending");
+                $("#view_salePaymentMethod").append(o);
+                document.getElementById('view_savepayment').disabled = true;
+                document.getElementById('view_paymentType').disabled = true;
+            }else{
+                document.getElementById('view_savepayment').disabled = false;
+                document.getElementById('view_paymentType').disabled = false;
+                document.getElementById('view_savepayment').value = id;
+                var repeater = 0;
+                switch(response){
+                    case "3 months":
+                        repeater= 3;
+                        break;
+                    case "6 months":
+                        repeater = 6;
+                        break;
+                    case "12 months":
+                        repeater = 12;
+                        break;
+                }
+                for (let index = 0; index < repeater; index++) {
+                    var o = new Option( (index+1) +" Installment", index + " Installment");
+                    $(o).html((index+1) +" Installment");
+                    $("#view_salePaymentMethod").append(o);
+                }
+                //Gets amount to be paid
+                 $.ajax({
+                     url: 'getAmountToBePaid/'+id,
+                     type: 'get',
+                     success: function(response){
+                         document.getElementById('view_totalamount').value = response;
+                    }
+                });
+            }
+        }
+    });
 }
 
+
+//Updates payment in payment_status
 function updatePayment(id, value){
     //@TODO
     $.ajaxSetup({
@@ -395,7 +466,6 @@ function updatePayment(id, value){
         }
     });
 }
-
 
 function enableAddtoProduct(){
     document.getElementById("btnAddProduct").disabled= false;

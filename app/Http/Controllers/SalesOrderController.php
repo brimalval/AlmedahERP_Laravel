@@ -12,6 +12,7 @@ use App\Models\payment_logs;
 use App\Models\MaterialRequest;
 use App\Models\ordered_products;
 use DB;
+use Carbon;
 use Exception;
 class SalesOrderController extends Controller
 {
@@ -157,7 +158,7 @@ class SalesOrderController extends Controller
                 $data->sales_status = "With Outstanding Balance";
 
                 $data->installment_type = $form_data['installmentType'];
-                $payment_logs->amount_paid = $form_data['saleDownPaymentCost'];
+                $payment_logs->amount_paid = $form_data['saleDownpaymentCost'];
 
                 $payment_logs->payment_description = "Downpayment";
                 
@@ -165,10 +166,12 @@ class SalesOrderController extends Controller
 
             if($form_data['paymentType'] == "Cheque"){
                 $payment_logs->account_no = $form_data['account_no'];
+                $payment_logs->payment_status = "Pending";
+            }else{
+                $payment_logs->payment_status = "Completed";
             }
-            $payment_logs->payment_method = $form_data['salePaymentMethod'];
-            $payment_logs->payment_status = "Pending";
-            //Ship, shipped, in assembly, waiting for payment, or completed.  
+            $payment_logs->payment_method = $form_data['paymentType'];
+            
 
             $customerCheck = Customer::where('id', "=", request('customer_id'))->first();
             if(!$customerCheck){
@@ -253,5 +256,65 @@ class SalesOrderController extends Controller
         $data->save();
         
         return "Success";
+    }
+
+
+    function getPaymentType($id){
+        //To get installment type
+        $sale = salesorder::find($id);
+        //Gets the last payment
+        $payment = payment_logs::where('sales_id',$sale->id)->latest('id')->first();
+        
+        if ($sale['payment_mode'] == "Cash" || $payment['payment_balance'] == 0.00){
+            
+            return "Cash";
+        }else if($payment['payment_status'] == "Pending"){
+            return "Payment still pending";
+        }else{
+            return response($sale['installment_type']);
+        }
+    }
+
+    function getAmountToBePaid($id){
+         //To get installment type
+        $sale = salesorder::find($id);
+        
+
+        $installmentArr = ["3 months" => 3 , "6 months" => 6 , "12 months"=>12];
+
+        $installmentType = $installmentArr[ $sale['installment_type']];
+        $divide = ($sale['cost_price'] + $sale['initial_payment'])/$installmentType;
+        return $divide;
+    }
+
+    function addPayment(Request $request){
+        $data = new payment_logs;
+        $form_data = $request->input();
+        $id = $request->input('id');
+
+        //Gets the last payment
+        $payment = payment_logs::where('sales_id',$id)->latest('id')->first();
+
+        //Get current date
+        $currDate = Carbon\Carbon::now();
+        $currDate = $currDate->toDateString();
+
+        $data->date_of_payment = $currDate;
+        $data->sales_id = $id;
+        $data->amount_paid = $form_data['view_totalamount'];
+        
+        if ( $form_data['view_paymentType'] == "Cheque"){
+            $data->account_no = $form_data['view_account_no'];
+            $data->payment_status = "Pending";
+        }else{
+            $data->payment_status = "Completed";
+        }
+        $data->payment_description = $form_data['view_salePaymentMethod'];
+        $data->payment_method = $form_data['view_paymentType'];
+        $data->customer_rep = $form_data['view_customer_rep'];
+
+        $data->payment_balance = $payment['payment_balance'] - $form_data['view_totalamount'];
+
+        $data->save();
     }
 }

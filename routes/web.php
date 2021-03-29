@@ -308,6 +308,9 @@ Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getCompone
 Route::get('/view/{id}', [SalesOrderController::class, 'viewId']);
 Route::get('/getPaymentLogs/{id}', [SalesOrderController::class, 'getPaymentLogs']);
 Route::patch('/updateStatus/{id}', [SalesOrderController::class, 'update']);
+Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentType']);
+Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
+Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {

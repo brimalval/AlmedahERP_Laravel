@@ -606,6 +606,7 @@
                         class="btn btn-secondary m-1"
                         data-dismiss="modal"
                         data-target="#viewPayment"
+                        id = "closeModal"
                     >
                         Close
                     </button>
@@ -694,18 +695,19 @@
                       </h2>
                     </div>
                     <div id="salesOrderCard4" class="collapse">
+                    <form id="makePaymentForm" method="POST" enctype="multipart/form-data" action="#">
+                      @csrf
                       <div class="card-body">
                         <div class="row">
                           <div class="col">
                             <div class="row">
                                 <div class="col">
                                     <label class="text-nowrap align-middle">
-                                        Payment Method
+                                        Payment
                                     </label>
-                                    <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
-                                        <option selected disabled>Please Select</option>
-                                        <option value="Cash">Full Payment(Cash)</option>
-                                        <option value="Installment">Installment</option>
+                                    <select class="form-control sellable" id="view_salePaymentMethod" name= "view_salePaymentMethod">
+                                        <option selected disabled required>Please Select</option>
+                                        
                                     </select>
                                 </div>
                                 <br>
@@ -713,7 +715,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Type
                                     </label>
-                                      <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentType();">
+                                      <select class="form-control sellable" id="view_paymentType" name="view_paymentType" onchange="selectPaymentType();" required>
                                           <option selected disabled>Payment Type...</option>
                                           <option value="Cash">Cash</option>
                                           <option value="Cheque">Cheque</option>
@@ -723,35 +725,21 @@
                             </div>
                             <br>
                             
-                            <div class="col" style="display:none">
+                            <div class="col" style="display:none" id="viewaccount_no_div">
                                 <label >
                                     Account No.
                                 </label>
-                                <input type="text" class="form-input form-control" placeholder="Account No">
+                                <input type="text" class="form-input form-control" placeholder="Account No" name="view_account_no">
                             </div>
                             <br>
 
-                            <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()" >
-                                <div class="col">
-                                    <label class="text-nowrap align-middle">
-                                        Initial Payment(Downpayment)
-                                    </label>
-                                    <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" name="saleDownpaymentCost" placeholder="0.00">
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label class="text-nowrap align-middle">
-                                            Installment Type
-                                        </label>
-                                        <select class="form-control" id="installmentType" name="installmentType">
-                                            <option selected disabled>Please Select</option>
-                                            <option value = "3 months">Installment 3 months</option>
-                                            <option value = "6 months">Installment 6 months</option>
-                                            <option value = "12 months">Installment 12 months</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            <div class="col" id="viewaccount_no_div">
+                                <label >
+                                    Customer Representative
+                                </label>
+                                <input type="text" class="form-input form-control" placeholder="Customer Rep" name="view_customer_rep" required>
                             </div>
+                            <br>
 
                             <table class="table border-bottom table-hover table-bordered">
                               <thead class="border-top border-bottom bg-light">
@@ -769,7 +757,7 @@
                                   <td></td>
                                   <td class="font-weight-bold text-center">TOTAL AMOUNT:</td>
                                   <td class="text-center">
-                                    <input class="form-control" type="text" placeholder="0.00" disabled>
+                                    <input class="form-control" type="text" placeholder="0.00" id="view_totalamount" name="view_totalamount" readonly>
                                   </td>
                                 </tr>
                               </tfoot>
@@ -778,14 +766,15 @@
                         </div>
                             <div class="row">
                               <div class="col-12 d-flex justify-content-center">
-                                <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
-                                  <a class="" href="#" style="text-decoration: none;color:white">
+                                <button type="submit" class="btn btn-primary m-1" id="view_savepayment">
+                                  <a style="text-decoration: none;color:white" >
                                     Save Payment
                                   </a>
                             </div>
                         </div>
                       </div>
                     </div>
+                    </form>
                   </div>
                 </div>
             </div>
@@ -851,6 +840,37 @@ function findRow(value){
         }
     @endforeach
 }
+
+$('#makePaymentForm').submit(function(e){
+    e.preventDefault();
+    $.ajaxSetup({
+         headers: {
+             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+         }
+    });
+    var formData = new FormData(this);
+    theId = document.getElementById('view_savepayment').value;
+    formData.append("id", theId);
+    
+    $.ajax({
+        type:'POST',
+        url:"/addPayment",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            console.log("Payment Sucess")
+            document.getElementById('closeModal').click();
+        },
+        error: function(data) {
+            console.log("error");
+            console.log(data);
+        }
+    });
+})
+
+
 // For creation of sales order
 $("#sales_order_form").submit(function(e) {
     e.preventDefault();
