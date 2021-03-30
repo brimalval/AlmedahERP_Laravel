@@ -78,7 +78,7 @@ class MatRequestController extends Controller
             $matRequest->mr_status = request('mr_status');
             $matRequest->request_id = "REQ";
             $matRequest->save();
-            $matRequest->request_id = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
+            $matRequest->request_id = $id_copy = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
             $matRequest->save();
             for($i=0; $i<sizeof(request('item_code')); $i++){
                 $requestItem = new RequestedRawMat();
@@ -90,7 +90,6 @@ class MatRequestController extends Controller
                 $requestItem->station_id = request('station_id')[$i];
                 $requestItem->save();
             }
-
 
 
             return response()->json([

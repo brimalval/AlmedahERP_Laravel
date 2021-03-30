@@ -66,6 +66,7 @@ class SupplierController extends Controller
             foreach($suppliers as $supplier) {
                 $supplier_data[] = array(
                                     "supplier_id" => $supplier->supplier_id,
+                                    "address" => $supplier->supplier_address,
                                     "company_name" => $supplier->company_name,
                                     "phone_number" => $supplier->phone_number,
                                     "email" => $supplier->supplier_email

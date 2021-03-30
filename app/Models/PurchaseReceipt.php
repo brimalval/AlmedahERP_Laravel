@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SuppliersQuotation extends Model
+class PurchaseReceipt extends Model
 {
     use HasFactory;
-    protected $table = 'suppliers_quotation';
+    protected $table = 'purchase_receipt';
     public $timestamps = true;
     
     protected $fillable = [
-        'supp_quotation_id',
+        'p_receipt_id',
         'date_created',
-        'req_quotation_id',
-        'items_list_rate_amt',
+        'purchase_id',
+        'items_list_received',
         'grand_total',
-        'remarks',
-        'sq_status'
+        'pr_status'
     ]; 
 }

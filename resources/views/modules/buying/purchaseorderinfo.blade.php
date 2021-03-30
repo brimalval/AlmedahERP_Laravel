@@ -1,32 +1,59 @@
-<?php 
-    $today = date("Y-m-d");
-?>
+<?php
+$i = 1; ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        let price = 0,
+            qty = 0;
+        for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
+            qty += !$("#qty" + i).val() ? 0 : parseInt($("#qty" + i).val());
+            price_string = isNaN($("#price" + i).val()) ? $("#price" + i).val().replace("₱ ", '') : $("#price" +
+                i).val();
+            //console.log(price_string);
+            let priceWOComma = price_string.replaceAll(',', '');
+            price_num = parseFloat(priceWOComma);
+            price += price_num;
 
-<script src="{{ asset('js/purchaseorder.js') }}"></script>
+            let price_val = parseFloat($("#price" + i).val().replace("₱ ", '').replaceAll(',', '')); 
+            $("#price" + i).val("₱ " + numberWithCommas(price_val.toFixed(2)));
+        }
+        $("#totalQty").val(qty);
+        $("#totalPrice").val("₱ " + numberWithCommas(price.toFixed(2)));
+    });
+
+    /**From internet function */
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+</script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
             <a href='javascript:onclick=loadPurchaseOrder();' class="fas fa-arrow-left back-button"><span></span></a>
-            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Order "Number"</h2>
+            <h2 class="navbar-brand" style="font-size: 35px;">{{ $purchase_order->purchase_id }}</h2>
         </h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Get items from
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="#">Product Bundle</a></li>
-                        <li><a class="dropdown-item" data-toggle="modal" data-target="#materialrequest-modal">Material Request</a></li>
+                        <li><a class="dropdown-item" data-toggle="modal" data-target="#materialrequest-modal">Material
+                                Request</a></li>
                         <li><a class="dropdown-item" href="#">Supplier Quotation</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Tools
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -52,8 +79,10 @@
                     <div class="form-group">
                         <table>
                             <tr>
-                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" onclick="">Make Material Request</button> </td>
-                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #007bff;">Get Items</button> </td>
+                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" onclick="">Make
+                                        Material Request</button> </td>
+                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal"
+                                        style="background-color: #007bff;">Get Items</button> </td>
                                 <td><a class="close" data-dismiss="modal"><i class="fa fa-times"></i></a></td>
                             </tr>
 
@@ -98,16 +127,16 @@
                     </thead>
                     <tbody class="">
                         @foreach ($material_requests as $request)
-                        <tr>
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
-                            </td>
-                            <td class="text-black-50">{{ $request->request_id }}</td>
-                            <td class="text-black-50">Almedah Food Equipment</td>
-                            <td class="text-black-50">{{ $request->request_date }}</td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input">
+                                    </div>
+                                </td>
+                                <td class="text-black-50">{{ $request->request_id }}</td>
+                                <td class="text-black-50">Almedah Food Equipment</td>
+                                <td class="text-black-50">{{ $request->request_date }}</td>
+                            </tr>
                         @endforeach
                         <!--
                         <tr>
@@ -138,7 +167,7 @@
                 <div class="input-group">
                     <label class="label">Series</label>
                     <select class="input--style-4" type="text" name="series" style="width:512px;height:38px;" disabled>
-                        <option>PUR-ORD-.YYYY.-</option>
+                        <option selected>{{ $purchase_order->purchase_id }}</option>
                     </select>
                 </div>
             </div>
@@ -147,28 +176,32 @@
                 <div class="form-group">
                     <label for="date">Date</label>
 
-                    <input type="date" id="transDate" name="date" value="<?php echo $today; ?>" class="form-control">
+                    <input type="date" id="transDate" name="date" value="{{ $purchase_order->purchase_date }}"
+                        class="form-control" readonly>
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="form-group">
                     <label for="supplier">Supplier</label>
-                    <input type="text" id="supplierField" name="supplier" class="form-control">
+                    <input type="text" id="supplierField" name="supplier" value="{{ $supplier }}"
+                        class="form-control" readonly>
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="form-group">
                     <label for="reqdbydate">Reqd by Date</label>
-                    <input type="date" name="reqdbydate" id="reqDate" class="form-control">
+                    <input type="date" name="reqdbydate" id="reqDate" value="{{ $req_date }}" class="form-control"
+                        readonly>
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="form-group">
                     <label for="company">Company</label>
-                    <input type="text" name="company" id="companyField" class="form-control">
+                    <input type="text" name="company" id="companyField" value="{{ $supplier }}" class="form-control"
+                        readonly>
                 </div>
             </div>
         </div>
@@ -176,7 +209,8 @@
 
 
         <!---Address and Contacts-->
-        <a href="#submenuAddressandContacts" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuAddressandContacts" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> ADDRESS AND CONTACTS</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -208,7 +242,8 @@
         </div>
         <!----End of Address and Contacts-->
         <!---Currency and Price List-->
-        <a href="#submenuCurrencyandPriceList" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuCurrencyandPriceList" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> CURRENCY AND PRICE LIST</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -264,7 +299,7 @@
                         <tr class="text-muted">
                             <td>
                                 <div class="form-check">
-                                    <input type="checkbox" id="masterChk" class="form-check-input">
+                                    <input type="checkbox" id="masterChk" class="form-check-input" disabled>
                                 </div>
                             </td>
                             <td>Item Code</td>
@@ -276,37 +311,41 @@
                         </tr>
                     </thead>
                     <tbody class="" id="itemTable-content">
-                        <tr id="item-1">
+                        @foreach ($items_purchased as $item)
+                            <tr id="item-<?= $i ?>">
                             <td>
                                 <div class="form-check">
-                                    <input type="checkbox" name="item-chk" id="chk1" class="form-check-input">
+                                    <input type="checkbox" name="item-chk" id="chk<?= $i ?>" class="form-check-input" disabled>
                                 </div>
                             </td>
                             <td class="text-black-50">
-                                <input type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
+                                <input type="text" name="item<?= $i ?>" id="item<?= $i ?>" value="{{ $item['item_code'] }}" readonly>
                             </td>
                             <td class="text-black-50">
-                                <input type="date" name="date1" id="date1">
+                                <input type="date" name="date<?= $i ?>" id="date<?= $i ?>" value="{{ $item['req_date'] }}" readonly>
                             </td>
                             <td class="text-black-50">
-                                <input type="number" name="qty1" id="qty1" value="0" min="1" onchange="calcPrice(1);">
+                                <input type="number" name="qty<?= $i ?>" id="qty<?= $i ?>" value="{{ $item['qty'] }}" min="1" readonly>
                             </td>
                             <td class="text-black-50">
-                                <input type="number" name="rate1" id="rate1" value="0" min="1" onchange="calcPrice(1);">
+                                <input type="number" name="rate<?= $i ?>" id="rate<?= $i ?>" value="{{ $item['rate'] }}" min="1" readonly>
                             </td>
                             <td class="text-black-50">
-                                <input type="text" name="price1" id="price1" value="₱ 0.00" readonly>
+                                <input type="text" name="price<?= $i ?>" id="price<?= $i ?>" value="₱ {{ $item['subtotal'] }}" readonly>
                             </td>
                             <td class="text-black-50">
-                                <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
+                                <select class="input--style-4" type="text" name="sampleOne"
+                                    style="width:50px;height:30px;">
                                     <option></option>
                                     <option></option>
                                     <option></option>
                                 </select>
                             </td>
-                        </tr> 
+                        </tr>
+                        <?php ++$i; ?>
+                        @endforeach
                     </tbody>
-                     <!--
+                    <!--
                         <tr>
                             <td>
                                 <div class="form-check">
@@ -329,9 +368,11 @@
                     -->
                     <tfoot>
                         <tr>
-                            <td><button type="button" id="multBtn" style="background-color: #007bff;">Add Multiple</button></td>
-                            <td><button type="button" id="rowBtn" style="background-color: #007bff;">Add Row</button></td>
-                            <td><button type="button" id="deleteRow" style="background-color: red; display:none;">Delete</button></td>
+                            <td><button type="button" id="multBtn" style="background-color: #007bff;" disabled>Add
+                                    Multiple</button></td>
+                            <td><button type="button" id="rowBtn" style="background-color: #007bff;" disabled>Add Row</button>
+                            </td>
+                            <td></td>
                             <td></td>
                             <td><button id="button1">Download</button></td>
                             <td><button id="button1">Upload</button></td>
@@ -339,11 +380,14 @@
                     </tfoot>
 
                     <style>
-                        #multBtn, #rowBtn, #deleteRow {
+                        #multBtn,
+                        #rowBtn,
+                        #deleteRow {
                             border-radius: 4px;
                             padding: 5px;
                             color: white;
                         }
+
                     </style>
                 </table>
                 <hr>
@@ -479,7 +523,8 @@
             <!----End of Currency and Price List-->
         </div>
         <!---Additional Discount-->
-        <a href="#submenuAdditionalDiscount" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuAdditionalDiscount" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> ADDITIONAL DISCOUNT</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -615,7 +660,8 @@
         </div>
         <!----End of Additional Discount-->
         <!---Terms and Conditions-->
-        <a href="#submenuTermsandConditions" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuTermsandConditions" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> TERMS AND CONDITIONS</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -642,7 +688,8 @@
         </div>
         <!----End of Terms and Conditions-->
         <!---More Information-->
-        <a href="#submenuMoreInfo" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuMoreInfo" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> MORE INFORMATION</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -675,7 +722,8 @@
         <!----End of More Information-->
 
         <!---Printing Settings-->
-        <a href="#submenuPrinting" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuPrinting" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> PRINTING SETTINGS</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
