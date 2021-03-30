@@ -125,6 +125,10 @@ class MatRequestController extends Controller
      */
     public function edit(MaterialRequest $materialrequest)
     {
+        if($materialrequest->mr_status == "Submitted"){
+            abort(403);
+        }
+
         $materials = ManufacturingMaterials::with('uom')->get();
         $stations = Station::get();
         $units = MaterialUOM::get();
@@ -145,6 +149,12 @@ class MatRequestController extends Controller
      */
     public function update(Request $request, MaterialRequest $materialrequest)
     {
+        if($materialrequest->mr_status == "Submitted"){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Request has already been submitted!'
+            ], 403);
+        }
         $rules = [
             'item_code' => 'required|array',
             'item_code.*' => 'required|string|exists:env_raw_materials,item_code',
@@ -180,6 +190,7 @@ class MatRequestController extends Controller
                 'status' => 'success',
                 'update' => true,
                 'materialrequest' => $materialrequest,
+                'required_date' => $materialrequest->required_date->format("Y-m-d"),
                 'request' => $request->all(),
             ]);
         }catch(Exception $e){

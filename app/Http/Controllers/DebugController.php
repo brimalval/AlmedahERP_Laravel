@@ -16,7 +16,11 @@ use Illuminate\Support\Carbon;
 class DebugController extends Controller
 {
     public function index(){
-        dd(json_encode(MaterialRequest::first()->raw_mats));
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Request has already been submitted!'
+        ], 403);
+        dd(json_encode(MaterialRequest::first()));
         return view('debug');
     }
 

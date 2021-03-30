@@ -35,7 +35,7 @@
                   <div class="form-group">
                     <label for="required_date">Required Date</label>
 
-                    <input value="{{ $materialRequest->required_date }}" type="date" required="true" name="required_date" id="required_date" class="form-control">
+                    <input value="{{ $materialRequest->required_date->format("Y-m-d") }}" type="date" required="true" name="required_date" id="required_date" class="form-control">
                   </div>
                 </div>
                 <div class="col-6">
