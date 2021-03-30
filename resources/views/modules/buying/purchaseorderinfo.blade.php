@@ -255,7 +255,7 @@ $i = 1; ?>
                         <tr class="text-muted">
                             <td>
                                 <div class="form-check">
-                                    <input type="checkbox" id="masterChk" class="form-check-input">
+                                    <input type="checkbox" id="masterChk" class="form-check-input" disabled>
                                 </div>
                             </td>
                             <td>Item Code</td>
