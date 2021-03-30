@@ -18,7 +18,6 @@ class CreateMaterialsUomTable extends Migration
             $table->string('uom_id')->unique();
             $table->string('item_uom');
             $table->float('conversion_factor');
-            $table->timestamps();
         });
     }
 
