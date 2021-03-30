@@ -42,6 +42,20 @@ class MaterialsPurchasedController extends Controller
         ]);
     }
 
+    //function getMaterials(Request $request) {
+    //    try {
+    //        $materialsByID = array();
+    //        $ids = $request->input('req_ids');
+    //        $request_ids = json_decode($ids);
+    //        foreach($request_ids as $request_id) {
+    //            $materialsByID[] = MaterialPurchased::where('request_id', $request_id)->get()->itemsPurchased();
+    //        }
+    //        return ['purchases' => $materialsByID];
+    //    } catch (Exception $e) {
+    //        return $e;
+    //    }
+    //}
+
     function store(Request $request)
     {
         try {
@@ -69,6 +83,7 @@ class MaterialsPurchasedController extends Controller
 
             $data->items_list_purchased = json_encode($form_data['materials_purchased']);
             $data->purchase_date = $form_data['purchase_date'];
+            $data->total_cost = $form_data['total_price'];
 
             $data->save();
         } catch (Exception $e) {

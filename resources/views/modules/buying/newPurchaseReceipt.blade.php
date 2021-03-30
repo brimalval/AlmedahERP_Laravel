@@ -55,11 +55,13 @@
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
+                            <!--
                             <label class=" text-nowrap align-middle">
                                 Supplier Delivery Note
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
+                        -->
                         </div>
                         <div class="col">
                             <br>
@@ -133,6 +135,7 @@
         <div id="salesOrderCard5">
             <div class="card-body">
                 <div class="row">
+                    <!--
                     <div class="col-6">
                         <div class="form-group" id="npi_setAwarehouse">
                             <label class=" text-nowrap align-middle">
@@ -161,6 +164,7 @@
                             </select>
                         </div>
                     </div>
+                -->
                 </div>
             </div>
         </div>
@@ -233,6 +237,7 @@
         <div id="salesOrderCard5">
             <div class="card-body">
                 <div class="row">
+                    <!--
                     <div class="col">
                         <div class="col-6 form-group">
                             <label class=" text-nowrap align-middle">
@@ -272,10 +277,12 @@
                             </tbody>
                         </table>
                     </div>
+                -->
                 </div>
             </div>
         </div>
     </div>
+    <!--
     <div class="card" id="cardTermsAndCondition">
         <div class="card-header">
             <h2 class="mb-0">
@@ -309,6 +316,7 @@
             </div>
         </div>
     </div>
+-->
     <div class="card" id="cardMoreInfo">
         <div id="salesOrderCard9">
             <div class="card-body">
@@ -331,6 +339,7 @@
             </div>
         </div>
     </div>
+    <!--
     <div class="card" id="cardTransporterInfo">
         <div class="card-header">
             <h2 class="mb-0">
@@ -372,6 +381,7 @@
             </div>
         </div>
     </div>
+-->
 </div>
 
 <script src="{{ asset('js/salesorder.js') }}"></script>

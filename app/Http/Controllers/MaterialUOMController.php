@@ -26,7 +26,7 @@ class MaterialUOMController extends Controller
 
             $data->item_uom = $form_data['name'];
             $data->conversion_factor = $form_data['conv'];
-            $data->price = $form_data['price'];
+            //$data->price = $form_data['price'];
 
             // Generate ID for UOM
             // Based from schema documentation
@@ -34,7 +34,7 @@ class MaterialUOMController extends Controller
             $nextId = ($lastUOM)
                         ? MaterialUOM::orderby('created_at', 'desc')->first()->id + 1 
                         : 1;
-            $data->uom_id = "UOM_" . $nextId;
+            $data->uom_id = $copy_id = "UOM_" . $nextId;
 
             //echo "<script>console.log(".$data.");</script>";
 
@@ -42,8 +42,7 @@ class MaterialUOMController extends Controller
 
             return ['id' => $data->uom_id,
                     'name' => $data->item_uom, 
-                    'conversion_factor' => $data->conversion_factor,
-                    'price' => $data->price];
+                    'conversion_factor' => $data->conversion_factor];
 
         } catch (Exception $e) {
         }

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
-            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Order #</h2>
+            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Invoice #</h2>
         </h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,18 +55,19 @@
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
+                            <!--
                             <label class=" text-nowrap align-middle">
                                 Tax ID
                             </label>
                             <input type="text" required class="form-input form-control" id="">
-                            <br>
+                        -->
                             <div id="npi_duedate">
                                 <label id="" class=" text-nowrap align-middle">
                                     Due Date
                                 </label>
                                 <input type="date" required class="form-input form-control" id="">
-                                <br>
                             </div>
+                            <!--
                             <div class="form-check ">
                                 <input type="checkbox" class="form-check-input" id="npi_paid"
                                     onclick="displayNotDisplay(this.checked, 'npi_duedate')">
@@ -81,6 +82,8 @@
 
                                 </script>
                             </div>
+                        -->
+                            <!--
                             <label for="" class="form-check-label ml-4">Is Paid</label>
                             <div class="form-check my-2">
                                 <input type="checkbox" class="form-check-input">
@@ -90,6 +93,7 @@
                                 <input type="checkbox" class="form-check-input">
                             </div>
                             <label for="" class="form-check-label ml-4">Apply Tax Withholding Amount</label>
+                        -->
                         </div>
                         <div class="col">
                             <br>
@@ -122,6 +126,7 @@
         </div>
     </div>
     <div class="card">
+        <!--
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
@@ -130,6 +135,8 @@
                 </button>
             </h2>
         </div>
+    -->
+        <!--
         <div id="salesOrderCard2" class="collapse">
             <div class="card-body">
                 <form action="" id="saleFormInfo">
@@ -180,7 +187,9 @@
                 </form>
             </div>
         </div>
+    -->
     </div>
+    <!--
     <div class="card" id="cardSupplierInvoice">
         <div class="card-header">
             <h2 class="mb-0">
@@ -211,6 +220,7 @@
             </div>
         </div>
     </div>
+-->
     <div class="card" id="cardAddressContacts">
         <div class="card-header">
             <h2 class="mb-0">
@@ -253,6 +263,7 @@
         <div id="salesOrderCard5">
             <div class="card-body">
                 <div class="row">
+                    <!--
                     <div class="col-6">
                         <div class="form-group" style="display: none;" id="npi_setAwarehouse">
                             <label class=" text-nowrap align-middle">
@@ -270,6 +281,8 @@
                             </label>
                         </div>
                     </div>
+                -->
+                    <!--
                     <div class="col-6">
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">
@@ -281,6 +294,7 @@
                             </select>
                         </div>
                     </div>
+                -->
                 </div>
             </div>
         </div>
@@ -290,11 +304,13 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
+                        <!--
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="npi_holdInvoice"
                                 onclick="displayNotDisplay2(this.checked,'npi_setAwarehouse', 'npi_rejectedWarehouse')">
                         </div>
                         <label for="" class="form-check-label ml-4 mb-3">Update Stocks</label>
+                    -->
                         <br>
                         <label class=" text-nowrap align-middle">Item</label>
                         <table class="table border-bottom table-hover table-bordered">
@@ -338,23 +354,29 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">
-                                Total Quantity
-                            </label>
-                            <input type="number" required class="form-input form-control" id="">
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class=" text-nowrap align-middle">
                                 Total (PHP)
                             </label>
                             <input type="number" required class="form-input form-control" id="">
                         </div>
                     </div>
+                    <!--
+                    <div class="col-6">
+                        
+                        <div class="form-group">
+                            <label class=" text-nowrap align-middle">
+                                Total Quantity
+                            </label>
+                            <input type="number" required class="form-input form-control" id="">
+                        </div>
+                    
+                    </div>
+                    -->
+                    
                 </div>
             </div>
         </div>
     </div>
+    <!--
     <div class="card" id="cardUpdateStock">
         <div id="salesOrderCard5">
             <div class="card-body">
@@ -402,7 +424,10 @@
             </div>
         </div>
     </div>
-    <div class="card" id="cardPaymentTerms">
+-->
+
+<!--    
+<div class="card" id="cardPaymentTerms">
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
@@ -457,6 +482,8 @@
             </div>
         </div>
     </div>
+-->
+    <!--
     <div class="card" id="cardTermsAndCondition">
         <div class="card-header">
             <h2 class="mb-0">
@@ -490,6 +517,7 @@
             </div>
         </div>
     </div>
+-->
     <div class="card" id="cardMoreInfo">
         <div id="salesOrderCard9">
             <div class="card-body">

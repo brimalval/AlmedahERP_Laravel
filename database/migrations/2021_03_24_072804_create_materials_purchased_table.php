@@ -22,7 +22,7 @@ class CreateMaterialsPurchasedTable extends Migration
             //$table->foreign('supp_quotation_id')->references('supp_quotation_id')->on('suppliers_quotation');
             $table->json('items_list_purchased');
             $table->date('purchase_date');
-            $table->string('mp_status')->default('Pending');
+            $table->string('mp_status')->default('Draft');
             $table->float('total_cost', 10, 2);
             $table->timestamps();
         });

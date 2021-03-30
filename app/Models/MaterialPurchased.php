@@ -17,7 +17,8 @@ class MaterialPurchased extends Model
         'supp_quotation_id',
         'items_list_purchased',
         'purchase_date',
-        'mp_status'
+        'mp_status',
+        'total_cost'
     ];
 
     protected $casts = [

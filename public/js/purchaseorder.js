@@ -1,3 +1,6 @@
+// Array for storing item codes
+var item_codes = [];
+
 // Function for adding rows in the currency and price list
 $("#rowBtn").on('click', function () {
     let tbl = $("#itemTable-content");
@@ -86,6 +89,7 @@ $("#deleteRow").click(function () {
             `
         );
         $("#masterChk").prop('checked', false);
+        item_codes = [];
     } else {
         let new_id = 1;
         for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
@@ -123,6 +127,11 @@ $("#deleteRow").click(function () {
         //remove every element with class item-0
         //or: thanos snap item-0 out of existence
         $(".item-0").remove();
+        let new_array = [];
+        for(let i=1; i<=$("#itemTable tbody tr").length; i++) {
+            new_array[i-1] = $("#item" + i).val();
+        }
+        item_codes = new_array;
     }
     chkBoxFunction();
     $("#deleteRow").css('display', 'none');
@@ -163,6 +172,14 @@ $("#saveOrder").click(function () {
     var form_data = new FormData();
     var purchased_mats = {};
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
+        if(parseInt($("#qty" + i).val()) == 0) {
+            alert('No quantity for material ' + $("#item" + i).val() + ' specified.');
+            return;
+        }
+        if(parseFloat($("#rate" + i).val()) == 0) {
+            alert('No rate for material ' + $("#item" + i).val() + ' specified.');
+            return;
+        }
         let price_string = $("#price" + i).val().replace("₱ ", '');
         purchased_mats[i] = {
             "item_code": $("#item" + i).val(),
@@ -176,6 +193,7 @@ $("#saveOrder").click(function () {
     }
     //console.log(JSON.stringify(purchased_mats));
     form_data.append('purchase_date', $("#transDate").val());
+    form_data.append('total_price', $(`#totalPrice`).val().replace("₱ ", '').replaceAll(',',''));
     form_data.set('materials_purchased', JSON.stringify(purchased_mats));
     $.ajax({
         url: '/create-order',
@@ -298,7 +316,13 @@ function fieldFunction(id, token = CSRF_TOKEN) {
             },
             select: function (event, ui) {
                 // Set selection
-                $(itemId).val(ui.item.item_code); // save selected name to input
+                let item_code = ui.item.item_code;
+                if(item_codes.includes(item_code) && item_codes.indexOf(item_code) !== id-1) {
+                    alert('Raw Material already selected.');
+                } else {
+                    item_codes[id-1] = item_code;
+                    $(itemId).val(ui.item.item_code); // save selected name to input
+                }
                 return false;
             }
         }).data("ui-autocomplete")._renderItem = function (ul, item) {

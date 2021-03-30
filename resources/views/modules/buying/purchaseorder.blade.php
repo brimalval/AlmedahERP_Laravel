@@ -102,11 +102,14 @@
                             <th scope="col">Status</th>
                             <th scope="col">Date</th>
                             <th scope="col">Grand Total</th>
+                            <!--
                             <th scope="col">% Received</th>
                             <th scope="col">% Billed</th>
+                            -->
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $i=1; ?>
                         @foreach ($materials_purchased as $material)
                             <tr>
                                 <td scope="col">
@@ -114,10 +117,13 @@
                                 </td>
                                 <td scope="col">{{ $material->mp_status }}</td>
                                 <td scope="col">{{ $material->purchase_date }}</td>
-                                <td scope="col">0.00</td>
+                                <td scope="col" id="totalPrice<?=$i?>">{{ $material->total_cost }}</td>
+                                <!--
                                 <td scope="col">0</td>
                                 <td scope="col">0</td>
+                                -->
                             </tr>
+                        <?php ++$i; ?>
                         @endforeach
                     </tbody>
                 </table>
@@ -125,6 +131,22 @@
         </div>
 
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            for(let i=1; i<=$("#tbl-buying-purchaseorder tbody tr").length; i++) {
+                let price = parseFloat($("#totalPrice" + i).html());
+                //console.log($("#totalPrice" + i).html());
+                $("#totalPrice" + i).html("₱ " + numberWithCommas(price.toFixed(2)));
+            }
+            
+        });
+    
+        /**From internet function */
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        }
+    </script>
 
     <script type="text/javascript">
         $(document).ready(function() {

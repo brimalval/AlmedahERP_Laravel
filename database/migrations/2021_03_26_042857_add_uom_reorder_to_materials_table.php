@@ -16,8 +16,8 @@ class AddUomReorderToMaterialsTable extends Migration
         Schema::table('env_raw_materials', function (Blueprint $table) {
             $table->string('uom_id')->default('nos');
             $table->foreign('uom_id')->references('uom_id')->on('materials_uom');
-            $table->integer('reorder_level');
-            $table->integer('reorder_qty');
+            //$table->integer('reorder_level');
+            //$table->integer('reorder_qty');
         });
     }
 

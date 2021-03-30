@@ -14,12 +14,12 @@ class RemoveObsoleteRawMatsCols extends Migration
     public function up()
     {
         Schema::table('env_raw_materials', function (Blueprint $table) {
-            $table->dropColumn('unit_price');
+            //$table->dropColumn('unit_price');
             // Total amount will be replaced by rm_quantity
-            $table->dropColumn('total_amount');
-            $table->dropColumn('total_amount_min');
-            $table->float('rm_quantity');
-            $table->float('stock_quantity');
+            //$table->dropColumn('total_amount');
+            //$table->dropColumn('total_amount_min');
+            //$table->float('rm_quantity');
+            //$table->float('stock_quantity');
         });
     }
 

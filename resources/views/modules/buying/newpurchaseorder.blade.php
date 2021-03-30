@@ -1,5 +1,7 @@
 <?php
-$today = date('Y-m-d'); ?>
+$today = date('Y-m-d');
+$i = 1;
+?>
 
 <script src="{{ asset('js/purchaseorder.js') }}"></script>
 
@@ -58,7 +60,7 @@ $today = date('Y-m-d'); ?>
                                 <td><button type="button" class="btn btn-info btn" data-dismiss="modal" onclick="">Make
                                         Material Request</button> </td>
                                 <td><button type="button" class="btn btn-info btn" data-dismiss="modal"
-                                        style="background-color: #007bff;">Get Items</button> </td>
+                                        style="background-color: #007bff;" id="getReqItem">Get Items</button> </td>
                                 <td><a class="close" data-dismiss="modal"><i class="fa fa-times"></i></a></td>
                             </tr>
 
@@ -88,12 +90,12 @@ $today = date('Y-m-d'); ?>
                     </div>
                 </div>
 
-                <table class="table table-bom border-bottom">
+                <table class="table table-bom border-bottom" id="reqTable">
                     <thead class="border-top border-bottom bg-light">
                         <tr class="text-muted">
                             <td>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
+                                    <input type="checkbox" id="masterReqChk" class="form-check-input">
                                 </div>
                             </td>
                             <td>Name</td>
@@ -106,13 +108,14 @@ $today = date('Y-m-d'); ?>
                             <tr>
                                 <td>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input">
+                                        <input type="checkbox" id="reqChk<?= $i ?>"class="form-check-input">
                                     </div>
                                 </td>
-                                <td class="text-black-50">{{ $request->request_id }}</td>
+                                <td class="text-black-50" id="req<?= $i ?>">{{ $request->request_id }}</td>
                                 <td class="text-black-50">Almedah Food Equipment</td>
                                 <td class="text-black-50">{{ $request->request_date }}</td>
                             </tr>
+                            <?php ++$i; ?>
                         @endforeach
                         <!--
                         <tr>
@@ -219,13 +222,14 @@ $today = date('Y-m-d'); ?>
         <a href="#submenuCurrencyandPriceList" data-toggle="collapse" aria-expanded="false"
             class="bg-white list-group-item list-group-item-action">
 
-            <span class="menu-collapsed align-middle smaller menu"> CURRENCY AND PRICE LIST</span>
+            <span class="menu-collapsed align-middle smaller menu"> PRICE LIST</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
 
         </a>
         <div id='submenuCurrencyandPriceList' class="collapse sidebar-submenu">
             <br>
             <div class="row">
+                <!---
                 <div class="col-6">
                     <div class="form-group">
                         <label for="currency">Currency</label>
@@ -248,6 +252,7 @@ $today = date('Y-m-d'); ?>
                     <hr>
                 </div>
                 <br>
+            -->
                 <div class="col-6">
                     <div class="form-group">
                         <label for="settargetWh">Set Target Warehouse</label>
@@ -255,6 +260,7 @@ $today = date('Y-m-d'); ?>
                     </div>
                 </div>
 
+                <!--
                 <div class="col-6">
                     <div class="input-group">
                         <label class="label">Supply Raw Materials</label>
@@ -266,6 +272,7 @@ $today = date('Y-m-d'); ?>
                     </div>
                 </div>
                 <hr>
+            -->
                 <br>
 
                 <table class="table table-bom border-bottom" id="itemTable">
@@ -363,12 +370,14 @@ $today = date('Y-m-d'); ?>
                 </table>
                 <hr>
                 <br>
+                <!--
                 <div class="col-6">
                     <div class="form-group">
                         <label for="totalQuantity">Total Quantity</label>
                         <input type="number" class="form-control" id="totalQty" value="0" readonly>
                     </div>
                 </div>
+            -->
 
                 <div class="col-6">
                     <div class="form-group">
@@ -382,18 +391,50 @@ $today = date('Y-m-d'); ?>
                     </div>
                 </div>
 
+                <!--
                 <div class="col-6">
                     <div class="form-group">
                         <label for="totalnetWeight">Total Net Weight</label>
                         <input type="text" class="form-control">
                     </div>
                 </div>
+            -->
+            </div>
 
-                <div class="col-12">
-                    <hr>
+        </div>
+        <a href="#submenuMoreInfo" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
+
+            <span class="menu-collapsed align-middle smaller menu"> MORE INFORMATION</span>
+            <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+        </a>
+        <div id='submenuMoreInfo' class="collapse sidebar-submenu">
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <input type="text" class="form-control">
+                    </div>
                 </div>
-                <br>
+                <div class="col-6">
+                    <div class="form-group">
+                    </div>
+                </div>
+                <!--
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Inter Company Order Reference</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            -->
+            </div>
 
+
+        </div>
+<!--
                 <div class="col-6">
                     <div class="form-group">
                         <label for="taxCategory">Tax Category</label>
@@ -491,9 +532,11 @@ $today = date('Y-m-d'); ?>
                     </div>
                 </div>
             </div>
-            <!----End of Currency and Price List-->
+            
+        -->
+        <!--
         </div>
-        <!---Additional Discount-->
+    
         <a href="#submenuAdditionalDiscount" data-toggle="collapse" aria-expanded="false"
             class="bg-white list-group-item list-group-item-action">
 
@@ -523,7 +566,7 @@ $today = date('Y-m-d'); ?>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <!--Empty Column-->
+                        
                     </div>
                 </div>
                 <div class="col-6">
@@ -628,9 +671,10 @@ $today = date('Y-m-d'); ?>
                     </tr>
                 </table>
             </div>
+        
+        
         </div>
-        <!----End of Additional Discount-->
-        <!---Terms and Conditions-->
+       
         <a href="#submenuTermsandConditions" data-toggle="collapse" aria-expanded="false"
             class="bg-white list-group-item list-group-item-action">
 
@@ -657,42 +701,13 @@ $today = date('Y-m-d'); ?>
             </div>
 
         </div>
-        <!----End of Terms and Conditions-->
+    -->
         <!---More Information-->
-        <a href="#submenuMoreInfo" data-toggle="collapse" aria-expanded="false"
-            class="bg-white list-group-item list-group-item-action">
-
-            <span class="menu-collapsed align-middle smaller menu"> MORE INFORMATION</span>
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
-
-        </a>
-
-        <div id='submenuMoreInfo' class="collapse sidebar-submenu">
-            <br>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Status</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Inter Company Order Reference</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
+        
         <!----End of More Information-->
 
         <!---Printing Settings-->
+        <!--
         <a href="#submenuPrinting" data-toggle="collapse" aria-expanded="false"
             class="bg-white list-group-item list-group-item-action">
 
@@ -729,9 +744,10 @@ $today = date('Y-m-d'); ?>
                 </div>
             </div>
         </div>
-        <!----End of Salary Details-->
+        -End of Salary Details-->
     </form>
     <br>
+    <!---
     <div class="col-6">
         <div class="form-group">
             <label>SUBSCRIPTION SECTION</label>
@@ -749,4 +765,5 @@ $today = date('Y-m-d'); ?>
             <input type="text" class="form-control">
         </div>
     </div>
+-->
 </div>
