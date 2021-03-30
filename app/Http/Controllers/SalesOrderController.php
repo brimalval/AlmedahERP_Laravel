@@ -23,8 +23,7 @@ class SalesOrderController extends Controller
         $products = ManufacturingProducts::get();
 
         $salesorders = DB::table('salesorder')
-        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.transaction_date', 'payment_logs.payment_balance', 'man_customers.customer_lname', 'man_customers.customer_fname')
-        ->join('payment_logs','payment_logs.sales_id','=','salesorder.id')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
         ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
@@ -144,32 +143,49 @@ class SalesOrderController extends Controller
             // @TODO Balanced out to zero if full payment
             if($form_data['salePaymentMethod'] == "Cash"){
                 $data->sales_status = "Fully Paid";
-                $payment_logs->payment_balance = 0;
                 $payment_logs->amount_paid = $form_data['costPrice'];
-
-
+                
                 $payment_logs->payment_description = "Fully Paid";
+
+                if($form_data['paymentType'] == "Cheque"){
+                    $payment_logs->payment_balance = $form_data['costPrice'];
+                    $data->payment_balance = $form_data['costPrice'];
+                    
+                    $payment_logs->account_no = $form_data['account_no'];
+                    $payment_logs->payment_status = "Pending";
+                }else{
+                    $payment_logs->payment_balance = 0;
+                    $data->payment_balance = 0;
+
+                    $payment_logs->payment_status = "Completed";
+                }
                 
             }else{
                 $data->initial_payment = $form_data['saleDownpaymentCost'];
                 
-                $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
-
                 $data->sales_status = "With Outstanding Balance";
 
                 $data->installment_type = $form_data['installmentType'];
                 $payment_logs->amount_paid = $form_data['saleDownpaymentCost'];
 
                 $payment_logs->payment_description = "Downpayment";
-                
+
+                if($form_data['paymentType'] == "Cheque"){
+
+                    $payment_logs->payment_balance = $form_data['costPrice'];
+                    $data->payment_balance = $payment_logs->payment_balance;
+                    
+                    $payment_logs->account_no = $form_data['account_no'];
+                    $payment_logs->payment_status = "Pending";
+                }else{
+                    $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
+                    $data->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
+
+                    $payment_logs->payment_status = "Completed";
+                }
             }
 
-            if($form_data['paymentType'] == "Cheque"){
-                $payment_logs->account_no = $form_data['account_no'];
-                $payment_logs->payment_status = "Pending";
-            }else{
-                $payment_logs->payment_status = "Completed";
-            }
+            
             $payment_logs->payment_method = $form_data['paymentType'];
             
 
@@ -251,8 +267,25 @@ class SalesOrderController extends Controller
 
     function update(Request $request, $id){
         $data = payment_logs::find($id);
+        $sales = salesorder::find($data->sales_id);
+
         $form_data = $request->input();
+
+        if($form_data['status'] == "Pending"){
+            $sales->payment_balance += $data->amount_paid;
+        }else{
+            $sales->payment_balance -= $data->amount_paid;
+        }
+
         $data->payment_status = $form_data['status'];
+        
+        if($sales->payment_balance == 0){
+            $sales->sales_status == "Fully Paid";
+        }else{
+            $sales->sales_status == "With Outstanding Balance";
+        }
+
+        $sales->save();
         $data->save();
         
         return "Success";
@@ -289,9 +322,10 @@ class SalesOrderController extends Controller
 
     function addPayment(Request $request){
         $data = new payment_logs;
+        
         $form_data = $request->input();
         $id = $request->input('id');
-
+        $sales = salesorder::find($id);
         //Gets the last payment
         $payment = payment_logs::where('sales_id',$id)->latest('id')->first();
 
@@ -308,6 +342,7 @@ class SalesOrderController extends Controller
             $data->payment_status = "Pending";
         }else{
             $data->payment_status = "Completed";
+            $sales->payment_balance = $sales->payment_balance - $form_data['view_totalamount'];
         }
         $data->payment_description = $form_data['view_salePaymentMethod'];
         $data->payment_method = $form_data['view_paymentType'];
@@ -315,6 +350,16 @@ class SalesOrderController extends Controller
 
         $data->payment_balance = $payment['payment_balance'] - $form_data['view_totalamount'];
 
+        $sales->save();
         $data->save();
+    }
+
+    function refresh(){
+        $salesorders = DB::table('salesorder')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->join('man_customers','salesorder.customer_id','=','man_customers.id')
+        ->get();
+
+        return $salesorders;
     }
 }

@@ -426,7 +426,7 @@ function viewPayments(id){
                         break;
                 }
                 for (let index = 0; index < repeater; index++) {
-                    var o = new Option( (index+1) +" Installment", index + " Installment");
+                    var o = new Option( (index+1) +" Installment", index+1 + " Installment");
                     $(o).html((index+1) +" Installment");
                     $("#view_salePaymentMethod").append(o);
                 }
@@ -460,6 +460,7 @@ function updatePayment(id, value){
         data: data,
         success: function(response){
             console.log(response);
+            loadRefresh();
         },
         error: function(response) {
             console.log(response);

@@ -24,7 +24,7 @@
                 </li>
                 <li class="nav-item li-bom">
                 <!-- @TODO -->
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" onclick="load__();">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" id="refreshBtn" onclick="loadRefresh()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
@@ -142,7 +142,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id = 'salesorder_table'>
             @foreach ($sales as $row)
             <tr>
                 <td class= "text-bold"> {{$row->id}} </td>
@@ -459,7 +459,7 @@
                                     <label class="text-nowrap align-middle">
                                         Initial Payment(Downpayment)
                                     </label>
-                                    <input type="number" class="form-input form-control sellable" id="saleDownpaymentCost" name="saleDownpaymentCost" placeholder="0.00">
+                                    <input type="text" class="form-input form-control sellable" id="saleDownpaymentCost" name="saleDownpaymentCost" placeholder="0.00">
                                 </div>
                                 <div class="col">
                                     <div class="form-group">
@@ -862,6 +862,7 @@ $('#makePaymentForm').submit(function(e){
         success: function(data) {
             console.log("Payment Sucess")
             document.getElementById('closeModal').click();
+            loadRefresh();
         },
         error: function(data) {
             console.log("error");
@@ -895,7 +896,9 @@ $("#sales_order_form").submit(function(e) {
                 $('#newSalePrompt').modal('hide');
             });
 
-            console.log(data);
+            document.getElementById('closeSaleOrderModal').click();
+
+            loadRefresh();
             
         },
         error: function(data) {
@@ -904,6 +907,7 @@ $("#sales_order_form").submit(function(e) {
         }
     });
 });
+
 function getCalculatedPrice($name){
     @foreach ($products as $row)
         if ("{{$row->product_code}}" == $name)
@@ -911,7 +915,29 @@ function getCalculatedPrice($name){
     @endforeach
 }
 
-
-
+function loadRefresh(){
+    $.ajax({
+        url: '/refresh',
+        type: 'get',
+        success: function(response){
+            x.clear();
+            response.forEach(row => {
+               x.row.add([
+                `<tr>
+                    <td class= "text-bold">  ` + row['id'] + ` </td> `,`
+                    <td class= "text-bold"> ` + row['customer_lname'] + `  ` + row['customer_fname'] + `</td> `,`
+                    <td class= "text-bold"> ` + row['payment_mode'] + `</td> `,`
+                    <td class="text-success"> `+ row['sales_status'] + `</td> `,`
+                    <td class="text-bold"> ` + row['payment_balance'] + `</td> `,`
+                    <td class="text-bold"> ` + row['transaction_date'] + `</td> `,`
+                    <td><button type="button" class="btn btn-primary btn-sm" onclick="viewOrderedProducts( ` + row['id'] + `)" data-toggle="modal" data-target="#viewOrder">View Orders</button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="viewPayments( ` + row['id'] + ` )" data-toggle="modal" data-target="#viewPayment">Payments</button>
+                    </td>
+                </tr>`
+               ]).draw();
+            });
+        }
+    });
+}
 
 </script>
