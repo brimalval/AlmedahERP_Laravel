@@ -359,7 +359,6 @@ $today = date('Y-m-d'); ?>
                             padding: 5px;
                             color: white;
                         }
-
                     </style>
                 </table>
                 <hr>

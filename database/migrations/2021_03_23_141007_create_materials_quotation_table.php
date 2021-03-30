@@ -14,7 +14,8 @@ class CreateMaterialsQuotationTable extends Migration
     public function up()
     {
         Schema::create('request_quotation', function (Blueprint $table) {
-            $table->id('req_quotation_id');
+            $table->id();
+            $table->string('req_quotation_id')->unique();
             $table->date('date_created');
             $table->string('request_id');
             $table->foreign('request_id')->references('request_id')->on('env_material_requests');

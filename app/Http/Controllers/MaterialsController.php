@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use \App\Models\ManufacturingMaterials;
 use App\Models\ManufacturingProducts;
 use App\Models\MaterialCategory;
+use App\Models\MaterialUOM;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
@@ -13,18 +14,22 @@ use Illuminate\Support\Facades\Validator;
 class MaterialsController extends Controller
 {
     function index(){
-        $raw_materials = ManufacturingMaterials::with('category')->get();
+        $raw_materials = ManufacturingMaterials::with(['category', 'uom'])->get();
         $man_mats_categories = MaterialCategory::get();
+        $units = MaterialUOM::get();
         return view('modules.manufacturing.inventory', [
             'raw_materials' => $raw_materials,
-            'categories' => $man_mats_categories
+            'categories' => $man_mats_categories,
+            'units' => $units,
         ]);
     }
 
-    function get($id)
+    function get($code)
     {
-        $material_details = ManufacturingMaterials::with('category')->find($id);
-        return $material_details;
+        $material = ManufacturingMaterials::with(['uom','category'])->where('item_code', '=', $code)->first();
+        return response()->json([
+            'material' => $material,
+        ]);
     }
 
     public function store(Request $request)
@@ -33,8 +38,8 @@ class MaterialsController extends Controller
             'material_code' => 'required|string',
             'material_name' => 'required|string',
             'material_category' => 'required|string',
-            'unit_price' => 'required|integer|numeric|min:0',
-            'total_amount' => 'required|integer|numeric|min:1',
+            'uom_id'=> 'required|exists:materials_uom',
+            'rm_quantity' => 'required|integer|numeric|min:1',
             'rm_status' => 'required',
             'material_image' => 'required',
             'material_image.*' => 'image' 
@@ -55,8 +60,10 @@ class MaterialsController extends Controller
             // If it does, add to its quantity
             $data = ManufacturingMaterials::where('item_code', '=', request('material_code'))->first();
             if($data){
-                $data->total_amount += request('total_amount');
-                $data->category->quantity += request('total_amount');
+                $data->uom_id = request('uom_id');
+                $added_amount = request('rm_quantity') * $data->uom->conversion_factor;
+                $data->stock_quantity += $added_amount;
+                $data->category->quantity += $added_amount;
                 $data->category->save();
                 $data->save();
                 return response()->json([
@@ -74,10 +81,17 @@ class MaterialsController extends Controller
             $data->item_code = $form_data['material_code'];
             $data->item_name = $form_data['material_name'];
             $data->category_id  = $form_data['material_category'];
-            $data->unit_price = $form_data['unit_price'];
-            $data->total_amount = $form_data['total_amount'];
-            $data->category-> quantity += $form_data['total_amount'];
+            // Commenting this out for now since unit_price no longer exists
+            // $data->unit_price = $form_data['unit_price'];
+            $data->uom_id = $form_data['uom_id'];
+            $data->rm_quantity = $form_data['rm_quantity'];
+            $data->stock_quantity = $data->rm_quantity * $data->uom->conversion_factor;
+            $data->category->quantity += $data->stock_quantity;
             $data->category->save();
+            // MAKE THESE FIELDS NOT-STATIC
+            $data->reorder_level = 123;
+            $data->reorder_qty = 45;
+            ///////////
             $data->rm_status = $form_data['rm_status'];
             $data->item_image = json_encode($imagePath);
             $data->save();
