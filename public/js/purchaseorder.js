@@ -1,3 +1,4 @@
+// Function for adding rows in the currency and price list
 $("#rowBtn").on('click', function () {
     let tbl = $("#itemTable-content");
     let nextRow = $("#itemTable tbody tr").length + 1;
@@ -34,23 +35,10 @@ $("#rowBtn").on('click', function () {
     </tr> 
     `);
 
-    $('input[name="item-chk"]').each(function () {
-        $(this).change(function () {
-            if ($(this).is(":checked"))
-                $("#deleteRow").css('display', 'block');
-            else {
-                let size = $("#itemTable tbody tr").length;
-                for (let i = 1; i <= size; i++) {
-                    if ($("#chk" + i).is(":checked")) {
-                        return;
-                    }
-                }
-                $("#deleteRow").css('display', 'none');
-            }
-        });
-    });
+    chkBoxFunction();
 });
 
+// Function for deleting rows in currency and price list
 $("#deleteRow").click(function () {
     let tbl = $("#itemTable-content");
     let nextRow = $("#itemTable tbody tr").length + 1;
@@ -66,7 +54,7 @@ $("#deleteRow").click(function () {
         $("#itemTable tbody tr").remove();
         $("#itemTable tbody").append(
             `
-            <tr id="item-${nextRow}">
+            <tr id="item-1">
                 <td>
                     <div class="form-check">
                         <input type="checkbox" name="item-chk" id="chk1" class="form-check-input">
@@ -76,7 +64,7 @@ $("#deleteRow").click(function () {
                     <input type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
                 </td>
                 <td class="text-black-50">
-                    <input type="date" name="date1" id="date1">
+                    <input type="date" name="date1" id="date1" value=${$("#reqDate").val()}>
                 </td>
                 <td class="text-black-50">
                     <input type="number" name="qty1" id="qty1" value="0" min="1" onchange="calcPrice(1);">
@@ -85,7 +73,7 @@ $("#deleteRow").click(function () {
                     <input type="number" name="rate1" id="rate1" value="0" min="1" onchange="calcPrice(1);">
                 </td>
                 <td class="text-black-50">
-                    <input type="text" name="price1" id="price1" value="₱ 0.00" disabled>
+                    <input type="text" name="price1" id="price1" value="₱ 0.00" readonly>
                 </td>
                 <td class="text-black-50">
                     <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
@@ -105,7 +93,9 @@ $("#deleteRow").click(function () {
                 // "mark" every row to be deleted
                 $("#item-" + i).attr('class', 'item-0');
             } else {
-                //assign new ids and attributes to unchecked elements
+                // assign new ids and attributes to unchecked elements
+                // reassign attributes first before id's
+                // otherwise, the attributes of wrong id will be reassigned
                 $("#chk"+i).attr('id', 'chk'+new_id);
 
                 $("#item-" + i).attr('id', 'item-' + new_id);
@@ -134,41 +124,12 @@ $("#deleteRow").click(function () {
         //or: thanos snap item-0 out of existence
         $(".item-0").remove();
     }
-    $('input[name="item-chk"]').each(function () {
-        $(this).change(function () {
-            if ($(this).is(":checked"))
-                $("#deleteRow").css('display', 'block');
-            else {
-                let size = $("#itemTable tbody tr").length;
-                for (let i = 1; i <= size; i++) {
-                    if ($("#chk" + i).is(":checked")) {
-                        return;
-                    }
-                }
-                $("#deleteRow").css('display', 'none');
-            }
-        });
-    });
+    chkBoxFunction();
     $("#deleteRow").css('display', 'none');
     getQtyAndPrice();
 });
 
-$('input[name="item-chk"]').each(function () {
-    $(this).change(function () {
-        if ($(this).is(":checked"))
-            $("#deleteRow").css('display', 'block');
-        else {
-            let size = $("#itemTable tbody tr").length;
-            for (let i = 1; i <= size; i++) {
-                if ($("#chk" + i).is(":checked")) {
-                    return;
-                }
-            }
-            $("#deleteRow").css('display', 'none');
-        }
-    });
-});
-
+// When the master checkbox is clicked, every checkbox below it is checked
 $("#masterChk").change(function () {
     if ($(this).is(":checked")) {
         for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
@@ -183,6 +144,8 @@ $("#masterChk").change(function () {
     }
 });
 
+// When the "required date" field is changed, the value is
+// reflected in the items in the "Currency and Price List" table
 $("#reqDate").change(function () {
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
         $("#date" + i).val($(this).val());
@@ -229,6 +192,8 @@ $("#saveOrder").click(function () {
 });
 
 $(document).ready(function () {
+    chkBoxFunction();
+
     $('#supplierField').autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -279,6 +244,23 @@ function getQtyAndPrice() {
     $("#totalPrice").val("₱ " + numberWithCommas(price.toFixed(2)));
 }
 
+function chkBoxFunction() {
+    $('input[name="item-chk"]').each(function () {
+        $(this).change(function () {
+            if ($(this).is(":checked"))
+                $("#deleteRow").css('display', 'block');
+            else {
+                let size = $("#itemTable tbody tr").length;
+                for (let i = 1; i <= size; i++) {
+                    if ($("#chk" + i).is(":checked")) {
+                        return;
+                    }
+                }
+                $("#deleteRow").css('display', 'none');
+            }
+        });
+    });
+}
 
 /**From internet function */
 function numberWithCommas(x) {

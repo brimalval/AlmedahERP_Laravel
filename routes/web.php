@@ -14,6 +14,8 @@ use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\ProductMonitoringController;
+use App\Http\Controllers\PurchaseInvoiceController;
+use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
@@ -259,11 +261,23 @@ Route::get('/loadProjectTemplate', function() {
     return view('modules.projects.projecttemplate');
 });
 
+/**PURCHASE INVOICE ROUTES */
+Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
+Route::get('/new-invoice', function() {
+    return view('modules.buying.newPurchaseInvoice');
+});
+
 /**PURCHASE ORDER ROUTES */
 Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
 Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openOrderForm']);
 Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
 Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
+
+/**PURCHASE RECEIPT ROUTES */
+Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
+Route::get('/new-receipt', function() {
+    return view('modules.buying.newPurchaseReceipt');
+});
 
 /**QUALITY ROUTES */
 Route::get('/quality', function() {

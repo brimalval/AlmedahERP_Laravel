@@ -20,6 +20,7 @@ class CreateMaterialsPurchasedTable extends Migration
             $table->json('items_list_purchased');
             $table->date('purchase_date');
             $table->string('mp_status')->default('Pending');
+            $table->float('total_cost', 10, 2);
             $table->timestamps();
         });
     }

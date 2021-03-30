@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use function PHPUnit\Framework\isEmpty;
+
 class MaterialPurchased extends Model
 {
     use HasFactory;
@@ -24,6 +26,10 @@ class MaterialPurchased extends Model
 
     public function itemsPurchased() {
         $items_purchased = json_decode($this->items_list_purchased);
+        // sometimes, one json_decode is not enough to convert json string to json object
+        while(gettype($items_purchased) === 'string') {
+            $items_purchased = json_decode($items_purchased);
+        }
         $items_purchased_array = array();
         foreach($items_purchased as $item) {
             array_push($items_purchased_array,
