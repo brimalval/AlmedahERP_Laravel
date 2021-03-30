@@ -265,13 +265,13 @@ function loadSupplier() {
 
 function openSupplierInfo(id) {
   $(document).ready(function () {
-    $('#contentSupplier').load('/view-supplier/' + id);
+    $('#contentSupplier').load(`/view-supplier/${id}`);
   });
 }
 
 function openSaleInfo(id) {
   $(document).ready(function () {
-    $('#contentSalesOrder').load('/view-sales-order/' + id);
+    $('#contentSalesOrder').load(`/view-sales-order/${id}`);
   });
 }
 
@@ -294,7 +294,7 @@ function loadPurchaseOrder() {
 
 function viewPurchaseOrder(id) {
   $(document).ready(function () {
-    $('#contentPurchaseOrder').load('/view-order/' + id);
+    $('#contentPurchaseOrder').load(`/view-order/${id}`);
   })
 }
 

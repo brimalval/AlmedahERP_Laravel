@@ -1,6 +1,5 @@
-<?php 
-    $today = date("Y-m-d");
-?>
+<?php
+$today = date('Y-m-d'); ?>
 
 <script src="{{ asset('js/purchaseorder.js') }}"></script>
 
@@ -10,23 +9,27 @@
             <a href='javascript:onclick=loadPurchaseOrder();' class="fas fa-arrow-left back-button"><span></span></a>
             <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Order "Number"</h2>
         </h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Get items from
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="#">Product Bundle</a></li>
-                        <li><a class="dropdown-item" data-toggle="modal" data-target="#materialrequest-modal">Material Request</a></li>
+                        <li><a class="dropdown-item" data-toggle="modal" data-target="#materialrequest-modal">Material
+                                Request</a></li>
                         <li><a class="dropdown-item" href="#">Supplier Quotation</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Tools
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -42,9 +45,9 @@
     </div>
 </nav>
 
-<div id="materialrequest-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content" style="width:780px;">
+<div class="modal fade" id="materialrequest-modal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="margin:auto;">
             <div class="modal-header">
                 <h3>Select Material Request</h3>
                 <h3></h3>
@@ -52,8 +55,10 @@
                     <div class="form-group">
                         <table>
                             <tr>
-                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" onclick="">Make Material Request</button> </td>
-                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" style="background-color: #007bff;">Get Items</button> </td>
+                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" onclick="">Make
+                                        Material Request</button> </td>
+                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal"
+                                        style="background-color: #007bff;">Get Items</button> </td>
                                 <td><a class="close" data-dismiss="modal"><i class="fa fa-times"></i></a></td>
                             </tr>
 
@@ -98,16 +103,16 @@
                     </thead>
                     <tbody class="">
                         @foreach ($material_requests as $request)
-                        <tr>
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
-                            </td>
-                            <td class="text-black-50">{{ $request->request_id }}</td>
-                            <td class="text-black-50">Almedah Food Equipment</td>
-                            <td class="text-black-50">{{ $request->request_date }}</td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input">
+                                    </div>
+                                </td>
+                                <td class="text-black-50">{{ $request->request_id }}</td>
+                                <td class="text-black-50">Almedah Food Equipment</td>
+                                <td class="text-black-50">{{ $request->request_date }}</td>
+                            </tr>
                         @endforeach
                         <!--
                         <tr>
@@ -130,6 +135,7 @@
 </div>
 
 
+
 <div class="container">
     <form id="newpurchaseorderForm" name="newpurchaseForm" role="form" method="POST">
         @csrf
@@ -147,7 +153,8 @@
                 <div class="form-group">
                     <label for="date">Date</label>
 
-                    <input type="date" id="transDate" name="date" value="<?php echo $today; ?>" class="form-control">
+                    <input type="date" id="transDate" name="date"
+                        value="<?php echo $today; ?>" class="form-control">
                 </div>
             </div>
 
@@ -176,7 +183,8 @@
 
 
         <!---Address and Contacts-->
-        <a href="#submenuAddressandContacts" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuAddressandContacts" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> ADDRESS AND CONTACTS</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -208,7 +216,8 @@
         </div>
         <!----End of Address and Contacts-->
         <!---Currency and Price List-->
-        <a href="#submenuCurrencyandPriceList" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuCurrencyandPriceList" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> CURRENCY AND PRICE LIST</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -298,15 +307,16 @@
                                 <input type="text" name="price1" id="price1" value="₱ 0.00" readonly>
                             </td>
                             <td class="text-black-50">
-                                <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
+                                <select class="input--style-4" type="text" name="sampleOne"
+                                    style="width:50px;height:30px;">
                                     <option></option>
                                     <option></option>
                                     <option></option>
                                 </select>
                             </td>
-                        </tr> 
+                        </tr>
                     </tbody>
-                     <!--
+                    <!--
                         <tr>
                             <td>
                                 <div class="form-check">
@@ -329,9 +339,12 @@
                     -->
                     <tfoot>
                         <tr>
-                            <td><button type="button" id="multBtn" style="background-color: #007bff;">Add Multiple</button></td>
-                            <td><button type="button" id="rowBtn" style="background-color: #007bff;">Add Row</button></td>
-                            <td><button type="button" id="deleteRow" style="background-color: red; display:none;">Delete</button></td>
+                            <td><button type="button" id="multBtn" style="background-color: #007bff;">Add
+                                    Multiple</button></td>
+                            <td><button type="button" id="rowBtn" style="background-color: #007bff;">Add Row</button>
+                            </td>
+                            <td><button type="button" id="deleteRow"
+                                    style="background-color: red; display:none;">Delete</button></td>
                             <td></td>
                             <td><button id="button1">Download</button></td>
                             <td><button id="button1">Upload</button></td>
@@ -339,11 +352,14 @@
                     </tfoot>
 
                     <style>
-                        #multBtn, #rowBtn, #deleteRow {
+                        #multBtn,
+                        #rowBtn,
+                        #deleteRow {
                             border-radius: 4px;
                             padding: 5px;
                             color: white;
                         }
+
                     </style>
                 </table>
                 <hr>
@@ -479,7 +495,8 @@
             <!----End of Currency and Price List-->
         </div>
         <!---Additional Discount-->
-        <a href="#submenuAdditionalDiscount" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuAdditionalDiscount" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> ADDITIONAL DISCOUNT</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -615,7 +632,8 @@
         </div>
         <!----End of Additional Discount-->
         <!---Terms and Conditions-->
-        <a href="#submenuTermsandConditions" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuTermsandConditions" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> TERMS AND CONDITIONS</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -642,7 +660,8 @@
         </div>
         <!----End of Terms and Conditions-->
         <!---More Information-->
-        <a href="#submenuMoreInfo" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuMoreInfo" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> MORE INFORMATION</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -675,7 +694,8 @@
         <!----End of More Information-->
 
         <!---Printing Settings-->
-        <a href="#submenuPrinting" data-toggle="collapse" aria-expanded="false" class="bg-white list-group-item list-group-item-action">
+        <a href="#submenuPrinting" data-toggle="collapse" aria-expanded="false"
+            class="bg-white list-group-item list-group-item-action">
 
             <span class="menu-collapsed align-middle smaller menu"> PRINTING SETTINGS</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
