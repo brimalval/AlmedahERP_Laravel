@@ -13,6 +13,7 @@ class Employee extends Authenticatable
     use HasFactory;
     protected $table = 'env_employees';
     protected $fillable = [
+        'employee_id',
         'last_name',
         'first_name',
         'position',

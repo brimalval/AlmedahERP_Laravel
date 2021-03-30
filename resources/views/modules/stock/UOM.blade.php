@@ -51,8 +51,6 @@
                                     <p>Must be Whole Number</p>-->
                                         <input type="text" class="form-control" id="conv" name="conv"
                                             placeholder="Conversion Value..."><br>
-                                        <input type="text" id="price" name="price" placeholder="Price of UOM"
-                                            class="form-control">
                                     </form>
                                 </div>
                                 <div class="modal-footer">
@@ -109,7 +107,6 @@
                     <td></td>
                     <td>Conversion Factor</td>
                     <td></td>
-                    <td>Price</td>
                     <td>4 of 4</td>
                     <td></td>
                 </tr>
@@ -127,7 +124,6 @@
                     <td class="text-black-50"></td>
                     <td>{{ $uom->conversion_factor }}</td>
                     <td></td>
-                    <td>{{ $uom->price }}</td>
                     <td class="text-black-50">9 M</td>
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>  
@@ -167,7 +163,7 @@
 
         formData.append("name", $("#name").val());
         formData.append("conv", $("#conv").val());
-        formData.append("price", $("#price").val());
+        //formData.append("price", $("#price").val());
 
         $.ajax({
             url: '/create-mat-uom',
@@ -191,7 +187,6 @@
                         <td></td>
                         <td>` + data.conversion_factor + `</td>
                         <td class="text-black-50"></td>
-                        <td>` + data.price + `</td>
                         <td class="text-black-50">9 M</td>
                         <td><span class="fas fa-comments"></span>0</td>
                     </tr>

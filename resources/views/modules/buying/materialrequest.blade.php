@@ -28,10 +28,8 @@
 </nav>
 <br>
 <div class="container">
-    
         <hr>
-        <table id="mat-req-table" class="table table-bom border-bottom">
-        
+        <table id="mat-req-table" class="w-100 table table-bom border-bottom">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -56,16 +54,28 @@
                         </div>
                     </td>
                     <td class="mr-request-id"><a name="{{ $mat_request->request_id }}" href='javascript:onclick=openMaterialRequestInfo();'>{{ $mat_request->request_id }}</a></td>
-                    <td class="mr-rq-status">{{ $mat_request->mr_status }}</td>
+                    <?php
+                        if($mat_request->mr_status == "Draft"){
+                            $color = "orange";
+                        }
+                        elseif ($mat_request->mr_status == "Submitted") {
+                            $color = "blue";
+                        }
+                    ?>
+                    <td class="mr-rq-status">
+                        <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
+                        {{ $mat_request->mr_status }}
+                    </td>
                     <td class="text-black-50 mr-req-date">{{ $mat_request->required_date }}</td>
                     <td class="text-black-50 mr-purpose">{{ $mat_request->purpose }}</td>
                     <td>
-                    <button class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
-                    {{-- <a href="{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}" class="btn btn-outline-warning" ><i class="fa fa-edit"></i></a> --}}
+                    @if ($mat_request->mr_status == 'Draft')
+                        <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
+                    @endif
                     <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="mr-delete-btn btn btn-outline-danger" onclick="return confirm('Are you sure? you want to delete this request?')"><i class="fa fa-trash"></i></a>
+                        <button type="submit" class="mr-delete-btn btn btn-outline-danger" onclick="return confirm('Are you sure? you want to delete this request?')"><i class="fa fa-trash"></i></button>
                     </form>
                     
                     

@@ -20,7 +20,15 @@ class Supplier extends Model
         'supplier_address'
     ];
 
-    public function getRQEntry() {
-        return $this->belongsToMany(RequestQuotationSuppliers::class, 'supplier_id', 'supplier_id');
+    public function request_quotations() {
+        return $this
+            ->hasManyThrough(
+                MaterialQuotation::class,
+                RequestQuotationSuppliers::class,
+                'supplier_id',
+                'req_quotation_id',
+                'supplier_id',
+                'req_quotation_id',
+            );
     }
 }

@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<form action="/materialrequest" method="post" id="mat-req" class="create">
+<form action="{{ route('materialrequest.store') }}" method="post" id="mat-req" class="create">
 @csrf
 <div id="accordion">
   <div class="card">
@@ -56,7 +56,7 @@
         </button>
       </h5>
     </div>
-    <div id="Dashboard" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+    <div id="Dashboard" class="collapse show" aria-labelledby="headingOne">
       <div class="card-body">
         <!--dashboard contents-->
         <div class="container">
@@ -92,19 +92,20 @@
               </div>
               <br>
               <label>Item</label>
-              <table class="table border-bottom table-hover table-bordered" id="items-tbl">
+              <table class="table border-bottom table-hover table-bordered items-tbl" id="items-tbl">
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
-                    <td>
+                    <td class="text-center">
                       <div class="form-check">
                         <input type="checkbox" class="form-check-input">
                       </div>
                     </td>
 
-                    <td>Item Code</td>
-                    <td>Quantity</td>
-                    <td>Target Station</td>
-                    <td>Procurement Method</td>
+                    <td class="text-center">Item Code</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-center">Unit</td>
+                    <td class="text-center">Target Station</td>
+                    <td class="text-center"> Procurement Method</td>
                     <td></td>
                   </tr>
                 </thead>
@@ -118,7 +119,6 @@
               </table>
               <td colspan="7" rowspan="5">
                 <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>
               </td>
           {{-- </form> --}}
 
@@ -135,7 +135,7 @@
         </button>
       </h5>
     </div>
-    <div id="Item" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+    <div id="Item" class="collapse" aria-labelledby="headingTwo">
       <div class="card-body">
         <!--moreinfo contents-->
         <div class="container">
@@ -148,7 +148,7 @@
                 <div class="form-group">
                   <label for="">Type</label>
                   <select class="form-control" required="true" name="mr_status" readonly id="procurement_method">
-                    <option value="draft">Draft</option>
+                    <option value="Draft">Draft</option>
                   </select>
                 </div>
               </div>
@@ -243,17 +243,5 @@
 </div>
 </form>
 </div>
-
-<div class="d-none" id="selects">
-  <select required="true" name="item_code[]" class="form-control">
-    @foreach ($materials as $material)
-        <option value="{{ $material->item_code }}">{{ $material->item_name }}</option>
-    @endforeach
-  </select>
-
-  <select required="true" name="station_id[]" class="form-control">
-    @foreach ($stations as $station)
-        <option value="{{ $station->station_id }}">{{ $station->station_name }}</option>
-    @endforeach
-  </select>
-</div>
+@include('modules.buying.materialReqmodules.selectpickers')
+@include('modules.buying.materialReqmodules.edit_item_modal')

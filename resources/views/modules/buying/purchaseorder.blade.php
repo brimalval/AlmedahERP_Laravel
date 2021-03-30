@@ -25,8 +25,8 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onClick="loadNewEmployee()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
+                        onClick="loadPurchaseOrder();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-info btn" style="background-color: #007bff;"
@@ -102,20 +102,28 @@
                             <th scope="col">Status</th>
                             <th scope="col">Date</th>
                             <th scope="col">Grand Total</th>
+                            <!--
                             <th scope="col">% Received</th>
                             <th scope="col">% Billed</th>
+                            -->
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $i=1; ?>
                         @foreach ($materials_purchased as $material)
                             <tr>
-                                <th scope="col">{{ $material->item_code }}</th>
-                                <th scope="col">{{ $material->mp_status }}</th>
-                                <th scope="col">{{ $material->purchase_date }}</th>
-                                <th scope="col"></th>
-                                <th scope="col">{{ $material->quantity_received }}</th>
-                                <th scope="col"></th>
+                                <td scope="col">
+                                    <a href="javascript:onclick=viewPurchaseOrder({{ $material->id }})">{{ $material->purchase_id }}</a>
+                                </td>
+                                <td scope="col">{{ $material->mp_status }}</td>
+                                <td scope="col">{{ $material->purchase_date }}</td>
+                                <td scope="col" id="totalPrice<?=$i?>">{{ $material->total_cost }}</td>
+                                <!--
+                                <td scope="col">0</td>
+                                <td scope="col">0</td>
+                                -->
                             </tr>
+                        <?php ++$i; ?>
                         @endforeach
                     </tbody>
                 </table>
@@ -123,7 +131,38 @@
         </div>
 
     </div>
+
     <script type="text/javascript">
+        $(document).ready(function() {
+            for(let i=1; i<=$("#tbl-buying-purchaseorder tbody tr").length; i++) {
+                let price = parseFloat($("#totalPrice" + i).html());
+                //console.log($("#totalPrice" + i).html());
+                $("#totalPrice" + i).html("₱ " + numberWithCommas(price.toFixed(2)));
+            }
+            
+        });
+    
+        /**From internet function */
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#tbl-buying-purchaseorder').dataTable({
+                columnDefs: [{
+                    orderable: false,
+                    targets: 0
+                }],
+                order: [
+                    [1, 'asc']
+                ],
+                drawCallback: function() {
+                    $('#products-table_wrapper').addClass('col-12');
+                },
+            });
+        });
         $(document).ready(function() {
             var modalCrmLeadsForm = $("#modal-buying-purchaseorder-form");
 

@@ -18,6 +18,7 @@ class CreateMatRequestsTable extends Migration
             $table->id();
             $table->string('request_id')->unique();
             $table->date('request_date');
+            //foreign key needed here
             $table->date('required_date');
             $table->string('purpose');
             $table->string('mr_status');

@@ -1,4 +1,10 @@
 <script src="{{ asset('js/materialrequest.js') }}"></script>
+<form id="mr-submit" action="{{ route('materialrequest.submit', ['materialrequest'=>$materialRequest->id]) }}" method="post">
+  @csrf
+  <button class="btn btn-primary btn-sm ml-4" href="#" role="button">
+    Submit
+  </button>
+</form>
 <form  id="mat-req" class="update" action="{{ route('materialrequest.update', ['materialrequest' => $materialRequest->id]) }}">
 @csrf
 @method('PATCH')
@@ -11,7 +17,7 @@
         </button>
       </h5>
     </div>
-    <div id="Dashboard" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+    <div id="Dashboard" class="collapse show" aria-labelledby="headingOne">
       <div class="card-body">
         <!--dashboard contents-->
         <div class="container">
@@ -40,7 +46,6 @@
                   </div>
                 </div>
               </div>
-      
 
               <div class="col-12">
                 <hr>
@@ -48,7 +53,7 @@
               <br>
               <label>Item</label>
               <div id="items-border-div" class="mb-3">
-              <table class="table border-bottom table-hover table-bordered" id="items-tbl">
+              <table class="table border-bottom table-hover table-bordered items-tbl" id="items-tbl">
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
                     <td>
@@ -59,6 +64,7 @@
 
                     <td>Item Code</td>
                     <td>Quantity</td>
+                    <td>Unit</td>
                     <td>Target Station</td>
                     <td>Procurement Method</td>
                     <td></td>
@@ -66,38 +72,48 @@
                 </thead>
                 <tbody class="" id="material-request-input-rows">
                     @foreach ($materialRequest->raw_mats as $rq_mat)
-                      <tr>
+                      <tr data-id="{{ $loop->index }}">
                           <td>
                           <div class="form-check">
                               <input type="checkbox" class="form-check-input">
                           </div>
                           </td>
                           <td id="mr-code-input-{{ $loop->index }}" class="mr-code-input">
-                            <select required="true" name="item_code[]" class="form-control">
+                            <select required="true" data-id="item_code" data-live-search="true" name="item_code[]" class="form-control selectpicker">
                               @foreach ($materials as $material)
-                                    <option value="{{ $material->item_code }}" @if ($material->item_code == $rq_mat->item_code) selected="selected" @endif>{{ $material->item_name }}</option>
+                                  <option @if($material->item_code == $rq_mat->item_code) selected @endif value="{{ $material->item_code }}">{{ $material->item_name }}</option>
                               @endforeach
                             </select>
                           </td>
-                          <td style="width: 10%;"><input required value="{{ $rq_mat->quantity_requested }}" class="form-control" min="0" type="number" name="quantity_requested[]" id="mr-qty-input-row-{{ $loop->index }}"></td>
+                          <td style="width: 10%;" class="mr-qty-input"><input required class="form-control" min="0" type="number" name="quantity_requested[]" id="mr-qty-input-row-{{ $loop->index }}" value="{{ $rq_mat->quantity_requested }}"></td>
+                          <td class="mr-unit-input">
+                            <select required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
+                              @foreach ($units as $unit)
+                                  <option @if($unit->uom_id == $rq_mat->uom_id) selected @endif value="{{ $unit->uom_id }}" data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</small></option>
+                              @endforeach
+                            </select>
+                          </td>
                           <td id="mr-target-input-{{ $loop->index }}" class="mr-target-input">
-                            <select required="true" selected="{{ $material->station_id }}" name="station_id[]" class="form-control">
+                            <select required="true" data-id="station_id" data-live-search="true" name="station_id[]" class="form-control selectpicker">
                               @foreach ($stations as $station)
-                                  <option value="{{ $station->station_id }}" @if ($station->station_id == $rq_mat->station_id) selected="selected" @endif>{{ $station->station_name }}</option>
+                                  <option @if($station->station_id == $rq_mat->station_id) selected @endif value="{{ $station->station_id }}">{{ $station->station_name }}</option>
                               @endforeach
                             </select>
                           </td>
-                          <td style="width: 20%">
-                          <select name="procurement_method[]" required class="form-control" selected="{{ $rq_mat->procurement_method }}">
-                              <option value="buy" @if($rq_mat->procurement_method == "buy") selected="selected" @endif>Buy</option>
-                              <option value="produce" @if($rq_mat->procurement_method == "produce") selected="selected" @endif>Produce</option>
-                              <option value="buyproduce" @if($rq_mat->procurement_method == "buyproduce") selected="selected" @endif>Buy & Produce</option>
+                          <td style="width: 20%" class="mr-procurement-input">
+                          <select name="procurement_method[]" required class="form-control selectpicker">
+                              <option value="buy">Buy</option>
+                              <option value="produce">Produce</option>
+                              <option value="buyproduce">Buy & Produce</option>
                           </select>
                           </td>
                           <td>
-                          <a id="" class="btn btn-primary delete-btn" href="#" role="button">
-                              <i class="fa fa-trash" aria-hidden="true"></i>
+                          <a id="" class="btn item-edit-btn" href="#" role="button" onclick="openItemEditModal($(this).parents('tr'))">
+                            <i class="fa fa-caret-up" aria-hidden="true"></i>
                           </a>
+                          <button type="button" id="" class="btn delete-btn" role="button">
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                          </button>
                           </td>
                       </tr>
                     @endforeach
@@ -106,10 +122,7 @@
               </div>
               <td colspan="7" rowspan="5">
                 <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                <button class="btn btn-sm btn-sm btn-secondary">Add Multiple</button>
               </td>
-          {{-- </form> --}}
-
         </div>
         <!--end contents-->
       </div>
@@ -123,24 +136,20 @@
         </button>
       </h5>
     </div>
-    <div id="Item" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+    <div id="Item" class="collapse" aria-labelledby="headingTwo">
       <div class="card-body">
         <!--moreinfo contents-->
         <div class="container">
-          {{-- <form id="contactForm" name="contact" role="form"> --}}
             <div class="row">
-              
               </div>
-
               <div class="col-6">
                 <div class="form-group">
                   <label for="">Type</label>
                   <select class="form-control" required="true" name="mr_status" readonly id="procurement_method">
-                    <option value="draft">Draft</option>
+                    <option value="Draft">Draft</option>
                   </select>
                 </div>
               </div>
-          {{-- </form> --}}
         </div>
         <!--end contents-->
       </div>
@@ -230,16 +239,5 @@
 
 </div>
 </form>
-<div class="d-none" id="selects">
-  <select required="true" name="item_code[]" class="form-control">
-    @foreach ($materials as $material)
-        <option value="{{ $material->item_code }}">{{ $material->item_name }}</option>
-    @endforeach
-  </select>
-
-  <select required="true" name="station_id[]" class="form-control">
-    @foreach ($stations as $station)
-        <option value="{{ $station->station_id }}">{{ $station->station_name }}</option>
-    @endforeach
-  </select>
-</div>
+@include('modules.buying.materialReqmodules.selectpickers');
+@include('modules.buying.materialReqmodules.edit_item_modal')

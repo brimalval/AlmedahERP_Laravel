@@ -84,6 +84,7 @@ class SalesOrderController extends Controller
             $form_data = $request->input();
 
             $cart = $request->input("cart");
+
             $cart = explode(',', $cart);
             
             // Declares a 2d array because if not it considers it as a dictionary
@@ -211,6 +212,26 @@ class SalesOrderController extends Controller
             
             $data->save();
             $payment_logs->sales_id = $data->id;
+
+            //generate payment id
+            $lastPayment = payment_logs::orderby('id', 'desc')->first();
+            $to_add = ($lastPayment) ? 1 : 0;
+            $nextId = SalesOrder::orderby('id', 'desc')->first()->id + $to_add; 
+
+            $to_append = 0;
+            $digit_flag = 1;
+            while($nextId >= $digit_flag) {
+                ++$to_append;
+                $digit_flag *= 10;
+            }
+
+            $payment_id = "PID-".str_pad($nextId, 10-$to_append, "0", STR_PAD_LEFT);
+            //end generate payment id
+
+            $payment_logs->payment_id = $payment_id;
+
+            $payment_logs->date_of_payment = date("Y-m-d");
+
             $payment_logs->save();
             
             // MATERIAL REQUEST CANNOT CONTINUE DUE TO LACK OF INFO

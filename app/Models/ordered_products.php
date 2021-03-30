@@ -19,4 +19,8 @@ class ordered_products extends Model
 
     protected $casts = [
     ];
+
+    public function salesOrder() {
+        return $this->belongsTo(SalesOrder::class, 'id', 'sales_id');
+    }
 }

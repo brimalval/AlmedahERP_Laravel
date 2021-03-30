@@ -15,7 +15,7 @@ class CreateRqSuppliersTable extends Migration
     {
         Schema::create('rq_suppliers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('req_quotation_id');
+            $table->string('req_quotation_id');
             $table->foreign('req_quotation_id')->references('req_quotation_id')->on('request_quotation');
             $table->string('supplier_id');
             $table->foreign('supplier_id')->references('supplier_id')->on('suppliers');

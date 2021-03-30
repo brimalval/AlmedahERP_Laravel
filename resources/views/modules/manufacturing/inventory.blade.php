@@ -1,3 +1,4 @@
+<script src="{{ asset('js/inventory_backend.js') }}"></script>
 <script>
     function clickView(images){
         if(typeof images == 'string')
@@ -61,8 +62,7 @@
                         <td>Item Code</td>
                         <td>Item Name</td>
                         <td>Category</td>
-                        <td>Unit Price (PHP)</td>
-                        <td>Qty.</td>
+                        <td>Stock Qty.</td>
                         <td>RM Status</td>
                         <td>View</td>
                         <td>Actions</td>
@@ -79,8 +79,7 @@
                             <td>{{ $row->item_code }}</td>
                             <td>{{ $row->item_name }}</td>
                             <td>{{ $row->category->category_title }}</td>
-                            <td class="text-black-50">{{ $row->unit_price }}</td>
-                            <td id="item-qty-{{ $row->id }}" class="text-black-50">{{ $row->total_amount }}</td>
+                            <td id="item-qty-{{ $row->id }}" class="text-black-50">{{ $row->stock_quantity }}</td>
                             <td class="text-black-50">{{ $row->rm_status }}</td>
 
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $row->item_image }}))" class="row-img-view-btn" id="clickViewTagInv{{ $row->id }}">View</a></td>
@@ -370,17 +369,31 @@
 
                     </script>
 
-                    <div class="form-group">
-                        <label for="">Unit Price</label>
-                        <input class="form-control" type="number" id="create_unit_price" name="unit_price" required placeholder="Ex. 100">
-                        <span id="create-price-error" class="input-error text-danger"></span>
-                    </div>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label for="">Quantity</label>
+                            <input class="form-control" type="number" id="create_total_amount" name="rm_quantity" required placeholder="Ex. 500">
+                            <span id="create-qty-error" class="input-error text-danger"></span>
+                        </div>
 
+                        <div class="form-group col-6">
+                        <label for="">Unit of Measurement</label>
+                        <select class="form-control selectpicker" data-live-search="true" name="uom_id" id="uom_id">
+                            @foreach ($units as $unit)
+                                <option value="{{ $unit->uom_id }}" data-subtext="({{ $unit->conversion_factor }} nos.)" data-cf="{{ $unit->conversion_factor }}">{{ $unit->item_uom }}</option>   
+                            @endforeach
+                        </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="">Qty.</label>
-                        <input class="form-control" type="number" id="create_total_amount" name="total_amount" required placeholder="Ex. 500">
-                        <span id="create-qty-error" class="input-error text-danger"></span>
+                        <div class="form-group col-6">
+                          <label for="">Conversion Factor</label>
+                          <input type="text" value="0" readonly id="conversion_factor" class="form-control" placeholder="" aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group col-6">
+                          <label for="">Stock Quantity</label>
+                          <input type="text" value="0" readonly id="stock_quantity" class="form-control" placeholder="" aria-describedby="helpId">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -653,8 +666,6 @@
                                     formData.get('material_name'),
                                     data.category_title,
                                     '<span class="text-black-50">' + formData
-                                    .get('unit_price') + '</span>',
-                                    '<span class="text-black-50">' + formData
                                     .get('total_amount') + '</span>',
                                     '<span class="text-black-50">' + formData
                                     .get('rm_status') + '</span>',
@@ -768,9 +779,7 @@
                                     formData.get('material_name'),
                                     data.category_title,
                                     '<span class="text-black-50">' + formData
-                                    .get('unit_price') + '</span>',
-                                    '<span class="text-black-50">' + formData
-                                    .get('total_amount') + '</span>',
+                                    .get('stock_quantity') + '</span>',
                                     '<span class="text-black-50">' + formData
                                     .get('rm_status') + '</span>',
                                     `<span class='text-black-50 text-center w-100' style='display: inline-block'> 

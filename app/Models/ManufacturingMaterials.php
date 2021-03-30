@@ -15,10 +15,12 @@ class ManufacturingMaterials extends Model
         'item_name',
         'item_image',
         'category_id',
-        'unit_price',
-        'total_amount',
-        'total_amount_min',
-        'rm_status'
+        'reorder_level',
+        'reorder_qty',
+        'rm_status',
+        'rm_quantity',
+        'uom_id',
+        'stock_quantity',
     ];
 
     public function category(){
@@ -27,5 +29,9 @@ class ManufacturingMaterials extends Model
 
     public function reorder_level(){
         return $this->hasOne(MaterialReorderLevel::class, 'item_code', 'item_code');
+    }
+    
+    public function uom(){
+        return $this->hasOne(MaterialUOM::class, 'uom_id', 'uom_id');
     }
 }

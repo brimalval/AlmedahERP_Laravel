@@ -2,15 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SupplierQuotationEmail;
+use App\Models\ManufacturingProducts;
+use App\Models\MaterialQuotation;
 use App\Models\MaterialRequest;
 use App\Models\RequestedRawMat;
+use App\Models\RequestQuotationSuppliers;
+use App\Models\Supplier;
+use App\Models\SuppliersQuotation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class DebugController extends Controller
 {
     public function index(){
-        dd(RequestedRawMat::where('request_id', '=', 'MAT-MR-2021-00003')->pluck());
-        dd(MaterialRequest::find(3)->raw_mats);
+        dd(json_encode(MaterialRequest::first()->raw_mats));
         return view('debug');
+    }
+
+    public function show(Request $request){
+        if($request->hasValidSignature())
+            dd($request->all());
+        else
+           abort(401);
     }
 }

@@ -16,10 +16,14 @@ class CreateMaterialsPurchasedTable extends Migration
         Schema::create('materials_purchased', function (Blueprint $table) {
             $table->id();
             $table->string('purchase_id')->unique();
-            $table->string('supp_quotation_id');
+            $table->string('supp_quotation_id')->nullable();
+            //change nullable and remove comment on line below
+            //when integrating with suppliers quotation
+            //$table->foreign('supp_quotation_id')->references('supp_quotation_id')->on('suppliers_quotation');
             $table->json('items_list_purchased');
             $table->date('purchase_date');
-            $table->string('mp_status');
+            $table->string('mp_status')->default('Draft');
+            $table->float('total_cost', 10, 2);
             $table->timestamps();
         });
     }
