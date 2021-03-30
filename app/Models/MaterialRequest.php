@@ -16,10 +16,11 @@ class MaterialRequest extends Model
         'request_date',
         'required_date',
         'purpose',
-        'mr_status',
+        'mr_status'
     ]; 
 
-    public function raw_mats(){
-        return $this->hasMany(RequestedRawMat::class, 'request_id', 'request_id');
-    }
+    protected $casts = [
+        'required_date' => 'date',
+        'request_date' => 'date'
+    ];
 }

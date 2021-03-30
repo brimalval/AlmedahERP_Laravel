@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PurchaseReceipt extends Model
+class MaterialOrdered extends Model
 {
     use HasFactory;
-    protected $table = 'purchase_receipt';
+    protected $table = 'materials_ordered';
     public $timestamps = true;
     
     protected $fillable = [
+        'mat_ordered_id',
         'p_receipt_id',
-        'date_created',
-        'purchase_id',
         'items_list_received',
-        'grand_total',
-        'pr_status'
+        'mo_status'
     ]; 
 }

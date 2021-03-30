@@ -20,8 +20,4 @@ class SuppliersQuotation extends Model
         'remarks',
         'sq_status'
     ]; 
-
-    public function getPurchasedMaterials() {
-        return $this->hasOne(MaterialPurchased::class, 'supp_quotation_id', 'supp_quotation_id');
-    }
 }

@@ -21,9 +21,10 @@ class CreateRawMatsTable extends Migration
                 $table->string('item_name');
                 $table->json('item_image');
                 $table->string('category_id');
-                $table->float('unit_price');
-                $table->float('total_amount');
-                $table->float('total_amount_min')->default('0');
+                $table->float('rm_quantity');
+                $table->float('stock_quantity');
+                $table->float('reorder_level');
+                $table->float('reorder_qty');
                 $table->string('rm_status');
                 $table->timestamps();
             });
