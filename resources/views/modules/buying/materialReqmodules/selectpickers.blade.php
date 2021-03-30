@@ -13,7 +13,15 @@
 
   <select required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
     @foreach ($units as $unit)
-        <option value="{{ $unit->uom_id }}" data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</small></option>
+        <option value="{{ $unit->uom_id }}" data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</option>
     @endforeach
   </select>
+
+  @if (isset($suppliers))
+    <select onchange="fillSupplierRow($(this))" required="true" data-id="supplier_id" data-live-search="true" name="supplier_id[]" class="form-control selectpicker">
+      @foreach ($suppliers as $supplier)
+        <option value="{{ $supplier->supplier_id }}" data-subtext="{{ $supplier->supplier_id }}" data-email="{{ $supplier->supplier_email }}">{{ $supplier->company_name }}</option>
+      @endforeach
+    </select>
+  @endif
 </div>

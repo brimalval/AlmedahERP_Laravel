@@ -53,7 +53,7 @@
               <br>
               <label>Item</label>
               <div id="items-border-div" class="mb-3">
-              <table class="table border-bottom table-hover table-bordered" id="items-tbl">
+              <table class="table border-bottom table-hover table-bordered items-tbl" id="items-tbl">
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
                     <td>
@@ -101,19 +101,19 @@
                             </select>
                           </td>
                           <td style="width: 20%" class="mr-procurement-input">
-                          <select name="procurement_method[]" required class="form-control">
+                          <select name="procurement_method[]" required class="form-control selectpicker">
                               <option value="buy">Buy</option>
                               <option value="produce">Produce</option>
                               <option value="buyproduce">Buy & Produce</option>
                           </select>
                           </td>
                           <td>
-                          <a id="" class="btn item-edit-btn" href="#" role="button">
+                          <a id="" class="btn item-edit-btn" href="#" role="button" onclick="openItemEditModal($(this).parents('tr'))">
                             <i class="fa fa-caret-up" aria-hidden="true"></i>
                           </a>
-                          <a id="" class="btn delete-btn" href="#" role="button">
+                          <button type="button" id="" class="btn delete-btn" role="button">
                             <i class="fa fa-minus" aria-hidden="true"></i>
-                          </a>
+                          </button>
                           </td>
                       </tr>
                     @endforeach

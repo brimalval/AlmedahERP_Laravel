@@ -240,22 +240,6 @@ function openManufacturingItemPriceForm() {
   });
 }
 
-function loadBuyingRequestForQuotation() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/requestforquotation');
-  });
-}
-function openBuyingRequestForQuotationForm() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/new-quotation');
-  });
-}
-function viewBuyingRequestForQuotationForm() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/view-quotation');
-  });
-}
-
 
 function loadSupplier() {
   $(document).ready(function () {
