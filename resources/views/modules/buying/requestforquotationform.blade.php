@@ -66,7 +66,7 @@
                 @if (isset($rfquotation) && $rfquotation->req_status == "Submitted")
                 <form action="{{ route('rfquotation.email', ['rfquotation'=>$rfquotation->id]) }}" method="post">
                     @csrf
-                    <button type="button" class="btn btn-secondary btn-sm ml-1">Send Supplier Emails</button>
+                    <button type="button" onclick="submitRFQ($(this).parents('form')[0])" class="btn btn-secondary btn-sm ml-1">Send Supplier Emails</button>
                 </form>
                 @endif
             </div>

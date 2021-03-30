@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SupplierQuotationEmail;
 use App\Models\ManufacturingMaterials;
 use App\Models\MaterialQuotation;
 use App\Models\MaterialRequest;
@@ -12,6 +13,7 @@ use App\Models\Supplier;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class MaterialQuotationController extends Controller
@@ -41,8 +43,8 @@ class MaterialQuotationController extends Controller
         $units = MaterialUOM::get();
         $suppliers = Supplier::get();
         $material_requests = MaterialRequest::with('raw_mats')
-        ->where('mr_status','=','Submitted')
-        ->get();
+            ->where('mr_status', '=', 'Submitted')
+            ->get();
         return view('modules.buying.requestforquotationform', [
             'materials' => $materials,
             'stations' => $stations,
@@ -120,6 +122,7 @@ class MaterialQuotationController extends Controller
                 'status' => 'success',
                 'rfquotation' => $rfquotation,
                 'suppliers' => $rfquotation->suppliers,
+                'redirect' => route('rfquotation.index'),
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -156,8 +159,8 @@ class MaterialQuotationController extends Controller
         $units = MaterialUOM::get();
         $suppliers = Supplier::get();
         $material_requests = MaterialRequest::with('raw_mats')
-        ->where('mr_status','=','Submitted')
-        ->get();
+            ->where('mr_status', '=', 'Submitted')
+            ->get();
         return view('modules.buying.requestforquotationform', [
             'rfquotation' => $rfquotation,
             'materials' => $materials,
@@ -270,6 +273,23 @@ class MaterialQuotationController extends Controller
      */
     public function email_suppliers(MaterialQuotation $rfquotation)
     {
+        try {
+            $suppliers = $rfquotation->suppliers;
+            $request_id = $rfquotation->req_quotation_id;
+            $message = $rfquotation->supplier_message;
+            foreach ($suppliers as $supplier) {
+                Mail::to($supplier->supplier_email)
+                    ->send(new SupplierQuotationEmail($request_id, $supplier, $message));
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+        return response()->json([
+            'emails' => $rfquotation->suppliers()->pluck('supplier_email'),
+        ]);
     }
 
     /**
@@ -278,14 +298,15 @@ class MaterialQuotationController extends Controller
      * @param \App\Models\MaterialQuotation $rfquotation
      * @return \Illuminate\Http\Response
      */
-    public function submit(MaterialQuotation $rfquotation){
-        try{
+    public function submit(MaterialQuotation $rfquotation)
+    {
+        try {
             $rfquotation->req_status = "Submitted";
             $rfquotation->save();
             return response()->json([
                 'status' => 'success',
             ]);
-        } catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),

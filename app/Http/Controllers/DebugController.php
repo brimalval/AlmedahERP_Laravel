@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SupplierQuotationEmail;
 use App\Models\ManufacturingProducts;
 use App\Models\MaterialQuotation;
 use App\Models\MaterialRequest;
@@ -17,5 +18,12 @@ class DebugController extends Controller
     public function index(){
         dd(json_encode(MaterialRequest::first()->raw_mats));
         return view('debug');
+    }
+
+    public function show(Request $request){
+        if($request->hasValidSignature())
+            dd($request->all());
+        else
+           abort(401);
     }
 }

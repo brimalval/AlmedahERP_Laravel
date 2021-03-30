@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<form action="/materialrequest" method="post" id="mat-req" class="create">
+<form action="{{ route('materialrequest.store') }}" method="post" id="mat-req" class="create">
 @csrf
 <div id="accordion">
   <div class="card">

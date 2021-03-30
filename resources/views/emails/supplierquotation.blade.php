@@ -1,11 +1,13 @@
 @component('mail::message')
-# Introduction
+Greetings, {{ $contact }}!
 
-The body of your message.
+{!! $message !!}
 
-@component('mail::button', ['url' => ''])
-Button Text
+@component('mail::button', ['url' => $link])
+Go to Supplier Quotation
 @endcomponent
+
+If the above button does not work, click <a href="{{ $link }}">this link</a>
 
 Thanks,<br>
 {{ config('app.name') }}

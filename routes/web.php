@@ -412,3 +412,4 @@ Route::get('/openManufacturingWorkstationForm', function () {
 Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
+Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
