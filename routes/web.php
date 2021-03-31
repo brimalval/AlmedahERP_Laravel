@@ -59,6 +59,18 @@ Route::get('/shippingruleinfo', function() {
     return view('modules.NewUI.ShippingRuleInfo');
 });
 
+Route::get('/suppliergroup', function() {
+    return view('modules.NewUI.SupplierGroup');
+});
+
+Route::get('/salestaxes', function() {
+    return view('modules.NewUI.SalesTaxes');
+});
+
+Route::get('/NewSalesTaxes', function() {
+    return view('modules.NewUI.NewSalesTaxes');
+});
+
 /**BOM ROUTES */
 Route::get('/bom', [BOMController::class, 'index']);
 Route::get('/newBOM', function() { 

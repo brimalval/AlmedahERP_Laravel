@@ -470,3 +470,13 @@ function loadShippingInfo() {
     $('#contentShippingRule').load('/shippingrule');
   });
 }
+function openNewSalesTaxes() {
+  $(document).ready(function () {
+    $('#contentSalesTaxes').load('/NewSalesTaxes');
+  });
+}
+function loadSalesTaxes() {
+  $(document).ready(function () {
+    $('#contentSalesTaxes').load('/salestaxes');
+  });
+}
