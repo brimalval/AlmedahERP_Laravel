@@ -94,7 +94,7 @@
                 </tbody>
               </table>
               <td colspan="7" rowspan="5">
-                <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                <button type="button" onclick="addnewRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
               </td>
           </form>
         </div>

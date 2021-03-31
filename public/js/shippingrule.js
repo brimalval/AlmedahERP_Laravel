@@ -1,8 +1,8 @@
 
-function addRow(){
-    if($('#no-data')[0]){
-        deleteItemRow($('#no-data').parents('tr'));
-    }
+function addnewRow(){
+  if($('#contentShippingRule').find('#no-data')[0]){
+    $('#contentShippingRule').find('#no-data').parents('tr').remove();
+}
     let lastRow = $('#country-table tr:last');
     let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
     $('#country-table').append(
@@ -14,7 +14,7 @@ function addRow(){
         <input type="text" name="Shipping_Amount" class="form-control">
         </div>
         <div class="col-1">
-        <a id="" class="btn delete-btn" href="#" role="button">
+        <a id="" class="btn delete-btn" href="#"  onclick="$(this).parents('tr').remove()">
         <i class="fa fa-minus" aria-hidden="true"></i>
         </a>
         </div>

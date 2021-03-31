@@ -1,7 +1,7 @@
 
-function addRow(){
-    if($('#no-data')[0]){
-        deleteItemRow($('#no-data').parents('tr'));
+function addnewRow(){
+    if($('#contentPurchaseTaxes').find('#no-data')[0]){
+        $('#contentPurchaseTaxes').find('#no-data').parents('tr').remove();
     }
     let lastRow = $('#purchasetaxes-table tr:last');
     let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
@@ -13,7 +13,7 @@ function addRow(){
     <td id="mr-code-input-${nextID}" class="mr-code-input"> <input placeholder="P 0.00" type="number" name="Tax_Amount" class="form-control"></td>
     <td id="mr-code-input-${nextID}" class="mr-code-input"> <input placeholder="P 0.00" type="number" name="Tax_Total" class="form-control"></td>    
     <td>
-        <a id="" class="btn delete-btn" href="#" role="button">
+        <a id="deleteItemRow" class="btn delete-btn" href="#" role="button" onclick="$(this).parents('tr').remove()">
             <i class="fa fa-minus" aria-hidden="true"></i>
         </a>
     </td>
