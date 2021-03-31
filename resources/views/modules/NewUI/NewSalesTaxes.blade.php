@@ -81,11 +81,16 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                        </tbody>
+                        <tbody class="" id="material-request-input-rows">
+                  <tr>
+                    <td id="no-data" colspan="7" style="text-align: center;">
+                      NO DATA
+                    </td>
+                  </tr>
+                </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
-                            <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                            <button type="button" onclick="addSaleTaxRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
                     </td>
                 </div>
             </div>
@@ -93,4 +98,4 @@
     </form>
 </div>
 </div>
-<script src="{{ asset('js/salestaxes.js') }}"></script>
+<script src="{{ asset('js/saletaxes.js') }}"></script>
