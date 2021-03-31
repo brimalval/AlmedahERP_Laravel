@@ -43,6 +43,19 @@ Route::get('/dashboard', function() {
 Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
+/**NEW USER INTERFACE*/
+Route::get('/shippingrule', function() {
+    return view('modules.NewUI.ShippingRule');
+});
+Route::get('/shippingruleinfo', function() {
+    return view('modules.NewUI.ShippingRuleInfo');
+});
+Route::get('/purchasetaxes', function() {
+    return view('modules.NewUI.purchasetaxes');
+});
+Route::get('/purchasetaxesinfo', function() {
+    return view('modules.NewUI.purchasetaxesinfo');
+});
 
 /**BOM ROUTES */
 Route::get('/bom', [BOMController::class, 'index']);

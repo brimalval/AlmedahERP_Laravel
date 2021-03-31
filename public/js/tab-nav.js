@@ -459,3 +459,23 @@ function openNewSupplierQuotation() {
     $('#contentSupplierQuotation').load('/new-supplier');
   });
 }
+function openNewShippingRule() {
+  $(document).ready(function () {
+    $('#contentShippingRule').load('/shippingruleinfo');
+  });
+}
+function loadShippingInfo() {
+  $(document).ready(function () {
+    $('#contentShippingRule').load('/shippingrule');
+  });
+}
+function loadPurchaseTaxes() {
+  $(document).ready(function () {
+    $('#contentPurchaseTaxes').load('/purchasetaxes');
+  });
+}
+function openNewPurchaseTaxes() {
+  $(document).ready(function () {
+    $('#contentPurchaseTaxes').load('/purchasetaxesinfo');
+  });
+}
