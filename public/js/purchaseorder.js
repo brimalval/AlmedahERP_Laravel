@@ -22,9 +22,20 @@ function onChangeFunction() {
                 'X-CSRF-TOKEN': CSRF_TOKEN,
             }
         });
+        let transDate = new Date($("#transDate").val());
+        let reqDate = new Date($("#reqDate").val());
+        if (transDate > reqDate) {
+            alert('Transaction date is later than required date of materials!');
+            return;
+        }
         var form_data = new FormData();
         var purchased_mats = {};
         for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
+            reqDate = new Date($("#date" + i).val());
+            if (transDate > reqDate) {
+                alert(`Transaction date is later than required date of ${$("#item" + i).val()}.`);
+                return;
+            }
             if (parseInt($("#qty" + i).val()) == 0) {
                 alert('No quantity for material ' + $("#item" + i).val() + ' specified.');
                 return;
@@ -239,27 +250,27 @@ function submitOrder() {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
     });
-    
+
     let purchase_id = $("#purch_id").val();
-    if(confirm(`Permanently submit ${purchase_id}?`)) {
+    if (confirm(`Permanently submit ${purchase_id}?`)) {
         $.ajax({
             url: `/update-status/${purchase_id}`,
             type: 'POST',
             cache: false,
             contentType: false,
             processData: false,
-            success: function() {
+            success: function () {
                 loadPurchaseOrder();
             }
         });
     } else {
         return;
-    } 
+    }
 }
 
 //For permanently changing purchase orders
 //Only works on existing purchase orders
-$("#submitOrder").on( 'click', submitOrder);
+$("#submitOrder").on('click', submitOrder);
 
 
 
@@ -269,9 +280,22 @@ $("#saveOrder").click(function () {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
     });
+
+    let transDate = new Date($("#transDate").val());
+    let reqDate = new Date($("#reqDate").val());
+    if (transDate > reqDate) {
+        alert('Transaction date is later than required date of materials!');
+        return;
+    }
+
     var form_data = new FormData();
     var purchased_mats = {};
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
+        reqDate = new Date($("#date" + i).val());
+        if (transDate > reqDate) {
+            alert(`Transaction date is later than required date of ${$("#item" + i).val()}.`);
+            return;
+        }
         if (parseInt($("#qty" + i).val()) == 0) {
             alert('No quantity for material ' + $("#item" + i).val() + ' specified.');
             return;
