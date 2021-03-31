@@ -117,19 +117,7 @@ $i = 1;
                             </tr>
                             <?php ++$i; ?>
                         @endforeach
-                        <!--
-                        <tr>
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
-                            </td>
-                            <td class="text-black-50">Material 2</td>
-                            <td class="text-black-50">Almedah Food Equipment</td>
-                            <td class="text-black-50">12-MAR-2021</td>
-
-                        </tr>
-                        -->
+                       
                     </tbody>
                 </table>
             </form>
@@ -146,7 +134,7 @@ $i = 1;
             <div class="col-6">
                 <div class="input-group">
                     <label class="label">Series</label>
-                    <select class="input--style-4" type="text" name="series" style="width:512px;height:38px;" disabled>
+                    <select class="form-control" type="text" name="series" style="width:512px;height:38px;" disabled>
                         <option>PUR-ORD-.YYYY.-</option>
                     </select>
                 </div>
@@ -229,30 +217,7 @@ $i = 1;
         <div id='submenuCurrencyandPriceList' class="collapse sidebar-submenu">
             <br>
             <div class="row">
-                <!---
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="currency">Currency</label>
-                        <input type="text" class="form-control" placeholder="PHP" disabled>
-                    </div>
-                </div>
-
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="priceList">Price List</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <input type="checkbox"> Ignore Pricing Rule
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-12">
-                    <hr>
-                </div>
-                <br>
-            -->
+              
                 <div class="col-6">
                     <div class="form-group">
                         <label for="settargetWh">Set Target Warehouse</label>
@@ -260,19 +225,6 @@ $i = 1;
                     </div>
                 </div>
 
-                <!--
-                <div class="col-6">
-                    <div class="input-group">
-                        <label class="label">Supply Raw Materials</label>
-                        <select class="input--style-4" type="text" name="supprawmat" style="width:512px;height:38px;">
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
-                        </select>
-                    </div>
-                </div>
-                <hr>
-            -->
                 <br>
 
                 <table class="table table-bom border-bottom" id="itemTable">
@@ -299,19 +251,19 @@ $i = 1;
                                 </div>
                             </td>
                             <td class="text-black-50">
-                                <input type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
+                                <input class="form-control" type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
                             </td>
                             <td class="text-black-50">
-                                <input type="date" name="date1" id="date1">
+                                <input class="form-control" type="date" name="date1" id="date1">
                             </td>
                             <td class="text-black-50">
-                                <input type="number" name="qty1" id="qty1" value="0" min="1" onchange="calcPrice(1);">
+                                <input class="form-control" type="number" name="qty1" id="qty1" value="0" min="1" onchange="calcPrice(1);">
                             </td>
                             <td class="text-black-50">
-                                <input type="number" name="rate1" id="rate1" value="0" min="1" onchange="calcPrice(1);">
+                                <input class="form-control" type="number" name="rate1" id="rate1" value="0" min="1" onchange="calcPrice(1);">
                             </td>
                             <td class="text-black-50">
-                                <input type="text" name="price1" id="price1" value="₱ 0.00" readonly>
+                                <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00" readonly>
                             </td>
                             <td class="text-black-50">
                                 <select class="input--style-4" type="text" name="sampleOne"
@@ -323,27 +275,7 @@ $i = 1;
                             </td>
                         </tr>
                     </tbody>
-                    <!--
-                        <tr>
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
-                            </td>
-                            <td class="text-black-50">Sample 1</td>
-                            <td class="text-black-50"></td>
-                            <td class="text-black-50">0</td>
-                            <td class="text-black-50">Php 0.00</td>
-                            <td class="text-black-50">Php 0.00</td>
-                            <td class="text-black-50">
-                                <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
-                                </select>
-                            </td>
-                        </tr>
-                    -->
+                   
                     <tfoot>
                         <tr>
                             <td><button type="button" id="multBtn" style="background-color: #007bff;">Add
@@ -370,14 +302,6 @@ $i = 1;
                 </table>
                 <hr>
                 <br>
-                <!--
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="totalQuantity">Total Quantity</label>
-                        <input type="number" class="form-control" id="totalQty" value="0" readonly>
-                    </div>
-                </div>
-            -->
 
                 <div class="col-6">
                     <div class="form-group">
@@ -391,14 +315,6 @@ $i = 1;
                     </div>
                 </div>
 
-                <!--
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="totalnetWeight">Total Net Weight</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            -->
             </div>
 
         </div>
@@ -422,348 +338,12 @@ $i = 1;
                     <div class="form-group">
                     </div>
                 </div>
-                <!--
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Inter Company Order Reference</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            -->
-            </div>
-
-
-        </div>
-<!--
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="taxCategory">Tax Category</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="shippingRule">Shipping Rule</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <hr>
-                </div>
-                <br>
-
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="purchaseTemplate">Purchase Taxes and Charges Template</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <table class="table table-bom border-bottom">
-                        <thead class="border-top border-bottom bg-light">
-                            <label for="purchasetaxesandCharges">Purchase Taxes and Charges</label>
-                            <tr class="text-muted">
-                                <td>
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input">
-                                    </div>
-                                </td>
-                                <td>Type</td>
-                                <td>Account Head</td>
-                                <td>Rate</td>
-                                <td>Amount</td>
-                                <td>Total</td>
-                                <td></td>
-                            </tr>
-                        </thead>
-                        <tbody class="">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>NO DATA</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tbody>
-                        <tr>
-                            <td><button id="button1">Add Row</button></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </div>
-                <hr>
-                <br>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="taxandchargeAdd">Taxes and Charges Added (PHP)</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="taxandchargeDeduct">Taxes and Charges Deducted (PHP)</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="totaltaxandCharges">Total Taxes and Charges (PHP)</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
             
-        -->
-        <!--
-        </div>
-    
-        <a href="#submenuAdditionalDiscount" data-toggle="collapse" aria-expanded="false"
-            class="bg-white list-group-item list-group-item-action">
-
-            <span class="menu-collapsed align-middle smaller menu"> ADDITIONAL DISCOUNT</span>
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
-
-        </a>
-
-        <div id='submenuAdditionalDiscount' class="collapse sidebar-submenu">
-            <br>
-            <div class="row">
-                <div class="col-6">
-                    <div class="input-group">
-                        <label class="label">Apply Additional Discount On</label>
-                        <select class="input--style-4" type="text" name="applyaddDisc" style="width:512px;height:38px;">
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Additional Discount Percentage</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Additional Discount Amount (PHP)</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <hr>
-                <br>
-                <div class="col-12">
-                    <div class="form-group">
-                        <hr>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Grand Total (PHP)</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Rounding Adjustment (PHP)</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Rounded Total (PHP)</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <input type="checkbox"> Disable Rounded Total
-                </div>
-                <br>
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Advance Paid</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <br>
-            <div class="col-6">
-                <div class="form-group">
-                    <label>Payment Terms Template</label>
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            <div class="col-12">
-                <table class="table table-bom border-bottom">
-                    <thead class="border-top border-bottom bg-light">
-                        <label>Payment Schedule</label>
-                        <tr class="text-muted">
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
-                            </td>
-                            <td>Payment Term</td>
-                            <td>Description</td>
-                            <td>Due Date</td>
-                            <td>Invoice Portion</td>
-                            <td>Payment Amount</td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody class="">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>NO DATA</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tbody>
-                    <tr>
-                        <td><button id="button1">Add Row</button></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-        
-        
-        </div>
-       
-        <a href="#submenuTermsandConditions" data-toggle="collapse" aria-expanded="false"
-            class="bg-white list-group-item list-group-item-action">
-
-            <span class="menu-collapsed align-middle smaller menu"> TERMS AND CONDITIONS</span>
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
-
-        </a>
-
-        <div id='submenuTermsandConditions' class="collapse sidebar-submenu">
-            <br>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Terms</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-12">
-                    <label for="termsandConditions">Terms and Conditions</label>
-                    <textarea id="summernote" name="termsandconditions"></textarea>
-                    <script src="js/inventory.js">
-                    </script>
-                </div>
             </div>
 
         </div>
-    -->
-        <!---More Information-->
-        
-        <!----End of More Information-->
 
-        <!---Printing Settings-->
-        <!--
-        <a href="#submenuPrinting" data-toggle="collapse" aria-expanded="false"
-            class="bg-white list-group-item list-group-item-action">
-
-            <span class="menu-collapsed align-middle smaller menu"> PRINTING SETTINGS</span>
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
-
-        </a>
-
-        <div id='submenuPrinting' class="collapse sidebar-submenu">
-            <br>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Letter Heads</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <input type="checkbox"> Group same items
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Print Heading</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Print Language</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-        </div>
-        -End of Salary Details-->
     </form>
     <br>
-    <!---
-    <div class="col-6">
-        <div class="form-group">
-            <label>SUBSCRIPTION SECTION</label>
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="form-group">
-            <label>From Date</label>
-            <input type="text" class="form-control">
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="form-group">
-            <label>To Date</label>
-            <input type="text" class="form-control">
-        </div>
-    </div>
--->
+    
 </div>
