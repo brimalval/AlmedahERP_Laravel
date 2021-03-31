@@ -17,10 +17,10 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadMaterialRequest();">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadPurchaseTaxes();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="openNewMaterialRequest();" style="float: left;">New</button>
+                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="openNewPurchaseTaxes();" style="float: left;">New</button>
                 </li>
             </ul>
         </div>
@@ -28,10 +28,21 @@
 </nav>
 <br>
 <div class="container">
-    
-        <hr>
-       
-    </div>
+<table id="PurchaseTaxes" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Default</th>
+                <th>Disabled</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
 
 </div>
 <style>
@@ -42,6 +53,6 @@
 
 <script>
 $(document).ready(function() {
-    $('#mat-req-table').DataTable();
+    $('#PurchaseTaxes').DataTable();
 } );
 </script>

@@ -460,6 +460,16 @@ function loadShippingInfo() {
     $('#contentShippingRule').load('/shippingrule');
   });
 }
+function loadPurchaseTaxes() {
+  $(document).ready(function () {
+    $('#contentPurchaseTaxes').load('/purchasetaxes');
+  });
+}
+function openNewPurchaseTaxes() {
+  $(document).ready(function () {
+    $('#contentPurchaseTaxes').load('/purchasetaxesinfo');
+  });
+}
 function openNewSalesTaxes() {
   $(document).ready(function () {
     $('#contentSalesTaxes').load('/NewSalesTaxes');

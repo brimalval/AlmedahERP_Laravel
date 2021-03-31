@@ -1,11 +1,11 @@
 // Function that is called whenever the user presses "add row" in the materialrequest form
 function addRow(){
-    if($('#no-data')[0]){
-        deleteItemRow($('#no-data').parents('tr'));
+    if($('#contentPurchaseTaxes').find('#no-data')[0]){
+        $('#contentPurchaseTaxes').find('#no-data').parents('tr').remove();
     }
-    let lastRow = $('#material-request-input-rows tr:last');
+    let lastRow = $('#salestaxes tr:last');
     let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
-    $('#material-request-input-rows').append(
+    $('#salestaxes').append(
     `<tr data-id="${nextID}">
         
         <td id="mr-code-input-${nextID}" class="mr-code-input">
@@ -14,17 +14,14 @@ function addRow(){
         <input type="text" name="Shipping_Amount" class="form-control">
         </div>
         <div class="col-1">
-        <a id="" class="btn delete-btn" href="#" role="button">
-        <i class="fa fa-minus" aria-hidden="true"></i>
+      
+        <i class="fa fa-minus" aria-hidden="true" onclick="$(this).parents('tr').remove()"></i>
         </a>
         </div>
         </div>
         </td>
     </tr>`);
-    $('#selects select[data-id="item_code"]').clone().appendTo(`#items-tbl tr:last .mr-code-input`).selectpicker();
-    $('#selects select[data-id="station_id"]').clone().appendTo(`#items-tbl tr:last .mr-target-input`).selectpicker();
-    $('#selects select[data-id="uom_id"]').clone().appendTo(`#items-tbl tr:last .mr-unit-input`).selectpicker();
-    $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
+
 }
 // Opens the modal for editing an item
 function openItemEditModal(row){

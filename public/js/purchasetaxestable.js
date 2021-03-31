@@ -13,9 +13,9 @@ function addnewRow(){
     <td id="mr-code-input-${nextID}" class="mr-code-input"> <input placeholder="P 0.00" type="number" name="Tax_Amount" class="form-control"></td>
     <td id="mr-code-input-${nextID}" class="mr-code-input"> <input placeholder="P 0.00" type="number" name="Tax_Total" class="form-control"></td>    
     <td>
-        <a id="deleteItemRow" class="btn delete-btn" href="#" role="button" onclick="$(this).parents('tr').remove()">
-            <i class="fa fa-minus" aria-hidden="true"></i>
-        </a>
+        
+        <i class="fa fa-minus" aria-hidden="true" onclick="$(this).parents('tr').remove()"></i>
+       
     </td>
     </tr>`);
 }

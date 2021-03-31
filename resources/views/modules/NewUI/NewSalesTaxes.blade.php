@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
-            <a href='javascript:onclick=loadPurchaseOrder();' class="fas fa-arrow-left back-button"><span></span></a>
+            <a href='javascript:onclick=loadSalesTaxes();' class="fas fa-arrow-left back-button"><span></span></a>
             <h2 class="navbar-brand" style="font-size: 35px;">New Sales Taxes</h2>
         </h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,6 +10,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
+                     
                     <button class="btn btn-primary" type="submit">Save</button>
                 </li>
             </ul>
@@ -68,7 +69,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label for="salestaxesandcharges">Sales Taxes and Charges</label>
-                    <table id="ShippingRuleTable" class="table table-striped table-bordered" style="width:100%">
+                    <table id="salestaxes" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
                                 <th><input type="checkbox"></th>

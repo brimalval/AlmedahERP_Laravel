@@ -2,12 +2,12 @@
 
 // Function that is called whenever the user presses "add row" in the materialrequest form
 function addRow(){
-    if($('#no-data')[0]){
-        deleteItemRow($('#no-data').parents('tr'));
-    }
-    let lastRow = $('#material-request-input-rows tr:last');
+  if($('#contentShippingRule').find('#no-data')[0]){
+    $('#contentShippingRule').find('#no-data').parents('tr').remove();
+}
+    let lastRow = $('#country-table tr:last');
     let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
-    $('#material-request-input-rows').append(
+    $('#country-table').append(
     `<tr data-id="${nextID}">
         
         <td id="mr-code-input-${nextID}" class="mr-code-input">
@@ -17,11 +17,7 @@ function addRow(){
         </div>
         <div class="col-1">
 
-        <a id="" class="btn delete-btn" href="#"  onclick="$(this).parents('tr').remove()">
-
-        <a id="" class="btn delete-btn" href="#" role="button">
-
-        <i class="fa fa-minus" aria-hidden="true"></i>
+        <i class="fa fa-minus" aria-hidden="true" onclick="$(this).parents('tr').remove()"></i>
         </a>
         </div>
         </div>
