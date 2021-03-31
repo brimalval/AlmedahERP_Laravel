@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
     return view('home');
 });
@@ -43,7 +44,10 @@ Route::get('/dashboard', function () {
     return view('modules.dashboard');
 });
 
-Route::get('/accounting', function () {
+Route::get('/purchasetaxes', function() {
+    return view('modules.NewUI.PurchaseTaxes');
+});
+Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 /**NEW USER INTERFACE*/
@@ -58,6 +62,27 @@ Route::get('/purchasetaxes', function() {
 });
 Route::get('/purchasetaxesinfo', function() {
     return view('modules.NewUI.purchasetaxesinfo');
+});
+
+/**NEW USER INTERFACE*/
+Route::get('/shippingrule', function() {
+    return view('modules.NewUI.ShippingRule');
+});
+
+Route::get('/shippingruleinfo', function() {
+    return view('modules.NewUI.ShippingRuleInfo');
+});
+
+Route::get('/suppliergroup', function() {
+    return view('modules.NewUI.SupplierGroup');
+});
+
+Route::get('/salestaxes', function() {
+    return view('modules.NewUI.SalesTaxes');
+});
+
+Route::get('/NewSalesTaxes', function() {
+    return view('modules.NewUI.NewSalesTaxes');
 });
 
 /**BOM ROUTES */

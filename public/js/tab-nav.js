@@ -460,50 +460,13 @@ function loadShippingInfo() {
     $('#contentShippingRule').load('/shippingrule');
   });
 }
-function loadPurchaseTaxes() {
+function openNewSalesTaxes() {
   $(document).ready(function () {
-    $('#contentPurchaseTaxes').load('/purchasetaxes');
+    $('#contentSalesTaxes').load('/NewSalesTaxes');
   });
 }
-function openNewPurchaseTaxes() {
+function loadSalesTaxes() {
   $(document).ready(function () {
-    $('#contentPurchaseTaxes').load('/purchasetaxesinfo');
-  });
-}
-
-function openNewPurchaseInvoice() {
-  $(document).ready(function () {
-    $('#contentPurchaseInvoice').load('/new-invoice');
-  });
-}
-
-function loadPurchaseInvoice() {
-  $(document).ready(function () {
-    $('#contentPurchaseInvoice').load('/purchaseinvoice');
-  });
-}
-
-function openPurchaseInvoiceInfo() {
-  $(document).ready(function () {
-    $('#contentPurchaseInvoice').load('modules/buying/purchaseInvoiceInfo.php');
-  });
-}
-
-function openNewPurchaseReceipt() {
-  $(document).ready(function () {
-    $('#contentPurchaseReceipt').load('/new-receipt');
-  });
-}
-
-function openPurchaseReceiptInfo() {
-  $(document).ready(function () {
-    $('#contentPurchaseReceipt').load('modules/buying/PurchaseReceiptInfo.php');
-  });
-}
-
-function loadPurchaseReceipt() {
-  $(document).ready(function () {
-    $('#contentPurchaseReceipt').load('/purchasereceipt');
-
+    $('#contentSalesTaxes').load('/salestaxes');
   });
 }

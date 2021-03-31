@@ -84,14 +84,12 @@
     <div class="col-6">
 
       <div class="row">
-
-
         <div class="form-check">
           <input id="include" type="checkbox" class="form-check-input" onchange="javascript:openField()">
         </div>
         <label for="">Include Payment (POS)</label>
-
       </div>
+      
       <div id="cont" style="display:none;">
         <label for="">POS Profile</label>
         <input type="text" name="" class="form-control">

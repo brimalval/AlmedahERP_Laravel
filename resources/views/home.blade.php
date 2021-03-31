@@ -726,6 +726,7 @@
                         <span class="submenu-icon ml-auto"></span>
                     </div>
                 </a>
+                
                 <!-- End of Menu Item Administration -->
                 <a href="#submenunewUI" data-toggle="collapse" aria-expanded="false"
                     class="bg-dark bevel list-group-item list-group-item-action flex-column align-items-start">
