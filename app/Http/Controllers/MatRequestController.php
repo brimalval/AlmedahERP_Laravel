@@ -78,8 +78,7 @@ class MatRequestController extends Controller
             $matRequest->mr_status = request('mr_status');
             $matRequest->request_id = "REQ";
             $matRequest->save();
-            $matRequest->request_id = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
-            $id_copy = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
+            $matRequest->request_id = $id_copy = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
             $matRequest->save();
             for($i=0; $i<sizeof(request('item_code')); $i++){
                 $requestItem = new RequestedRawMat();
@@ -93,7 +92,6 @@ class MatRequestController extends Controller
             }
 
 
-
             return response()->json([
                 'status' => 'success',
                 'information' => $request->all(),
@@ -104,7 +102,7 @@ class MatRequestController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ]);
+            ], 500);
         }
     }
 
@@ -127,6 +125,10 @@ class MatRequestController extends Controller
      */
     public function edit(MaterialRequest $materialrequest)
     {
+        if($materialrequest->mr_status == "Submitted"){
+            abort(403);
+        }
+
         $materials = ManufacturingMaterials::with('uom')->get();
         $stations = Station::get();
         $units = MaterialUOM::get();
@@ -147,6 +149,12 @@ class MatRequestController extends Controller
      */
     public function update(Request $request, MaterialRequest $materialrequest)
     {
+        if($materialrequest->mr_status == "Submitted"){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Request has already been submitted!'
+            ], 403);
+        }
         $rules = [
             'item_code' => 'required|array',
             'item_code.*' => 'required|string|exists:env_raw_materials,item_code',
@@ -161,7 +169,7 @@ class MatRequestController extends Controller
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors(),
-            ]);
+            ], 422);
         }
         try{ 
             $materialrequest->update($request->all());
@@ -182,13 +190,14 @@ class MatRequestController extends Controller
                 'status' => 'success',
                 'update' => true,
                 'materialrequest' => $materialrequest,
+                'required_date' => $materialrequest->required_date->format("Y-m-d"),
                 'request' => $request->all(),
             ]);
         }catch(Exception $e){
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ]);
+            ], 500);
         }
     }
 
@@ -227,35 +236,17 @@ class MatRequestController extends Controller
         try{
             $materialrequest->mr_status = "Submitted";
             $materialrequest->save();
-
-            $quotation = new MaterialQuotation();
-            $quotation->request_id = $materialrequest->request_id;
-            $quotation->date_created = Carbon::now();
-            
-            $items = $materialrequest->raw_mats;
-            $item_array = array();
-            foreach($items as $item) {
-                $item_array[] = array(
-                    'item_code' => $item->item_code,
-                    'qty' => $item->quantity_requested,
-                    'uom_id' => $item->uom_id,
-                    'station' => $item->station_id,
-                    'method' => $item->procurement_method
-                );
-            }
-
-            $quotation->item_list = json_encode($item_array);
-            $quotation->save();
             return response()->json([
                 'status' => 'success',
                 'materialrequest' => $materialrequest,
                 'message' => 'Submitted ' . $materialrequest->request_id,
+                'submit' => true,
             ]);
         } catch(Exception $e){
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ]);
+            ], 500);
         }
     }
 }

@@ -19,49 +19,92 @@
                         <a class="dropdown-item" href="#">Settings</a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" onclick="loadBuyingRequestForQuotation()">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="openBuyingRequestForQuotationForm()">New</button>
+                <button type="button" class="btn btn-primary ml-1" onclick="loadIntoQuotationPage('{{ route('rfquotation.index') }}')">Refresh</button>
+                <button type="button" class="btn btn-info ml-1" onclick="loadIntoQuotationPage('{{ route('rfquotation.create') }}')">New</button>
             </div>
         </div>
     </div>
 </nav>
 <br>
 <div class="container-fluid" style="margin: 0; padding: 0;">
-    
-<table id="table_id" class="display">
+
+<style>
+    #contentRequestforQuotation tbody tr:hover{
+        transition: 250ms;
+        background-color: #cccccc;
+    }
+</style>
+<table id="table_id" class="w-100 display table table-bordered">
     <thead>
         <tr>
-            
-            <th>Request Quotation ID</th>
-            <th>Date Created</th>
-            <th>Items List</th>
+            <td>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input">
+                </div>
+            </td>
+            <th>Name</th>
             <th>Status</th>
-            
+            <th>Company</th>
+            <th>Date</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-           
-            <td><a href="#" onclick="javascript:viewBuyingRequestForQuotationForm();"><?= 'Hi-top' ?></a></td>
-            <td>Insert Date</td>
-            <td>Insert list</td>
-            <td>Insert Status</td>
-            
-        </tr>
-        <tr>
-            
-            <td><a href="#" onclick="javascript:viewBuyingRequestForQuotationForm();"><?= 'Low-top' ?></a></td>
-            <td>Insert Date</td>
-            <td>Insert list</td>
-            <td>Insert Status</td>
-            
-        </tr>
+        @forelse ($rfquotations as $rfquotation)
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="text-primary" onclick="loadIntoQuotationPage('{{ route('rfquotation.edit', ['rfquotation'=>$rfquotation->id]) }}')">{{ $rfquotation->req_quotation_id }}</button>
+                </td>
+                <td>
+                    <?php
+                        if($rfquotation->req_status == "Draft"){
+                            $color = "orange";
+                        }
+                        elseif ($rfquotation->req_status == "Submitted") {
+                            $color = "blue";
+                        }
+                    ?>
+                    <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
+                    {{ $rfquotation->req_status }}
+                </td>
+                <td class="text-muted">
+                    {{ $rfquotation->suppliers[0]->company_name }}
+                </td>
+                <td class="text-muted">
+                    {{ $rfquotation->date_created->format('m-d-Y') }}
+                </td>
+                <td class="text-muted">
+                    {{ $rfquotation->date_created->shortRelativeDiffForHumans() }}
+                </td>
+                <td>
+                    <form action="{{ route('rfquotation.destroy', ['rfquotation' => $rfquotation->id]) }}" method="POST" class="mr-delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure? you want to delete this request?')">
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                        </button>   
+                    </form>
+                </td>
+            </tr>
+        @empty
+            <tr colspan="5">
+                <div class="text-muted">
+                    No Data
+                </div>
+            </tr>
+        @endforelse
     </tbody>
 </table>
     </div>
-    <script>
-$(document).ready( function () {
-    $('#table_id').DataTable();
-} );
+<script>
+    $(document).ready( function () {
+        $('#table_id').DataTable();
+    } );
 </script>
 </div>

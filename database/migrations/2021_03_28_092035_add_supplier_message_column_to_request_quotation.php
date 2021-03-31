@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMaterialsUomTable extends Migration
+class AddSupplierMessageColumnToRequestQuotation extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateMaterialsUomTable extends Migration
      */
     public function up()
     {
-        Schema::create('materials_uom', function (Blueprint $table) {
-            $table->id();
-            $table->string('uom_id')->unique();
-            $table->string('item_uom');
-            $table->float('conversion_factor');
+        Schema::table('request_quotation', function (Blueprint $table) {
+            $table->longText('supplier_message');
         });
     }
 
@@ -28,6 +25,8 @@ class CreateMaterialsUomTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('materials_uom');
+        Schema::table('request_quotation', function (Blueprint $table) {
+            $table->dropColumn('supplier_message');
+        });
     }
 }

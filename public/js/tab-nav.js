@@ -240,22 +240,6 @@ function openManufacturingItemPriceForm() {
   });
 }
 
-function loadBuyingRequestForQuotation() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/requestforquotation');
-  });
-}
-function openBuyingRequestForQuotationForm() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/new-quotation');
-  });
-}
-function viewBuyingRequestForQuotationForm() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/view-quotation');
-  });
-}
-
 
 function loadSupplier() {
   $(document).ready(function () {
@@ -290,6 +274,12 @@ function loadPurchaseOrder() {
   $(document).ready(function () {
     $('#contentPurchaseOrder').load('/purchaseorder');
   });
+}
+
+function viewPurchaseOrder(id) {
+  $(document).ready(function () {
+    $('#contentPurchaseOrder').load('/view-order/' + id);
+  })
 }
 
 function openNewPurchaseOrder() {
@@ -459,6 +449,7 @@ function openNewSupplierQuotation() {
     $('#contentSupplierQuotation').load('/new-supplier');
   });
 }
+
 function openNewShippingRule() {
   $(document).ready(function () {
     $('#contentShippingRule').load('/shippingruleinfo');
@@ -477,5 +468,42 @@ function loadPurchaseTaxes() {
 function openNewPurchaseTaxes() {
   $(document).ready(function () {
     $('#contentPurchaseTaxes').load('/purchasetaxesinfo');
+  });
+}
+
+function openNewPurchaseInvoice() {
+  $(document).ready(function () {
+    $('#contentPurchaseInvoice').load('/new-invoice');
+  });
+}
+
+function loadPurchaseInvoice() {
+  $(document).ready(function () {
+    $('#contentPurchaseInvoice').load('/purchaseinvoice');
+  });
+}
+
+function openPurchaseInvoiceInfo() {
+  $(document).ready(function () {
+    $('#contentPurchaseInvoice').load('modules/buying/purchaseInvoiceInfo.php');
+  });
+}
+
+function openNewPurchaseReceipt() {
+  $(document).ready(function () {
+    $('#contentPurchaseReceipt').load('/new-receipt');
+  });
+}
+
+function openPurchaseReceiptInfo() {
+  $(document).ready(function () {
+    $('#contentPurchaseReceipt').load('modules/buying/PurchaseReceiptInfo.php');
+  });
+}
+
+function loadPurchaseReceipt() {
+  $(document).ready(function () {
+    $('#contentPurchaseReceipt').load('/purchasereceipt');
+
   });
 }

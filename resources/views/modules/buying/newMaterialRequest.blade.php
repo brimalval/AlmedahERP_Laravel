@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<form action="/materialrequest" method="post" id="mat-req" class="create">
+<form action="{{ route('materialrequest.store') }}" method="post" id="mat-req" class="create">
 @csrf
 <div id="accordion">
   <div class="card">
@@ -92,7 +92,7 @@
               </div>
               <br>
               <label>Item</label>
-              <table class="table border-bottom table-hover table-bordered" id="items-tbl">
+              <table class="table border-bottom table-hover table-bordered items-tbl" id="items-tbl">
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
                     <td class="text-center">
