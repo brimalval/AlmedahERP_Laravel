@@ -158,7 +158,7 @@ $('#mat-req').submit(function(){
                 // If the form's objective is to update, update the row
                 if(data.update){
                     let row = parentPane.find(`#mr-row-${data.materialrequest.id}`);
-                    row.children('td.mr-req-date').text(data.materialrequest.required_date);
+                    row.children('td.mr-req-date').text(data.required_date);
                     row.children('td.mr-purpose').text(data.materialrequest.purpose);
                     parentPane.find('.editModal').modal('hide');
                     parentPane.find('#mat-req').remove();
@@ -193,7 +193,7 @@ $(document).on('submit','#mr-submit',function(){
             row.children('td.mr-rq-status').prepend(
                 `<i class="fa fa-circle" aria-hidden="true" style="color:blue"></i> `
             );
-            row.find('.edit-mr-button').remove();
+            row.find('#edit-mr-button').remove();
             parentPane.find('#editModal').modal('hide');
             parentPane.find('#mat-req').remove();
         },

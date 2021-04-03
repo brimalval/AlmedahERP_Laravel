@@ -1,40 +1,15 @@
 <?php
 $i = 1; ?>
-<script type="text/javascript">
-    $(document).ready(function() {
-        let price = 0,
-            qty = 0;
-        for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
-            qty += !$("#qty" + i).val() ? 0 : parseInt($("#qty" + i).val());
-            price_string = isNaN($("#price" + i).val()) ? $("#price" + i).val().replace("₱ ", '') : $("#price" +
-                i).val();
-            //console.log(price_string);
-            let priceWOComma = price_string.replaceAll(',', '');
-            price_num = parseFloat(priceWOComma);
-            price += price_num;
-
-            let price_val = parseFloat($("#price" + i).val().replace("₱ ", '').replaceAll(',', ''));
-            $("#price" + i).val("₱ " + numberWithCommas(price_val.toFixed(2)));
-        }
-        $("#totalQty").val(qty);
-        $("#totalPrice").val("₱ " + numberWithCommas(price.toFixed(2)));
-    });
-
-    /**From internet function */
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-</script>
-
+<script src="{{ asset('js/purchaseorder.js') }}"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
             <a href='javascript:onclick=loadPurchaseOrder();' class="fas fa-arrow-left back-button"><span></span></a>
             <h2 class="navbar-brand" style="font-size: 35px;">{{ $purchase_order->purchase_id }}</h2>
-            <p>{{ $purchase_order->mp_status }}</p>
+            <p id="mp_status">{{ $purchase_order->mp_status }}</p>
         </h2>
+        @if($purchase_order->mp_status === 'Draft')
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -64,10 +39,11 @@ $i = 1; ?>
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-primary" id="saveOrder" type="button">Save</button>
+                    <button class="btn btn-primary" id="submitOrder" type="button">Submit</button>
                 </li>
             </ul>
         </div>
+        @endif
     </div>
 </nav>
 
@@ -157,8 +133,8 @@ $i = 1; ?>
             <div class="col-6">
                 <div class="input-group">
                     <label class="label">Series</label>
-                    <select class="input--style-4" type="text" name="series" style="width:512px;height:38px;" readonly disabled>
-                        <option selected>{{ $purchase_order->purchase_id }}</option>
+                    <select class="form-control" id="purch_id" type="text" name="series" style="width:512px;height:38px;" readonly>
+                        <option value="{{ $purchase_order->purchase_id }}" selected>{{ $purchase_order->purchase_id }}</option>
                     </select>
                 </div>
             </div>
@@ -182,7 +158,7 @@ $i = 1; ?>
             <div class="col-6">
                 <div class="form-group">
                     <label for="reqdbydate">Reqd by Date</label>
-                    <input type="date" name="reqdbydate" id="reqDate" value="{{ $req_date }}" class="form-control" readonly>
+                    <input type="date" name="reqdbydate" id="reqDate" value="{{ $req_date }}" class="form-control" @if($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
                 </div>
             </div>
 
@@ -255,7 +231,7 @@ $i = 1; ?>
                         <tr class="text-muted">
                             <td>
                                 <div class="form-check">
-                                    <input type="checkbox" id="masterChk" class="form-check-input" disabled>
+                                    <input type="checkbox" id="masterChk" class="form-check-input" @if($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
                                 </div>
                             </td>
                             <td>Item Code</td>
@@ -271,23 +247,23 @@ $i = 1; ?>
                             <tr id="item-<?= $i ?>">
                             <td>
                                 <div class="form-check">
-                                    <input type="checkbox" name="item-chk" id="chk<?= $i ?>" class="form-check-input" disabled>
+                                    <input type="checkbox" name="item-chk" id="chk<?= $i ?>" class="form-check-input" @if($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
                                 </div>
                             </td>
                             <td class="text-black-50">
-                                <input type="text" name="item<?= $i ?>" id="item<?= $i ?>" value="{{ $item['item_code'] }}" readonly>
+                                <input class="form-control" type="text" name="item<?= $i ?>" id="item<?= $i ?>" value="{{ $item['item_code'] }}" @if($purchase_order->mp_status !== 'Draft') readonly @else onkeyup="fieldFunction(<?= $i ?>); onChangeFunction();" @endif>
                             </td>
                             <td class="text-black-50">
-                                <input type="date" name="date<?= $i ?>" id="date<?= $i ?>" value="{{ $item['req_date'] }}" readonly>
+                                <input class="form-control" type="date" name="date<?= $i ?>" id="date<?= $i ?>" value="{{ $item['req_date'] }}" @if($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
                             </td>
                             <td class="text-black-50">
-                                <input type="number" name="qty<?= $i ?>" id="qty<?= $i ?>" value="{{ $item['qty'] }}" min="1" readonly>
+                                <input class="form-control" type="number" name="qty<?= $i ?>" id="qty<?= $i ?>" value="{{ $item['qty'] }}" min="1" @if($purchase_order->mp_status !== 'Draft') readonly @else onchange="calcPrice(1); onChangeFunction();" @endif>
                             </td>
                             <td class="text-black-50">
-                                <input type="number" name="rate<?= $i ?>" id="rate<?= $i ?>" value="{{ $item['rate'] }}" min="1" readonly>
+                                <input class="form-control" type="number" name="rate<?= $i ?>" id="rate<?= $i ?>" value="{{ $item['rate'] }}" min="1" @if($purchase_order->mp_status !== 'Draft') readonly @else onchange="calcPrice(1); onChangeFunction();" @endif>
                             </td>
                             <td class="text-black-50">
-                                <input type="text" name="price<?= $i ?>" id="price<?= $i ?>" value="₱ {{ $item['subtotal'] }}" readonly>
+                                <input class="form-control" type="text" name="price<?= $i ?>" id="price<?= $i ?>" value="₱ {{ $item['subtotal'] }}" readonly>
                             </td>
                             <td class="text-black-50">
                                 <select class="input--style-4" type="text" name="sampleOne"
@@ -304,15 +280,17 @@ $i = 1; ?>
                     
                     <tfoot>
                         <tr>
-                            <td><button type="button" id="multBtn" style="background-color: #007bff;">Add
+                        @if($purchase_order->mp_status === 'Draft')
+                            <td><button type="button" id="multBtn" style="background-color: #007bff;" onclick="onChangeFunction();">Add
                                     Multiple</button></td>
-                            <td><button type="button" id="rowBtn" style="background-color: #007bff;">Add Row</button>
+                            <td><button type="button" id="rowBtn" style="background-color: #007bff;" onclick="onChangeFunction();">Add Row</button>
                             </td>
                             <td><button type="button" id="deleteRow"
                                     style="background-color: red; display:none;">Delete</button></td>
                             <td></td>
                             <td><button id="button1">Download</button></td>
                             <td><button id="button1">Upload</button></td>
+                        @endif
                         </tr>
                     </tfoot>
 
@@ -368,5 +346,5 @@ $i = 1; ?>
 
 
         </div>
-
+    </form>
 </div>

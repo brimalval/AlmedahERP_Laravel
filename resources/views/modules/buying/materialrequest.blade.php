@@ -66,7 +66,7 @@
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
                         {{ $mat_request->mr_status }}
                     </td>
-                    <td class="text-black-50 mr-req-date">{{ $mat_request->required_date }}</td>
+                    <td class="text-black-50 mr-req-date">{{ $mat_request->required_date->format("Y-m-d") }}</td>
                     <td class="text-black-50 mr-purpose">{{ $mat_request->purpose }}</td>
                     <td>
                     @if ($mat_request->mr_status == 'Draft')
