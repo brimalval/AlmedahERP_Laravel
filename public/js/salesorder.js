@@ -70,34 +70,6 @@ $("#saveSaleOrder1").click(function () {
     continueToWorkOrder("#saveSaleOrder1");
 });
 
-//Unecessary
-// $(".form-check > .append-check").click(function () {
-//     $rowElement = $(this).parent().parent().parent();
-//     if ($(this).prop("checked") == true) {
-//         $rowElement.next().show();
-//     }
-//     else {
-//         $rowElement.nextAll().find("input").prop('checked', false);
-//         $rowElement.nextUntil("#rowTotal").hide();
-//     }
-// });
-
-/**
- * function continueToWorkOrder(x) {
-  if (saveSaleOrder(document.getElementById("saleCustomerForm"), document.getElementById("saleFormInfo"))) {
-    $(`${x} > a`).attr("data-name", "Work Order");
-    $(`${x} > a`).attr("data-parent", "manufacturing");
-    $(`${x} > a`).attr("data-dismiss", "modal");
-    $(`${x} > a`).addClass("nav-link menu");
-    let myVar = setTimeout(function () {
-      $(`${x} > a`).removeClass("nav-link menu");
-    },
-      100);
-  }
-}
- */
-//end
-
 
 function selectSalesMethod() {
     var selected = document.getElementById("saleSupplyMethod").value;
@@ -121,9 +93,9 @@ function selectPaymentMethod() {
     
 }
 
-function selectPaymentType(){
+function creationSelectPaymentType(){
     var paymentType = document.getElementById('paymentType').value;
-    if(paymentType == "Cash"){
+    if(paymentType === "Cash"){
         document.getElementById('account_no_div').style.display = "none"
     }else{
         document.getElementById('account_no_div').style.display = "flex"
@@ -211,7 +183,7 @@ function changeQuantity(r){
     index = r.parentNode.parentNode.rowIndex -1;
     productName = currentCart[index][0];
     currentCart[index] = [productName, r.value];
-
+    $('#btnSalesCalculate').click();
 }
 
 //Deletes product from array
@@ -220,8 +192,8 @@ function deleteRow(r) {
     index = r.parentNode.parentNode.rowIndex -1;
     // -1 because index is not 0-indexed
     currentCart.splice(index,1);
-
     $(r).parent().parent().remove();
+    $('#btnSalesCalculate').click();
 }
 
 
@@ -242,6 +214,8 @@ $('#btnSalesCalculate').click(function (){
     ultimateComponentTable = [];
 });
 
+
+//@TODO8
 function components(){
     for (let index = 0; index < currentCart.length; index++) {
         name = currentCart[index][0];
@@ -264,6 +238,7 @@ function components(){
 }
 
 function finalizer(){
+    $(".components tr").remove();
     for (let index = 0; index<ultimateComponentTable.length; index++) {
         component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2]];
         quantity = parseInt(ultimateComponentTable[index][3])

@@ -115,34 +115,13 @@ class SalesOrderController extends Controller
             
             $payment_logs = new payment_logs();
 
-            // //generate payment id
-            // $lastPayment = payment_logs::orderby('date_of_payment', 'desc')->first();
-            // $nextId = ($lastPayment)
-            //             ? payment_logs::orderby('date_of_payment', 'desc')->first()->id + 1 
-            //             : 1;
-
-            // $to_append = 0;
-            // $digit_flag = 1;
-            // while($nextId >= $digit_flag) {
-            //     ++$to_append;
-            //     $digit_flag *= 10;
-            // }
-
-            // $payment_id = "PID-";
-
-            // for($i=1; $i <= 10 - $to_append; $i++){
-            //     $payment_id .= "0";
-            // }
-
-            // $payment_id .= $nextId;
-
-            // $payment_logs->payment_id = $payment_id;
-
             $payment_logs->date_of_payment = $form_data['saleDate'];
+
 
             //Calculate total cost of material then minus initial payment or full payment
             // @TODO Balanced out to zero if full payment
             if($form_data['salePaymentMethod'] == "Cash"){
+                
                 $data->sales_status = "Fully Paid";
                 $payment_logs->amount_paid = $form_data['costPrice'];
                 
@@ -191,6 +170,7 @@ class SalesOrderController extends Controller
             
 
             $customerCheck = Customer::where('id', "=", request('customer_id'))->first();
+            
             if(!$customerCheck){
                 $customerCheck = new Customer();
                 $customerCheck->customer_lname = $form_data['lName'];
@@ -211,24 +191,8 @@ class SalesOrderController extends Controller
             $payment_logs->customer_rep = $form_data['lName'] . " ". $form_data['fName'];
             
             $data->save();
+            
             $payment_logs->sales_id = $data->id;
-
-            //generate payment id
-            $lastPayment = payment_logs::orderby('id', 'desc')->first();
-            $to_add = ($lastPayment) ? 1 : 0;
-            $nextId = SalesOrder::orderby('id', 'desc')->first()->id + $to_add; 
-
-            $to_append = 0;
-            $digit_flag = 1;
-            while($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
-
-            $payment_id = "PID-".str_pad($nextId, 10-$to_append, "0", STR_PAD_LEFT);
-            //end generate payment id
-
-            $payment_logs->payment_id = $payment_id;
 
             $payment_logs->date_of_payment = date("Y-m-d");
 
@@ -256,7 +220,7 @@ class SalesOrderController extends Controller
                 $order->save();
             }
             
-
+            
             //@TODO make a return type so table would be updated
             // $custId = $data->id;
 
@@ -300,10 +264,10 @@ class SalesOrderController extends Controller
 
         $data->payment_status = $form_data['status'];
         
-        if($sales->payment_balance == 0){
-            $sales->sales_status == "Fully Paid";
+        if($sales->payment_balance <= 0.00){
+            $sales->sales_status = "Fully Paid";
         }else{
-            $sales->sales_status == "With Outstanding Balance";
+            $sales->sales_status = "With Outstanding Balance";
         }
 
         $sales->save();
@@ -320,12 +284,12 @@ class SalesOrderController extends Controller
         $payment = payment_logs::where('sales_id',$sale->id)->latest('id')->first();
         
         if ($sale['payment_mode'] == "Cash" || $payment['payment_balance'] == 0.00){
-            
             return "Cash";
         }else if($payment['payment_status'] == "Pending"){
             return "Payment still pending";
         }else{
-            return response($sale['installment_type']);
+
+            return response( $sale['installment_type']);
         }
     }
 
@@ -337,7 +301,7 @@ class SalesOrderController extends Controller
         $installmentArr = ["3 months" => 3 , "6 months" => 6 , "12 months"=>12];
 
         $installmentType = $installmentArr[ $sale['installment_type']];
-        $divide = ($sale['cost_price'] + $sale['initial_payment'])/$installmentType;
+        $divide = ($sale['cost_price'] - $sale['initial_payment'])/$installmentType;
         return $divide;
     }
 

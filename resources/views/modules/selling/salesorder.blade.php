@@ -148,7 +148,11 @@
                 <td class= "text-bold"> {{$row->id}} </td>
                 <td class= "text-bold"> {{$row->customer_lname}} {{$row->customer_fname}} </td>
                 <td class= "text-bold"> {{$row->payment_mode}}</td>
+                @if ($row->sales_status == "Fully Paid")
                 <td class="text-success"> {{$row->sales_status}} </td>
+                @else
+                <td class="text-danger"> {{$row->sales_status}} </td>
+                @endif
                 <td class="text-bold">{{$row->payment_balance}}</td>
                 <td class="text-bold">{{$row->transaction_date}}</td>
                 <td><button type="button" class="btn btn-primary btn-sm" onclick="viewOrderedProducts({{$row->id}})" data-toggle="modal" data-target="#viewOrder">View Orders</button>
@@ -223,7 +227,7 @@
                                         <label class=" text-nowrap align-middle">
                                             First Name
                                         </label>
-                                        <input type="text" required class="form-input form-control" id="fName" required name ="fName">
+                                        <input type="text" required class="form-input form-control" id="fName" name ="fName">
                                         <br>
                                         <label class=" text-nowrap align-middle">
                                             Last Name
@@ -253,7 +257,7 @@
                                         <input type="text" required class="form-input form-control" id="companyName" name="companyName">
                                         <br>
                                         <label>Address</label>
-                                        <input class="form-control" required id="custAddress" name="custAddress"> </input>
+                                        <input class="form-control" required id="custAddress" name="custAddress">
                                     </div>
                                 </div>
                             </div>
@@ -281,7 +285,7 @@
                                             <label class=" text-nowrap align-middle">
                                                 Product Code
                                             </label>
-                                            <select class="form-control" id="saleProductCode" name="saleProductCode" onchange="enableAddtoProduct()">
+                                            <select class="form-control" id="saleProductCode" required name="saleProductCode" onchange="enableAddtoProduct()">
                                                 <option value="none" selected disabled hidden> 
                                                     Select an Option 
                                                 </option>
@@ -299,7 +303,7 @@
                                             <label class="text-nowrap align-middle">
                                                 Transaction Date
                                             </label>
-                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" >
+                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" required>
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Add to list
@@ -335,8 +339,8 @@
                                         </table>
                                         <div class="row">
                                           <div class="col-12 d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary m-1" id='btnSalesCalculate'>
-                                              <a class="" href="#" style="text-decoration: none;color:white">
+                                            <button type="button" class="btn btn-primary m-1" id='btnSalesCalculate' style="display:none;">
+                                              <a class="" href="#" style="text-decoration: none;color:white" >
                                                 Calculate
                                               </a>
                                           </div>
@@ -348,7 +352,7 @@
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" onchange="selectSalesMethod();">
+                                        <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" required onchange="selectSalesMethod();">
                                             <option selected disabled>Please Select</option>
                                             <option value="Produce">Instock</option>
                                             <option value="Purchase">Purchase</option>
@@ -425,7 +429,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Method
                                     </label>
-                                    <select class="form-control sellable" id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
+                                    <select class="form-control sellable" id="salePaymentMethod" required name="salePaymentMethod" onchange="selectPaymentMethod();">
                                         <option selected disabled>Please Select</option>
                                         <option value="Cash">Full Payment(Cash)</option>
                                         <option value="Installment">Installment</option>
@@ -436,11 +440,11 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Type
                                     </label>
-                                      <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentType();">
-                                          <option selected disabled>Payment Type...</option>
-                                          <option value="Cash">Cash</option>
-                                          <option value="Cheque">Cheque</option>
-                                      </select>
+                                    <select class="form-control sellable" onchange="creationSelectPaymentType()" id="paymentType" required name="paymentType" >
+                                        <option selected disabled>Payment Type</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Cheque">Cheque</option>
+                                    </select>
                                 </div>
                                 <br>
                             </div>
@@ -513,15 +517,6 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card" id="cardPaymentLogs">
-                    <div class="card-header">
-                      <h2 class="mb-0">
-                        <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard5" aria-expanded="false">
-                          PAYMENT LOGS
-                        </button>
-                      </h2>
-                    </div>
-                </div>
                 <!--
                     'salesorderform.php' contents end here
                 -->
@@ -536,12 +531,6 @@
                 </div>
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                <div class="modal-footer">
-                    <a class="nav-link menu" href="javascript:onclick=closeSaleTab;" data-parent="selling"
-                        data-name="New Sale Order" data-dismiss="modal">
-                        Edit in full page
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -899,6 +888,7 @@ $("#sales_order_form").submit(function(e) {
 
             document.getElementById('closeSaleOrderModal').click();
 
+            console.log(data);
             loadRefresh();
             
         },
@@ -917,25 +907,33 @@ function getCalculatedPrice($name){
 }
 
 function loadRefresh(){
+    var stats = "";
     $.ajax({
         url: '/refresh',
         type: 'get',
         success: function(response){
             x.clear();
             response.forEach(row => {
+
+                if(row['sales_status'] == "Fully Paid"){
+                    stats = "<td class='text-success'>" + row['sales_status']+ " </td>";
+                }else{
+                    stats = "<td class='text-danger'>" + row['sales_status']+ " </td>";
+                }
+
                x.row.add([
                 `<tr>
                     <td class= "text-bold">  ` + row['id'] + ` </td> `,`
                     <td class= "text-bold"> ` + row['customer_lname'] + `  ` + row['customer_fname'] + `</td> `,`
                     <td class= "text-bold"> ` + row['payment_mode'] + `</td> `,`
-                    <td class="text-success"> `+ row['sales_status'] + `</td> `,`
+                    ` + stats + ` `,`
                     <td class="text-bold"> ` + row['payment_balance'] + `</td> `,`
                     <td class="text-bold"> ` + row['transaction_date'] + `</td> `,`
                     <td><button type="button" class="btn btn-primary btn-sm" onclick="viewOrderedProducts( ` + row['id'] + `)" data-toggle="modal" data-target="#viewOrder">View Orders</button>
                         <button type="button" class="btn btn-primary btn-sm" onclick="viewPayments( ` + row['id'] + ` )" data-toggle="modal" data-target="#viewPayment">Payments</button>
                     </td>
                 </tr>`
-               ]).draw();
+               ]).draw(false);
             });
         }
     });
