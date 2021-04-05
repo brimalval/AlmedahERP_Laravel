@@ -157,13 +157,13 @@ var currentCart = [];
 // Adds component into a 2d array. If it is already init adds value instead
 //@TODO
 function componentAdder(name, cat, neededVal, stockVal){
-    
     if(ultimateComponentTable.length == 0){
         ultimateComponentTable.push( [name, cat, neededVal, stockVal])
     }else{
         for(let index = 0; index<ultimateComponentTable.length; index++){
             if(ultimateComponentTable[index][0] == name ){
               ultimateComponentTable[index][2] += neededVal;
+              console.log("Pass1");
             }else{
               ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
             }
