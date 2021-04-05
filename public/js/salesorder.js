@@ -150,22 +150,22 @@ function installmentType(){
 }
 
 var totalValue = 0;
-let ultimateComponentTable = [];
+var ultimateComponentTable = [];
 // 2d Array [ProductCode, Quantity]
-let currentCart = [];
+var currentCart = [];
 
 // Adds component into a 2d array. If it is already init adds value instead
 //@TODO
 function componentAdder(name, cat, neededVal, stockVal){
-
-    if(ultimateComponentTable.length <1){
+    
+    if(ultimateComponentTable.length == 0){
         ultimateComponentTable.push( [name, cat, neededVal, stockVal])
     }else{
         for(let index = 0; index<ultimateComponentTable.length; index++){
             if(ultimateComponentTable[index][0] == name ){
               ultimateComponentTable[index][2] += neededVal;
             }else{
-              ultimateComponentTable.push( [name, cat, neededVal, stockVal])
+              ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
             }
         }
     }
@@ -226,9 +226,8 @@ function components(){
             type: "GET",
             success: function (components) {
                 for (component of components) {
-                    componentAdder(component[2], component[1], parseInt(quantity), component[0] )
+                    componentAdder(component[2], component[1], parseInt(quantity) * parseInt(component[0]), component[3] )
                 }
-                
             },
             error: function (request, error) {
                 alert("Request: " + JSON.stringify(request));
@@ -240,23 +239,22 @@ function components(){
 function finalizer(){
     $(".components tr").remove();
     for (let index = 0; index<ultimateComponentTable.length; index++) {
-        component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2]];
-        quantity = parseInt(ultimateComponentTable[index][3])
+        component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2], ultimateComponentTable[index][3]];
         
         // set status of each component
         if (
-            component[2] == 0 &&
-            component[2] < component[2] * quantity
+            component[3] <= 0 
         ) {
             status = "Out of stock";
         } else if (
-            component[2] != 0 &&
-            component[2] < component[2] * quantity
+            component[3] > 0 &&
+            component[3] < component[2]
         ) {
             status = "Insufficient";
-        } else if (component[2] >= quantity) {
+        } else if (component[2] >= component[2]) {
             status = "Available";
         }
+
         
         // append each component to the components table
         $(".components").append(
@@ -277,11 +275,11 @@ function finalizer(){
             `
         </td>
         <td class="mt-available" style="text-align: center;">` +
-            component[2] +
+            component[3] +
             `</td>
         <td class="mt-needed text-center">
         ` +
-            parseInt(quantity * component[2]) +
+            component[2] +
             `
         </td>
         <td class="mt-needed text-center">

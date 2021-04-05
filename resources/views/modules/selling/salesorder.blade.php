@@ -216,7 +216,7 @@
                                             </div>
                                             <br>
                                         -->
-                                        <input list="customers" class="form-input form-control" name="customer_id" onchange="customeridselector(value);">
+                                        <input list="customers" class="form-input form-control" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
                                         <datalist id="customers">
                                         @foreach ($customers as $row)
                                           <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
@@ -786,6 +786,7 @@ $(document).ready(function() {
     var yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
     document.getElementById('currentDate').value = today;
+    
 });
 $("#gotoworkorder").click(function(){
     console.log("Clicked");
