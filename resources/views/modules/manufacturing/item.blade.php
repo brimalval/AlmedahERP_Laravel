@@ -46,7 +46,7 @@
          if (materialList.indexOf(id) !== -1) {
             alert("Value exists!");
         } else {
-            if ($('#raw_' + id).val() > 0) {
+            if ($('#raw_' + id).val() > 0 && !qty) {
                 $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label class="text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-'+id+'">' + $('#mat-option-'+id).text() + '</span> (<span id="material-badge-qty-'+ id + '">' + $('#raw_' + id).val() + '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value='+qty+'></div>');
             } else {
                 $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label style="cursor: pointer;" onclick="$(`#create-product-form`).hide(); $(`body`).removeClass(`modal-open`); $(`.modal-backdrop`).remove(); $(`#divMain`).load(`/inventory`);" class="text-truncate badge badge-danger m-1 p-2">' + $('#mat-option-'+id).html() + ' (' + $('#raw_' + id).val() + ' Stocks Left)</label></div>');
@@ -602,7 +602,7 @@
 
                             <!-- Loading the raw materials' ids and their available amounts -->
                             @foreach ($raw_mats as $raw_mat)
-                                <input id="raw_{{ $raw_mat->id }}" type="text" value="{{ $raw_mat->total_amount }}" hidden>
+                                <input id="raw_{{ $raw_mat->id }}" type="text" value="{{ $raw_mat->stock_quantity }}" hidden>
                             @endforeach
 
                             <script type="text/javascript">
