@@ -327,7 +327,6 @@ Route::get('/openNewSaleOrder', function () {
     return view('modules.selling.newsaleorder');
 });
 Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
-Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 Route::get('/view/{id}', [SalesOrderController::class, 'viewId']);
 Route::get('/getPaymentLogs/{id}', [SalesOrderController::class, 'getPaymentLogs']);
 Route::patch('/updateStatus/{id}', [SalesOrderController::class, 'update']);
@@ -335,6 +334,7 @@ Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentTyp
 Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
+Route::get('/getComponents/{id}',[SalesOrderController::class, 'getComponents']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {

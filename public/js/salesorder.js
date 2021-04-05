@@ -155,6 +155,7 @@ let ultimateComponentTable = [];
 let currentCart = [];
 
 // Adds component into a 2d array. If it is already init adds value instead
+//@TODO
 function componentAdder(name, cat, neededVal, stockVal){
 
     if(ultimateComponentTable.length <1){
@@ -215,7 +216,7 @@ $('#btnSalesCalculate').click(function (){
 });
 
 
-//@TODO8
+//@TODO
 function components(){
     for (let index = 0; index < currentCart.length; index++) {
         name = currentCart[index][0];
@@ -233,8 +234,7 @@ function components(){
                 alert("Request: " + JSON.stringify(request));
             },
         });
-    }
-    //Function here
+    }    //Function here
 }
 
 function finalizer(){

@@ -38,6 +38,7 @@ class SalesOrderController extends Controller
         ['sales_order' => $sales_order, 'product' => $product, 'customer' => $customer_info]);
     }
 
+    //@TODO
     function getComponents($selected){
         $product = ManufacturingProducts::where('product_code', $selected)->first();
         $material = json_decode($product->materials, true);
