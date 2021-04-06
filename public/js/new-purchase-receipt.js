@@ -4,6 +4,43 @@ $(document).ready(function () {
     
 });
 
+$('#saveReceipt').click(function () { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+
+    let formData = new FormData();
+    let received_mats = {};
+
+    for(let i=1; i<=$('#itemsToReceive tr').length; i++) {
+        received_mats[i] = {
+            "item_code" : $(`#item_code${i}`).val(),
+            "qty_received" : $(`#qtyAcc${i}`).val(),
+            "rate": $(`#rateAcc${i}`).val(),
+            "amount": $(`#amtAcc${i}`).val(),
+        }
+    }
+
+    formData.append('date_created', $('#npr_date').val());
+    formData.append('purchase_id', $('#orderId').val());
+    formData.append('items_received', JSON.stringify(received_mats));
+    formData.append('grand_total', $('#receivePrice').val());
+
+    $.ajax({
+        type: "POST",
+        url: '/create-receipt',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            loadPurchaseReceipt();
+        }
+    });
+    
+});
+
 function chkBoxFunction() {
     $('input[name="item-chk"]').each(function () {
         $(this).change(function () {
@@ -29,6 +66,9 @@ function loadMaterials(id) {
         }
     });
 
+    let total_price = 0;
+    let total_qty = 0;
+
     $.ajax({
         type: "GET",
         url: `/get-ordered-mats/${id}`,
@@ -36,6 +76,8 @@ function loadMaterials(id) {
         contentType: false,
         processData: false,
         success: function (data) {
+            $('#orderId').val(data.purchase_id);
+            console.log($('#orderId').val());
             let table = $('#itemsToReceive');
             $('#itemsToReceive tr').remove();
             for(let i=1; i<=data.ordered_mats.length; i++) {
@@ -62,7 +104,11 @@ function loadMaterials(id) {
                     </tr>
                     `
                 );
+                total_qty += parseInt(data.ordered_mats[i-1]['qty']);
+                total_price += parseFloat(data.ordered_mats[i-1]['subtotal']);
             }
+            $('#receiveQty').val(total_qty);
+            $('#receivePrice').val(total_price);
         }
     });
 }
@@ -126,6 +172,11 @@ $("#deleteBtn").click(function () {
         );
     }
 });
+
+/**From internet function */
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
 
 /**
  * // Function for deleting rows in currency and price list

@@ -19,7 +19,7 @@ $today = date('Y-m-d');
                         onclick="loadPurchaseReceipt();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-target="#saveSale">
+                    <button type="button" id="saveReceipt" class="btn btn-primary" data-target="#saveSale">
                         Save
                     </button>
                 </li>
@@ -32,19 +32,20 @@ $today = date('Y-m-d');
         <div class="card-header" id="heading1">
             <h2 class="mb-0">
                 <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
-                    id="dropdownMenunpi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    id="dropdownMenunpr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Get Items from
                 </button>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenunpi">
+                <div class="dropdown-menu" aria-labelledby="dropdownMenunpr">
                     <a class="dropdown-item" href="#" data-toggle="modal"
-                        data-target="#npi_purchaseOrderModal">Purchase Order</a>
+                        data-target="#npr_purchaseOrderModal">Purchase Order</a>
                 </div>
             </h2>
         </div>
         <div class="collapse show" id="salesOrderCard1">
             <div class="card-body">
-                <form action="" id="">
+                <form action="" id="" method="POST">
+                    @csrf
                     <div class="row">
                         <div class="col">
                             <br>
@@ -52,7 +53,7 @@ $today = date('Y-m-d');
                                 Series
                             </label>
                             <div class="d-flex">
-                                <input type="text" class="form-input form-control" max="6" value="0000001" id="custId">
+                                <input type="text" class="form-input form-control" max="6" value="PR-00X" disabled>
                             </div>
                             <br>
                             <label class=" text-nowrap align-middle">
@@ -60,32 +61,35 @@ $today = date('Y-m-d');
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
-                           
+                            <input type="text" required class="form-input form-control" hidden id="orderId">
                         </div>
                         <div class="col">
                             <br>
                             <label class="text-nowrap align-middle">
                                 Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_date" disabled value=<?php echo $today;?>>
+                            <input type="date" required class="form-input form-control" id="npr_date" readonly value=<?php echo $today;?>>
                             <br>
+                            <!--
                             <label class=" text-nowrap align-middle">
                                 Posting Time
                             </label>
-                            <input type="text" required class="form-input form-control" id="npi_postingT" disabled>
+                            <input type="text" required class="form-input form-control" id="npr_postingT" disabled>
                             <br>
+                        
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="npi_editpdt">
-                                <!--More concise form of enableDisable function from front-end-->
+                                <input type="checkbox" class="form-check-input" id="npr_editpdt">
+                                #More concise form of enableDisable function from front-end
                                 <script type="text/javascript">
-                                    $("#npi_editpdt").change(function () { 
+                                    $("#npr_editpdt").change(function () { 
                                         let bEnable = $(this).prop('checked');
-                                        $('#npi_date').prop('disabled', !bEnable);
-                                        $('#npi_postingT').prop('disabled', !bEnable);
+                                        $('#npr_date').prop('disabled', !bEnable);
+                                        $('#npr_postingT').prop('disabled', !bEnable);
                                     });
                                 </script>
                             </div>
-                            <label for="" class="form-check-label ml-4">Edit Posting Date and Time</label>
+                        
+                            <label for="" class="form-check-label ml-4">Edit Posting Date and Time</label>-->
                         </div>
                     </div>
                 </form>
@@ -197,7 +201,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Total Quantity
                             </label>
-                            <input type="number" required class="form-input form-control" id="">
+                            <input type="number" required class="form-input form-control" id="receiveQty">
                         </div>
                     </div>
                     <div class="col-6">
@@ -205,7 +209,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Total (PHP)
                             </label>
-                            <input type="number" required class="form-input form-control" id="">
+                            <input type="number" required class="form-input form-control" id="receivePrice">
                         </div>
                     </div>
                 </div>
@@ -246,7 +250,7 @@ $today = date('Y-m-d');
 
 </div>
 <!-- Modal Purchase Order-->
-<div class="modal fade" id="npi_purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="npi_purchaseOrderModal"
+<div class="modal fade" id="npr_purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="npr_purchaseOrderModal"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -272,7 +276,7 @@ $today = date('Y-m-d');
                                 <td class="text-bold">{{ $order->purchase_id }}</td>
                                 <td>{{ $order->purchase_date }}</td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                        data-toggle="modal" data-target="#npi_itemListView">View</button></td>
+                                        data-toggle="modal" data-target="#npr_itemListView">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-dismiss="modal" onclick="loadMaterials({{ $order->id }})">Select</button></td>   
                             </tr>

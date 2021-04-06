@@ -279,6 +279,7 @@ Route::post('/get-materials', [MaterialPurchasedController::class, 'getMaterials
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
 Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
+Route::post('/create-receipt', [PurchaseReceiptController::class, 'createReceipt']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function () {
@@ -330,8 +331,6 @@ Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentTyp
 Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
-Route::get('/getComponents/{id}',[SalesOrderController::class, 'getComponents']);
-
 Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 /**SALES INVOICE ROUTES */
