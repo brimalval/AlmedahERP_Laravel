@@ -21,7 +21,7 @@ class CreatePurchaseReceiptTable extends Migration
             $table->foreign('purchase_id')->references('purchase_id')->on('materials_purchased');
             $table->json('item_list_received');
             $table->float('grand_total');
-            $table->string('pr_status');
+            $table->string('pr_status')->default('Draft');
             $table->timestamps();
         });
     }

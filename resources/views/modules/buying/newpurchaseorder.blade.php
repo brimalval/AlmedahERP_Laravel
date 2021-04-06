@@ -163,12 +163,6 @@ $i = 1;
                 </div>
             </div>
 
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="company">Company</label>
-                    <input type="text" name="company" id="companyField" class="form-control">
-                </div>
-            </div>
         </div>
 
 

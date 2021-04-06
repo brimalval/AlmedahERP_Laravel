@@ -17,8 +17,7 @@ class PurchaseInvoiceController extends Controller
     }
 
     public function openInvoiceForm() {
-        $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
         //also add purchase receipts when created
-        return view('modules.buying.newPurchaseInvoice', ['orders' => $orders]);
+        return view('modules.buying.newPurchaseInvoice');
     }
 }

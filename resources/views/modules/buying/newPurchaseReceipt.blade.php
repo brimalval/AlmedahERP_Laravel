@@ -1,3 +1,8 @@
+<?php
+$today = date('Y-m-d');
+?>
+
+<script src="{{ asset('js/new-purchase-receipt.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
@@ -32,8 +37,8 @@
                 </button>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenunpi">
-                    <a class="dropdown-item" href="#">Purchase Order</a>
-                    <a class="dropdown-item" href="#">Purchase Receipt</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal"
+                        data-target="#npi_purchaseOrderModal">Purchase Order</a>
                 </div>
             </h2>
         </div>
@@ -55,20 +60,14 @@
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
-                            <!--
-                            <label class=" text-nowrap align-middle">
-                                Supplier Delivery Note
-                            </label>
-                            <input type="text" required class="form-input form-control" id="">
-                            <br>
-                        -->
+                           
                         </div>
                         <div class="col">
                             <br>
-                            <label class=" text-nowrap align-middle">
+                            <label class="text-nowrap align-middle">
                                 Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_date" disabled>
+                            <input type="date" required class="form-input form-control" id="npi_date" disabled value=<?php echo $today;?>>
                             <br>
                             <label class=" text-nowrap align-middle">
                                 Posting Time
@@ -76,14 +75,14 @@
                             <input type="text" required class="form-input form-control" id="npi_postingT" disabled>
                             <br>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="npi_editpdt"
-                                    onclick="enableDisable(this.checked, 'npi_date','npi_postingT');">
-                                <script>
-                                    function enableDisable(bEnable, textBoxID1, textBoxID2) {
-                                        document.getElementById(textBoxID1).disabled = !bEnable;
-                                        document.getElementById(textBoxID2).disabled = !bEnable;
-                                    }
-
+                                <input type="checkbox" class="form-check-input" id="npi_editpdt">
+                                <!--More concise form of enableDisable function from front-end-->
+                                <script type="text/javascript">
+                                    $("#npi_editpdt").change(function () { 
+                                        let bEnable = $(this).prop('checked');
+                                        $('#npi_date').prop('disabled', !bEnable);
+                                        $('#npi_postingT').prop('disabled', !bEnable);
+                                    });
                                 </script>
                             </div>
                             <label for="" class="form-check-label ml-4">Edit Posting Date and Time</label>
@@ -131,78 +130,50 @@
             </div>
         </div>
     </div>
-    <div class="card" id="cardRawMaterialSupply">
-        <div id="salesOrderCard5">
-            <div class="card-body">
-                <div class="row">
-                    <!--
-                    <div class="col-6">
-                        <div class="form-group" id="npi_setAwarehouse">
-                            <label class=" text-nowrap align-middle">
-                                Set Accepted Warehouse
-                            </label>
-                            <input type="text" required class="form-input form-control" id="">
-                        </div>
-                        <div class="form-group" id="npi_rejectedWarehouse">
-                            <label class=" text-nowrap align-middle">
-                                Rejected Warehouse
-                            </label>
-                            <input type="text" required class="form-input form-control" id="">
-                            <label class=" text-nowrap align-middle text-muted">
-                                Warehouse where you are maintaining stock of rejected Items
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class=" text-nowrap align-middle">
-                                Raw Materials Supplied
-                            </label>
-                            <select id="" class="form-control">
-                                <option>Yes</option>
-                                <option selected>No</option>
-                            </select>
-                        </div>
-                    </div>
-                -->
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="card" id="cardUpdateStock">
-        <div id="salesOrderCard5">
+        <div class="card-header">
+            <h2 class="mb-0">
+                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                    data-target="#salesOrderCard5" aria-expanded="false">
+                    UPDATE STOCK
+                </button>
+            </h2>
+        </div>
+        <div id="salesOrderCard5" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
                         <label class=" text-nowrap align-middle">Items</label>
-                        <table class="table border-bottom table-hover table-bordered">
+                        <table class="table border-bottom table-hover table-bordered" id="itemsFromOrder">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
                                     <td>
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input">
+                                            <input type="checkbox" id="mainChk" class="form-check-input">
                                         </div>
                                     </td>
                                     <td>Item</td>
                                     <td>Accepted Quantity</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
-                                    <td></td>
                                 </tr>
                             </thead>
-                            <tbody class="">
-                                <tr>
+                            <tbody class="" id="itemsToReceive">
+                                <tr id='nullRow'>
                                     <td colspan="7" style="text-align: center;">
                                         NO DATA
                                     </td>
                                 </tr>
+                            </tbody>
+                            <tfoot>
                                 <tr>
                                     <td colspan="7" rowspan="5">
-                                        <button class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
-                                        <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                                        <button id="multBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
+                                        <button id="rowBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Row</button>
+                                        <button id="deleteBtn" class="btn btn-sm btn-sm btn-secondary" style="display: none; background-color: red">Delete</button>
                                     </td>
                                 </tr>
-                            </tbody>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -210,7 +181,15 @@
         </div>
     </div>
     <div class="card" id="cardQuantityPHP">
-        <div id="salesOrderCard5">
+        <div class="card-header">
+            <h2 class="mb-0">
+                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                    data-target="#salesOrderCard6" aria-expanded="false">
+                    PRICE
+                </button>
+            </h2>
+        </div>
+        <div id="salesOrderCard6" class="collapse">
             <div class="card-body">
                 <div class="row my-4">
                     <div class="col-6">
@@ -237,86 +216,11 @@
         <div id="salesOrderCard5">
             <div class="card-body">
                 <div class="row">
-                    <!--
-                    <div class="col">
-                        <div class="col-6 form-group">
-                            <label class=" text-nowrap align-middle">
-                                Purchase Taxes and Charges Template
-                            </label>
-                            <input type="text" required class="form-input form-control" id="">
-                            <br>
-                        </div>
-                        <label class=" text-nowrap align-middle">Purchase Taxes and Charges</label>
-                        <table class="table border-bottom table-hover table-bordered">
-                            <thead class="border-top border-bottom bg-light">
-                                <tr class="text-muted">
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input">
-                                        </div>
-                                    </td>
-                                    <td>Type</td>
-                                    <td>Account Head</td>
-                                    <td>Rate</td>
-                                    <td>Amount</td>
-                                    <td>Total</td>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody class="">
-                                <tr>
-                                    <td colspan="7" style="text-align: center;">
-                                        NO DATA
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7" rowspan="5">
-                                        <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                -->
+                 
                 </div>
             </div>
         </div>
     </div>
-    <!--
-    <div class="card" id="cardTermsAndCondition">
-        <div class="card-header">
-            <h2 class="mb-0">
-                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard7" aria-expanded="false">
-                    TERMS AND CONDITIONS
-                </button>
-            </h2>
-        </div>
-        <div id="salesOrderCard7" class="collapse">
-            <div id="salesOrderCard5">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <div class="col-6 form-group">
-                                <label class=" text-nowrap align-middle">
-                                    Terms
-                                </label>
-                                <input type="text" required class="form-input form-control" id="">
-                                <br>
-                            </div>
-                            <label class=" text-nowrap align-middle">Terms and Conditions</label>
-                            <textarea name="editor1" class="form-control" style="resize: none;"></textarea>
-                            <script>
-                                CKEDITOR.replace('editor1');
-
-                            </script>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
--->
     <div class="card" id="cardMoreInfo">
         <div id="salesOrderCard9">
             <div class="card-body">
@@ -339,49 +243,47 @@
             </div>
         </div>
     </div>
-    <!--
-    <div class="card" id="cardTransporterInfo">
-        <div class="card-header">
-            <h2 class="mb-0">
-                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard10" aria-expanded="false">
-                    TRANSPORTER DETAILS
+
+</div>
+<!-- Modal Purchase Order-->
+<div class="modal fade" id="npi_purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="npi_purchaseOrderModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Purchase Orders</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
-            </h2>
-        </div>
-        <div id="salesOrderCard10" class="collapse">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class=" text-nowrap align-middle">
-                                Transporter Name
-                            </label>
-                            <input type="text" required class="form-input form-control" id="">
-                            <br>
-                        </div>
-                        <div class="form-group">
-                            <label class=" text-nowrap align-middle">
-                                Vehicle Number
-                            </label>
-                            <input type="text" required class="form-input form-control" id="">
-                            <br>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class=" text-nowrap align-middle">
-                                Vehicle Date
-                            </label>
-                            <input type="date" required class="form-input form-control" id="">
-                            <br>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="modal-body">
+                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Purchase ID</th>
+                            <th>Date</th>
+                            <th>Item List</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+                            <tr>
+                                <td class="text-bold">{{ $order->purchase_id }}</td>
+                                <td>{{ $order->purchase_date }}</td>
+                                <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
+                                        data-toggle="modal" data-target="#npi_itemListView">View</button></td>
+                                <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
+                                        data-dismiss="modal" onclick="loadMaterials({{ $order->id }})">Select</button></td>   
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
--->
 </div>
 
-<script src="{{ asset('js/salesorder.js') }}"></script>

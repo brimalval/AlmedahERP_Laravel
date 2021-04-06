@@ -278,9 +278,8 @@ Route::post('/get-materials', [MaterialPurchasedController::class, 'getMaterials
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
-Route::get('/new-receipt', function() {
-    return view('modules.buying.newPurchaseReceipt');
-});
+Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
+Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function () {
