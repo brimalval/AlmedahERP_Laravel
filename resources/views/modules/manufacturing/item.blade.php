@@ -54,6 +54,16 @@
             materialList.push(id);
         }
     }
+
+    function addComponent(id, qty=""){
+        console.log(id);
+         if (componentList.indexOf(id) !== -1) {
+            alert("Value exists!");
+        } else {
+            $('#components_div').append('<div class="col-sm-6 component-badge" id="component-badge-'+id+'"><label class="text-truncate badge badge-success m-1 p-2"><span id="component-badge-name-'+id+'">' + $('#com-option-'+id).text() + '</span></label><input type="number" min="0" name="components_qty[]" class="form-control" placeholder="Qty." value='+qty+'></div>');
+            componentList.push(id);
+        }
+    }
     // Creating a custom reset method since the native reset
     // function also resets the values of the materials in case
     // they've been changed in the inventory tab
@@ -82,6 +92,7 @@
         $('#sales_price_wt').val(null);
         materialList = [];
         attributeList = [];
+        componentList = [];
         $('#attributes_div').html('');        
         // Removing each of the selected material badges
         $('.material-badge').each(function(){
@@ -107,6 +118,17 @@
             var materialId = materialsJSON[material].material_id;
             var materialQty = materialsJSON[material].material_qty;
             addMaterial(materialId, materialQty);
+        }
+    }
+    // Populating the components div with the components of a particular item
+    function populateComponents(componentsJSON){
+        componentList = [];
+        if (typeof componentsJSON == "string")
+            componentsJSON = JSON.parse(componentsJSON);
+        for(let component in componentsJSON){
+            var componentId = componentsJSON[component].component_id;
+            var componentQty = componentsJSON[component].component_qty;
+            addComponent(componentId);
         }
     }
     // Function that takes a product as a JSON as a parameter
@@ -617,6 +639,37 @@
                             <div class="row" id="materials_div" style="background:#ecf0f1">
                             </div>
                         </div>
+
+                        <div class="form-group" id="components-picker">
+                            <label>Components</label>
+                            <select id="components" class="selectpicker4 form-control" name="components" data-container="body" data-live-search="true" title="Select components" data-hide-disabled="true">
+                                <option value="none" selected disabled hidden>
+                                    Select a Component
+                                </option>
+                                @foreach ($components as $component)
+                                <!-- Loading the components into the selectpicker with their ID as the value -->
+                                    <option id="com-option-{{ $component->id }}" value="{{ $component->id }}">{{ $component->component_name }}</option>
+                                @endforeach
+                            </select>
+
+                            {{-- <!-- Loading the components' ids and their available amounts -->
+                            @foreach ($components as $component)
+                                <input id="raw_{{ $raw_mat->id }}" type="text" value="{{ $raw_mat->total_amount }}" hidden>
+                            @endforeach --}}
+
+                            <script type="text/javascript">
+                                componentList = (typeof componentList != 'undefined' && componentList instanceof Array) ? componentList : []
+                                $(document).ready(function() {
+                                    $('.selectpicker4').selectpicker();
+                                    $('#components').on('change', function(){
+                                        addComponent(this.value);
+                                    });
+                                });
+                            </script>
+                            <div class="row" id="components_div" style="background:#ecf0f1">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="">Item Description</label>
                             <textarea class="form-control" type="text" id="internal_description" name="internal_description" required></textarea>
@@ -1075,6 +1128,17 @@
                 }
             }
             formData.set('materials', JSON.stringify(materials));
+            console.log('materials'+materials);
+            components_qty = document.getElementsByName('components_qty[]');
+            var components = {};
+            for(var i=0; i<componentList.length; i++){
+                components[i] = {
+                    "component_id" : componentList[i],
+                    "component_qty" : components_qty[i].value,
+                }
+            }
+            formData.set('components', JSON.stringify(components));
+            console.log('components'+components);
             $.ajax({
                 type: 'POST',
                 url: $('#product-form').attr('action'),

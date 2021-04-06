@@ -18,7 +18,7 @@ class MaterialPurchased extends Model
         'mp_status'
     ];
 
-    public function getSupplierQuotation() {
-        return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
-    }
+    // public function getSupplierQuotation() {
+    //     return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
+    // }
 }

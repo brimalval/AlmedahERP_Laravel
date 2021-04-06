@@ -4,12 +4,12 @@
 $(document).ready(function () {
     $("#notif").hide();
 });
-$("#idBtn").on('click', function () {
+$("#idBtn").on("click", function () {
     var id = $("#custId").val();
     $.ajax({
-        url: '/search-customer/' + id,
+        url: "/search-customer/" + id,
         type: "GET",
-        data: { 'id': id },
+        data: { id: id },
         success: function (data) {
             $("#fName").val(data.customer_data[0].customer_fname);
             $("#lName").val(data.customer_data[0].customer_lname);
@@ -18,11 +18,9 @@ $("#idBtn").on('click', function () {
             $("#companyName").val(data.customer_data[0].company_name);
             $("#custEmail").val(data.customer_data[0].email_address);
             $("#custAddress").val(data.customer_data[0].address);
-        }
+        },
     });
 });
-
-
 
 // Creating a custom reset method since the native reset
 // function also resets the values of the materials in case
@@ -98,7 +96,6 @@ $("#saveSaleOrder1").click(function () {
  */
 //end
 
-
 function selectSalesMethod() {
     var selected = document.getElementById("saleSupplyMethod").value;
     if (selected == "Produce") {
@@ -116,49 +113,74 @@ function selectPaymentMethod() {
         document.getElementById("paymentInstallment").style.display = "none";
         installmentType();
     }
-    
 }
 
-function selectPaymentType(){
-    var paymentType = document.getElementById('paymentType').value;
-    if(paymentType == "Cash"){
-        document.getElementById('account_no_div').style.display = "none"
-    }else{
-        document.getElementById('account_no_div').style.display = "flex"
+function selectPaymentType() {
+    var paymentType = document.getElementById("paymentType").value;
+    if (paymentType == "Cash") {
+        document.getElementById("account_no_div").style.display = "none";
+    } else {
+        document.getElementById("account_no_div").style.display = "flex";
     }
 }
 
 //Function for payment type
-function installmentType(){
-    
-    $('#payments_table_body tr').remove();
-    cost = document.getElementById('costPrice').value;
-    payment_method = document.getElementById('salePaymentMethod').value;
+function installmentType() {
+    $("#payments_table_body tr").remove();
+    cost = document.getElementById("costPrice").value;
+    payment_method = document.getElementById("salePaymentMethod").value;
     divider = 0;
-    if(payment_method == "Cash"){
-        $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Cash</td><td class="text-center">'+cost+'</td></tr>');
-    }else{
-        installment_type = document.getElementById('installmentType').value;
-        saleDownpaymentCost = document.getElementById('saleDownpaymentCost').value;
-        $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Downpayment </td><td class="text-center">'+saleDownpaymentCost+'</td></tr>');
-        cost-=saleDownpaymentCost;
+    if (payment_method == "Cash") {
+        $("#payments_table_body").append(
+            '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Cash</td><td class="text-center">' +
+                cost +
+                "</td></tr>"
+        );
+    } else {
+        installment_type = document.getElementById("installmentType").value;
+        saleDownpaymentCost = document.getElementById("saleDownpaymentCost")
+            .value;
+        $("#payments_table_body").append(
+            '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Downpayment </td><td class="text-center">' +
+                saleDownpaymentCost +
+                "</td></tr>"
+        );
+        cost -= saleDownpaymentCost;
         switch (installment_type) {
             case "3 months":
-                divider = Math.round(cost*100.0 /3)/100
+                divider = Math.round((cost * 100.0) / 3) / 100;
                 for (let index = 0; index < 3; index++) {
-                    $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment '+(index+1)+'</td><td class="text-center">'+divider+'</td></tr>'); 
+                    $("#payments_table_body").append(
+                        '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
+                            (index + 1) +
+                            '</td><td class="text-center">' +
+                            divider +
+                            "</td></tr>"
+                    );
                 }
                 break;
             case "6 months":
-                divider = Math.round(cost*100.0 /6)/100
+                divider = Math.round((cost * 100.0) / 6) / 100;
                 for (let index = 0; index < 6; index++) {
-                    $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment '+(index+1)+'</td><td class="text-center">'+divider+'</td></tr>'); 
+                    $("#payments_table_body").append(
+                        '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
+                            (index + 1) +
+                            '</td><td class="text-center">' +
+                            divider +
+                            "</td></tr>"
+                    );
                 }
                 break;
             case "12 months":
-                divider = Math.round( cost*100.0 /12)/100
+                divider = Math.round((cost * 100.0) / 12) / 100;
                 for (let index = 0; index < 12; index++) {
-                    $('#payments_table_body').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment '+(index+1)+'</td><td class="text-center">'+divider+'</td></tr>'); 
+                    $("#payments_table_body").append(
+                        '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
+                            (index + 1) +
+                            '</td><td class="text-center">' +
+                            divider +
+                            "</td></tr>"
+                    );
                 }
                 break;
         }
@@ -171,66 +193,97 @@ let ultimateComponentTable = [];
 let currentCart = [];
 
 // Adds component into a 2d array. If it is already init adds value instead
-function componentAdder(name, cat, neededVal, stockVal){
-
-    if(ultimateComponentTable.length <1){
-        ultimateComponentTable.push( [name, cat, neededVal, stockVal])
-    }else{
-        for(let index = 0; index<ultimateComponentTable.length; index++){
-            if(ultimateComponentTable[index][0] == name ){
-              ultimateComponentTable[index][2] += neededVal;
-            }else{
-              ultimateComponentTable.push( [name, cat, neededVal, stockVal])
+function componentAdder(name, cat, neededVal, stockVal) {
+    if (ultimateComponentTable.length < 1) {
+        ultimateComponentTable.push([name, cat, neededVal, stockVal]);
+    } else {
+        for (let index = 0; index < ultimateComponentTable.length; index++) {
+            if (ultimateComponentTable[index][0] == name) {
+                ultimateComponentTable[index][2] += neededVal;
+            } else {
+                ultimateComponentTable.push([name, cat, neededVal, stockVal]);
             }
         }
     }
 }
 
 //Adds product to array
-function addToTable(){
-    currentProduct = document.getElementById('saleProductCode').value
-    currentCart.push([currentProduct,0]);
+function addToTable() {
+    currentProduct = document.getElementById("saleProductCode").value;
+    currentCart.push([currentProduct, 0]);
 
-    $('#ProductsTable').append('<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +currentProduct +'</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>' );
+    $("#ProductsTable").append(
+        '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
+            currentProduct +
+            '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
+    );
 }
 
 //Quantity inside the products table
-function changeQuantity(r){
-    index = r.parentNode.parentNode.rowIndex -1;
+function changeQuantity(r) {
+    index = r.parentNode.parentNode.rowIndex - 1;
     productName = currentCart[index][0];
     currentCart[index] = [productName, r.value];
-
 }
 
 //Deletes product from array
 function deleteRow(r) {
     // Index of row
-    index = r.parentNode.parentNode.rowIndex -1;
+    index = r.parentNode.parentNode.rowIndex - 1;
     // -1 because index is not 0-indexed
-    currentCart.splice(index,1);
+    currentCart.splice(index, 1);
 
     $(r).parent().parent().remove();
 }
 
-
-
-$('#btnSalesCalculate').click(function (){
+$("#btnSalesCalculate").click(function () {
     cost = 0;
     for (let index = 0; index < currentCart.length; index++) {
-        cost += currentCart[index][1] * getCalculatedPrice(currentCart[index][0])
+        cost +=
+            currentCart[index][1] * getCalculatedPrice(currentCart[index][0]);
     }
-    document.getElementById('costPrice').value = cost;
-    document.getElementById('payment_total_amount').value = cost;
+    document.getElementById("costPrice").value = cost;
+    document.getElementById("payment_total_amount").value = cost;
 
-    components();
-
+    rawMaterials();
+    // components();
+    // console.log(ultimateComponentTable);
     //@TODO use call back function here instead of timeout. Problematic if huge data is processed
     // 2ms timeout
-    setTimeout(() => {  finalizer(); }, 2000);
+    setTimeout(() => {
+        finalizer();
+    }, 2000);
     ultimateComponentTable = [];
 });
 
-function components(){
+function rawMaterials() {
+    for (let index = 0; index < currentCart.length; index++) {
+        name = currentCart[index][0];
+        quantity = currentCart[index][1];
+        $.ajax({
+            url: "/getRawMaterials/" + name,
+            type: "GET",
+            success: function (rawMaterials) {
+                console.log(rawMaterials);
+                for (rawMaterial of rawMaterials) {
+                    componentAdder(
+                        rawMaterial[2],
+                        rawMaterial[1],
+                        parseInt(quantity),
+                        rawMaterial[0]
+                    );
+                }
+            },
+            error: function (request, error) {
+                // alert("Request: " + JSON.stringify(request));
+            },
+        });
+    }
+    //Function here
+}
+
+function components() {
+    console.log(currentCart.length);
     for (let index = 0; index < currentCart.length; index++) {
         name = currentCart[index][0];
         quantity = currentCart[index][1];
@@ -238,29 +291,36 @@ function components(){
             url: "/getComponents/" + name,
             type: "GET",
             success: function (components) {
+                console.log(components.length);
                 for (component of components) {
-                    componentAdder(component[2], component[1], parseInt(quantity), component[0] )
+                    console.log(component);
+                    componentAdder(
+                        component[2],
+                        component[1],
+                        parseInt(quantity),
+                        component[0]
+                    );
                 }
-                
             },
             error: function (request, error) {
-                alert("Request: " + JSON.stringify(request));
+                // alert("Request: " + JSON.stringify(request));
             },
         });
     }
     //Function here
 }
 
-function finalizer(){
-    for (let index = 0; index<ultimateComponentTable.length; index++) {
-        component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2]];
-        quantity = parseInt(ultimateComponentTable[index][3])
-        
+function finalizer() {
+    for (let index = 0; index < ultimateComponentTable.length; index++) {
+        component = [
+            ultimateComponentTable[index][0],
+            ultimateComponentTable[index][1],
+            ultimateComponentTable[index][2],
+        ];
+        quantity = parseInt(ultimateComponentTable[index][3]);
+
         // set status of each component
-        if (
-            component[2] == 0 &&
-            component[2] < component[2] * quantity
-        ) {
+        if (component[2] == 0 && component[2] < component[2] * quantity) {
             status = "Out of stock";
         } else if (
             component[2] != 0 &&
@@ -270,7 +330,7 @@ function finalizer(){
         } else if (component[2] >= quantity) {
             status = "Available";
         }
-        
+
         // append each component to the components table
         $(".components").append(
             `<tr>
@@ -281,26 +341,26 @@ function finalizer(){
         </td>
         <td class="text-center">
         ` +
-            component[0] +
-            `
+                component[0] +
+                `
         </td>
         <td class="text-center">
         ` +
-            component[1] +
-            `
+                component[1] +
+                `
         </td>
         <td class="mt-available" style="text-align: center;">` +
-            component[2] +
-            `</td>
+                component[2] +
+                `</td>
         <td class="mt-needed text-center">
         ` +
-            parseInt(quantity * component[2]) +
-            `
+                parseInt(quantity * component[2]) +
+                `
         </td>
         <td class="mt-needed text-center">
         ` +
-            status +
-            `
+                status +
+                `
         </td>
         </tr>`
         );
@@ -320,8 +380,6 @@ $("#saleQuantity").keyup(function () {
         );
 });
 
-
-
-function enableAddtoProduct(){
-    document.getElementById("btnAddProduct").disabled= false;
+function enableAddtoProduct() {
+    document.getElementById("btnAddProduct").disabled = false;
 }

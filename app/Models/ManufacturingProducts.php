@@ -23,9 +23,11 @@ class ManufacturingProducts extends Model
         'bar_code',
         'picture',
         'materials',
+        'components',
     ];
     protected $casts = [
         'materials' => 'array',
+        'components' => 'array',
     ];
     
     // Returns the product's materials & their respective quantities
@@ -40,5 +42,21 @@ class ManufacturingProducts extends Model
             ));
         }
         return $materials_with_qty;
+    }
+
+    // Returns the product's materials & their respective quantities
+    // as an array of arrays {{component_object1, qty}, {component_object2, qty}, etc.}
+    // Expects that the json is formatted as {"0":{'component_id' : 'id', 'component_qty': 'qty'}, "1"...}
+
+    public function components(){
+        $components = json_decode($this->components);
+        $components_with_qty = array();
+        foreach($components as $component){
+            array_push($components_with_qty, array(
+                'component' => Component::find($component->component_id),
+                'qty' => $component->component_qty,
+            ));
+        }
+        return $components_with_qty;
     }
 }

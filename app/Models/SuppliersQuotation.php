@@ -21,7 +21,7 @@ class SuppliersQuotation extends Model
         'sq_status'
     ]; 
 
-    public function getPurchasedMaterials() {
-        return $this->hasOne(MaterialPurchased::class, 'supp_quotation_id', 'supp_quotation_id');
-    }
+    // public function getPurchasedMaterials() {
+    //     return $this->hasOne(MaterialPurchased::class, 'supp_quotation_id', 'supp_quotation_id');
+    // }
 }

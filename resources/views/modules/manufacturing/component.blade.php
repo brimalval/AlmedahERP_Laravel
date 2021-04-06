@@ -74,6 +74,7 @@
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentItemCode"
                                 name="item_code">
+                                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addRowNewComponent()">Add Item</button>
                         </div>
                         <div class="col">
                             <label for="" class="text-nowrap align-middle">Image</label><br>
@@ -99,8 +100,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" class="btn btn-secondary btn-sm ml-1" onclick="addRowNewComponent()">Add
-                        Row</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -112,36 +111,62 @@
 </div>
 <!-- End of Modal -->
 <script>
-    var i = 1;
-
+    let i = 1;
+    let raw_materials = [];
     function addRowNewComponent() {
+        let item_code = $('#componentItemCode').val();
         var tableBody = $("#rawMats");
-        tableBody.append(
-            `
-                <tr class="center">
-                    <td><input type="checkbox" id="check${i}"></td>
-                    <td><input class="form-control" type="text" name="rawMat${i}" id="rawMat${i}"></td>
-                    <td><input class="form-control" type="number" name="qty${i}" id="qty${i}" min="1"></td>
-                </tr>
-            `
-        );
-        i++;
-
+        console.log(item_code);
+        if(raw_materials.includes(item_code)){
+            alert('Item already included in Component')
+        }else{ 
+            $.ajax({
+                url: '/get-item/' + item_code,
+                type: "GET",
+                data: { 'item_code': item_code },
+                success: function (data) {
+                    raw_materials.push(item_code);
+                    tableBody.append(
+                    `
+                        <tr class="center">
+                            <td><input type="checkbox" id="check`+data.id+`"></td>
+                            <td><p name="rawMat${i}" id="`+data.item_name+`">`+data.item_name+`</p></td>
+                            <td><p name="qty${i}" id="qty${i}" min="1">`+i+`</p></td>
+                        </tr>
+                    `
+                    );
+                    console.log(raw_materials);
+                }, error: () =>
+                    console.log('No item Found')
+            });
+            i++;
+        }
     }
 
     $('#addComponentForm').on('submit', function(e){
         e.preventDefault();
-        $.ajax({
+        if(raw_materials.length == 0){
+            alert('Cannot create a component without raw materials');
+        }else{
+            component_raw_materials = JSON.stringify(raw_materials);
+            $('#componentItemCode').val(component_raw_materials);
+            // var formData = new FormData(addComponentForm);
+            // formData.set("item_code", component_raw_materials);
+            $.ajax({
             type: "POST",
             url: "/create-component",
             data: $("#addComponentForm").serialize(),
             success: function (r) {
-                console.log('success');
+                console.log(r.status);
+                $('#newComponentModal').modal('hide');
+                // $('#componentItemCode').val('');
+                raw_materials = [];
             },
             error: function () {
                 console.log('error');
             },
         });
+        }
     });
 
     $(document).ready(function() {

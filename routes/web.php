@@ -69,7 +69,7 @@ Route::get('/buying', function() {
 /**COMPONENTS ROUTES */
 Route::get('/component', [ComponentController::class, 'index']);
 Route::post('/create-component', [ComponentController::class, 'store']);
-
+Route::get('/get-item/{item_code}', [ComponentController::class, 'getItem']);
 /**CRM ROUTES */
 Route::get('/contacts', function() {
     return view('modules.crm.contacts');
@@ -300,8 +300,8 @@ Route::get('/openNewSaleOrder', function() {
     return view('modules.selling.newsaleorder');
 });
 Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer']);
+Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
-
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function() {
     return view('modules.selling.salesinvoice');
@@ -382,6 +382,7 @@ Route::get('/openNewWorkorder', function() {
 Route::get('/loadWorkOrderInfo', function() {
     return view('modules.manufacturing.workordersubModules.workorder_info');
 });
+Route::get('/getRawMaterialsWork/{selected}', [WorkOrderController::class, 'getRawMaterials']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function() {
