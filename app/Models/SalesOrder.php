@@ -18,7 +18,7 @@ class SalesOrder extends Model
         'sale_supply_method',
         'transaction_date',
         'payment_mode',
-
+        'payment_balance',
         'initial_payment',
         'installment_type',
         'sales_status',

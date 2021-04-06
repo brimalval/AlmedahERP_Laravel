@@ -11,7 +11,8 @@ use App\Models\MaterialCategory;
 use App\Models\payment_logs;
 use App\Models\MaterialRequest;
 use App\Models\ordered_products;
-use Illuminate\Support\Facades\DB;
+use DB;
+use Carbon;
 use Exception;
 class SalesOrderController extends Controller
 {
@@ -22,12 +23,10 @@ class SalesOrderController extends Controller
         $products = ManufacturingProducts::get();
 
         $salesorders = DB::table('salesorder')
-        ->select('*')
-        ->join('payment_logs','payment_logs.sales_id','=','salesorder.id')
-        ->join('ordered_products', 'ordered_products.sales_id', '=', 'salesorder.id')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
-        
         return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
     }
 
@@ -39,6 +38,7 @@ class SalesOrderController extends Controller
         ['sales_order' => $sales_order, 'product' => $product, 'customer' => $customer_info]);
     }
 
+    //@TODO
     function getComponents($selected){
         $product = ManufacturingProducts::where('product_code', $selected)->first();
         $material = json_decode($product->materials, true);
@@ -49,9 +49,10 @@ class SalesOrderController extends Controller
             $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
             $raw_material_name = $raw_material->item_name;
             $raw_material_category_id = $raw_material->category_id;
+            $raw_material_quantity = $raw_material->rm_quantity;
             $category = MaterialCategory::where('id', $raw_material_category_id)->first();
             $raw_material_category = $category->category_title;
-            array_push($components, [$material_qty, $raw_material_category, $raw_material_name]);
+            array_push($components, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
         }
         return response($components);
     }
@@ -116,39 +117,62 @@ class SalesOrderController extends Controller
             
             $payment_logs = new payment_logs();
 
+            $payment_logs->date_of_payment = $form_data['saleDate'];
+
+
             //Calculate total cost of material then minus initial payment or full payment
             // @TODO Balanced out to zero if full payment
             if($form_data['salePaymentMethod'] == "Cash"){
+                
                 $data->sales_status = "Fully Paid";
-                $payment_logs->payment_balance = 0;
                 $payment_logs->amount_paid = $form_data['costPrice'];
+                
+                $payment_logs->payment_description = "Fully Paid";
 
-                #@TODO
-                $payment_logs->payment_description = "To be developed";
+                if($form_data['paymentType'] == "Cheque"){
+                    $payment_logs->payment_balance = $form_data['costPrice'];
+                    $data->payment_balance = $form_data['costPrice'];
+                    
+                    $payment_logs->account_no = $form_data['account_no'];
+                    $payment_logs->payment_status = "Pending";
+                }else{
+                    $payment_logs->payment_balance = 0;
+                    $data->payment_balance = 0;
+
+                    $payment_logs->payment_status = "Completed";
+                }
                 
             }else{
                 $data->initial_payment = $form_data['saleDownpaymentCost'];
                 
-                $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
-
                 $data->sales_status = "With Outstanding Balance";
 
                 $data->installment_type = $form_data['installmentType'];
                 $payment_logs->amount_paid = $form_data['saleDownpaymentCost'];
 
-                #@TODO
-                $payment_logs->payment_description = "To be developed";
-                
+                $payment_logs->payment_description = "Downpayment";
+
+                if($form_data['paymentType'] == "Cheque"){
+
+                    $payment_logs->payment_balance = $form_data['costPrice'];
+                    $data->payment_balance = $payment_logs->payment_balance;
+                    
+                    $payment_logs->account_no = $form_data['account_no'];
+                    $payment_logs->payment_status = "Pending";
+                }else{
+                    $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
+                    $data->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
+
+                    $payment_logs->payment_status = "Completed";
+                }
             }
 
-            if($form_data['paymentType'] == "Cheque"){
-                $payment_logs->account_no = $form_data['account_no'];
-            }
-            $payment_logs->payment_method = $form_data['salePaymentMethod'];
-            $payment_logs->payment_status = "Pending";
-            //Ship, shipped, in assembly, waiting for payment, or completed.  
+            
+            $payment_logs->payment_method = $form_data['paymentType'];
+            
 
             $customerCheck = Customer::where('id', "=", request('customer_id'))->first();
+            
             if(!$customerCheck){
                 $customerCheck = new Customer();
                 $customerCheck->customer_lname = $form_data['lName'];
@@ -169,24 +193,8 @@ class SalesOrderController extends Controller
             $payment_logs->customer_rep = $form_data['lName'] . " ". $form_data['fName'];
             
             $data->save();
+            
             $payment_logs->sales_id = $data->id;
-
-            //generate payment id
-            $lastPayment = payment_logs::orderby('id', 'desc')->first();
-            $to_add = ($lastPayment) ? 1 : 0;
-            $nextId = SalesOrder::orderby('id', 'desc')->first()->id + $to_add; 
-
-            $to_append = 0;
-            $digit_flag = 1;
-            while($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
-
-            $payment_id = "PID-".str_pad($nextId, 10-$to_append, "0", STR_PAD_LEFT);
-            //end generate payment id
-
-            $payment_logs->payment_id = $payment_id;
 
             $payment_logs->date_of_payment = date("Y-m-d");
 
@@ -214,10 +222,131 @@ class SalesOrderController extends Controller
                 $order->save();
             }
             
-            return "Success";
+            
+            //@TODO make a return type so table would be updated
+            // $custId = $data->id;
+
+            // $salesorders = DB::table('salesorder')
+            // ->select('*')
+            // ->join('payment_logs','payment_logs.sales_id','=','salesorder.id')
+            // ->join('ordered_products', 'ordered_products.sales_id', '=', 'salesorder.id')
+            // ->where('salesorder.id', '=' , $custId)
+            // ->get();
+            
+            // return $salesorders;
+
+            return "Sucess";
 
         }catch(Exception $e){
             return $e;
         }
+    }
+
+    function getPaymentLogs($id){
+        $logs = payment_logs::where('sales_id', $id)->get();
+        return response($logs);
+    }
+
+    function viewId($id){
+        $ordered = ordered_products::where('sales_id', $id)->get();
+        return response($ordered);
+    }
+
+    function update(Request $request, $id){
+        $data = payment_logs::find($id);
+        $sales = salesorder::find($data->sales_id);
+
+        $form_data = $request->input();
+
+        if($form_data['status'] == "Pending"){
+            $sales->payment_balance += $data->amount_paid;
+        }else{
+            $sales->payment_balance -= $data->amount_paid;
+        }
+
+        $data->payment_status = $form_data['status'];
+        
+        if($sales->payment_balance <= 0.00){
+            $sales->sales_status = "Fully Paid";
+        }else{
+            $sales->sales_status = "With Outstanding Balance";
+        }
+
+        $sales->save();
+        $data->save();
+        
+        return "Success";
+    }
+
+
+    function getPaymentType($id){
+        //To get installment type
+        $sale = salesorder::find($id);
+        //Gets the last payment
+        $payment = payment_logs::where('sales_id',$sale->id)->latest('id')->first();
+        
+        if ($sale['payment_mode'] == "Cash" || $payment['payment_balance'] == 0.00){
+            return "Cash";
+        }else if($payment['payment_status'] == "Pending"){
+            return "Payment still pending";
+        }else{
+
+            return response( $sale['installment_type']);
+        }
+    }
+
+    function getAmountToBePaid($id){
+         //To get installment type
+        $sale = salesorder::find($id);
+        
+
+        $installmentArr = ["3 months" => 3 , "6 months" => 6 , "12 months"=>12];
+
+        $installmentType = $installmentArr[ $sale['installment_type']];
+        $divide = ($sale['cost_price'] - $sale['initial_payment'])/$installmentType;
+        return $divide;
+    }
+
+    function addPayment(Request $request){
+        $data = new payment_logs;
+        
+        $form_data = $request->input();
+        $id = $request->input('id');
+        $sales = salesorder::find($id);
+        //Gets the last payment
+        $payment = payment_logs::where('sales_id',$id)->latest('id')->first();
+
+        //Get current date
+        $currDate = Carbon\Carbon::now();
+        $currDate = $currDate->toDateString();
+
+        $data->date_of_payment = $currDate;
+        $data->sales_id = $id;
+        $data->amount_paid = $form_data['view_totalamount'];
+        
+        if ( $form_data['view_paymentType'] == "Cheque"){
+            $data->account_no = $form_data['view_account_no'];
+            $data->payment_status = "Pending";
+        }else{
+            $data->payment_status = "Completed";
+            $sales->payment_balance = $sales->payment_balance - $form_data['view_totalamount'];
+        }
+        $data->payment_description = $form_data['view_salePaymentMethod'];
+        $data->payment_method = $form_data['view_paymentType'];
+        $data->customer_rep = $form_data['view_customer_rep'];
+
+        $data->payment_balance = $payment['payment_balance'] - $form_data['view_totalamount'];
+
+        $sales->save();
+        $data->save();
+    }
+
+    function refresh(){
+        $salesorders = DB::table('salesorder')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->join('man_customers','salesorder.customer_id','=','man_customers.id')
+        ->get();
+
+        return $salesorders;
     }
 }
