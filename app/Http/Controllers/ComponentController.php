@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Component;
+use App\Models\ManufacturingMaterials;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,10 @@ class ComponentController extends Controller
      */
     public function index()
     {
-        //
+        $components = Component::get();
+        return view('modules.manufacturing.component', [
+            'components' => $components,
+        ]);
     }
 
     /**
@@ -42,7 +46,7 @@ class ComponentController extends Controller
             'component_name' => 'required|string',
             'component_image' => 'nullable|image',
             'component_description' => 'nullable|string',
-            'item_code' => 'required|string|exists:env_raw_materials',
+            'item_code' => 'required|string',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -58,6 +62,8 @@ class ComponentController extends Controller
             if ($request->hasFile('component_image')) {
                 $component_image = $request->file('component_image')->store('uploads/jobscheduling/components', 'public');
                 $component->component_image = $component_image;
+            }else{
+                $component->component_image = '';
             }
 
             if (!$request->component_code) {
@@ -89,6 +95,14 @@ class ComponentController extends Controller
         }
     }
 
+    public function getItem(Request $request, $item_code)
+    {
+        $raw_material = ManufacturingMaterials::where('item_code', $item_code)->first();
+        if(empty($raw_material)){
+            return response()->json(['error' => 'Error msg'], 404);
+        }
+        return response($raw_material);
+    }
     /**
      * Display the specified resource.
      *

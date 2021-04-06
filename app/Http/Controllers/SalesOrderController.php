@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SalesOrder;
 use App\Models\Customer;
+use App\Models\Component;
+use App\Models\WorkOrder;
 use App\Models\ManufacturingProducts;
 use App\Models\ManufacturingMaterials;
 use App\Models\MaterialCategory;
+use App\Models\MaterialPurchased;
 use App\Models\payment_logs;
 use App\Models\MaterialRequest;
 use App\Models\ordered_products;
@@ -38,11 +41,10 @@ class SalesOrderController extends Controller
         ['sales_order' => $sales_order, 'product' => $product, 'customer' => $customer_info]);
     }
 
-    //@TODO
-    function getComponents($selected){
+    function getRawMaterials($selected){
         $product = ManufacturingProducts::where('product_code', $selected)->first();
         $material = json_decode($product->materials, true);
-        $components = array();
+        $materials = array();
         for ($x = 0; $x < count($material); $x++) {
             $material_id = $material[$x]['material_id'];
             $material_qty = $material[$x]['material_qty'];
@@ -52,13 +54,32 @@ class SalesOrderController extends Controller
             $raw_material_quantity = $raw_material->rm_quantity;
             $category = MaterialCategory::where('id', $raw_material_category_id)->first();
             $raw_material_category = $category->category_title;
-            array_push($components, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
+            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name]);
+        }
+        return response($materials);
+    }
+
+    function getComponents($selected){
+        $product = ManufacturingProducts::where('product_code', $selected)->first();
+        $component = json_decode($product->components, true);
+        $components = array();
+        for ($x = 0; $x < count($component); $x++) {
+            $component_id = $component[$x]['component_id'];
+            $component_qty = $component[$x]['component_qty'];
+            $component_db = Component::where('id', $component_id)->first();
+            $component_name = $component_db->component_name;
+            $component_category = "Component";
+            array_push($components, [$component_qty, $component_category, $component_name]);
         }
         return response($components);
     }
 
-    function create(Request $request){
 
+    function create(Request $request){
+        
+        function generateRandomString($length = 10) {
+            return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+        }
         #Comment ko muna yung validation, nahihirapan akong mag-enter ng data para sa testing eh hahah
         //$request->validate([
         //    'costPrice' => 'nullable|numeric',
@@ -211,31 +232,43 @@ class SalesOrderController extends Controller
             //         $mr_status = "Draft";
             //     }
             // }
+            $new_component = array();
+            $index = 1;
+            foreach(json_decode($component, true) as $key => $c){
+                if($c[$index] == 'Component'){
+                    array_push($new_component, $c);
+                }
+            }
 
-            foreach ($cart as $row){
-            
+            foreach ($cart as $row){        
+                $material_purchased = new MaterialPurchased();
+                $material_purchased->supp_quotation_id = generateRandomString();
+                $material_purchased->purchase_id = generateRandomString();
+                $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
+                $material_purchased->mp_status = "ExStatus";   
+                $material_purchased->items_list_purchased = json_encode($new_component);   
+                $material_purchased->save();
+
                 $order = new ordered_products();
                 $order->sales_id = $data->id;
                 $order->product_code = $row[0];
                 $order->quantity_purchased = $row[1];
-                
                 $order->save();
             }
-            
-            
-            //@TODO make a return type so table would be updated
-            // $custId = $data->id;
 
-            // $salesorders = DB::table('salesorder')
-            // ->select('*')
-            // ->join('payment_logs','payment_logs.sales_id','=','salesorder.id')
-            // ->join('ordered_products', 'ordered_products.sales_id', '=', 'salesorder.id')
-            // ->where('salesorder.id', '=' , $custId)
-            // ->get();
-            
-            // return $salesorders;
+            foreach($new_component as $c){
+                $work_order = new WorkOrder();
+                $work_order->purchase_id = $material_purchased->purchase_id;
+                $work_order->sales_id = $data->id;
+                $work_order->planned_start_date = null;
+                $work_order->planned_end_date = null;
+                $work_order->real_start_date = null;
+                $work_order->real_end_date = null;
+                $work_order->work_order_status = "Not Started";
+                $work_order->save();
+            }
 
-            return "Sucess";
+            return response($new_component);
 
         }catch(Exception $e){
             return $e;

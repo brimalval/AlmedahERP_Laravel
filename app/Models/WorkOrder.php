@@ -12,9 +12,11 @@ class WorkOrder extends Model
     public $timestamps = true;
     protected $fillable = [
         'purchase_id',
-        'materials_qty',
-        'product_code',
         'sales_id',
         'work_order_status',
+        'planned_start_date',
+        'planned_end_date',
+        'real_start_date',
+        'real_end_date',
     ];
 }

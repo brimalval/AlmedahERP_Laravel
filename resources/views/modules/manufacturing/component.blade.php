@@ -22,6 +22,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($components as $row)
+                        <tr id="<?=$row["id"]?>">
+                            <td class="text-black-50"><?=$row["component_code"]?></td>
+                            <td class="text-black-50"><?=$row["component_name"]?></td>
+                            <td class="text-black-50"><a href="">View</a></td>
+                            <td class="text-black-50"><?=$row["component_description"]?></td>
+                            <td class="text-black-50"><?=$row["item_code"]?></td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -31,7 +40,7 @@
 <!-- Modal -->
 <div class="modal fade" id="newComponentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <form action="">
+    <form action="" id="addComponentForm">
         @csrf
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -48,14 +57,14 @@
                                 Component Code
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentCode"
-                                name="componentCode">
+                                name="component_code">
                         </div>
                         <div class="col">
                             <label class="text-nowrap align-middle">
                                 Component Name
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentName"
-                                name="componentName">
+                                name="component_name">
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -64,17 +73,18 @@
                                 Item Code
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentItemCode"
-                                name="componentItemCode">
+                                name="item_code">
+                                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addRowNewComponent()">Add Item</button>
                         </div>
                         <div class="col">
                             <label for="" class="text-nowrap align-middle">Image</label><br>
-                            <input type="file" name="componentImg[]" id="componentImg[]">
+                            <input type="file" name="component_image[]" id="componentImg[]">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col">
                             <label for="" class="text-nowrap align-middle">Component Description</label><br>
-                            <textarea class="form-input form-control sellable" name="componentDescription"
+                            <textarea class="form-input form-control sellable" name="component_description"
                                 id="componentDescription" cols="" rows="4" style="resize: none;"></textarea>
                         </div>
                     </div>
@@ -90,8 +100,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" class="btn btn-secondary btn-sm ml-1" onclick="addRowNewComponent()">Add
-                        Row</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -103,23 +111,63 @@
 </div>
 <!-- End of Modal -->
 <script>
-    var i = 1;
-
+    let i = 1;
+    let raw_materials = [];
     function addRowNewComponent() {
+        let item_code = $('#componentItemCode').val();
         var tableBody = $("#rawMats");
-        tableBody.append(
-            `
-                <tr class="center">
-                    <td><input type="checkbox" id="check${i}"></td>
-                    <td><input class="form-control" type="text" name="rawMat${i}" id="rawMat${i}"></td>
-                    <td><input class="form-control" type="number" name="qty${i}" id="qty${i}" min="1"></td>
-                </tr>
-            `
-        );
-        i++;
-
+        console.log(item_code);
+        if(raw_materials.includes(item_code)){
+            alert('Item already included in Component')
+        }else{ 
+            $.ajax({
+                url: '/get-item/' + item_code,
+                type: "GET",
+                data: { 'item_code': item_code },
+                success: function (data) {
+                    raw_materials.push(item_code);
+                    tableBody.append(
+                    `
+                        <tr class="center">
+                            <td><input type="checkbox" id="check`+data.id+`"></td>
+                            <td><p name="rawMat${i}" id="`+data.item_name+`">`+data.item_name+`</p></td>
+                            <td><p name="qty${i}" id="qty${i}" min="1">`+i+`</p></td>
+                        </tr>
+                    `
+                    );
+                    console.log(raw_materials);
+                }, error: () =>
+                    console.log('No item Found')
+            });
+            i++;
+        }
     }
 
+    $('#addComponentForm').on('submit', function(e){
+        e.preventDefault();
+        if(raw_materials.length == 0){
+            alert('Cannot create a component without raw materials');
+        }else{
+            component_raw_materials = JSON.stringify(raw_materials);
+            $('#componentItemCode').val(component_raw_materials);
+            // var formData = new FormData(addComponentForm);
+            // formData.set("item_code", component_raw_materials);
+            $.ajax({
+            type: "POST",
+            url: "/create-component",
+            data: $("#addComponentForm").serialize(),
+            success: function (r) {
+                console.log(r.status);
+                $('#newComponentModal').modal('hide');
+                // $('#componentItemCode').val('');
+                raw_materials = [];
+            },
+            error: function () {
+                console.log('error');
+            },
+        });
+        }
+    });
 
     $(document).ready(function() {
         $('#componentTable').DataTable();

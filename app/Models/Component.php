@@ -16,7 +16,7 @@ class Component extends Model
         'item_code',
     ];
 
-    public function raw_material(){
-        return $this->hasOne(ManufacturingMaterials::class, 'item_code', 'item_code');
-    }
+    // public function raw_material(){
+    //     return $this->hasOne(ManufacturingMaterials::class, 'item_code', 'item_code');
+    // }
 }
