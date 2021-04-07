@@ -51,7 +51,6 @@ class SalesOrderController extends Controller
             $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
             $raw_material_name = $raw_material->item_name;
             $raw_material_category_id = $raw_material->category_id;
-            $raw_material_quantity = $raw_material->rm_quantity;
             $category = MaterialCategory::where('id', $raw_material_category_id)->first();
             $raw_material_category = $category->category_title;
             array_push($materials, [$material_qty, $raw_material_category, $raw_material_name]);
@@ -61,15 +60,18 @@ class SalesOrderController extends Controller
 
     function getComponents($selected){
         $product = ManufacturingProducts::where('product_code', $selected)->first();
-        $component = json_decode($product->components, true);
+        $material = json_decode($product->materials, true);
         $components = array();
-        for ($x = 0; $x < count($component); $x++) {
-            $component_id = $component[$x]['component_id'];
-            $component_qty = $component[$x]['component_qty'];
-            $component_db = Component::where('id', $component_id)->first();
-            $component_name = $component_db->component_name;
-            $component_category = "Component";
-            array_push($components, [$component_qty, $component_category, $component_name]);
+        for ($x = 0; $x < count($material); $x++) {
+            $material_id = $material[$x]['material_id'];
+            $material_qty = $material[$x]['material_qty'];
+            $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
+            $raw_material_name = $raw_material->item_name;
+            $raw_material_category_id = $raw_material->category_id;
+            $raw_material_quantity = $raw_material->rm_quantity;
+            $category = MaterialCategory::where('id', $raw_material_category_id)->first();
+            $raw_material_category = $category->category_title;
+            array_push($components, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
         }
         return response($components);
     }

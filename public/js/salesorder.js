@@ -90,7 +90,7 @@ function selectPaymentMethod() {
     }
 }
 
-function selectPaymentType() {
+function creationSelectPaymentType() {
     var paymentType = document.getElementById("paymentType").value;
     if (paymentType == "Cash") {
         document.getElementById("account_no_div").style.display = "none";
@@ -289,7 +289,6 @@ function components() {
                 }
             },
             error: function (request, error) {
-                // alert("Request: " + JSON.stringify(request));
             },
         });
     }    //Function here
