@@ -18,4 +18,8 @@ class RequestedMaterials extends Model
         'station_id',
         'procurement_method'
     ]; 
+
+    public function item(){
+        return $this->hasOne(ManufacturingMaterials::class, 'item_code', 'item_code');
+    }
 }

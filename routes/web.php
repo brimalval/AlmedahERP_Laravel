@@ -21,6 +21,7 @@ use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -268,7 +269,7 @@ Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']
 Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
+Route::get('/purchaseorder', [MaterialsPurchasedController::class, 'index']);
 Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openOrderForm']);
 Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
 Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
@@ -375,9 +376,7 @@ Route::get('/createnewsupplier', function () {
 });
 
 /**SUPPLIER QUOTATION ROUTES */
-Route::get('/supplierquotation', function () {
-    return view('modules.buying.supplierQuotation');
-});
+Route::resource('/supplierquotation', SupplierQuotationController::class);
 Route::get('/load-supplier', function () {
     return view('modules.buying.supplierQuotation1');
 });
