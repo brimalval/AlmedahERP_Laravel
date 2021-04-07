@@ -15,7 +15,6 @@ class CreatePaymentLogsTable extends Migration
     {
         Schema::create('payment_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('payment_id')->unique();
             $table->date('date_of_payment');
             #Foreign Key
             $table->unsignedBigInteger('sales_id');
