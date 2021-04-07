@@ -47,9 +47,7 @@ class MaterialPurchased extends Model
         return $items_purchased_array;
     }
 
-    public function getSupplierQuotation() {
-        return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
-    }
-
-
+    // public function getSupplierQuotation() {
+    //     return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
+    // }
 }

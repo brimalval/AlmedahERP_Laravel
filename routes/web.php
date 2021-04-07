@@ -70,10 +70,9 @@ Route::get('/buying', function () {
 });
 
 /**COMPONENTS ROUTES */
-Route::get('/component', function () {
-    return view('modules.manufacturing.component');
-});
-
+Route::get('/component', [ComponentController::class, 'index']);
+Route::post('/create-component', [ComponentController::class, 'store']);
+Route::get('/get-item/{item_code}', [ComponentController::class, 'getItem']);
 /**CRM ROUTES */
 Route::get('/contacts', function () {
     return view('modules.crm.contacts');
@@ -265,9 +264,7 @@ Route::get('/loadProjectTemplate', function () {
 
 /**PURCHASE INVOICE ROUTES */
 Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
-Route::get('/new-invoice', function() {
-    return view('modules.buying.newPurchaseInvoice');
-});
+Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
 
 /**PURCHASE ORDER ROUTES */
 Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
@@ -280,9 +277,9 @@ Route::post('/get-materials', [MaterialPurchasedController::class, 'getMaterials
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
-Route::get('/new-receipt', function() {
-    return view('modules.buying.newPurchaseReceipt');
-});
+Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
+Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
+Route::post('/create-receipt', [PurchaseReceiptController::class, 'createReceipt']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function () {
@@ -334,8 +331,8 @@ Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentTyp
 Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
-Route::get('/getComponents/{id}',[SalesOrderController::class, 'getComponents']);
-
+Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
+Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');
@@ -416,6 +413,7 @@ Route::get('/openNewWorkorder', function () {
 Route::get('/loadWorkOrderInfo', function () {
     return view('modules.manufacturing.workordersubModules.workorder_info');
 });
+Route::get('/getRawMaterialsWork/{selected}', [WorkOrderController::class, 'getRawMaterials']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

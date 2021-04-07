@@ -873,7 +873,7 @@ $("#sales_order_form").submit(function(e) {
     var formData = new FormData(this);
     console.log(currentCart);
     formData.append("cart",currentCart );
-    formData.append("component", ultimateComponentTable);
+    formData.append("component", JSON.stringify(ultimateComponentTable));
     formData.append("installmentType", document.getElementById('installmentType').value);
     $.ajax({
         type: 'POST',

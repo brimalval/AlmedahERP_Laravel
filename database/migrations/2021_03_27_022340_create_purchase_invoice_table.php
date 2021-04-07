@@ -22,7 +22,7 @@ class CreatePurchaseInvoiceTable extends Migration
             $table->json('due_date_of_payment');
             $table->float('mode_payment');
             $table->string('paid_amount');
-            $table->string('pi_status');
+            $table->string('pi_status')->default('Draft');
             $table->timestamps();
         });
     }

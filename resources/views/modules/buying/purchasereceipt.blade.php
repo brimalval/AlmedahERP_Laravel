@@ -24,7 +24,7 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="refresh()">Refresh</button>
+                        onclick="loadPurchaseReceipt()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" onclick="openNewPurchaseReceipt();">
@@ -48,7 +48,18 @@
         </tr>
     </thead>
     <tbody>
-
+        @foreach ($receipts as $receipt)
+        <tr>
+            <td class="text-bold">{{ $receipt->p_receipt_id }}</td>
+            <td>{{ $receipt->date_created }}</td>
+            <td>{{ $receipt->purchase_id }}</td>
+            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary" data-toggle="modal"
+                    data-target="#pr_itemListView">View</button></td>
+            <td class="text-bold">{{ $receipt->grand_total }}</td>
+            <td>{{ $receipt->pr_status }}</td>
+        </tr>
+        @endforeach
+        <!--
         <tr>
             <td class="text-bold">PR-123</td>
             <td>March/28/2021</td>
@@ -58,6 +69,7 @@
             <td class="text-bold">100</td>
             <td>Draft</td>
         </tr>
+    -->
     </tbody>
 </table>
 

@@ -27,6 +27,7 @@ class ManufacturingProducts extends Model
     ];
     protected $casts = [
         'materials' => 'array',
+        'components' => 'array',
     ];
     
     // Returns the product's materials & their respective quantities
