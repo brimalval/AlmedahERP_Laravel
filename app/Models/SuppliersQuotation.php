@@ -18,6 +18,25 @@ class SuppliersQuotation extends Model
         'items_list_rate_amt',
         'grand_total',
         'remarks',
-        'sq_status'
+        'sq_status',
+        'supplier_id',
     ]; 
+
+    public $casts = [
+        'date_created' => 'date',
+    ];
+
+    public function items(){
+        $itemsString = $this->items_list_rate_amt;
+        $itemsJSON = json_decode($itemsString);
+        foreach($itemsJSON as $item){
+            $item->item = ManufacturingMaterials::where('item_code', '=', $item->item_code)->first();
+            $item->uom = MaterialUOM::where('uom_id', '=', $item->uom_id)->first();
+        }
+        return $itemsJSON;
+    }
+
+    public function supplier(){
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'supplier_id');
+    }
 }

@@ -209,6 +209,9 @@
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Item</span>
                     </a>
+                    <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Supplier Quotation</span>
+                    </a>
                 </div>
                 <!-- End of Submenu Buying content -->
                 <!-- Menu Item Accounting -->
