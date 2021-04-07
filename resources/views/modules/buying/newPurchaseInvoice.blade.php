@@ -1,3 +1,6 @@
+<?php
+$today = date('Y-m-d');
+?>
 <script src="{{ asset('js/new-purchase-invoice.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
@@ -15,7 +18,7 @@
                         onclick="loadPurchaseInvoice();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-target="#saveSale">
+                    <button type="button" class="btn btn-primary" data-target="#saveSale" id="saveInvoice">
                         Save
                     </button>
                 </li>
@@ -48,7 +51,7 @@
                                 Series
                             </label>
                             <div class="d-flex">
-                                <input type="text" class="form-input form-control" max="6" value="0000001" id="custId">
+                                <input type="text" class="form-input form-control" max="6" value="PI-00X" disabled>
                             </div>
                             <br>
                             <label class=" text-nowrap align-middle">
@@ -56,18 +59,19 @@
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
+                            <input type="text" name="" hidden id="receiptId">
                         </div>
                         <div class="col">
                             <br>
                             <label class=" text-nowrap align-middle">
                                 Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_date" disabled>
+                            <input type="date" required class="form-input form-control" id="npi_date" readonly value=<?=$today?>>
                             <br>
                             <label id="" class=" text-nowrap align-middle">
                                 Due Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="">
+                            <input type="date" required class="form-input form-control" id="npi_due_date" readonly value=<?=$today?>>
                         </div>
                     </div>
                 </form>
@@ -142,19 +146,21 @@
                                     <td></td>
                                 </tr>
                             </thead>
-                            <tbody class="">
+                            <tbody class="" id="itemsReceived">
                                 <tr>
                                     <td colspan="7" style="text-align: center;">
                                         NO DATA
                                     </td>
                                 </tr>
+                            </tbody>
+                            <tfoot>
                                 <tr>
                                     <td colspan="7" rowspan="5">
                                         <button class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
                                         <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
                                     </td>
                                 </tr>
-                            </tbody>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -176,9 +182,10 @@
                             <label class=" text-nowrap align-middle">
                                 Mode of Payment
                             </label>
-                            <select id="" class="form-control">
-                                <option selected>Cash</option>
-                                <option>Cheque</option>
+                            <select id="paymentMode" class="form-control">
+                                <option value="" selected hidden disabled>Select Mode of Payment...</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Cheque">Cheque</option>
                             </select>
                             <br>
                         </div>
@@ -187,7 +194,7 @@
                                 <label class=" text-nowrap align-middle">
                                     Total (PHP)
                                 </label>
-                                <input type="number" required class="form-input form-control" id="">
+                                <input type="number" required class="form-input form-control" id="priceToPay">
                             </div>
                         </div>
                     </div>
@@ -252,7 +259,7 @@
                                     data-toggle="modal">View</button></td>
                             <td class="price">{{ $receipt->grand_total }}</td>
                             <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-dismiss="modal">Select</button></td>
+                                    data-dismiss="modal" onclick="loadMaterials({{ $receipt->id }})">Select</button></td>
                         </tr>
                         @endforeach
                         <!--
@@ -312,5 +319,5 @@
 </div>
 
 <script type="text/javascript">
-    $('#itemsFromReceipt').DataTable();
+    //$('#itemsFromReceipt').DataTable();
 </script>

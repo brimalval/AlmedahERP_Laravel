@@ -63,8 +63,10 @@ class PurchaseReceiptController extends Controller
 
     public function getReceivedMats($id) {
         try {
-            $received_mats = PurchaseReceipt::find($id)->receivedMats();
-            return ['received_mats' => $received_mats];
+            $receipt = PurchaseReceipt::find($id);
+            $receipt_id = $receipt->p_receipt_id;
+            $received_mats = $receipt->receivedMats();
+            return ['p_receipt_id' => $receipt_id, 'received_mats' => $received_mats];
         } catch(Exception $e) {
             return $e;
         }

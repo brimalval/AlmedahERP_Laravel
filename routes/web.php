@@ -265,6 +265,7 @@ Route::get('/loadProjectTemplate', function () {
 /**PURCHASE INVOICE ROUTES */
 Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
 Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
+Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
 
 /**PURCHASE ORDER ROUTES */
 Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
