@@ -234,6 +234,8 @@ class SalesOrderController extends Controller
             //         $mr_status = "Draft";
             //     }
             // }
+
+
             $new_component = array();
             $index = 1;
             foreach(json_decode($component, true) as $key => $c){
@@ -270,7 +272,7 @@ class SalesOrderController extends Controller
                 $work_order->save();
             }
 
-            return response($new_component);
+            return "Sucess";
 
         }catch(Exception $e){
             return $e;

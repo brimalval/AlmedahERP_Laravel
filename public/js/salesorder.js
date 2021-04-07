@@ -178,15 +178,15 @@ var ultimateComponentTable = [];
 var currentCart = [];
 
 // Adds component into a 2d array. If it is already init adds value instead
-function componentAdder(name, cat, neededVal, stockVal) {
-    if (ultimateComponentTable.length < 1) {
-        ultimateComponentTable.push([name, cat, neededVal, stockVal]);
-    } else {
-        for (let index = 0; index < ultimateComponentTable.length; index++) {
-            if (ultimateComponentTable[index][0] == name) {
-                ultimateComponentTable[index][2] += neededVal;
-            } else {
-                ultimateComponentTable.push([name, cat, neededVal, stockVal]);
+function componentAdder(name, cat, neededVal, stockVal){
+    if(ultimateComponentTable.length == 0){
+        ultimateComponentTable.push( [name, cat, neededVal, stockVal])
+    }else{
+        for(let index = 0; index<ultimateComponentTable.length; index++){
+            if(ultimateComponentTable[index][0] == name ){
+              ultimateComponentTable[index][2] += neededVal;
+            }else{
+              ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
             }
         }
     }
@@ -209,6 +209,7 @@ function changeQuantity(r) {
     index = r.parentNode.parentNode.rowIndex - 1;
     productName = currentCart[index][0];
     currentCart[index] = [productName, r.value];
+    $('#btnSalesCalculate').click();
 }
 
 //Deletes product from array
@@ -231,9 +232,7 @@ $("#btnSalesCalculate").click(function () {
     document.getElementById("costPrice").value = cost;
     document.getElementById("payment_total_amount").value = cost;
 
-    rawMaterials();
-    // components();
-    // console.log(ultimateComponentTable);
+    components();
     //@TODO use call back function here instead of timeout. Problematic if huge data is processed
     // 2ms timeout
     setTimeout(() => {
@@ -241,32 +240,6 @@ $("#btnSalesCalculate").click(function () {
     }, 2000);
     ultimateComponentTable = [];
 });
-
-function rawMaterials() {
-    for (let index = 0; index < currentCart.length; index++) {
-        name = currentCart[index][0];
-        quantity = currentCart[index][1];
-        $.ajax({
-            url: "/getRawMaterials/" + name,
-            type: "GET",
-            success: function (rawMaterials) {
-                console.log(rawMaterials);
-                for (rawMaterial of rawMaterials) {
-                    componentAdder(
-                        rawMaterial[2],
-                        rawMaterial[1],
-                        parseInt(quantity),
-                        rawMaterial[0]
-                    );
-                }
-            },
-            error: function (request, error) {
-                // alert("Request: " + JSON.stringify(request));
-            },
-        });
-    }
-    //Function here
-}
 
 function components() {
     console.log(currentCart.length);
@@ -280,12 +253,7 @@ function components() {
                 console.log(components.length);
                 for (component of components) {
                     console.log(component);
-                    componentAdder(
-                        component[2],
-                        component[1],
-                        parseInt(quantity),
-                        component[0]
-                    );
+                    componentAdder(component[2], component[1], parseInt(quantity) * parseInt(component[0]), component[3] )
                 }
             },
             error: function (request, error) {
@@ -294,17 +262,15 @@ function components() {
     }    //Function here
 }
 
-function finalizer() {
-    for (let index = 0; index < ultimateComponentTable.length; index++) {
-        component = [
-            ultimateComponentTable[index][0],
-            ultimateComponentTable[index][1],
-            ultimateComponentTable[index][2],
-        ];
-        quantity = parseInt(ultimateComponentTable[index][3]);
-
+function finalizer(){
+    $(".components tr").remove();
+    for (let index = 0; index<ultimateComponentTable.length; index++) {
+        component = [ ultimateComponentTable[index][0], ultimateComponentTable[index][1] , ultimateComponentTable[index][2], ultimateComponentTable[index][3]];
+        
         // set status of each component
-        if (component[2] == 0 && component[2] < component[2] * quantity) {
+        if (
+            component[3] <= 0 
+        ) {
             status = "Out of stock";
         } else if (
             component[3] > 0 &&
@@ -315,6 +281,7 @@ function finalizer() {
             status = "Available";
         }
 
+        
         // append each component to the components table
         $(".components").append(
             `<tr>
@@ -325,26 +292,26 @@ function finalizer() {
         </td>
         <td class="text-center">
         ` +
-                component[0] +
-                `
+            component[0] +
+            `
         </td>
         <td class="text-center">
         ` +
-                component[1] +
-                `
+            component[1] +
+            `
         </td>
         <td class="mt-available" style="text-align: center;">` +
-                component[2] +
-                `</td>
+            component[3] +
+            `</td>
         <td class="mt-needed text-center">
         ` +
-                parseInt(quantity * component[2]) +
-                `
+            component[2] +
+            `
         </td>
         <td class="mt-needed text-center">
         ` +
-                status +
-                `
+            status +
+            `
         </td>
         </tr>`
         );
