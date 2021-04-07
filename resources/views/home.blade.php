@@ -196,6 +196,10 @@
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Purchase Order</span>
                     </a>
+                    <a href="#" data-parent="buying" id="inbox-toggle"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Pending Orders</span>
+                    </a>
                     <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Purchase Invoice</span>
                     </a>

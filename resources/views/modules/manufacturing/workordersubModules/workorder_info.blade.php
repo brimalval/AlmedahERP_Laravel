@@ -2,9 +2,13 @@
 	<div class="container-fluid">
 		<h2 class="navbar-brand tab-list-title">
 			<a href='javascript:onclick=loadWorkOrder();' class="fas fa-arrow-left back-button"><span></span></a>
-			<h2 class="navbar-brand" style="font-size: 35px;">Emulsifier Component </h2>
+			{{-- dynamically changed through JS --}}
+			<h2 class="navbar-brand" id="componentName" style="font-size: 35px;"></h2>
+
 		</h2>
-		<span>Not Started</span>
+		{{-- dynamically changed through JS --}}
+		<span id="componentStatus"></span>
+
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -12,7 +16,9 @@
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item dropdown li-bom mr-2">
 				<li class="nav-item dropdown li-bom mr-2 d-flex align-items-center">
-					<p class="text-muted align-items-center">MFG-WO-2020-00003</p>
+					{{-- dynamically changed through JS --}}
+					<p id="componentPurchaseId" class="text-muted align-items-center"></p>
+
 				</li>
 				<li class="nav-item dropdown li-bom mr-2 d-flex align-items-center">
 					<a href="#" class="text-muted">
@@ -221,88 +227,9 @@
 							</td>
 						</tr>
 					</thead>
-					<tbody class="">
-						<tr>
-							<td>
-								<div class="row m-1">
-									<div class="d-flex justify-content-start">
-										<div class="form-check">
-											<input type="checkbox" class="form-check-input">
-										</div>
-										<label for="" class="ml-5">1</label>
-									</div>
-								</div>
-							</td>
-							<td>MTL-BAR-SHAFT-CRS-5/8"</td>
-							<td>Store - ALM</td>
-							<td>800</td>
-							<td>0</td>
-							<td>0</td>
-							<td style="padding: 1%;" class="h-100">
-								<div class="input-group mb-3">
-									<select class="custom-select border-0" id="inputGroupSelect02">
-										<option selected> </option>
-										<option value="1"> </option>
-										<option value="2"> </option>
-										<option value="3"> </option>
-									</select>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="row m-1">
-									<div class="d-flex justify-content-start">
-										<div class="form-check">
-											<input type="checkbox" class="form-check-input">
-										</div>
-										<label for="" class="ml-5">2</label>
-									</div>
-								</div>
-							</td>
-							<td>MTL-BAR-SHAFT-CRS-3/4"</td>
-							<td>Store - ALM</td>
-							<td>200</td>
-							<td>0</td>
-							<td>0</td>
-							<td style="padding: 1%;" class="h-100">
-								<div class="input-group mb-3">
-									<select class="custom-select border-0" id="inputGroupSelect02">
-										<option selected> </option>
-										<option value="1"> </option>
-										<option value="2"> </option>
-										<option value="3"> </option>
-									</select>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="row m-1">
-									<div class="d-flex justify-content-start">
-										<div class="form-check">
-											<input type="checkbox" class="form-check-input">
-										</div>
-										<label for="" class="ml-5">3</label>
-									</div>
-								</div>
-							</td>
-							<td>MTL-BAR-SHAFT-CRS-5"</td>
-							<td>Store - ALM</td>
-							<td>382.500</td>
-							<td>0</td>
-							<td>0</td>
-							<td style="padding: 1%;" class="h-100 ">
-								<div class="input-group mb-3">
-									<select class="custom-select border-0" id="inputGroupSelect02">
-										<option selected> </option>
-										<option value="1"> </option>
-										<option value="2"> </option>
-										<option value="3"> </option>
-									</select>
-								</div>
-							</td>
-						</tr>
+					{{-- dynamically changed through JS --}}
+					<tbody class="" id="requiredItems">
+						
 					</tbody>
 				</table>
 			</div>
@@ -312,11 +239,21 @@
 		<h5 class="text-muted">TIME</h5>
 		<div class="row">
 			<div class="col-6">
-				<label for="" class="text-muted">Planned Start</label>
+				<label for="" class="text-muted">Planned Start Date</label>
 				<input type="text" class="form-control" disabled="true">
 			</div>
 			<div class="col-6">
-				<label for="" class="text-muted">Expected Delivery Date</label>
+				<label for="" class="text-muted">Actual Start Date</label>
+				<input type="text" class="form-control" disabled="true">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-6">
+				<label for="" class="text-muted">Planned End Date</label>
+				<input type="text" class="form-control" disabled="true">
+			</div>
+			<div class="col-6">
+				<label for="" class="text-muted">Actual End Date</label>
 				<input type="text" class="form-control" disabled="true">
 			</div>
 		</div>

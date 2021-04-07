@@ -20,7 +20,7 @@ class CreateComponentsTable extends Migration
             $table->text('component_image');
             $table->string('component_description');
             $table->string('item_code');
-            $table->foreign('item_code')->references('item_code')->on('env_raw_materials');
+            // $table->foreign('item_code')->references('item_code')->on('env_raw_materials');
             $table->timestamps();
         });
     }

@@ -17,7 +17,8 @@ class MaterialPurchased extends Model
         'supp_quotation_id',
         'items_list_purchased',
         'purchase_date',
-        'mp_status'
+        'mp_status',
+        'total_cost'
     ];
 
     protected $casts = [
@@ -46,9 +47,7 @@ class MaterialPurchased extends Model
         return $items_purchased_array;
     }
 
-    public function getSupplierQuotation() {
-        return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
-    }
-
-
+    // public function getSupplierQuotation() {
+    //     return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
+    // }
 }

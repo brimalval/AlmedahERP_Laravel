@@ -74,14 +74,14 @@
                 </tr>
             </thead>
             <tbody class="">
-            @foreach($work_orders as $work_order)
+            @foreach($work_orders as $index => $work_order)
                 <tr>
                     <td>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="Emulsifier Component 1" href='javascript:onclick=loadWorkOrderInfo();'>Emulsifier Component 1</a></td>
+                    <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $items[$index] }}`)'> {{ $items[$index] }} </a></td>
                     <td>{{ $work_order->work_order_status }}</td>
                     <td class="text-black-50">{{ $work_order->purchase_id }}</td>
                     <td class="text-black-50">{{ $work_order->product_code }}</td>
@@ -89,21 +89,6 @@
                     <td><span class="fas fa-comments"></span>0</td>
                 </tr>
             @endforeach
-            <!--
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a name="Emulsifier Component 2" href='javascript:onclick=loadWorkOrderInfo();'>Emulsifier Component 2</a></td>
-                    <td>Not Started</td>
-                    <td class="text-black-50">IFG-WO-2020-00003</td>
-                    <td class="text-black-50">Emulsifier B</td>
-                    <td><input type="checkbox"></td>
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-            -->
             </tbody>
         </table>
     </div>
@@ -119,3 +104,10 @@
         </div>
     </div>
 </div>
+
+<script>
+    function workOrderInfo(workOrderDetails, itemName){
+        console.log(workOrderDetails);
+        loadWorkOrderInfo(workOrderDetails, itemName);
+    }
+</script>

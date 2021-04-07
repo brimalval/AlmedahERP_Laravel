@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemGroup;
 use App\Models\ManufacturingMaterials;
 use App\Models\UnitOfMeasurement;
+use App\Models\Component;
 use \App\Models\ManufacturingProducts;
 use \App\Models\ProductAttribute;
 use \App\Models\ProductVariantWithValue;
@@ -21,12 +22,14 @@ class ProductsController extends Controller
         $man_products = ManufacturingProducts::get();
         $item_groups = ItemGroup::all();
         $raw_mats = ManufacturingMaterials::where('rm_status', 'Available')->get();
+        $components = Component::all();
         $product_units = UnitOfMeasurement::all();
         $product_variants = ProductAttribute::all();
         return view('modules.manufacturing.item', [
             "man_products"=>$man_products,
             "item_groups"=>$item_groups,
             "raw_mats"=>$raw_mats,
+            "components"=>$components,
             "product_units"=>$product_units,
             "product_variants"=>$product_variants,
         ]);
@@ -88,8 +91,7 @@ class ProductsController extends Controller
             $data->bar_code = $form_data['bar_code'];
             $data->internal_description = $form_data['internal_description'];
             $data->materials = $form_data['materials'];
-            // UN-COMMENT THIS WHEN COMPONENTS CAN BE ADDED TO PRODUCTS
-            // $data->components = $form_data['components'];
+            $data->components = $form_data['components'];
             $data->picture = json_encode($imagePath);
             $data->product_category = (isset($form_data['product_category'])) ? $form_data['product_category'] : null;
             $data->product_name = $form_data['product_name'];
