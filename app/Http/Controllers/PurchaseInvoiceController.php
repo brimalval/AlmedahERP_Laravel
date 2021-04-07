@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MaterialPurchased;
 use App\Models\PurchaseInvoice;
+use App\Models\PurchaseReceipt;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
@@ -17,7 +18,7 @@ class PurchaseInvoiceController extends Controller
     }
 
     public function openInvoiceForm() {
-        //also add purchase receipts when created
-        return view('modules.buying.newPurchaseInvoice');
+        $receipts = PurchaseReceipt::where('pr_status', 'To Bill')->get();
+        return view('modules.buying.newPurchaseInvoice', ['receipts' => $receipts]);
     }
 }

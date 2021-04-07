@@ -1,17 +1,36 @@
 <?php
 $today = date('Y-m-d');
+$i = 1;
 ?>
 
 <script src="{{ asset('js/new-purchase-receipt.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        let total_price = 0;
+        let total_qty = 0;
+        for (let i = 1; i <= $('#itemsToReceive tr').length; i++) {
+            total_qty += parseInt($(`#qtyAcc${i}`).val());
+            total_price += parseFloat($(`#amtAcc${i}`).val());
+        }
+        $('#receiveQty').val(total_qty);
+        $('#receivePrice').val(total_price);
+    });
+
+</script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
-            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Receipt #</h2>
+            <a href='javascript:onclick=loadPurchaseReceipt();' class="fas fa-arrow-left back-button"><span></span></a>
+            <h2 class="navbar-brand" style="font-size: 35px;">Receipt <span
+                    id="pr_id">{{ $receipt->p_receipt_id }}</span></h2>
+            <br>
+            <p id="recStatus">{{ $receipt->pr_status }}</p>
         </h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        @if($receipt->pr_status === 'Draft')
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
@@ -19,16 +38,18 @@ $today = date('Y-m-d');
                         onclick="loadPurchaseReceipt();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" id="saveReceipt" class="btn btn-primary" data-target="#saveSale">
-                        Save
+                    <button type="button" id="submitReceipt" class="btn btn-primary" data-target="#saveSale">
+                        Submit
                     </button>
                 </li>
             </ul>
         </div>
+        @endif
     </div>
 </nav>
 <div class="accordion" id="accordion">
     <div class="card">
+        @if($receipt->pr_status === "Draft")
         <div class="card-header" id="heading1">
             <h2 class="mb-0">
                 <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
@@ -37,11 +58,12 @@ $today = date('Y-m-d');
                 </button>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenunpr">
-                    <a class="dropdown-item" href="#" data-toggle="modal"
-                        data-target="#npr_purchaseOrderModal">Purchase Order</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#npr_purchaseOrderModal">Purchase
+                        Order</a>
                 </div>
             </h2>
         </div>
+        @endif
         <div class="collapse show" id="salesOrderCard1">
             <div class="card-body">
                 <form action="" id="" method="POST">
@@ -53,7 +75,8 @@ $today = date('Y-m-d');
                                 Series
                             </label>
                             <div class="d-flex">
-                                <input type="text" class="form-input form-control" max="6" value="PR-00X" disabled>
+                                <input type="text" class="form-input form-control" id="receiptId" max="6"
+                                    value={{ $receipt->p_receipt_id }} readonly>
                             </div>
                             <br>
                             <label class=" text-nowrap align-middle">
@@ -61,35 +84,16 @@ $today = date('Y-m-d');
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
-                            <input type="text" required class="form-input form-control" hidden id="orderId">
+                            <input type="text" required class="form-input form-control" hidden id="orderId" value="{{ $receipt->purchase_id }}">
                         </div>
                         <div class="col">
                             <br>
                             <label class="text-nowrap align-middle">
                                 Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npr_date" readonly value=<?php echo $today;?>>
+                            <input type="date" required class="form-input form-control" id="npr_date" readonly
+                                value={{ $receipt->date_created }}>
                             <br>
-                            <!--
-                            <label class=" text-nowrap align-middle">
-                                Posting Time
-                            </label>
-                            <input type="text" required class="form-input form-control" id="npr_postingT" disabled>
-                            <br>
-                        
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="npr_editpdt">
-                                #More concise form of enableDisable function from front-end
-                                <script type="text/javascript">
-                                    $("#npr_editpdt").change(function () { 
-                                        let bEnable = $(this).prop('checked');
-                                        $('#npr_date').prop('disabled', !bEnable);
-                                        $('#npr_postingT').prop('disabled', !bEnable);
-                                    });
-                                </script>
-                            </div>
-                        
-                            <label for="" class="form-check-label ml-4">Edit Posting Date and Time</label>-->
                         </div>
                     </div>
                 </form>
@@ -153,7 +157,7 @@ $today = date('Y-m-d');
                                 <tr class="text-muted">
                                     <td>
                                         <div class="form-check">
-                                            <input type="checkbox" id="mainChk" class="form-check-input" disabled>
+                                            <input type="checkbox" id="mainChk" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif class="form-check-input">
                                         </div>
                                     </td>
                                     <td>Item</td>
@@ -163,11 +167,28 @@ $today = date('Y-m-d');
                                 </tr>
                             </thead>
                             <tbody class="" id="itemsToReceive">
-                                <tr id='nullRow'>
-                                    <td colspan="7" style="text-align: center;">
-                                        NO DATA
+                                @foreach ($materials as $material)
+                                    <tr id="row-<?= $i ?>">
+                                    <td>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="item-chk" id="chk<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif class="form-check-input">
+                                        </div>
                                     </td>
+                                    <td class="text-black-50">
+                                        <input class="form-control" type="text" id="item_code<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif value={{ $material['item_code'] }}>
+                                    </td>
+                                    <td class="text-black-50">
+                                        <input class="form-control" id="qtyAcc<?= $i ?>" type="number" @if ($receipt->pr_status === 'Draft') onchange="calcPrice(<?= $i ?>); onChangeFunction();" @else disabled @endif min="0" value={{ $material['qty'] }}>
+                                    </td> 
+                                    <td class="text-black-50">
+                                        <input class="form-control" id="rateAcc<?= $i ?>" type="text" @if ($receipt->pr_status === 'Draft') readonly onchange="calcPrice(<?= $i ?>); onChangeFunction();" @else disabled @endif min="0" value={{ $material['rate'] }}>
+                                    </td> 
+                                    <td class="text-black-50">
+                                        <input class="form-control" id="amtAcc<?= $i ?>" type="text" @if ($receipt->pr_status === 'Draft') readonly onchange="onChangeFunction();" @else disabled @endif min="0" value={{ $material['amount'] }}>
+                                    </td> 
                                 </tr>
+                                <?php ++$i; ?>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -290,4 +311,3 @@ $today = date('Y-m-d');
         </div>
     </div>
 </div>
-

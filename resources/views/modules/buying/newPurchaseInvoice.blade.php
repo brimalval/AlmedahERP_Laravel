@@ -56,12 +56,6 @@
                             </label>
                             <input type="text" required class="form-input form-control" id="">
                             <br>
-                            <div id="npi_duedate">
-                                <label id="" class=" text-nowrap align-middle">
-                                    Due Date
-                                </label>
-                                <input type="date" required class="form-input form-control" id="">
-                            </div>
                         </div>
                         <div class="col">
                             <br>
@@ -70,23 +64,10 @@
                             </label>
                             <input type="date" required class="form-input form-control" id="npi_date" disabled>
                             <br>
-                            <label class=" text-nowrap align-middle">
-                                Posting Time
+                            <label id="" class=" text-nowrap align-middle">
+                                Due Date
                             </label>
-                            <input type="text" required class="form-input form-control" id="npi_postingT" disabled>
-                            <br>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="npi_editpdt">
-                                <!--More concise form of enableDisable function from front-end-->
-                                <script type="text/javascript">
-                                    $("#npi_editpdt").change(function () { 
-                                        let bEnable = $(this).prop('checked');
-                                        $('#npi_date').prop('disabled', !bEnable);
-                                        $('#npi_postingT').prop('disabled', !bEnable);
-                                    });
-                                </script>
-                            </div>
-                            <label for="" class="form-check-label ml-4">Edit Posting Date and Time</label>
+                            <input type="date" required class="form-input form-control" id="">
                         </div>
                     </div>
                 </form>
@@ -175,9 +156,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <script type="text/javascript">
-                            $('#itemsFromReceipt').DataTable();
-                        </script>
                     </div>
                 </div>
             </div>
@@ -244,7 +222,7 @@
 <!-- Modal Purchase Receipt-->
 <div class="modal fade" id="npi_purchaseReceiptModal" tabindex="-1" role="dialog"
     aria-labelledby="npi_purchaseReceiptModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Purchase Receipt</h5>
@@ -265,7 +243,19 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @foreach ($receipts as $receipt)
+                        <tr>
+                            <td class="text-bold">{{ $receipt->p_receipt_id }}</td>
+                            <td>{{ $receipt->date_created }}</td>
+                            <td>{{ $receipt->purchase_id }}</td>
+                            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
+                                    data-toggle="modal">View</button></td>
+                            <td class="price">{{ $receipt->grand_total }}</td>
+                            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
+                                    data-dismiss="modal">Select</button></td>
+                        </tr>
+                        @endforeach
+                        <!--
                         <tr>
                             <td class="text-bold">PR-001</td>
                             <td>3/31/2021</td>
@@ -275,7 +265,7 @@
                             <td>P10,000</td>
                             <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                     data-dismiss="modal">Select</button></td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>
@@ -320,3 +310,7 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('#itemsFromReceipt').DataTable();
+</script>
