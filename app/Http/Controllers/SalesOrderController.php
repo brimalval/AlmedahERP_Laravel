@@ -54,7 +54,7 @@ class SalesOrderController extends Controller
             $raw_material_quantity = $raw_material->rm_quantity;
             $category = MaterialCategory::where('id', $raw_material_category_id)->first();
             $raw_material_category = $category->category_title;
-            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name]);
+            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
         }
         return response($materials);
     }

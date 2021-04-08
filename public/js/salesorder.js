@@ -763,7 +763,7 @@ $("#btnSalesCalculate").click(function () {
     document.getElementById("costPrice").value = cost;
     document.getElementById("payment_total_amount").value = cost;
     rawMaterials();
-    // components();
+    components();
     //@TODO use call back function here instead of timeout. Problematic if huge data is processed
     // 2ms timeout
     setTimeout(() => {
@@ -780,15 +780,19 @@ function rawMaterials() {
             url: "/getRawMaterials/" + name,
             type: "GET",
             success: function (rawMaterials) {
+                console.log(rawMaterials);
                 for (rawMaterial of rawMaterials) {
                     componentAdder(
                         rawMaterial[2],
                         rawMaterial[1],
-                        parseInt(quantity),
-                        rawMaterial[0]
+                        parseInt(quantity) * parseInt(rawMaterial[0]),
+                        rawMaterial[3]
                     );
+                    console.log(
+                        "qqq" + parseInt(quantity) * parseInt(rawMaterial[0])
+                    );
+                    console.log(ultimateComponentTable);
                 }
-                console.log(ultimateComponentTable);
             },
             error: function (request, error) {
                 // alert("Request: " + JSON.stringify(request));
@@ -798,30 +802,30 @@ function rawMaterials() {
     //Function here
 }
 
-// function components() {
-//     console.log(currentCart.length);
-//     for (let index = 0; index < currentCart.length; index++) {
-//         name = currentCart[index][0];
-//         quantity = currentCart[index][1];
-//         $.ajax({
-//             url: "/getComponents/" + name,
-//             type: "GET",
-//             success: function (components) {
-//                 console.log(components.length);
-//                 for (component of components) {
-//                     console.log(component);
-//                     componentAdder(
-//                         component[2],
-//                         component[1],
-//                         parseInt(quantity) * parseInt(component[0]),
-//                         component[3]
-//                     );
-//                 }
-//             },
-//             error: function (request, error) {},
-//         });
-//     } //Function here
-// }
+function components() {
+    console.log(currentCart.length);
+    for (let index = 0; index < currentCart.length; index++) {
+        name = currentCart[index][0];
+        quantity = currentCart[index][1];
+        $.ajax({
+            url: "/getComponents/" + name,
+            type: "GET",
+            success: function (components) {
+                console.log(components);
+                for (component of components) {
+                    console.log(component);
+                    componentAdder(
+                        component[2],
+                        component[1],
+                        parseInt(quantity) * parseInt(component[0]),
+                        component[3]
+                    );
+                }
+            },
+            error: function (request, error) {},
+        });
+    } //Function here
+}
 
 function finalizer() {
     $("#create-material-req-btn").html("");
@@ -834,7 +838,7 @@ function finalizer() {
             ultimateComponentTable[index][2],
             ultimateComponentTable[index][3],
         ];
-
+        console.log("ccc" + component);
         // set status of each component
         if (component[3] <= 0) {
             status = "Out of stock";
