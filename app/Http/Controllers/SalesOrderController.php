@@ -287,7 +287,7 @@ class SalesOrderController extends Controller
             // }
 
             //return "Sucess";
-            return response($new_component);
+            return response("Sucess");
 
         }catch(Exception $e){
             return $e;

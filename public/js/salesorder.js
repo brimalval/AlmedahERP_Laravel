@@ -717,14 +717,29 @@ function componentAdder(name, cat, neededVal, stockVal){
         ultimateComponentTable.push( [name, cat, neededVal, stockVal])
     }else{
         for(let index = 0; index<ultimateComponentTable.length; index++){
-            if(ultimateComponentTable[index][0] == name ){
+            if(contains(name, ultimateComponentTable)){
               ultimateComponentTable[index][2] += neededVal;
             }else{
               ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
               console.log(name);
             }
         }
+
     }
+}
+
+function contains( names , arr){
+    namelist = [];
+    for (let index = 0; index < arr.length; index++) {
+        namelist.push( arr[index][0]);
+    }
+
+    for (let index = 0; index < arr.length; index++) {
+        if(namelist[index] == names){
+            return true;
+        }
+    }
+    return false;
 }
 
 //Adds product to array
