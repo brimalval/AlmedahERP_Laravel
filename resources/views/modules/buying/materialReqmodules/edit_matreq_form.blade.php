@@ -1,9 +1,33 @@
 <script src="{{ asset('js/materialrequest.js') }}"></script>
+@if (!$editable)
+  <script>
+    $(document).ready(function(){
+      $('input').each(function(){
+        $(this).attr('readonly', true);
+      });
+      $('select').each(function(){
+        $(this).attr('disabled', true);
+      });
+      $('button').each(function(){
+        $(this).attr('onclick', false);
+      });
+    });
+  </script>
+@endif
+@if ($full_page)
+    <h2 class="navbar-brand tab-list-title">
+        <a href="#" onclick="loadIntoPage(this, '{{ route('materialrequest.index') }}')"
+            class="fas fa-arrow-left back-button"><span></span></a>
+        <h2 class="navbar-brand" style="font-size: 35px;">{{ $materialRequest->request_id }}</h2>
+    </h2>
+@endif
 <form id="mr-submit" action="{{ route('materialrequest.submit', ['materialrequest'=>$materialRequest->id]) }}" method="post">
   @csrf
-  <button class="btn btn-primary btn-sm ml-4" href="#" role="button">
-    Submit
-  </button>
+  @if ($materialRequest->mr_status == "Draft")
+    <button class="btn btn-primary btn-sm ml-4" href="#" role="button">
+      Submit
+    </button>
+  @endif
 </form>
 <form  id="mat-req" class="update" action="{{ route('materialrequest.update', ['materialrequest' => $materialRequest->id]) }}">
 @csrf
@@ -121,7 +145,7 @@
               </table>
               </div>
               <td colspan="7" rowspan="5">
-                <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                <button type="button" @if($editable) onclick="addRow()" @endif class="btn btn-sm btn-sm btn-secondary">Add Row</button>
               </td>
         </div>
         <!--end contents-->
@@ -239,5 +263,5 @@
 
 </div>
 </form>
-@include('modules.buying.materialReqmodules.selectpickers');
+@include('modules.buying.materialReqmodules.selectpickers')
 @include('modules.buying.materialReqmodules.edit_item_modal')

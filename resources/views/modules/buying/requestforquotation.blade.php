@@ -83,13 +83,15 @@
                     {{ $rfquotation->date_created->shortRelativeDiffForHumans() }}
                 </td>
                 <td>
-                    <form action="{{ route('rfquotation.destroy', ['rfquotation' => $rfquotation->id]) }}" method="POST" class="mr-delete-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure? you want to delete this request?')">
-                            <i class="fa fa-minus" aria-hidden="true"></i>
-                        </button>   
-                    </form>
+                    @if ($rfquotation->req_status == "Draft")
+                        <form action="{{ route('rfquotation.destroy', ['rfquotation' => $rfquotation->id]) }}" method="POST" class="mr-delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure? you want to delete this request?')">
+                                <i class="fa fa-minus" aria-hidden="true"></i>
+                            </button>   
+                        </form>
+                    @endif
                 </td>
             </tr>
         @empty

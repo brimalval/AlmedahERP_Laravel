@@ -53,7 +53,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td class="mr-request-id"><a name="{{ $mat_request->request_id }}" href='javascript:onclick=openMaterialRequestInfo();'>{{ $mat_request->request_id }}</a></td>
+                    <td class="mr-request-id"><a name="{{ $mat_request->request_id }}" href='#' onclick="loadIntoPage(this, '{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id'], 'full_page' => true]) }}')">{{ $mat_request->request_id }}</a></td>
                     <?php
                         if($mat_request->mr_status == "Draft"){
                             $color = "orange";
@@ -71,12 +71,12 @@
                     <td>
                     @if ($mat_request->mr_status == 'Draft')
                         <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
+                        <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="mr-delete-btn btn btn-outline-danger" onclick="return confirm('Are you sure? you want to delete this request?')"><i class="fa fa-trash"></i></button>
+                        </form>
                     @endif
-                    <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="mr-delete-btn btn btn-outline-danger" onclick="return confirm('Are you sure? you want to delete this request?')"><i class="fa fa-trash"></i></button>
-                    </form>
                     
                     
                     </td>
