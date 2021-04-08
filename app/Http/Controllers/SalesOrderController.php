@@ -51,9 +51,10 @@ class SalesOrderController extends Controller
             $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
             $raw_material_name = $raw_material->item_name;
             $raw_material_category_id = $raw_material->category_id;
+            $raw_material_quantity = $raw_material->rm_quantity;
             $category = MaterialCategory::where('id', $raw_material_category_id)->first();
             $raw_material_category = $category->category_title;
-            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name]);
+            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
         }
         return response($materials);
     }
@@ -234,45 +235,45 @@ class SalesOrderController extends Controller
             //         $mr_status = "Draft";
             //     }
             // }
+            
+            // $new_component = array();
+            // $index = 1;
+            // foreach(json_decode($component, true) as $key => $c){
+            //     if($c[$index] == 'Component'){
+            //         array_push($new_component, $c);
+            //     }
+            // }
 
+            // foreach ($cart as $row){        
+            //     $material_purchased = new MaterialPurchased();
+            //     $material_purchased->supp_quotation_id = generateRandomString();
+            //     $material_purchased->purchase_id = generateRandomString();
+            //     $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
+            //     $material_purchased->mp_status = "ExStatus";   
+            //     $material_purchased->items_list_purchased = json_encode($new_component);   
+            //     $material_purchased->save();
 
-            $new_component = array();
-            $index = 1;
-            foreach(json_decode($component, true) as $key => $c){
-                if($c[$index] == 'Component'){
-                    array_push($new_component, $c);
-                }
-            }
+            //     $order = new ordered_products();
+            //     $order->sales_id = $data->id;
+            //     $order->product_code = $row[0];
+            //     $order->quantity_purchased = $row[1];
+            //     $order->save();
+            // }
 
-            foreach ($cart as $row){        
-                $material_purchased = new MaterialPurchased();
-                $material_purchased->supp_quotation_id = generateRandomString();
-                $material_purchased->purchase_id = generateRandomString();
-                $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
-                $material_purchased->mp_status = "ExStatus";   
-                $material_purchased->items_list_purchased = json_encode($new_component);   
-                $material_purchased->save();
+            // foreach($new_component as $c){
+            //     $work_order = new WorkOrder();
+            //     $work_order->purchase_id = $material_purchased->purchase_id;
+            //     $work_order->sales_id = $data->id;
+            //     $work_order->planned_start_date = null;
+            //     $work_order->planned_end_date = null;
+            //     $work_order->real_start_date = null;
+            //     $work_order->real_end_date = null;
+            //     $work_order->work_order_status = "Not Started";
+            //     $work_order->save();
+            // }
 
-                $order = new ordered_products();
-                $order->sales_id = $data->id;
-                $order->product_code = $row[0];
-                $order->quantity_purchased = $row[1];
-                $order->save();
-            }
-
-            foreach($new_component as $c){
-                $work_order = new WorkOrder();
-                $work_order->purchase_id = $material_purchased->purchase_id;
-                $work_order->sales_id = $data->id;
-                $work_order->planned_start_date = null;
-                $work_order->planned_end_date = null;
-                $work_order->real_start_date = null;
-                $work_order->real_end_date = null;
-                $work_order->work_order_status = "Not Started";
-                $work_order->save();
-            }
-
-            return "Sucess";
+            //return "Sucess";
+            return response($new_component);
 
         }catch(Exception $e){
             return $e;

@@ -390,7 +390,11 @@
                                                     <!--Components Body -->
                                                     
                                                 </tbody>
+                                                
                                             </table>
+                                            <div id="create-material-req-btn">
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
