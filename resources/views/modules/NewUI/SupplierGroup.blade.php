@@ -12,36 +12,50 @@
                         Menu
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Option 1</a></li>
-                        <li><a class="dropdown-item" href="#">Option 2</a></li>
+                        <li><a class="dropdown-item" href="#">Import</a></li>
+                        <li><a class="dropdown-item" href="#">User Permissions</a></li>
+                        <li><a class="dropdown-item" href="#">Role Permissions Manager</a></li>
+                        <li><a class="dropdown-item" href="#">Customize</a></li>
+                        <li><a class="dropdown-item" href="#">Toggle Sidebar</a></li>
+                        <li><a class="dropdown-item" href="#">Share URL</a></li>
+                        <li><a class="dropdown-item" href="#">User Permissions</a></li>
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadShippingInfo();">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadSupplierGroup();">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick='openNewShippingRule();' style="float: left;">New</button>
+                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="openSupplierGroup();" style="float: left;">New</button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+<div class="card">
 <br>
 <div class="container">
-<table id="ShippingRuleTable" class="table table-striped table-bordered" style="width:100%">
+<table id="SupplierGroupTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
+                <th><input type="checkbox"></th>
                 <th>Name</th>
-                <th>Status</th>
-                <th>Calculate Based On</th>
-
+                <th>Parent Supplier Group</th>
+                <th>Is group</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-
+            <tr>
+                <td></td>
+                <td><a href="javascript:onclick=openSupplierGrouptable()">Sample 1</a></td>
+                <td>All Supplier Groups</td>
+                <td><input type="checkbox"></td>
+                <td>Distributor</td>
+            </tr>
         </tbody>
     </table>
 
+</div>
 </div>
 <style>
     .conContent {
@@ -51,6 +65,6 @@
 
 <script>
 $(document).ready(function() {
-    $('#ShippingRuleTable').DataTable();
+    $('#SupplierGroupTable').DataTable();
 } );
 </script>

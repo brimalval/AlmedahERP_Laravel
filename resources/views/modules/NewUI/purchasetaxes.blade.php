@@ -35,11 +35,16 @@
                 <th>Status</th>
                 <th>Default</th>
                 <th>Disabled</th>
-
             </tr>
         </thead>
-        <tbody>
 
+        <tbody>
+            <tr>
+            <td><a href="javascript:onclick=openNewPurchaseTaxes();">Value 1</a></td>
+            <td>Status 1</td>
+            <td><input type="checkbox"></td>
+            <td><input type="checkbox"></td>
+            </tr>
         </tbody>
     </table>
 

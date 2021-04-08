@@ -44,19 +44,11 @@ Route::get('/dashboard', function () {
     return view('modules.dashboard');
 });
 
-Route::get('/purchasetaxes', function() {
-    return view('modules.NewUI.PurchaseTaxes');
-});
 Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
-/**NEW USER INTERFACE*/
-Route::get('/shippingrule', function() {
-    return view('modules.NewUI.ShippingRule');
-});
-Route::get('/shippingruleinfo', function() {
-    return view('modules.NewUI.ShippingRuleInfo');
-});
+
+/*PURCHASE TAXES*/
 Route::get('/purchasetaxes', function() {
     return view('modules.NewUI.purchasetaxes');
 });
@@ -64,7 +56,7 @@ Route::get('/purchasetaxesinfo', function() {
     return view('modules.NewUI.purchasetaxesinfo');
 });
 
-/**NEW USER INTERFACE*/
+/*SHIPPING RULE*/
 Route::get('/shippingrule', function() {
     return view('modules.NewUI.ShippingRule');
 });
@@ -73,16 +65,72 @@ Route::get('/shippingruleinfo', function() {
     return view('modules.NewUI.ShippingRuleInfo');
 });
 
-Route::get('/suppliergroup', function() {
-    return view('modules.NewUI.SupplierGroup');
+/*PRICING RULE*/
+Route::get('/pricingrule', function() {
+    return view('modules.NewUI.PricingRule');
 });
 
+Route::get('/PricingRuleInfo', function() {
+    return view('modules.NewUI.PricingRuleInfo');
+});
+/*SALES TAXES*/
 Route::get('/salestaxes', function() {
     return view('modules.NewUI.SalesTaxes');
 });
 
-Route::get('/NewSalesTaxes', function() {
+Route::get('/newsalestaxes', function() {
     return view('modules.NewUI.NewSalesTaxes');
+});
+/*SUPPLIER GROUP*/
+Route::get('/newsuppliergroup', function() {
+    return view('modules.NewUI.NewSupplierGroup');
+});
+Route::get('/suppliergroup', function() {
+    return view('modules.NewUI.SupplierGroup');
+});
+Route::get('/newsuppliergrouptable', function() {
+    return view('modules.NewUI.NewSupplierGrpTable');
+});
+
+Route::get('/newsuppliergrouptable', function() {
+    return view('modules.NewUI.NewSupplierGrpTable');
+});
+
+/*PRODUCT BUNDLE ROUTES */
+Route::get('/productbundle', function() {
+    return view('modules.NewUI.productbundle');
+});
+Route::get('/newproductbundle', function() {
+    return view('modules.NewUI.newproductbundle');
+});
+Route::get('/openProductBundleInfo', function() {
+    return view('modules.NewUI.productBundleInfo');
+});
+
+/*ADDRESS ROUTES */
+
+Route::get('/address', function() {
+    return view('modules.NewUI.address');
+});
+Route::get('/openAddressInfo', function() {
+    return view('modules.NewUI.addressInfo');
+});
+Route::get('/newAddress', function() {
+    return view('modules.NewUI.newAddress');
+});
+Route::get('/address', function() {
+    return view('modules.NewUI.address');
+});
+
+/**COUPON CODE ROUTES */
+Route::get('/couponcode', function() {
+    return view('modules.NewUI.couponcode');
+});
+Route::get('/newCouponCode', function() {
+    return view('modules.NewUI.newCouponCode');
+});
+Route::get('/openCouponInfo', function() {
+    return view('modules.NewUI.couponInfo');
 });
 
 /**BOM ROUTES */

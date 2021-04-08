@@ -33,19 +33,29 @@
 </nav>
 <br>
 <div class="container">
-<table id="ShippingRuleTable" class="table table-striped table-bordered" style="width:100%">
+<table id="SalesTaxesTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
+                <th><input type="checkbox"></th>
                 <th>Name</th>
                 <th>Status</th>
                 <th>Default</th>
                 <th>Company</th>
                 <th></th>
+                <th></th>
 
             </tr>
         </thead>
         <tbody>
-
+            <tr>
+                <td></td>
+                <td><a href="javascript:onclick=openNewSalesTaxes()">Sample 1</a></td>
+                <td>Enabled</td>
+                <td><input type="checkbox"></td>
+                <td>Almedah Food Equipments</td>
+                <td>Philippine Tax - ALM</td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 
@@ -58,6 +68,6 @@
 
 <script>
 $(document).ready(function() {
-    $('#ShippingRuleTable').DataTable();
+    $('#SalesTaxesTable').DataTable();
 } );
 </script>

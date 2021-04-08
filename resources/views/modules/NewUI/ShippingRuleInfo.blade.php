@@ -125,8 +125,9 @@
               <td colspan="7" rowspan="5">
 
                 <button type="button" onclick="addRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-
+                <br>
               </td>
+             
         </div>
         <br>
     </div>

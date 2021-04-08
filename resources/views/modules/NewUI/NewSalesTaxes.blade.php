@@ -24,15 +24,15 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label for="supplier">Supplier</label>
-                    <input type="text" name="supplier" class="form-control">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" class="form-control">
                 </div>
             </div>
 
             <div class="col-6">
                 <div class="form-group">
-                    <label for="supplier">Company</label>
-                    <input type="text" name="supplier" class="form-control" value="Almedah Food Equipments">
+                    <label for="taxCategory">Tax Category</label>
+                    <input type="text" name="taxCategory" class="form-control">
                 </div>
             </div>
 
@@ -43,15 +43,8 @@
                     <input type="checkbox"> Disabled
             </div>
 
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="supplier">Tax Category</label>
-                    <input type="text" name="supplier" class="form-control">
-                </div>
-            </div>
-
             <div class="col-12">
-                <hr>
+                <br><hr><br>
             </div>
             
             <br>
@@ -69,7 +62,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label for="salestaxesandcharges">Sales Taxes and Charges</label>
-                    <table id="salestaxes" class="table table-striped table-bordered" style="width:100%">
+                    <table id="salestaxesandcharges" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
                                 <th><input type="checkbox"></th>
@@ -90,7 +83,7 @@
                 </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
-                            <button type="button" onclick="addSaleTaxRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+                            <button type="button" onclick="addSalesTaxRow()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
                     </td>
                 </div>
             </div>
@@ -99,3 +92,86 @@
 </div>
 </div>
 <script src="{{ asset('js/saletaxes.js') }}"></script>
+
+<!-- Modal -->
+<div class="modal fade" id="editSalesTaxesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editing Row #1</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="container">
+            <form id="newsalestaxesForm" name="newsalestaxesForm" role="form">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="type">Type</label>
+                    <select class="form-control">
+                        <option></option>
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="accountHead">Account Head</label>
+                    <input type="text" name="accountHead" class="form-control">
+                  </div>
+                </div>
+
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" name="description" class="form-control" style="width:410px;height:200px;">
+                  </div>
+                  <input type="checkbox"> Is this Tax included in Basic Rate?
+                  <p>If checked, the tax amount will be considered as already included in the Print Rate / Print Amount</p>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group">
+                    <br><hr><br>
+                  </div>
+                </div>
+
+                <div class="col-6">
+                    <label>ACCOUNTING DIMENSIONS</label>
+                </div>
+
+                <div class="col-6">
+                  <br>
+                </div>
+                
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="costCenter">Cost Center</label>
+                    <input type="text" name="costCenter" class="form-control">
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <br><hr><br>
+                </div>
+
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="rate">Rate</label>
+                    <input type="text" name="rate" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
