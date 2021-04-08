@@ -267,6 +267,8 @@ Route::get('/loadProjectTemplate', function () {
 Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
 Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
 Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
+Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
+Route::post('/pay-invoice/{receipt_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 
 /**PURCHASE ORDER ROUTES */
 Route::get('/purchaseorder', [MaterialsPurchasedController::class, 'index']);
@@ -339,6 +341,7 @@ Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
 Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
+
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');
@@ -377,6 +380,7 @@ Route::get('/createnewsupplier', function () {
 
 /**SUPPLIER QUOTATION ROUTES */
 Route::resource('/supplierquotation', SupplierQuotationController::class);
+Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
 Route::get('/load-supplier', function () {
     return view('modules.buying.supplierQuotation1');
 });

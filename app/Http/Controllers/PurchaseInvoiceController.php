@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MaterialPurchased;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
+use App\Models\SuppliersQuotation;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
@@ -12,13 +14,28 @@ class PurchaseInvoiceController extends Controller
 {
     //
     public function index() {
-        //$purchase_invoice = PurchaseInvoice::all();
-        return view('modules.buying.purchaseinvoice');
+        $purchase_invoice = PurchaseInvoice::all();
+        return view('modules.buying.purchaseinvoice', ['invoices' => $purchase_invoice]);
     }
 
     public function openInvoiceForm() {
         $receipts = PurchaseReceipt::where('pr_status', 'To Bill')->get();
         return view('modules.buying.newPurchaseInvoice', ['receipts' => $receipts]);
+    }
+
+    public function viewInvoice($id) {
+        $invoice = PurchaseInvoice::find($id);
+        $receipt = PurchaseReceipt::where('p_receipt_id', $invoice->p_receipt_id)->first();
+        $received_items = $receipt->receivedMats();
+        $order = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
+        $supplier = SuppliersQuotation::where('supp_quotation_id', $order->supp_quotation_id)->first()->supplier;
+        return view('modules.buying.purchaseInvoiceInfo', ['invoice' => $invoice, 'received_items' => $received_items, 'supplier' => $supplier]);
+    }
+
+    public function payInvoice($id) {
+        $invoice = PurchaseInvoice::where('p_invoice_id', $id)->first();
+        $invoice->pi_status = "Paid";
+        $invoice->save();
     }
 
     public function createInvoice(Request $request) {

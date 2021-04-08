@@ -28,6 +28,26 @@ $("#saveInvoice").click(function () {
     
 });
 
+function payInvoice() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    if(confirm(`Permanently submit ${$("#invoiceId").val()}?`)) {
+        $.ajax({
+            type: "POST",
+            url: `/pay-invoice/${$("#invoiceId").val()}`,
+            data: $("#invoiceId").val(),
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                loadPurchaseInvoice();
+            }
+        });
+    }
+}
+
 function loadMaterials(id) {
     $.ajaxSetup({
         headers: {

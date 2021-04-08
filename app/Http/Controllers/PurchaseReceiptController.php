@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MaterialPurchased;
 use App\Models\PurchaseReceipt;
+use App\Models\SuppliersQuotation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
@@ -26,14 +27,18 @@ class PurchaseReceiptController extends Controller
         $receipt = PurchaseReceipt::find($id);
         $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
         $materials = $receipt->receivedMats();
-        return view('modules.buying.purchasereceiptinfo', ['receipt' => $receipt, 'materials' => $materials, 'orders' => $orders]);
+        $mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
+        $supplier = SuppliersQuotation::where('supp_quotation_id', $mat_purchased->supp_quotation_id)->first()->supplier;
+        return view('modules.buying.purchasereceiptinfo', ['receipt' => $receipt, 'materials' => $materials, 'orders' => $orders, 'supplier' => $supplier]);
     }
 
     public function getOrderedMaterials($id) {
         try {
-            $ordered_mats = MaterialPurchased::find($id)->itemsPurchased();
-            $purchase_id = MaterialPurchased::find($id)->purchase_id;
-            return ['ordered_mats' => $ordered_mats, 'purchase_id' => $purchase_id];
+            $mat_purchased = MaterialPurchased::find($id);
+            $supplier = SuppliersQuotation::where('supp_quotation_id', $mat_purchased->supp_quotation_id)->first()->supplier;
+            $ordered_mats = $mat_purchased->itemsPurchased();
+            $purchase_id = $mat_purchased->purchase_id;
+            return ['ordered_mats' => $ordered_mats, 'purchase_id' => $purchase_id, 'supplier' => $supplier];
         } catch(Exception $e) {
             return $e;
         }

@@ -542,9 +542,9 @@ function loadPurchaseInvoice() {
   });
 }
 
-function openPurchaseInvoiceInfo() {
+function openPurchaseInvoiceInfo(id) {
   $(document).ready(function () {
-    $('#contentPurchaseInvoice').load('modules/buying/purchaseInvoiceInfo.php');
+    $('#contentPurchaseInvoice').load(`/view-invoice/${id}`);
   });
 }
 

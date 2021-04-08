@@ -82,7 +82,7 @@ $i = 1;
                             <label class=" text-nowrap align-middle">
                                 Supplier
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required class="form-input form-control" value="{{ $supplier->company_name }}" readonly id="">
                             <br>
                             <input type="text" required class="form-input form-control" hidden id="orderId" value="{{ $receipt->purchase_id }}">
                         </div>
@@ -117,7 +117,7 @@ $i = 1;
                             <label class=" text-nowrap align-middle">
                                 Select Supplier Address
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required class="form-input form-control" readonly value="{{ $supplier->supplier_address }}"id="">
                         </div>
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">

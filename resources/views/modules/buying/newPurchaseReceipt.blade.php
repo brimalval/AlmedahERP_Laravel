@@ -59,7 +59,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Supplier
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required class="form-input form-control" id="suppField">
                             <br>
                             <input type="text" required class="form-input form-control" hidden id="orderId">
                         </div>
@@ -113,7 +113,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Select Supplier Address
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required class="form-input form-control" id="addressField">
                         </div>
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">

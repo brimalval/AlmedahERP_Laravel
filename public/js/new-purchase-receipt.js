@@ -123,6 +123,8 @@ function loadMaterials(id) {
             //console.log($('#orderId').val());
             let table = $('#itemsToReceive');
             $('#itemsToReceive tr').remove();
+            $("#suppField").val(data.supplier.company_name);
+            $("#addressField").val(data.supplier.supplier_address);
             for (let i = 1; i <= data.ordered_mats.length; i++) {
                 table.append(
                     `

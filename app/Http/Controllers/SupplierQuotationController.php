@@ -53,6 +53,15 @@ class SupplierQuotationController extends Controller
         ]);
     }
 
+    public function getQuotation($id) 
+    {
+        $quotation = SuppliersQuotation::find($id);
+        $supplier = $quotation->supplier;
+        $items = $quotation->items();
+        
+        return ['quotation' => $quotation, 'supplier' => $supplier, 'items' => $items];
+    }
+
     /**
      * Store a newly created resource in storage.
      *
