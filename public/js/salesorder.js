@@ -237,7 +237,7 @@ $("#btnSalesCalculate").click(function () {
     // 2ms timeout
     setTimeout(() => {
         finalizer();
-    }, 2000);
+    }, 3000);
     ultimateComponentTable = [];
 });
 
