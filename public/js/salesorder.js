@@ -715,14 +715,12 @@ var createMatRequestItems = [];
 function componentAdder(name, cat, neededVal, stockVal){
     if(ultimateComponentTable.length == 0){
         ultimateComponentTable.push( [name, cat, neededVal, stockVal])
-    }else{
-        for(let index = 0; index<ultimateComponentTable.length; index++){
-            if(contains(name, ultimateComponentTable)){
-              ultimateComponentTable[index][2] += neededVal;
-            }else{
-              ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
-              console.log(name);
-            }
+    }else{    
+        if(contains(name, ultimateComponentTable)){
+          ultimateComponentTable[index][2] += neededVal;
+        }else{
+          ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
+          console.log(name);
         }
 
     }
