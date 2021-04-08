@@ -62,7 +62,10 @@ class SalesOrderController extends Controller
     function getComponents($selected){
         $product = ManufacturingProducts::where('product_code', $selected)->first();
         $material = json_decode($product->materials, true);
+        $component = json_decode($product->components, true);
+
         $components = array();
+
         for ($x = 0; $x < count($material); $x++) {
             $material_id = $material[$x]['material_id'];
             $material_qty = $material[$x]['material_qty'];
@@ -74,6 +77,17 @@ class SalesOrderController extends Controller
             $raw_material_category = $category->category_title;
             array_push($components, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
         }
+
+        for ($x = 0; $x < count($component); $x++) {
+            $component_id = $component[$x]['id'];
+            $component_qty = $component[$x]['component_qty'];
+            $raw_material = Component::where('id', $component_id)->first();
+            $raw_material_category = "Component";
+            $raw_material_name = $raw_material->component_name;
+            $raw_material_quantity = 0;
+            array_push($components, [$component_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
+        }
+
         return response($components);
     }
 

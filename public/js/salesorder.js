@@ -703,12 +703,15 @@ function installmentType() {
 }
 
 var totalValue = 0;
+
 var ultimateComponentTable = [];
+
 // 2d Array [ProductCode, Quantity]
 var currentCart = [];
 // Array for storing Insufficient Quantity Items to be used for Material Request
 var createMatRequestItems = [];
 // Adds component into a 2d array. If it is already init adds value instead
+
 function componentAdder(name, cat, neededVal, stockVal){
     if(ultimateComponentTable.length == 0){
         ultimateComponentTable.push( [name, cat, neededVal, stockVal])
@@ -718,6 +721,7 @@ function componentAdder(name, cat, neededVal, stockVal){
               ultimateComponentTable[index][2] += neededVal;
             }else{
               ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
+              console.log(name);
             }
         }
     }
@@ -777,13 +781,12 @@ function rawMaterials() {
         name = currentCart[index][0];
         quantity = currentCart[index][1];
         $.ajax({
-            url: "/getRawMaterials/" + name,
+            url: "/getComponents/" + name,
             type: "GET",
             success: function (rawMaterials) {
                 for (rawMaterial of rawMaterials) {
-                    componentAdder(rawMaterial[2], rawMaterial[1], parseInt(rawMaterial) * parseInt(rawMaterial[0]), rawMaterial[3] )
+                    componentAdder(rawMaterial[2], rawMaterial[1], parseInt(quantity) * parseInt(rawMaterial[0]), rawMaterial[3] )
                 }
-                console.log(ultimateComponentTable);
             },
             error: function (request, error) {
                 // alert("Request: " + JSON.stringify(request));
@@ -848,7 +851,7 @@ function finalizer() {
                 quantity_need: component[2],
                 quantity_avail: component[3],
             });
-            console.log(createMatRequestItems);
+
         } else if (component[2] >= component[2]) {
             status = "Available";
         }
