@@ -36,6 +36,13 @@ class PurchaseInvoiceController extends Controller
         $invoice = PurchaseInvoice::where('p_invoice_id', $id)->first();
         $invoice->pi_status = "Paid";
         $invoice->save();
+
+        $receipt = PurchaseReceipt::where('p_receipt_id', $invoice->p_receipt_id)->first();
+        $receipt->pr_status = "Completed";
+        $receipt->save();
+        $order = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
+        $order->mp_status = "Completed";
+        $order->save();
     }
 
     public function createInvoice(Request $request) {
