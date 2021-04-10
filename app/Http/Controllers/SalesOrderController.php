@@ -257,22 +257,22 @@ class SalesOrderController extends Controller
             //         array_push($new_component, $c);
             //     }
             // }
+ 
+            foreach ($cart as $row){        
+                // $material_purchased = new MaterialPurchased();
+                // $material_purchased->supp_quotation_id = generateRandomString();
+                // $material_purchased->purchase_id = generateRandomString();
+                // $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
+                // $material_purchased->mp_status = "ExStatus";   
+                // $material_purchased->items_list_purchased = json_encode($new_component);   
+                // $material_purchased->save();
 
-            // foreach ($cart as $row){        
-            //     $material_purchased = new MaterialPurchased();
-            //     $material_purchased->supp_quotation_id = generateRandomString();
-            //     $material_purchased->purchase_id = generateRandomString();
-            //     $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
-            //     $material_purchased->mp_status = "ExStatus";   
-            //     $material_purchased->items_list_purchased = json_encode($new_component);   
-            //     $material_purchased->save();
-
-            //     $order = new ordered_products();
-            //     $order->sales_id = $data->id;
-            //     $order->product_code = $row[0];
-            //     $order->quantity_purchased = $row[1];
-            //     $order->save();
-            // }
+                $order = new ordered_products();
+                $order->sales_id = $data->id;
+                $order->product_code = $row[0];
+                $order->quantity_purchased = $row[1];
+                $order->save();
+            }
 
             // foreach($new_component as $c){
             //     $work_order = new WorkOrder();
