@@ -736,6 +736,21 @@ function contains( names , arr){
         if(namelist[index] == names){
             return true;
         }
+
+    }
+    return false;
+}
+
+function contains( names , arr){
+    namelist = [];
+    for (let index = 0; index < arr.length; index++) {
+        namelist.push( arr[index][0]);
+    }
+
+    for (let index = 0; index < arr.length; index++) {
+        if(namelist[index] == names){
+            return true;
+        }
     }
     return false;
 }
@@ -785,7 +800,7 @@ $("#btnSalesCalculate").click(function () {
     // 2ms timeout
     setTimeout(() => {
         finalizer();
-    }, 2000);
+    }, 3000);
     ultimateComponentTable = [];
 });
 
