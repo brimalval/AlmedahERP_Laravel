@@ -28,6 +28,8 @@ class CreatePaymentLogsTable extends Migration
             $table->float('payment_balance');
             # Will only display when user chose cheque
             $table->string('account_no')->nullable();
+            $table->string('cheque_no')->nullable();
+            $table->date('cheque_date')->nullable();
         });
     }
 

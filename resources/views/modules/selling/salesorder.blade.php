@@ -433,7 +433,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Method
                                     </label>
-                                    <select class="form-control sellable" id="salePaymentMethod" required name="salePaymentMethod" onchange="selectPaymentMethod();">
+                                    <select class="form-control sellable" required id="salePaymentMethod"  name="salePaymentMethod" onchange="selectPaymentMethod();">
                                         <option selected disabled>Please Select</option>
                                         <option value="Cash">Full Payment(Cash)</option>
                                         <option value="Installment">Installment</option>
@@ -444,7 +444,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Type
                                     </label>
-                                    <select class="form-control sellable" onchange="creationSelectPaymentType()" id="paymentType" required name="paymentType" >
+                                    <select class="form-control sellable" required onchange="creationSelectPaymentType()" id="paymentType"  name="paymentType" >
                                         <option selected disabled>Payment Type</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Cheque">Cheque</option>
@@ -459,6 +459,20 @@
                                     Account No.
                                 </label>
                                 <input type="text" class="form-input form-control" id="account_no" name="account_no" placeholder="Account No">
+                            </div>
+                            <br>
+                            <div class="col" id="account_cheque_no" name="account_cheque_no" style="display:none">
+                                <label >
+                                    Cheque No.
+                                </label>
+                                <input type="text" class="form-input form-control" id="cheque_no" name="cheque_no" placeholder="Cheque No">
+                            </div>
+                            <br>
+                            <div class="col" id="account_cheque_date" name="account_cheque_date" style="display:none">
+                                <label >
+                                    Cheque Date
+                                </label>
+                                <input type="date" class="form-input form-control" id="cheque_date" name="cheque_date" placeholder="Cheque Date">
                             </div>
                             <br>
 

@@ -624,8 +624,12 @@ function creationSelectPaymentType() {
     var paymentType = document.getElementById("paymentType").value;
     if (paymentType == "Cash") {
         document.getElementById("account_no_div").style.display = "none";
+        document.getElementById("account_cheque_no").style.display = "none";
+        document.getElementById("account_cheque_date").style.display = "none";
     } else {
         document.getElementById("account_no_div").style.display = "flex";
+        document.getElementById("account_cheque_no").style.display = "flex";
+        document.getElementById("account_cheque_date").style.display = "flex";
     }
 }
 

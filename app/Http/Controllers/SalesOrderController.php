@@ -173,6 +173,8 @@ class SalesOrderController extends Controller
                     
                     $payment_logs->account_no = $form_data['account_no'];
                     $payment_logs->payment_status = "Pending";
+                    $payment_logs->cheque_no = $form_data['cheque_no'];
+                    $payment_logs->cheque_date = $form_data['cheque_date'];
                 }else{
                     $payment_logs->payment_balance = 0;
                     $data->payment_balance = 0;
@@ -197,10 +199,11 @@ class SalesOrderController extends Controller
                     
                     $payment_logs->account_no = $form_data['account_no'];
                     $payment_logs->payment_status = "Pending";
+                    $payment_logs->cheque_no = $form_data['cheque_no'];
+                    $payment_logs->cheque_date = $form_data['cheque_date'];
                 }else{
                     $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
                     $data->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
-
                     $payment_logs->payment_status = "Completed";
                 }
             }
