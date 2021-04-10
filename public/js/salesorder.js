@@ -708,27 +708,12 @@ function installmentType() {
 
 var totalValue = 0;
 
-var ultimateComponentTable = [];
-
 // 2d Array [ProductCode, Quantity]
 var currentCart = [];
 // Array for storing Insufficient Quantity Items to be used for Material Request
 var createMatRequestItems = [];
 // Adds component into a 2d array. If it is already init adds value instead
 
-function componentAdder(name, cat, neededVal, stockVal){
-    if(ultimateComponentTable.length == 0){
-        ultimateComponentTable.push( [name, cat, neededVal, stockVal])
-    }else{    
-        if(contains(name, ultimateComponentTable)){
-          ultimateComponentTable[index][2] += neededVal;
-        }else{
-          ultimateComponentTable.push( [name, cat, neededVal, stockVal]);
-          console.log(name);
-        }
-
-    }
-}
 
 function contains( names , arr){
     namelist = [];
@@ -745,30 +730,18 @@ function contains( names , arr){
     return false;
 }
 
-function contains( names , arr){
-    namelist = [];
-    for (let index = 0; index < arr.length; index++) {
-        namelist.push( arr[index][0]);
-    }
-
-    for (let index = 0; index < arr.length; index++) {
-        if(namelist[index] == names){
-            return true;
-        }
-    }
-    return false;
-}
 
 //Adds product to array
 function addToTable() {
     currentProduct = document.getElementById("saleProductCode").value;
-    currentCart.push([currentProduct, 0]);
-
-    $("#ProductsTable").append(
-        '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
-            currentProduct +
-            '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
-    );
+    if(! contains(currentProduct, currentCart)){
+        currentCart.push([currentProduct, 0]);
+        $("#ProductsTable").append(
+            '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
+                currentProduct +
+                '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
+        );
+    }
 }
 
 //Quantity inside the products table
@@ -799,70 +772,43 @@ $("#btnSalesCalculate").click(function () {
     document.getElementById("costPrice").value = cost;
     document.getElementById("payment_total_amount").value = cost;
     rawMaterials();
-    //components();
-    //@TODO use call back function here instead of timeout. Problematic if huge data is processed
-    // 2ms timeout
-    setTimeout(() => {
-        finalizer();
-    }, 3000);
-    ultimateComponentTable = [];
 });
 
 function rawMaterials() {
+    var data = {};
+    var products = [];
+    var qty = [];
     for (let index = 0; index < currentCart.length; index++) {
-        name = currentCart[index][0];
-        quantity = currentCart[index][1];
-        $.ajax({
-            url: "/getComponents/" + name,
-            type: "GET",
-            success: function (rawMaterials) {
-                for (rawMaterial of rawMaterials) {
-                    componentAdder(rawMaterial[2], rawMaterial[1], parseInt(quantity) * parseInt(rawMaterial[0]), rawMaterial[3] )
-                }
-            },
-            error: function (request, error) {
-                // alert("Request: " + JSON.stringify(request));
-            },
-        });
+        products[index] = currentCart[index][0];
+        qty[index] = currentCart[index][1];
     }
+    data['products'] = products;
+    data['qty'] = qty;
+
+    $.ajax({
+        url: '/getCompo',
+        type: "GET",
+        data: data,
+        success: function(response){
+            finalizer(response);
+        },
+        error: function (response, error) {
+            // alert("Request: " + JSON.stringify(request));
+        },    
+    })
     //Function here
 }
 
-// function components() {
-//     console.log(currentCart.length);
-//     for (let index = 0; index < currentCart.length; index++) {
-//         name = currentCart[index][0];
-//         quantity = currentCart[index][1];
-//         $.ajax({
-//             url: "/getComponents/" + name,
-//             type: "GET",
-//             success: function (components) {
-//                 console.log(components.length);
-//                 for (component of components) {
-//                     console.log(component);
-//                     componentAdder(
-//                         component[2],
-//                         component[1],
-//                         parseInt(quantity) * parseInt(component[0]),
-//                         component[3]
-//                     );
-//                 }
-//             },
-//             error: function (request, error) {},
-//         });
-//     } //Function here
-// }
-
-function finalizer() {
+function finalizer( arr_components) {
     $("#create-material-req-btn").html("");
     $(".components tr").remove();
     createMatRequestItems = [];
-    for (let index = 0; index < ultimateComponentTable.length; index++) {
+    for (let index = 0; index < arr_components.length; index++) {
         component = [
-            ultimateComponentTable[index][0],
-            ultimateComponentTable[index][1],
-            ultimateComponentTable[index][2],
-            ultimateComponentTable[index][3],
+            arr_components[index][2],
+            arr_components[index][1],
+            arr_components[index][0],
+            arr_components[index][3],
         ];
 
         // set status of each component
