@@ -788,7 +788,7 @@ $("#sales_order_form").submit(function(e) {
     var formData = new FormData(this);
     console.log(currentCart);
     formData.append("cart",currentCart );
-    formData.append("component", JSON.stringify(ultimateComponentTable));
+    //formData.append("component", JSON.stringify(ultimateComponentTable));
     formData.append("installmentType", document.getElementById('installmentType').value);
     $.ajax({
         type: 'POST',
@@ -801,7 +801,6 @@ $("#sales_order_form").submit(function(e) {
             $('#saveSaleOrder1').click(function() {
                 $('#newSalePrompt').modal('hide');
             });
-            formReset();
             document.getElementById('closeSaleOrderModal').click();
             console.log(data);
             loadRefresh();
@@ -850,6 +849,7 @@ function loadRefresh(){
                 </tr>`
                ]).draw(false);
             });
+            formReset();
         }
     });
 }
