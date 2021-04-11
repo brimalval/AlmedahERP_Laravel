@@ -436,7 +436,7 @@ class SalesOrderController extends Controller
             }
 
             for ($x = 0; $x < count($component); $x++) {
-                $component_id = $component[$x]['id'];
+                $component_id = $component[$x]['component_id'];
                 $component_qty = $component[$x]['component_qty'];
                 $raw_material = Component::where('id', $component_id)->first();
                 $raw_material_category = "Component";
