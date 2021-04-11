@@ -339,8 +339,6 @@ Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentTyp
 Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
-Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
-Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
 Route::get('/getCompo' , [SalesOrderController::class, 'getCompo']);
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
