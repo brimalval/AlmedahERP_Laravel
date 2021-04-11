@@ -1,11 +1,11 @@
 <?php
-$today = date('Y-m-d');
+$i = 1;
 ?>
 <script src="{{ asset('js/new-purchase-invoice.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
-            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Invoice #</h2>
+            <h2 class="navbar-brand" style="font-size: 35px;">Purchase Invoice {{ $invoice->p_invoice_id }}</h2>
         </h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,8 +18,8 @@ $today = date('Y-m-d');
                         onclick="loadPurchaseInvoice();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-target="#saveSale" id="saveInvoice">
-                        Save
+                    <button type="button" class="btn btn-primary" onclick="payInvoice()" data-target="#saveSale" id="submitInvoice">
+                        Submit
                     </button>
                 </li>
             </ul>
@@ -51,13 +51,13 @@ $today = date('Y-m-d');
                                 Series
                             </label>
                             <div class="d-flex">
-                                <input type="text" class="form-input form-control" max="6" value="PI-00X" disabled>
+                                <input type="text" class="form-input form-control" max="6" value="{{ $invoice->p_invoice_id }}" id="invoiceId" readonly>
                             </div>
                             <br>
                             <label class=" text-nowrap align-middle">
                                 Supplier
                             </label>
-                            <input type="text" required class="form-input form-control" id="suppName">
+                            <input type="text" required class="form-input form-control" value="{{ $supplier->company_name }}"id="">
                             <br>
                             <input type="text" name="" hidden id="receiptId">
                         </div>
@@ -66,12 +66,12 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_date" readonly value=<?=$today?>>
+                            <input type="date" required class="form-input form-control" id="npi_date" readonly value={{ $invoice->date_created }}>
                             <br>
                             <label id="" class=" text-nowrap align-middle">
                                 Due Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_due_date" value=<?=$today?>>
+                            <input type="date" required class="form-input form-control" id="npi_due_date" readonly value={{ $invoice->due_date_of_payment }}>
                         </div>
                     </div>
                 </form>
@@ -96,7 +96,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Select Supplier Address
                             </label>
-                            <input type="text" required class="form-input form-control" id="suppAdd">
+                            <input type="text" required class="form-input form-control" value="{{ $supplier->supplier_address }}" id="">
                         </div>
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">
@@ -147,11 +147,27 @@ $today = date('Y-m-d');
                                 </tr>
                             </thead>
                             <tbody class="" id="itemsReceived">
-                                <tr>
-                                    <td id="emptyRow" colspan="7" style="text-align: center;">
-                                        NO DATA
-                                    </td>
-                                </tr>
+                                @foreach ($received_items as $item)
+                                    <tr id="row-<?=$i?>">
+                                        <td>
+                                            <div class="form-check">
+                                                <input type="checkbox" name="item-chk" id="chk<?=$i?>" class="form-check-input">
+                                            </div>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <input class="form-control" type="text" id="item_code<?=$i?>" value={{ $item['item_code'] }}>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <input class="form-control" id="qtyAcc<?=$i?>" type="number" min="0" value={{ $item['qty'] }}>
+                                        </td> 
+                                        <td class="text-black-50">
+                                            <input class="form-control" id="rateAcc<?=$i?>" type="text" min="0" value={{ $item['rate'] }}>
+                                        </td> 
+                                        <td class="text-black-50">
+                                            <input class="form-control" id="amtAcc<?=$i?>" type="text" min="0" value={{ $item['amount'] }}>
+                                        </td> 
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -183,7 +199,7 @@ $today = date('Y-m-d');
                                 Mode of Payment
                             </label>
                             <select id="paymentMode" class="form-control">
-                                <option value="" selected hidden disabled>Select Mode of Payment...</option>
+                                <option value="" selected hidden readonly>{{ $invoice->mode_payment }}</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Cheque">Cheque</option>
                             </select>
@@ -194,7 +210,7 @@ $today = date('Y-m-d');
                                 <label class=" text-nowrap align-middle">
                                     Total (PHP)
                                 </label>
-                                <input type="number" required class="form-input form-control" id="priceToPay">
+                                <input type="number" required class="form-input form-control" value={{ $invoice->paid_amount }} id="priceToPay">
                             </div>
                         </div>
                     </div>
@@ -227,6 +243,7 @@ $today = date('Y-m-d');
 </div>
 
 <!-- Modal Purchase Receipt-->
+<!--
 <div class="modal fade" id="npi_purchaseReceiptModal" tabindex="-1" role="dialog"
     aria-labelledby="npi_purchaseReceiptModal" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -250,19 +267,7 @@ $today = date('Y-m-d');
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($receipts as $receipt)
-                        <tr>
-                            <td class="text-bold">{{ $receipt->p_receipt_id }}</td>
-                            <td>{{ $receipt->date_created }}</td>
-                            <td>{{ $receipt->purchase_id }}</td>
-                            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-toggle="modal">View</button></td>
-                            <td class="price">{{ $receipt->grand_total }}</td>
-                            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-dismiss="modal" onclick="loadMaterials({{ $receipt->id }})">Select</button></td>
-                        </tr>
-                        @endforeach
-                        <!--
+                        
                         <tr>
                             <td class="text-bold">PR-001</td>
                             <td>3/31/2021</td>
@@ -272,7 +277,7 @@ $today = date('Y-m-d');
                             <td>P10,000</td>
                             <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                     data-dismiss="modal">Select</button></td>
-                        </tr>-->
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -282,6 +287,7 @@ $today = date('Y-m-d');
         </div>
     </div>
 </div>
+-->
 
 <!-- Modal itemlist-->
 <div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"

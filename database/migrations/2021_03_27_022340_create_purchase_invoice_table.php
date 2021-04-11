@@ -19,9 +19,9 @@ class CreatePurchaseInvoiceTable extends Migration
             $table->string('p_receipt_id');
             $table->foreign('p_receipt_id')->references('p_receipt_id')->on('purchase_receipt');
             $table->date('date_created');
-            $table->json('due_date_of_payment');
-            $table->float('mode_payment');
-            $table->string('paid_amount');
+            $table->date('due_date_of_payment');
+            $table->string('mode_payment');
+            $table->float('paid_amount');
             $table->string('pi_status')->default('Draft');
             $table->timestamps();
         });

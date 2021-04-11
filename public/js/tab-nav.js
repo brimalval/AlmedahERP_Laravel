@@ -542,9 +542,9 @@ function loadPurchaseInvoice() {
   });
 }
 
-function openPurchaseInvoiceInfo() {
+function openPurchaseInvoiceInfo(id) {
   $(document).ready(function () {
-    $('#contentPurchaseInvoice').load('modules/buying/purchaseInvoiceInfo.php');
+    $('#contentPurchaseInvoice').load(`/view-invoice/${id}`);
   });
 }
 
@@ -554,9 +554,9 @@ function openNewPurchaseReceipt() {
   });
 }
 
-function openPurchaseReceiptInfo() {
+function openPurchaseReceiptInfo(id) {
   $(document).ready(function () {
-    $('#contentPurchaseReceipt').load('modules/buying/PurchaseReceiptInfo.php');
+    $('#contentPurchaseReceipt').load(`/view-receipt/${id}`);
   });
 }
 

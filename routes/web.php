@@ -21,6 +21,7 @@ use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -265,9 +266,12 @@ Route::get('/loadProjectTemplate', function () {
 /**PURCHASE INVOICE ROUTES */
 Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
 Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
+Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
+Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
+Route::post('/pay-invoice/{receipt_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
+Route::get('/purchaseorder', [MaterialsPurchasedController::class, 'index']);
 Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openOrderForm']);
 Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
 Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
@@ -280,6 +284,10 @@ Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
 Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
 Route::post('/create-receipt', [PurchaseReceiptController::class, 'createReceipt']);
+Route::get('/view-receipt/{receipt_id}', [PurchaseReceiptController::class, 'showReceipt']);
+Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
+Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
+Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function () {
@@ -371,9 +379,8 @@ Route::get('/createnewsupplier', function () {
 });
 
 /**SUPPLIER QUOTATION ROUTES */
-Route::get('/supplierquotation', function () {
-    return view('modules.buying.supplierQuotation');
-});
+Route::resource('/supplierquotation', SupplierQuotationController::class);
+Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
 Route::get('/load-supplier', function () {
     return view('modules.buying.supplierQuotation1');
 });

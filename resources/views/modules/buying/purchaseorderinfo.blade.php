@@ -22,10 +22,9 @@ $i = 1; ?>
                         Get items from
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Product Bundle</a></li>
-                        <li><a class="dropdown-item" data-toggle="modal" data-target="#materialrequest-modal">Material
-                                Request</a></li>
-                        <li><a class="dropdown-item" href="#">Supplier Quotation</a></li>
+                        <!--<li><a class="dropdown-item" href="#">Product Bundle</a></li>-->
+                        <li><a class="dropdown-item" data-toggle="modal" data-target="#sq_modal">Supplier Quotation</a></li>
+                        <!--<li><a class="dropdown-item" href="#">Supplier Quotation</a></li>-->
                     </ul>
                 </li>
                 <li class="nav-item dropdown li-bom">
@@ -47,79 +46,44 @@ $i = 1; ?>
     </div>
 </nav>
 
-<div class="modal fade" id="materialrequest-modal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="margin:auto;">
+<!-- Modal Purchase Order-->
+<div class="modal fade" id="sq_modal" tabindex="-1" role="dialog" aria-labelledby="sq_modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>Select Material Request</h3>
-                <h3></h3>
-                <div class="col-6">
-                    <div class="form-group">
-                        <table>
-                            <tr>
-                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal" onclick="">Make
-                                        Material Request</button> </td>
-                                <td><button type="button" class="btn btn-info btn" data-dismiss="modal"
-                                        style="background-color: #007bff;" id="getReqItem">Get Items</button> </td>
-                                <td><a class="close" data-dismiss="modal"><i class="fa fa-times"></i></a></td>
-                            </tr>
-
-                        </table>
-                    </div>
-                </div>
-            </div><br>
-            <form id="materialrequestform" name="matreqform" role="form" method="POST">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Search Term</label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Company</label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Date Range</label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                </div>
-
-                <table class="table table-bom border-bottom" id="reqTable">
-                    <thead class="border-top border-bottom bg-light">
-                        <tr class="text-muted">
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" id="masterReqChk" class="form-check-input">
-                                </div>
-                            </td>
-                            <td>Name</td>
-                            <td>Company</td>
-                            <td>Date</td>
+                <h5 class="modal-title" id="exampleModalLabel">Supplier Quotations</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Supplier Quotation ID</th>
+                            <th>Supplier ID</th>
+                            <th>Item List</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody class="">
-                        @foreach ($material_requests as $request)
+                    <tbody>
+                        @foreach ($supplier_quotations as $quotation)
                             <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input type="checkbox" id="reqChk" class="form-check-input">
-                                    </div>
-                                </td>
-                                <td class="text-black-50" id="req<?= $i ?>">{{ $request->request_id }}</td>
-                                <td class="text-black-50">Almedah Food Equipment</td>
-                                <td class="text-black-50">{{ $request->request_date }}</td>
+                                <td class="text-bold">{{ $quotation->supp_quotation_id }}</td>
+                                <td>{{ $quotation->supplier_id }}</td>
+                                <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
+                                        data-toggle="modal" data-target="#npr_itemListView">View</button></td>
+                                <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
+                                        data-dismiss="modal" onclick="loadQuotation({{ $quotation->id }})">Select</button></td>   
                             </tr>
                         @endforeach
-                 
                     </tbody>
                 </table>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -151,7 +115,7 @@ $i = 1; ?>
             <div class="col-6">
                 <div class="form-group">
                     <label for="supplier">Supplier</label>
-                    <input type="text" id="supplierField" value="{{ $supplier }}" name="supplier" class="form-control" readonly>
+                    <input type="text" id="supplierField" value="{{ $supplier->company_name }}" name="supplier" class="form-control" readonly>
                 </div>
             </div>
 
@@ -162,12 +126,6 @@ $i = 1; ?>
                 </div>
             </div>
 
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="company">Company</label>
-                    <input type="text" name="company" value="{{ $supplier }}" id="companyField" class="form-control" readonly>
-                </div>
-            </div>
         </div>
 
 
@@ -187,7 +145,7 @@ $i = 1; ?>
                 <div class="col-6">
                     <div class="form-group">
                         <label for="selectsuppadd">Select Supplier Address</label>
-                        <input type="text" id="suppAddress" class="form-control">
+                        <input type="text" id="suppAddress" value="{{ $supplier->supplier_address }}" readonly class="form-control">
                     </div>
                 </div>
                 <div class="col-6">
