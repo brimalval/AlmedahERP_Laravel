@@ -115,7 +115,7 @@ $i = 1; ?>
             <div class="col-6">
                 <div class="form-group">
                     <label for="supplier">Supplier</label>
-                    <input type="text" id="supplierField" value="{{ $supplier->company_name }}" name="supplier" class="form-control" readonly>
+                    <input type="text" id="supplierField" value="{{ $supplier['company_name'] }}" name="supplier" class="form-control" readonly>
                 </div>
             </div>
 
@@ -145,7 +145,7 @@ $i = 1; ?>
                 <div class="col-6">
                     <div class="form-group">
                         <label for="selectsuppadd">Select Supplier Address</label>
-                        <input type="text" id="suppAddress" value="{{ $supplier->supplier_address }}" readonly class="form-control">
+                        <input type="text" id="suppAddress" value="{{ $supplier['supplier_address'] }}" readonly class="form-control">
                     </div>
                 </div>
                 <div class="col-6">

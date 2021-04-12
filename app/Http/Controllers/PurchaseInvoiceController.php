@@ -25,10 +25,8 @@ class PurchaseInvoiceController extends Controller
 
     public function viewInvoice($id) {
         $invoice = PurchaseInvoice::find($id);
-        $receipt = PurchaseReceipt::where('p_receipt_id', $invoice->p_receipt_id)->first();
-        $received_items = $receipt->receivedMats();
-        $order = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
-        $supplier = SuppliersQuotation::where('supp_quotation_id', $order->supp_quotation_id)->first()->supplier;
+        $received_items = $invoice->receipt->receivedMats();
+        $supplier = $invoice->receipt->order->supplier_quotation->supplier;
         return view('modules.buying.purchaseInvoiceInfo', ['invoice' => $invoice, 'received_items' => $received_items, 'supplier' => $supplier]);
     }
 

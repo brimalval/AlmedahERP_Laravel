@@ -20,4 +20,8 @@ class PurchaseInvoice extends Model
         'paid_amount',
         'pi_status'
     ]; 
+
+    public function receipt() {
+        return $this->belongsTo(PurchaseReceipt::class, 'p_receipt_id', 'p_receipt_id');
+    }
 }

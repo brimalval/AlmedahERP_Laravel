@@ -226,6 +226,7 @@ function loadQuotation(id) {
             $("#itemTable-content tr").remove();
             let tbl = $("#itemTable-content");
             $("#sqID").val(data.quotation.supp_quotation_id);
+            $("#reqDate").val(data.req_date);
             let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
             $("#supplierField").val(data.supplier.company_name);
             $("#suppAddress").val(data.supplier.supplier_address);

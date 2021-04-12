@@ -71,9 +71,10 @@ class PurchaseReceiptController extends Controller
         try {
             $receipt = PurchaseReceipt::find($id);
             $receipt_id = $receipt->p_receipt_id;
-            $mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
-            $supp_quotation = SuppliersQuotation::where('supp_quotation_id', $mat_purchased->supp_quotation_id)->first();
-            $supplier = Supplier::where('supplier_id', $supp_quotation->supplier_id)->first();
+            $supplier = $receipt->order->supplier_quotation->supplier;
+            //$mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
+            //$supp_quotation = SuppliersQuotation::where('supp_quotation_id', $mat_purchased->supp_quotation_id)->first();
+            //$supplier = Supplier::where('supplier_id', $supp_quotation->supplier_id)->first();
             $received_mats = $receipt->receivedMats();
             return ['p_receipt_id' => $receipt_id, 'received_mats' => $received_mats, 'supplier' => $supplier];
         } catch(Exception $e) {
