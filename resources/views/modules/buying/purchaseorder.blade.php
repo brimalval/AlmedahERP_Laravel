@@ -41,22 +41,28 @@
     <div class="card my-2">
         <div class="card-header bg-light">
             <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" id="buying-purchaseorder-filter-input" class="form-control"
-                            placeholder="Name">
-                    </div>
-                </div>
-                <div class="col-2">
+                <div class="col-3">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Title">
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Supplier">
+                        <input type="text" id="buying-purchaseorder-filter-input" class="form-control"
+                            placeholder="Supplier Name">
                     </div>
                 </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Raw Material Name">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Grand Total">
+                    </div>
+                </div>
+                <!--
                 <div class="col-2">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Almedah Food Equipment">
@@ -72,6 +78,7 @@
                         <input type="text" class="form-control" placeholder="">
                     </div>
                 </div>
+            -->
             </div>
         </div>
         <div class="card-body filter">
@@ -109,15 +116,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i=1; ?>
+                        <?php $i = 1; ?>
                         @foreach ($materials_purchased as $material)
                             <tr>
                                 <td scope="col">
-                                    <a href="javascript:onclick=viewPurchaseOrder({{ $material->id }})">{{ $material->purchase_id }}</a>
+                                    <a
+                                        href="javascript:onclick=viewPurchaseOrder({{ $material->id }})">{{ $material->purchase_id }}</a>
                                 </td>
                                 <td scope="col">{{ $material->mp_status }}</td>
                                 <td scope="col">{{ $material->purchase_date }}</td>
-                                <td scope="col" id="totalPrice<?=$i?>">{{ $material->total_cost }}</td>
+                                <td scope="col" id="totalPrice<?= $i ?>">{{ $material->total_cost }}</td>
                                 <!--
                                 <td scope="col">0</td>
                                 <td scope="col">0</td>
@@ -150,7 +158,7 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#tbl-buying-purchaseorder').dataTable({
+            var oTable = $('#tbl-buying-purchaseorder').dataTable({
                 columnDefs: [{
                     orderable: false,
                     targets: 0
@@ -162,34 +170,6 @@
                     $('#products-table_wrapper').addClass('col-12');
                 },
             });
-        });
-        $(document).ready(function() {
-            var modalCrmLeadsForm = $("#modal-buying-purchaseorder-form");
-
-            //var oTable = $('#tbl-buying-purchaseorder').DataTable({
-            //    sDom: 'rt',
-            //    ajax: "data/buying-purchaseorder.json", // test data only
-            //    columns: [{
-            //            data: 'title'
-            //        },
-            //        {
-            //            data: 'status'
-            //        },
-            //        {
-            //            data: 'date'
-            //        },
-            //        {
-            //            data: 'grand_total'
-            //        },
-            //        {
-            //            data: '%_received'
-            //        },
-            //        {
-            //            data: '%_billed'
-            //        }
-            //    ]
-            //});
-
             $(document).on('click', '#btn-buying-purchaseorder-add', function(e) {
                 e.preventDefault();
                 modalCrmLeadsForm.modal('show');
@@ -210,3 +190,4 @@
                 oTable.page('next').draw('page');
             });
         });
+    </script>

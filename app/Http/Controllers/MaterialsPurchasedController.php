@@ -30,7 +30,7 @@ class MaterialsPurchasedController extends Controller
     {
         $purchase_order = MaterialPurchased::find($index);
         //$material_requests = MaterialRequest::all();
-        $quotation_supplier = SuppliersQuotation::where('supp_quotation_id', $purchase_order->supp_quotation_id)->first()->supplier;
+        $quotation_supplier = $purchase_order->supplier_quotation->supplier;
         $supplier_quotations = SuppliersQuotation::all();
         $items_purchased = $purchase_order->itemsPurchased();
         $req_date = $items_purchased[0]['req_date'];

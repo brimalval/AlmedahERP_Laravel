@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use function PHPUnit\Framework\isEmpty;
-
 class MaterialPurchased extends Model
 {
     use HasFactory;
@@ -47,7 +45,11 @@ class MaterialPurchased extends Model
         return $items_purchased_array;
     }
 
-    // public function getSupplierQuotation() {
-    //     return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
-    // }
+    public function supplier_quotation() {
+        return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
+    }
+
+    public function receipt() {
+        return $this->hasOne(PurchaseReceipt::class, 'purchase_id', 'purchase_id');
+    }
 }
