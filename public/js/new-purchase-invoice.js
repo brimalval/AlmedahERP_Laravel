@@ -8,6 +8,18 @@ $("#saveInvoice").click(function () {
     });
 
     let formData = new FormData();
+    let createDate = $("#npi_date").val();
+    let dueDate = $("#npi_due_date").val();
+
+    if(createDate > dueDate) {
+        alert("The due date is earlier than the date of creation.");
+        return;
+    }
+
+    if($("#emptyRow").length) {
+        alert("Load a purchase receipt first.");
+        return;
+    }
 
     formData.append('receipt_id', $("#receiptId").val());
     formData.append('date_created', $("#npi_date").val());
@@ -68,7 +80,8 @@ function loadMaterials(id) {
             //$('#orderId').val(data.purchase_id);
             //console.log($('#orderId').val());
             $("#receiptId").val(data.p_receipt_id);
-            console.log($("#receiptId").val());
+            $("#suppName").val(data.supplier.company_name);
+            $("#suppAdd").val(data.supplier.supplier_address);
             let table = $('#itemsReceived');
             $('#itemsReceived tr').remove();
             for (let i = 1; i <= data.received_mats.length; i++) {

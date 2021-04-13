@@ -57,7 +57,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Supplier
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required class="form-input form-control" id="suppName">
                             <br>
                             <input type="text" name="" hidden id="receiptId">
                         </div>
@@ -71,7 +71,7 @@ $today = date('Y-m-d');
                             <label id="" class=" text-nowrap align-middle">
                                 Due Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_due_date" readonly value=<?=$today?>>
+                            <input type="date" required class="form-input form-control" id="npi_due_date" value=<?=$today?>>
                         </div>
                     </div>
                 </form>
@@ -96,7 +96,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Select Supplier Address
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required class="form-input form-control" id="suppAdd">
                         </div>
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">
@@ -148,7 +148,7 @@ $today = date('Y-m-d');
                             </thead>
                             <tbody class="" id="itemsReceived">
                                 <tr>
-                                    <td colspan="7" style="text-align: center;">
+                                    <td id="emptyRow" colspan="7" style="text-align: center;">
                                         NO DATA
                                     </td>
                                 </tr>

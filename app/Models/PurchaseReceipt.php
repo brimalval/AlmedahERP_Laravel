@@ -44,4 +44,8 @@ class PurchaseReceipt extends Model
         }
         return $received_mats_array;
     }
+
+    public function order() {
+        return $this->belongsTo(MaterialPurchased::class, 'purchase_id', 'purchase_id');
+    }
 }

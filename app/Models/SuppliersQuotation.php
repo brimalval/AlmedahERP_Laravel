@@ -39,6 +39,10 @@ class SuppliersQuotation extends Model
     public function supplier(){
         return $this->belongsTo(Supplier::class, 'supplier_id', 'supplier_id');
     }
+
+    public function req_quotation() {
+        return $this->belongsTo(MaterialQuotation::class, 'req_quotation_id', 'req_quotation_id');
+    }
     // public function getPurchasedMaterials() {
     //     return $this->hasOne(MaterialPurchased::class, 'supp_quotation_id', 'supp_quotation_id');
     // }

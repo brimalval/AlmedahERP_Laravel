@@ -39,8 +39,7 @@ class MaterialQuotation extends Model
             );
     }
 
-    public function request_quotation()
-    {
+    public function material_request(){
         return $this->belongsTo(MaterialRequest::class, 'request_id', 'request_id');
     }
 
