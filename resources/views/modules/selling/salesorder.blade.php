@@ -350,7 +350,14 @@
                                 <br>
                             </div>
                             <br>
-                            
+                            <div class="col" id="account_cheque_no" name="account_cheque_no" style="display:none">
+                                <label  >
+                                    Cheque No.
+                                </label>
+                                <br>
+                                <input type="text" class="form-input form-control" id="cheque_no" name="cheque_no" placeholder="Cheque No">
+                            </div>
+                            <br>
                             <div class="col" id="account_no_div" name="account_no_div" style="display:none">
                                 <label >
                                     Account No.
@@ -358,21 +365,25 @@
                                 <input type="text" class="form-input form-control" id="account_no" name="account_no" placeholder="Account No">
                             </div>
                             <br>
-                            <div class="col" id="account_cheque_no" name="account_cheque_no" style="display:none">
+                            <div class="col " id="account_name_div" name="account_name_div" style="display:none">
                                 <label >
-                                    Cheque No.
+                                    Account Name.
                                 </label>
-                                <input type="text" class="form-input form-control" id="cheque_no" name="cheque_no" placeholder="Cheque No">
+                                <input type="text" class="form-input form-control" id="account_name" name="account_name" placeholder="Account Name">
+                            </div>
+                            <br>
+                            <div class="col" id="with_postdated_div" name="with_postdated" style="display:none; padding-left: 37px;">
+                                <input type="checkbox" class="form-check-input"  id="with_postated_cheque" name="with_postated_cheque" onclick="withPostdatedCheque()">
+                                <label>Wtih Post-Dated Cheque?</label>
                             </div>
                             <br>
                             <div class="col" id="account_cheque_date" name="account_cheque_date" style="display:none">
                                 <label >
-                                    Cheque Date
+                                    Date of Post-Dated Cheque
                                 </label>
-                                <input type="date" class="form-input form-control" id="cheque_date" name="cheque_date" placeholder="Cheque Date">
+                                <input type="date" class="form-input form-control" id="post_date_cheque" name="post_date_cheque" placeholder="Cheque Date" disabled>
                             </div>
                             <br>
-
                             <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()" >
                                 <div class="col">
                                     <label class="text-nowrap align-middle">
