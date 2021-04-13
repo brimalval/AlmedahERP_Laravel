@@ -335,12 +335,12 @@ Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer
 Route::get('/view/{id}', [SalesOrderController::class, 'viewId']);
 Route::get('/getPaymentLogs/{id}', [SalesOrderController::class, 'getPaymentLogs']);
 Route::patch('/updateStatus/{id}', [SalesOrderController::class, 'update']);
-Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentType']);
-Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
+Route::get('/getPaymentType/{id}', [SalesOrderController::class, 'getPaymentType']);
+Route::get('/getAmountToBePaid/{id}', [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
-Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
-Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
+Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
+Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getComponents']);
 
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
@@ -380,6 +380,8 @@ Route::get('/createnewsupplier', function () {
 
 /**SUPPLIER QUOTATION ROUTES */
 Route::resource('/supplierquotation', SupplierQuotationController::class);
+Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'getSupplierQuotations'])
+    ->name('supplierquotation.list');
 Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
 Route::get('/load-supplier', function () {
     return view('modules.buying.supplierQuotation1');

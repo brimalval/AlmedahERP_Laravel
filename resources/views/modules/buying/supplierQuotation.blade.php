@@ -38,17 +38,17 @@
     <div class="row">
         <div class="col-4">
             <div class="form-group">
-                <input type="text" id="supp-search" class="form-control" placeholder="Supplier Name">
+                <input type="text" id="supp-search" class="form-control datatable-search" placeholder="Supplier Name">
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
-                <input type="text" class="form-control" id="material-search" placeholder="Raw Material">
+                <input type="text" class="form-control datatable-search" id="material-search" placeholder="Raw Material">
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
-                <input type="number" min="1" class="form-control" id="price-search" placeholder="Grand Total">
+                <input type="number" min="1" class="form-control datatable-search" id="price-search" placeholder="Grand Total">
             </div>
         </div>
         <!--
@@ -74,27 +74,27 @@
         </div>
     -->
         <div class="float-left">
-            <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
+            <button class="btn btn-outline-light btn-sm text-muted shadow-sm" id="clear-filters">
                 Clear Filters
             </button>
         </div>
     </div>
 </div>
 <br>
-<table id="quotation_tbl" class="display">
+<table id="quotation_tbl" class="display w-100">
     <thead>
         <tr>
-            <th>Supplier</th>
+            <th class="quotation_tbl_supp">Supplier</th>
             <th>Date Created</th>
             <th>Status</th>
             <th>Grand Total</th>
             <!--<th>Action</th>-->
             <th>Quotation ID</th>
-            <th>Time Created</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($squotations as $sq)
+        {{-- @foreach ($squotations as $sq)
             <tr>
                 <td>
                     <a href="#"
@@ -116,32 +116,57 @@
                 <td>{{ $sq->supp_quotation_id }}</td>
                 <td>{{ $sq->date_created->shortRelativeDiffForHumans() }}</td>
             </tr>
-        @endforeach
+        @endforeach --}}
     </tbody>
 </table>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 <script>
-    $(document).ready(function() {
-        var tbl = $('#quotation_tbl').DataTable({
-            columnDefs: [{
-                orderable: false,
-                targets: 0
-            }],
-            order: [
-                [1, 'asc']
-            ]
-        });
-        $(document).on('keyup', '#supp-search', function () {
-            if(tbl.search() !== $("#supp-search").val())
-                tbl.search($(this).val()).draw();
-        });
-        $(document).on('keyup', '#material-search', function () {
-            //tbl.search($(this).val()).draw();
-        });
-        $(document).on('keyup', '#price-search', function () {
-            //tbl.search($(this).val()).draw();
-        });
+    // Ajax data table to accommodate more complex search conditions
+    // and large database sizes
+    var tbl = $('#quotation_tbl').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '{{ route('supplierquotation.list', [], false) }}',
+            // Including the item code filter to the request
+            data: function(data){
+                console.log($('#material-search').val());
+                data.item_code = $('#material-search').val();
+            },
+        },
+        // Defining the columns; time diff is not searchable or orderable so as
+        // to prevent it from being included in queries
+        columns: [
+            {data: 'supplier.company_name', name: 'supplier.company_name'},
+            {data: 'date_created', name: 'date_created'},
+            {data: 'sq_status', name: 'sq_status'},
+            {data: 'grand_total', name: 'grand_total'},
+            {data: 'req_quotation_id', name: 'req_quotation_id'},
+            {data: 'time_diff', name:'time_diff', searchable: false, orderable:false},
+        ],
     });
-
+    // Unbinding the search filters then binding functions to them to prevent
+    // binding too many times when reloading the page
+    $('#supp-search').off().on('change', function () {
+        tbl.column('.quotation_tbl_supp').search($(this).val()).draw();
+    });
+    $('#material-search').off().on('change', function () {
+        tbl.draw();
+    });
+    $('#price-search').off().on('change', function () {
+        tbl.draw();
+    });
+    $('#clear-filters').off().on('click', function(){
+        $('.datatable-search').each(function(){
+            $(this).val('');
+        });
+        // Triggering supplier search's change function since it has the special search
+        // arguments attached to it; resetting anything else does nothing to the params
+        $('#supp-search').change();
+    });
+    $('th').each(function(item, index){
+        $(this).addClass('text-center');
+    });
+    $('.dataTables_filter').addClass('d-none');
 </script>
