@@ -14,6 +14,7 @@ use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
+use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
@@ -211,9 +212,8 @@ Route::get('/paymententry', function () {
 });
 
 /**PENDING ORDERS ROUTES */
-Route::get('/pendingorders', function () {
-    return view('modules.buying.pendingorders');
-});
+Route::get('/pendingorders', [PendingOrdersController::class, 'index']);
+Route::get('/view-progress/{id}', [PendingOrdersController::class, 'view_progress']);
 Route::get('/view-pending-order', function () {
     return view('modules.buying.pendingordersinfo');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MaterialsOrdered;
 use App\Models\MaterialPurchased;
 use App\Models\PurchaseReceipt;
 use App\Models\Supplier;
@@ -28,8 +29,8 @@ class PurchaseReceiptController extends Controller
         $receipt = PurchaseReceipt::find($id);
         $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
         $materials = $receipt->receivedMats();
-        $mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
-        $supplier = SuppliersQuotation::where('supp_quotation_id', $mat_purchased->supp_quotation_id)->first()->supplier;
+        $mat_purchased = $receipt->order;
+        $supplier = $mat_purchased->supplier_quotation->supplier;
         return view('modules.buying.purchasereceiptinfo', ['receipt' => $receipt, 'materials' => $materials, 'orders' => $orders, 'supplier' => $supplier]);
     }
 
@@ -59,9 +60,28 @@ class PurchaseReceiptController extends Controller
 
             //$mat_purchased->items_list_purchased = json_encode($materials_ordered);
             //$mat_purchased->save();
-            
+
             $receipt->pr_status = "To Bill";
             $receipt->save();
+
+            $lastMatOrder = MaterialsOrdered::orderby('id', 'desc')->first();
+            $nextOrderId = ($lastMatOrder) ? MaterialsOrdered::orderby('id', 'desc')->first()->id + 1 : 1;
+
+            $to_append = 0;
+            $digit_flag = 1;
+            while ($nextOrderId >= $digit_flag) {
+                ++$to_append;
+                $digit_flag *= 10;
+            }
+
+            $mo_id = "MAT-ORD-" . str_pad($nextOrderId, 4 - $to_append, '0', STR_PAD_LEFT);
+
+            $mat_order = new MaterialsOrdered();
+            $mat_order->mat_ordered_id = $mo_id;
+            $mat_order->p_receipt_id = $receipt->p_receipt_id;
+            $mat_order->items_list_received = $receipt->item_list_received;
+            $mat_order->save();
+
         } catch (Exception $e) {
             return $e;
         }

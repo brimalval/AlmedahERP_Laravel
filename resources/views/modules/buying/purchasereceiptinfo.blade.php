@@ -30,39 +30,48 @@ $i = 1;
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        @if($receipt->pr_status === 'Draft')
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="loadPurchaseReceipt();">Cancel</button>
-                </li>
-                <li class="nav-item li-bom">
-                    <button type="button" id="submitReceipt" class="btn btn-primary" data-target="#saveSale">
-                        Submit
-                    </button>
-                </li>
+                @if ($receipt->pr_status === 'Draft')
+
+                    <li class="nav-item li-bom">
+                        <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                            onclick="loadPurchaseReceipt();">Cancel</button>
+                    </li>
+                    <li class="nav-item li-bom">
+                        <button type="button" id="submitReceipt" class="btn btn-primary" data-target="#saveSale">
+                            Submit
+                        </button>
+                    </li>
+
+                @else
+                    <li class="nav-item li-bom">
+                        <button type="button" id="receiveMaterials" class="btn btn-primary" data-target="#saveSale">
+                            Save Record
+                        </button>
+                    </li>
+                @endif
             </ul>
         </div>
-        @endif
     </div>
 </nav>
 <div class="accordion" id="accordion">
     <div class="card">
-        @if($receipt->pr_status === "Draft")
-        <div class="card-header" id="heading1">
-            <h2 class="mb-0">
-                <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
-                    id="dropdownMenunpr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Get Items from
-                </button>
+        @if ($receipt->pr_status === 'Draft')
+            <div class="card-header" id="heading1">
+                <h2 class="mb-0">
+                    <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
+                        id="dropdownMenunpr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Get Items from
+                    </button>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenunpr">
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#npr_purchaseOrderModal">Purchase
-                        Order</a>
-                </div>
-            </h2>
-        </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenunpr">
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            data-target="#npr_purchaseOrderModal">Purchase
+                            Order</a>
+                    </div>
+                </h2>
+            </div>
         @endif
         <div class="collapse show" id="salesOrderCard1">
             <div class="card-body">
@@ -82,9 +91,11 @@ $i = 1;
                             <label class=" text-nowrap align-middle">
                                 Supplier
                             </label>
-                            <input type="text" required class="form-input form-control" value="{{ $supplier->company_name }}" readonly id="">
+                            <input type="text" required class="form-input form-control"
+                                value="{{ $supplier->company_name }}" readonly id="">
                             <br>
-                            <input type="text" required class="form-input form-control" hidden id="orderId" value="{{ $receipt->purchase_id }}">
+                            <input type="text" required class="form-input form-control" hidden id="orderId"
+                                value="{{ $receipt->purchase_id }}">
                         </div>
                         <div class="col">
                             <br>
@@ -117,7 +128,8 @@ $i = 1;
                             <label class=" text-nowrap align-middle">
                                 Select Supplier Address
                             </label>
-                            <input type="text" required class="form-input form-control" readonly value="{{ $supplier->supplier_address }}"id="">
+                            <input type="text" required class="form-input form-control" readonly
+                                value="{{ $supplier->supplier_address }}" id="">
                         </div>
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">
@@ -143,7 +155,7 @@ $i = 1;
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
                     data-target="#salesOrderCard5" aria-expanded="false">
-                    UPDATE STOCK
+                    RECEIVE MATERIALS
                 </button>
             </h2>
         </div>
@@ -161,7 +173,10 @@ $i = 1;
                                         </div>
                                     </td>
                                     <td>Item</td>
-                                    <td>Accepted Quantity</td>
+                                    @if ($receipt->pr_status !== 'Draft')
+                                        <td>Accepted Quantity</td>
+                                    @endif
+                                    <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
                                 </tr>
@@ -177,6 +192,11 @@ $i = 1;
                                     <td class="text-black-50">
                                         <input class="form-control" type="text" id="item_code<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif value={{ $material['item_code'] }}>
                                     </td>
+                                    @if ($receipt->pr_status !== 'Draft')
+                                        <td class="text-black-50">
+                                            <input class="form-control" type="text" id="qtyRec<?= $i ?>" placeholder="Enter quantity...">
+                                        </td>
+                                    @endif
                                     <td class="text-black-50">
                                         <input class="form-control" id="qtyAcc<?= $i ?>" type="number" @if ($receipt->pr_status === 'Draft') onchange="calcPrice(<?= $i ?>); onChangeFunction();" @else disabled @endif min="0" value={{ $material['qty'] }}>
                                     </td> 
@@ -191,12 +211,15 @@ $i = 1;
                                 @endforeach
                             </tbody>
                             <tfoot>
+                                @if ($receipt->pr_status === 'Draft')
+                                <td colspan="7" rowspan="5">
+                                    <button id="multBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
+                                    <button id="rowBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Row</button>
+                                    <button id="deleteBtn" class="btn btn-sm btn-sm btn-secondary" style="display: none; background-color: red">Delete</button>
+                                </td>
+                                @endif
                                 <tr>
-                                    <td colspan="7" rowspan="5">
-                                        <button id="multBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
-                                        <button id="rowBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Row</button>
-                                        <button id="deleteBtn" class="btn btn-sm btn-sm btn-secondary" style="display: none; background-color: red">Delete</button>
-                                    </td>
+                                    
                                 </tr>
                             </tfoot>
                         </table>
@@ -237,15 +260,8 @@ $i = 1;
             </div>
         </div>
     </div>
-    <div class="card" id="cardUpdateStock">
-        <div id="salesOrderCard5">
-            <div class="card-body">
-                <div class="row">
-                 
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <!--
     <div class="card" id="cardMoreInfo">
         <div id="salesOrderCard9">
             <div class="card-body">
@@ -268,7 +284,7 @@ $i = 1;
             </div>
         </div>
     </div>
-
+-->
 </div>
 <!-- Modal Purchase Order-->
 <div class="modal fade" id="npr_purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="npr_purchaseOrderModal"
