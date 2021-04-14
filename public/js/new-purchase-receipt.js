@@ -84,6 +84,38 @@ function onChangeFunction() {
     $("#submitReceipt").attr('id', 'saveReceipt');
 }
 
+$("#receiveMaterials").click(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+
+    var receipt_id = $("#receiptId").val();
+    var received_mats = {};
+    for (let i = 1; i <= $('#itemsToReceive tr').length; i++) {
+        received_mats[i] = {
+            "item_code": $(`#item_code${i}`).val(),
+            "qty_received": $(`#qtyRec${i}`).val(),
+        }
+    }
+
+    var formData = new FormData();
+    formData.append('receipt_id', receipt_id);
+    formData.append('mat_received', JSON.stringify(received_mats));
+
+    $.ajax({
+        type: "POST",
+        url: "/receive-materials",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            loadPurchaseReceipt();
+        }
+    });
+});
+
 function chkBoxFunction() {
     $('input[name="item-chk"]').each(function () {
         $(this).change(function () {

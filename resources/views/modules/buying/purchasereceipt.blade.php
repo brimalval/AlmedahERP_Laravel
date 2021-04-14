@@ -94,7 +94,7 @@
                     <thead>
                         <tr>
                             <th>Item</th>
-                            <th>Quantity Received</th>
+                            <th>Quantity To Receive</th>
                         </tr>
                     </thead>
                     <tbody id="receivedMats">

@@ -26,42 +26,39 @@
     </div>
 </nav>
 
+<?php
+$i = 0;
+?>
+
 <table id="pendingOrdersTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
         <tr>
             <th>Pending Order ID</th>
-            <th>Purchase ID</th>
+            <th>Receipt ID</th>
             <th>Item List Received</th>
             <th>Total %</th>
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
-
-        <tr>
-            <td class="text-bold">MAT-ORD-001</td>
-            <td>PID-001</td>
-            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary" data-toggle="modal"
-                    data-target="#pr_itemListView">View</button></td>
-            <td class="text-bold">33%</td>
-            <td>Pending</td>
-        </tr>
+        @foreach ($mat_ordered as $mo)
+            <tr>
+                <td class="text-bold">{{ $mo->mat_ordered_id }}</td>
+                <td>{{ $mo->p_receipt_id }}</td>
+                <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary" data-toggle="modal"
+                        data-target="#po_itemListView" onclick="showProgress({{ $mo->id }})">View</button></td>
+                <td class="text-bold">{{ $totals[$i] }}%</td>
+                <td>{{ $mo->mo_status }}</td>
+            </tr>
+            <?php ++$i; ?>
+        @endforeach
     </tbody>
 </table>
 
-
-<script>
-    $(document).ready(function() {
-        x = $('#pendingOrdersTable').DataTable();
-        z = $('#itemListViewTablePO').DataTable();
-    });
-
-</script>
-
 <!-- Modal -->
-<div class="modal fade" id="pr_itemListView" tabindex="-1" role="dialog" aria-labelledby="pr_itemListView"
+<div class="modal fade" id="po_itemListView" tabindex="-1" role="dialog" aria-labelledby="po_itemListView"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
@@ -73,20 +70,22 @@
                 <table id="itemListViewTablePO" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Item</th>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
                             <th>Quantity Ordered</th>
                             <th>Quantity Received</th>
                             <th>Percentage</th>
                         </tr>
                     </thead>
                     <tbody>
-
+                        <!--
                         <tr>
                             <td class="text-bold">4</td>
+                            <td class="text-bold">Sample Item</td>
                             <td>300</td>
                             <td>100</td>
                             <td>33%</td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>
@@ -96,3 +95,46 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        x = $('#pendingOrdersTable').DataTable();
+        z = $('#itemListViewTablePO').DataTable();
+    });
+
+    function showProgress(id) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: `/view-progress/${id}`,
+            data: id,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                var item_list = response.items_list;
+                //console.log(item_list);
+                $("#itemListViewTablePO tbody tr").remove();
+                var tbl = $("#itemListViewTablePO tbody");
+                for (var i = 0; i < item_list.length; i++) {
+                    var material = item_list[i].material;
+                    tbl.append(
+                        `
+                        <tr>
+                            <td class="text-bold">${material.item_code}</td>
+                            <td class="text-bold">${material.item_name}</td>
+                            <td>${item_list[i].qty_ordered}</td>
+                            <td>${item_list[i].qty_received}</td>
+                            <td>${item_list[i].curr_progress}%</td>
+                        </tr>
+                        `
+                    );
+                }
+            }
+        });
+    }
+
+</script>

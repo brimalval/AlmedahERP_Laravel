@@ -125,8 +125,9 @@ class MatRequestController extends Controller
      */
     public function edit(MaterialRequest $materialrequest)
     {
+        $editable = true;
         if($materialrequest->mr_status == "Submitted"){
-            abort(403);
+            $editable = false;
         }
 
         $materials = ManufacturingMaterials::with('uom')->get();
@@ -137,6 +138,8 @@ class MatRequestController extends Controller
             'materials' => $materials,
             'stations' => $stations,
             'units' => $units,
+            'editable' => $editable,
+            'full_page' => request('full_page'),
         ]);
     }
 

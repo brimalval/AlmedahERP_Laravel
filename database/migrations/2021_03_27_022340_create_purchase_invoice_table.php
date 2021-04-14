@@ -15,7 +15,7 @@ class CreatePurchaseInvoiceTable extends Migration
     {
         Schema::create('purchase_invoice', function (Blueprint $table) {
             $table->id();
-            $table->string('p_invoice_id')->unique;
+            $table->string('p_invoice_id')->unique();
             $table->string('p_receipt_id');
             $table->foreign('p_receipt_id')->references('p_receipt_id')->on('purchase_receipt');
             $table->date('date_created');

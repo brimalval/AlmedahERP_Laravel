@@ -60,7 +60,7 @@
             <td>{{ $invoice->date_created }}</td>
             <td class="text-bold">{{ $invoice->due_date_of_payment }}</td>
             <td class="text-bold">{{ $invoice->mode_payment }}</td>
-            <td class="text-bold price">{{ $invoice->paid_amount }}</td>
+            <td class="text-bold price">{{ $invoice->grand_total }}</td>
             <td>{{ $invoice->pi_status }}</td>
         </tr>
         @endforeach

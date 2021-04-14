@@ -1,6 +1,5 @@
 <?php
-$i = 1;
-?>
+$i = 1; ?>
 <script src="{{ asset('js/new-purchase-invoice.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
@@ -17,17 +16,21 @@ $i = 1;
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadPurchaseInvoice();">Cancel</button>
                 </li>
+                @if ($invoice->pi_status === 'Draft')
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" onclick="payInvoice()" data-target="#saveSale" id="submitInvoice">
+                    <button type="button" class="btn btn-primary" onclick="payInvoice()" data-target="#saveSale"
+                        id="submitInvoice">
                         Submit
                     </button>
                 </li>
+                @endif
             </ul>
         </div>
     </div>
 </nav>
 <div class="accordion" id="accordion">
     <div class="card">
+        @if($invoice->pi_status == 'Draft')
         <div class="card-header" id="heading1">
             <h2 class="mb-0">
                 <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
@@ -41,6 +44,7 @@ $i = 1;
                 </div>
             </h2>
         </div>
+        @endif
         <div class="collapse show" id="salesOrderCard1">
             <div class="card-body">
                 <form action="" id="">
@@ -51,13 +55,15 @@ $i = 1;
                                 Series
                             </label>
                             <div class="d-flex">
-                                <input type="text" class="form-input form-control" max="6" value="{{ $invoice->p_invoice_id }}" id="invoiceId" readonly>
+                                <input type="text" class="form-input form-control" max="6"
+                                    value="{{ $invoice->p_invoice_id }}" id="invoiceId" readonly>
                             </div>
                             <br>
                             <label class=" text-nowrap align-middle">
                                 Supplier
                             </label>
-                            <input type="text" required class="form-input form-control" value="{{ $supplier->company_name }}"id="">
+                            <input type="text" required class="form-input form-control"
+                                value="{{ $supplier->company_name }}" id="">
                             <br>
                             <input type="text" name="" hidden id="receiptId">
                         </div>
@@ -66,12 +72,14 @@ $i = 1;
                             <label class=" text-nowrap align-middle">
                                 Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_date" readonly value={{ $invoice->date_created }}>
+                            <input type="date" required class="form-input form-control" id="npi_date" readonly
+                                value={{ $invoice->date_created }}>
                             <br>
                             <label id="" class=" text-nowrap align-middle">
                                 Due Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_due_date" readonly value={{ $invoice->due_date_of_payment }}>
+                            <input type="date" required class="form-input form-control" id="npi_due_date" readonly
+                                value={{ $invoice->due_date_of_payment }}>
                         </div>
                     </div>
                 </form>
@@ -96,7 +104,8 @@ $i = 1;
                             <label class=" text-nowrap align-middle">
                                 Select Supplier Address
                             </label>
-                            <input type="text" required class="form-input form-control" value="{{ $supplier->supplier_address }}" id="">
+                            <input type="text" required class="form-input form-control"
+                                value="{{ $supplier->supplier_address }}" id="">
                         </div>
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">
@@ -148,23 +157,23 @@ $i = 1;
                             </thead>
                             <tbody class="" id="itemsReceived">
                                 @foreach ($received_items as $item)
-                                    <tr id="row-<?=$i?>">
+                                    <tr id="row-<?= $i ?>">
                                         <td>
                                             <div class="form-check">
-                                                <input type="checkbox" name="item-chk" id="chk<?=$i?>" class="form-check-input">
+                                                <input type="checkbox" name="item-chk" id="chk<?= $i ?>" class="form-check-input">
                                             </div>
                                         </td>
                                         <td class="text-black-50">
-                                            <input class="form-control" type="text" id="item_code<?=$i?>" value={{ $item['item_code'] }}>
+                                            <input class="form-control" type="text" id="item_code<?= $i ?>" value={{ $item['item_code'] }}>
                                         </td>
                                         <td class="text-black-50">
-                                            <input class="form-control" id="qtyAcc<?=$i?>" type="number" min="0" value={{ $item['qty'] }}>
+                                            <input class="form-control" id="qtyAcc<?= $i ?>" type="number" min="0" value={{ $item['qty'] }}>
                                         </td> 
                                         <td class="text-black-50">
-                                            <input class="form-control" id="rateAcc<?=$i?>" type="text" min="0" value={{ $item['rate'] }}>
+                                            <input class="form-control" id="rateAcc<?= $i ?>" type="text" min="0" value={{ $item['rate'] }}>
                                         </td> 
                                         <td class="text-black-50">
-                                            <input class="form-control" id="amtAcc<?=$i?>" type="text" min="0" value={{ $item['amount'] }}>
+                                            <input class="form-control" id="amtAcc<?= $i ?>" type="text" min="0" value={{ $item['amount'] }}>
                                         </td> 
                                     </tr>
                                 @endforeach
@@ -210,13 +219,71 @@ $i = 1;
                                 <label class=" text-nowrap align-middle">
                                     Total (PHP)
                                 </label>
-                                <input type="number" required class="form-input form-control" value={{ $invoice->paid_amount }} id="priceToPay">
+                                <input type="number" required class="form-input form-control" value={{ $invoice->grand_total }} id="priceToPay">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @if($invoice->pi_status !== 'Draft')
+        <div class="card" id="cardPaymentLogs">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                        data-target="#salesOrderCard7" aria-expanded="false">
+                        PAYMENT LOGS
+                    </button>
+                </h2>
+            </div>
+            <div id="salesOrderCard7" class="collapse">
+                <div class="card-body">
+                  <table id="paymentLogsTable" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Logs ID</th>
+                            <th>Date of Payment</th>
+                            <th>Payment Mode</th>
+                            <th>Payment Method</th>
+                            <th>Payment Description</th>
+                            <th>Amount Paid</th>
+                            <th>Handler</th><!--employee ID-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class= "text-bold">PI-LOG-001</td>
+                            <td>March/28/2021</td>
+                            <td class="text-danger">Installment</td>
+                            <td class="text-bold">Cash</td>
+                            <td class="text-bold">Downpayment</td>
+                            <td>1000</td>
+                            <td>emp001</td>
+                        </tr>
+                        <tr>
+                            <td class= "text-bold">PI-LOG-002</td>
+                            <td>April/28/2021</td>
+                            <td class="text-danger">Installment</td>
+                            <td class="text-bold">Cash</td>
+                            <td class="text-bold">1st Installment</td>
+                            <td>1000</td>
+                            <td>emp002</td>
+                        </tr>
+                        <tr>
+                            <td class= "text-bold">PI-LOG-003</td>
+                            <td>May/28/2021</td>
+                            <td class="text-danger">Installment</td>
+                            <td class="text-bold"><a href="#" data-toggle="modal" data-target="#npi_chequeInfo">Cheque</a></td>
+                            <td class="text-bold">2nd Installment</td>
+                            <td>1000</td>
+                            <td>emp001</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+        </div>
+        @endif
         <div class="card" id="cardMoreInfo">
             <div id="salesOrderCard9">
                 <div class="card-body">
@@ -241,53 +308,6 @@ $i = 1;
         </div>
     </div>
 </div>
-
-<!-- Modal Purchase Receipt-->
-<!--
-<div class="modal fade" id="npi_purchaseReceiptModal" tabindex="-1" role="dialog"
-    aria-labelledby="npi_purchaseReceiptModal" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Purchase Receipt</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Purchase Receipt ID</th>
-                            <th>Date Created</th>
-                            <th>Purchase ID</th>
-                            <th>Item List Received</th>
-                            <th>Grand Total(PHP)</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td class="text-bold">PR-001</td>
-                            <td>3/31/2021</td>
-                            <td>PID-001</td>
-                            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-toggle="modal">View</button></td>
-                            <td>P10,000</td>
-                            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-dismiss="modal">Select</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
--->
 
 <!-- Modal itemlist-->
 <div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"
@@ -324,6 +344,43 @@ $i = 1;
     </div>
 </div>
 
+<!-- Modal chequeInfo-->
+<div class="modal fade" id="npi_chequeInfo" tabindex="-1" role="dialog" aria-labelledby="npi_chequeInfo"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Account No.</th>
+                            <th>Cheque No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td class="text-bold">1001001234</td>
+                            <td>0123</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
-    //$('#itemsFromReceipt').DataTable();
+    $(document).ready(function() {
+        x = $('#paymentLogsTable').DataTable();
+    });
 </script>

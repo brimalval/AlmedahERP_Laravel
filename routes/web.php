@@ -14,6 +14,7 @@ use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
+use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
@@ -211,9 +212,8 @@ Route::get('/paymententry', function () {
 });
 
 /**PENDING ORDERS ROUTES */
-Route::get('/pendingorders', function () {
-    return view('modules.buying.pendingorders');
-});
+Route::get('/pendingorders', [PendingOrdersController::class, 'index']);
+Route::get('/view-progress/{id}', [PendingOrdersController::class, 'view_progress']);
 Route::get('/view-pending-order', function () {
     return view('modules.buying.pendingordersinfo');
 });
@@ -288,6 +288,7 @@ Route::get('/view-receipt/{receipt_id}', [PurchaseReceiptController::class, 'sho
 Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
 Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
+Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function () {
@@ -335,8 +336,8 @@ Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer
 Route::get('/view/{id}', [SalesOrderController::class, 'viewId']);
 Route::get('/getPaymentLogs/{id}', [SalesOrderController::class, 'getPaymentLogs']);
 Route::patch('/updateStatus/{id}', [SalesOrderController::class, 'update']);
-Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentType']);
-Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
+Route::get('/getPaymentType/{id}', [SalesOrderController::class, 'getPaymentType']);
+Route::get('/getAmountToBePaid/{id}', [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 
@@ -382,6 +383,8 @@ Route::get('/createnewsupplier', function () {
 
 /**SUPPLIER QUOTATION ROUTES */
 Route::resource('/supplierquotation', SupplierQuotationController::class);
+Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'getSupplierQuotations'])
+    ->name('supplierquotation.list');
 Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
 Route::get('/load-supplier', function () {
     return view('modules.buying.supplierQuotation1');

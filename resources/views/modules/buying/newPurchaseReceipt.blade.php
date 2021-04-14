@@ -139,7 +139,7 @@ $today = date('Y-m-d');
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
                     data-target="#salesOrderCard5" aria-expanded="false">
-                    UPDATE STOCK
+                    MATERIALS TO RECEIVE
                 </button>
             </h2>
         </div>
@@ -216,37 +216,7 @@ $today = date('Y-m-d');
             </div>
         </div>
     </div>
-    <div class="card" id="cardUpdateStock">
-        <div id="salesOrderCard5">
-            <div class="card-body">
-                <div class="row">
-                 
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card" id="cardMoreInfo">
-        <div id="salesOrderCard9">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class=" text-nowrap align-middle">
-                                Status
-                            </label>
-                            <select id="" class="form-control">
-                                <option selected>Draft</option>
-                                <option>Paid</option>
-                                <option>Unpaid</option>
-                                <option>Overdue</option>
-                                <option>Cancelled</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
 </div>
 <!-- Modal Purchase Order-->

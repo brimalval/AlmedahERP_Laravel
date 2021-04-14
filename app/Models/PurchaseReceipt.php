@@ -48,4 +48,8 @@ class PurchaseReceipt extends Model
     public function order() {
         return $this->belongsTo(MaterialPurchased::class, 'purchase_id', 'purchase_id');
     }
+
+    public function order_record() {
+        return $this->hasOne(MaterialsOrdered::class, 'p_receipt_id', 'p_receipt_id');
+    }
 }
