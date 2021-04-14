@@ -27,7 +27,7 @@ class MaterialsOrdered extends Model
         //var_dump($items);
         $order = $this->p_receipt->order;
         $ordered_mats = $order->itemsPurchased();
-        $i = 1;
+        $i = 0;
         $items_list_received = array();
         foreach ($ordered_mats as $item) {
             if ($items[$i]['item_code'] === $item['item_code']) {

@@ -288,6 +288,7 @@ Route::get('/view-receipt/{receipt_id}', [PurchaseReceiptController::class, 'sho
 Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
 Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
+Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function () {

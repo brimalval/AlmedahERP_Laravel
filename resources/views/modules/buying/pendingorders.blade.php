@@ -26,6 +26,10 @@
     </div>
 </nav>
 
+<?php
+$i = 0;
+?>
+
 <table id="pendingOrdersTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
         <tr>
@@ -42,16 +46,17 @@
                 <td class="text-bold">{{ $mo->mat_ordered_id }}</td>
                 <td>{{ $mo->p_receipt_id }}</td>
                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary" data-toggle="modal"
-                        data-target="#pr_itemListView" onclick="showProgress({{ $mo->id }})">View</button></td>
-                <td class="text-bold">33%</td>
+                        data-target="#po_itemListView" onclick="showProgress({{ $mo->id }})">View</button></td>
+                <td class="text-bold">{{ $totals[$i] }}%</td>
                 <td>{{ $mo->mo_status }}</td>
             </tr>
+            <?php ++$i; ?>
         @endforeach
     </tbody>
 </table>
 
 <!-- Modal -->
-<div class="modal fade" id="pr_itemListView" tabindex="-1" role="dialog" aria-labelledby="pr_itemListView"
+<div class="modal fade" id="po_itemListView" tabindex="-1" role="dialog" aria-labelledby="po_itemListView"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

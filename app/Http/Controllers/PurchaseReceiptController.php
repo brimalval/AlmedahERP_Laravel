@@ -15,17 +15,20 @@ use DB;
 class PurchaseReceiptController extends Controller
 {
     //
-    public function index() {
+    public function index()
+    {
         $purchase_receipts = PurchaseReceipt::all();
         return view('modules.buying.purchasereceipt', ['receipts' => $purchase_receipts]);
     }
 
-    public function openReceiptForm() {
+    public function openReceiptForm()
+    {
         $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
-        return view('modules.buying.newPurchaseReceipt', ['orders' => $orders]); 
+        return view('modules.buying.newPurchaseReceipt', ['orders' => $orders]);
     }
 
-    public function showReceipt($id) {
+    public function showReceipt($id)
+    {
         $receipt = PurchaseReceipt::find($id);
         $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
         $materials = $receipt->receivedMats();
@@ -34,19 +37,21 @@ class PurchaseReceiptController extends Controller
         return view('modules.buying.purchasereceiptinfo', ['receipt' => $receipt, 'materials' => $materials, 'orders' => $orders, 'supplier' => $supplier]);
     }
 
-    public function getOrderedMaterials($id) {
+    public function getOrderedMaterials($id)
+    {
         try {
             $mat_purchased = MaterialPurchased::find($id);
             $supplier = SuppliersQuotation::where('supp_quotation_id', $mat_purchased->supp_quotation_id)->first()->supplier;
             $ordered_mats = $mat_purchased->itemsPurchased();
             $purchase_id = $mat_purchased->purchase_id;
             return ['ordered_mats' => $ordered_mats, 'purchase_id' => $purchase_id, 'supplier' => $supplier];
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return $e;
         }
     }
 
-    public function changeStatus($receipt_id) {
+    public function changeStatus($receipt_id)
+    {
         try {
             $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
 
@@ -76,18 +81,31 @@ class PurchaseReceiptController extends Controller
 
             $mo_id = "MAT-ORD-" . str_pad($nextOrderId, 4 - $to_append, '0', STR_PAD_LEFT);
 
+            $pending_item_list = array();
+            $items = $receipt->receivedMats();
+            $i = 0;
+            foreach ($items as $item) {
+                array_push(
+                    $pending_item_list,
+                    array(
+                        'item_code' => $item['item_code'],
+                        'qty_received' => '0',
+                    )
+                );
+            }
+
             $mat_order = new MaterialsOrdered();
             $mat_order->mat_ordered_id = $mo_id;
             $mat_order->p_receipt_id = $receipt->p_receipt_id;
-            $mat_order->items_list_received = $receipt->item_list_received;
+            $mat_order->items_list_received = json_encode($pending_item_list);
             $mat_order->save();
-
         } catch (Exception $e) {
             return $e;
         }
     }
 
-    public function getReceivedMats($id) {
+    public function getReceivedMats($id)
+    {
         try {
             $receipt = PurchaseReceipt::find($id);
             $receipt_id = $receipt->p_receipt_id;
@@ -97,17 +115,70 @@ class PurchaseReceiptController extends Controller
             //$supplier = Supplier::where('supplier_id', $supp_quotation->supplier_id)->first();
             $received_mats = $receipt->receivedMats();
             return ['p_receipt_id' => $receipt_id, 'received_mats' => $received_mats, 'supplier' => $supplier];
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return $e;
         }
     }
 
-    public function createReceipt(Request $request) {
+    public function addReceivedMats(Request $request)
+    {
+        try {
+            $form_data = $request->input();
+
+            $receipt_id = $form_data['receipt_id'];
+            $received_mats = $form_data['mat_received'];
+
+            while (gettype($received_mats) === "string") {
+                $received_mats = json_decode($received_mats, true);
+            }
+
+            $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
+            $receipt_mats = $receipt->item_list_received;
+
+            while (gettype($receipt_mats) === "string") {
+                $receipt_mats = json_decode($receipt_mats, true);
+            }
+
+            $i = 1;
+
+            foreach ($receipt_mats as $key => $mat) {
+                $receipt_mats[$key]['qty_received'] = strval(intval($receipt_mats[$key]['qty_received']) - intval($received_mats[$i]['qty_received']));
+                $i++;
+            }
+
+            //dd($receipt_mats);
+
+            $receipt->item_list_received = json_encode($receipt_mats);
+            //echo $receipt->item_list_received;
+            $receipt->save();
+
+            $i = 1;
+
+            $pending_order = $receipt->order_record;
+            $order_items = $pending_order->items_list_received;
+            while (gettype($order_items) === "string") {
+                $order_items = json_decode($order_items, true);
+            }
+            foreach ($order_items as $index => $order_item) {
+                $order_items[$index]['qty_received'] = strval(intval($order_items[$index]['qty_received']) + intval($received_mats[$i]['qty_received']));
+                //'curr_progress' => intval(($items[$i]['qty_received']/$item['qty'])*100)
+                $i++;
+            }
+            //dd($order_items);
+            $pending_order->items_list_received = json_encode($order_items);
+            $pending_order->save();
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function createReceipt(Request $request)
+    {
         try {
             $form_data = $request->input();
 
             $data = new PurchaseReceipt();
-            
+
             $lastReceipt = PurchaseReceipt::orderby('id', 'desc')->first();
             $nextId = ($lastReceipt) ? PurchaseReceipt::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
@@ -119,7 +190,7 @@ class PurchaseReceiptController extends Controller
                 $digit_flag *= 10;
             }
 
-            $receipt_id = "PR-" . str_pad($nextId, 3 - $to_append, '0', STR_PAD_LEFT);
+            $receipt_id = "PR-" . str_pad($nextId, 4 - $to_append, '0', STR_PAD_LEFT);
 
             $data->p_receipt_id = $receipt_id;
             $data->date_created = $form_data['date_created'];
@@ -128,13 +199,13 @@ class PurchaseReceiptController extends Controller
             $data->grand_total = $form_data['grand_total'];
 
             $data->save();
-
         } catch (Exception $e) {
             return $e;
         }
     }
 
-    public function updateReceipt(Request $request) {
+    public function updateReceipt(Request $request)
+    {
         try {
             $form_data = $request->input();
 
@@ -146,7 +217,6 @@ class PurchaseReceiptController extends Controller
             $data->grand_total = $form_data['grand_total'];
 
             $data->save();
-
         } catch (Exception $e) {
             return $e;
         }

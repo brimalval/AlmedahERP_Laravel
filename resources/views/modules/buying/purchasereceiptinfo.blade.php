@@ -194,7 +194,7 @@ $i = 1;
                                     </td>
                                     @if ($receipt->pr_status !== 'Draft')
                                         <td class="text-black-50">
-                                            <input class="form-control" type="text" id="qtyRec<?= $i ?>" placeholder="Enter quantity...">
+                                            <input class="form-control" type="number" id="qtyRec<?= $i ?>" placeholder="Enter quantity...">
                                         </td>
                                     @endif
                                     <td class="text-black-50">
