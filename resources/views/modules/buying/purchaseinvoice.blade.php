@@ -24,7 +24,7 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="refresh()">Refresh</button>
+                        onclick="loadPurchaseInvoice()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" onclick="openNewPurchaseInvoice();">
@@ -49,22 +49,48 @@
         </tr>
     </thead>
     <tbody>
-
+        @foreach ($invoices as $invoice)
         <tr>
+            <td class="text-bold">
+                <a href="javascript:onclick=openPurchaseInvoiceInfo({{ $invoice->id }})">
+                    {{ $invoice->p_invoice_id }}
+                </a>
+            </td>
+            <td>{{ $invoice->p_receipt_id }}</td>
+            <td>{{ $invoice->date_created }}</td>
+            <td class="text-bold">{{ $invoice->due_date_of_payment }}</td>
+            <td class="text-bold">{{ $invoice->mode_payment }}</td>
+            <td class="text-bold price">{{ $invoice->grand_total }}</td>
+            <td>{{ $invoice->pi_status }}</td>
+        </tr>
+        @endforeach
+        <!--<tr>
             <td class="text-bold">PI-123</td>
             <td>PR-123</td>
             <td>March/28/2021</td>
             <td class="text-danger">March/31/2021</td>
             <td class="text-bold">Cheque</td>
-            <td class="text-bold">1000</td>
+            <td class="text-bold price">1000</td>
             <td>Draft</td>
-        </tr>
+        </tr>-->
     </tbody>
 </table>
 
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         x = $('#salestable').DataTable();
+
+        $(".price").each(function () {
+            // element == this
+            let price = parseFloat($(this).html());
+            let price_string = "₱ " + numberWithCommas(price.toFixed(2));
+            $(this).html(price_string);
+        });
     });
+
+    /**From internet function */
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 </script>

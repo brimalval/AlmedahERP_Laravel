@@ -1,137 +1,182 @@
-
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <h2 class="navbar-brand" style="font-size: 35px;">Supplier Quotation</h2>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <script src="js/supplierquotation.js"></script>
+    <h2 class="navbar-brand tab-list-title">
+        <a href='javascript:onclick=loadBuyingRequestForQuotation();'
+            class="fas fa-arrow-left back-button"><span></span></a>
+        <h2 class="navbar-brand" style="font-size: 35px;">Supplier Quotation</h2>
+    </h2>
 
     <div class="collapse navbar-collapse float-right" id="navbarSupportedContent">
         <div class="navbar-nav ml-auto">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Menu
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Import</a>
-                        <a class="dropdown-item" href="#">User Permissions</a>
-						<a class="dropdown-item" href="#">Role Permissions Manager</a>
-                        <a class="dropdown-item" href="#">Customize</a>
-						<a class="dropdown-item" href="#">Toggle Sidebar</a>
-						<a class="dropdown-item" href="#">Share URL</a>
-                        <a class="dropdown-item" href="#">Settings</a>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item" href="#">Menu1</a>
+                        <a class="dropdown-item" href="#">Menu2</a>
+                        <a class="dropdown-item" href="#">Menu3</a>
+                        <a class="dropdown-item" href="#">Menu4 <span class="float-right small">Ctrl+J</span></a>
+
+                        <a class="dropdown-item" href="#">Menu5<span class="float-right small">Ctrl+B</span></a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" href="#">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="openNewSupplierQuotation();">New</button>
+                <button type="button" onclick="loadIntoPage(this, '{{ route('supplierquotation.index') }}')"
+                    class="btn btn-refresh" style="background-color: #d9dbdb;">Refresh</button>
+                <button type="button" onclick="loadIntoPage(this, '{{ route('supplierquotation.create') }}')"
+                    class="btn btn-primary ml-1" href="#">New</button>
             </div>
         </div>
     </div>
+    <br>
+
 </nav>
 
-<div class="container-fluid" style="margin: 0; padding: 0;">
-    <div class="row mt-2 mb-3">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <form>
-                        <div class="form-row">
-                            <div class="col-2">
-                                <input type="text" class="form-control" placeholder="Name">
-                            </div>
-							<div class="col-2">
-                                <input type="text" class="form-control" placeholder="Title">
-                            </div>
-							<div class="col-2">
-                                <input type="text" class="form-control" placeholder="Supplier">
-                            </div>
-							<div class="col-2">
-                                <input type="text" class="form-control" placeholder="Title">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-body filter align-middle">
-                    <div class="float-left">
-                        <button class="btn btn-secondary btn-sm">Add Filter</button>
-                    </div>
-                    <div class="float-right">
-                        <span class="text-muted">Last Modified</span>
-                        <button class="btn btn-secondary btn-sm">
-                            <span class="fa fa-arrow-down fa-fw"></span>
-                        </button>
-                    </div>
-                </div>
-				<div class="card-body table-display">
-                    <table class="table table-hover">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 0%;">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-center" style="width: 0%;">
-                                </th>
-                                <th scope="col" style="width: 15%;">Name</th>
-                                <th scope="col" style="width: 10%;">Status</th>
-                                <th scope="col" style="width: 30%;">Grand Total</th>
-                                <th scope="col" style="width: 20%;">&nbsp;</th>
-                                <th scope="col" style="width: 5%;">&nbsp;</th>
-                                <th scope="col" style="width: 0%;">&nbsp;</th>
-                                <th scope="col" style="width: 5%;">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php for ($i = 1; $i <= 1; $i++) : ?>
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                            <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                       
-                                    </td>
-                                    <td>
-                                        <span onclick='loadSupplierQuotationInfo();' style="cursor: pointer;">
-                                            <?= 'Hi Top ' . $i ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                       
-										Submitted
-                                    </td>
-                                   <td class="text-right">
-                                       
-                                    </td>
-                                    <td class="text-right">
-                                       R-SQTN-2021-00001
-                                    </td>
-                                    <td class="text-center">
-                                        <span>10 M</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="fa fa-square-o fa-2x"></span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <span class="fa fa-comments fa-fw"></span>
-                                            <span>0</span>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endfor; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-dark" href="#">20</button>
-                        <button type="button" class="btn btn-secondary" href="#">100</button>
-                        <button type="button" class="btn btn-secondary" href="#">500</button>
-                    </div>
-                </div>
-			</div>
-		</div>
-	</div>
+<div class="card-header bg-light">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <input type="text" id="supp-search" class="form-control datatable-search" placeholder="Supplier Name">
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                {{-- <input type="text" class="form-control datatable-search" id="material-search" placeholder="Raw Material"> --}}
+                <select id="material-search" class="form-control selectpicker datatable-search" data-live-search="true">
+                    <option value="" data-subtext="None" selected>Raw Material</option>
+                    @foreach ($materials as $material)
+                        <option value="{{ $material->item_code }}" data-subtext="{{ $material->item_code }}">
+                            {{ $material->item_name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        {{-- Search based on grand total, not yet known how to handle this --}}
+        {{-- <div class="col-4">
+            <div class="form-group">
+                <input type="number" min="1" class="form-control datatable-search" id="price-search" placeholder="Grand Total">
+            </div>
+        </div> --}}
+        <!--
+            <div class="col-4">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Title">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Almedah Food Equipment">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="">
+            </div>
+        </div>
+    -->
+        <div class="float-left">
+            <button class="btn btn-outline-secondary btn-sm shadow-sm" id="clear-filters">
+                Clear Filters
+            </button>
+        </div>
+    </div>
 </div>
+<br>
+<table id="quotation_tbl" class="display w-100">
+    <thead>
+        <tr>
+            <th class="quotation_tbl_supp">Supplier</th>
+            <th>Date Created</th>
+            <th>Status</th>
+            <th>Grand Total</th>
+            <!--<th>Action</th>-->
+            <th>Quotation ID</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{-- @foreach ($squotations as $sq)
+            <tr>
+                <td>
+                    <a href="#"
+                        onclick="loadIntoPage(this, '{{ route('supplierquotation.show', ['supplierquotation' => $sq->id]) }}')">
+                        {{ $sq->supplier->company_name }}
+                    </a>
+                </td>
+                <td>{{ $sq->date_created->format('m/d/Y') }}</td>
+                <td>
+                    <?php if ($sq->sq_status == 'Draft') {
+                    $color = 'orange';
+                    } elseif ($sq->sq_status == 'Submitted') {
+                    $color = 'blue';
+                    } ?>
+                    <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
+                    {{ $sq->sq_status }}
+                </td>
+                <td>₱{{ $sq->grand_total }}</td>
+                <td>{{ $sq->supp_quotation_id }}</td>
+                <td>{{ $sq->date_created->shortRelativeDiffForHumans() }}</td>
+            </tr>
+        @endforeach --}}
+    </tbody>
+</table>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<script>
+    // Ajax data table to accommodate more complex search conditions
+    // and large database sizes
+    var tbl = $('#quotation_tbl').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '{{ route('supplierquotation.list', [], false) }}',
+            // Including the item code filter to the request
+            data: function(data){
+                console.log($('#material-search').val());
+                data.item_code = $('#material-search').val();
+            },
+        },
+        // Defining the columns; time diff is not searchable or orderable so as
+        // to prevent it from being included in queries
+        columns: [
+            {data: 'supplier.company_name', name: 'supplier.company_name'},
+            {data: 'date_created', name: 'date_created'},
+            {data: 'sq_status', name: 'sq_status'},
+            {data: 'grand_total', name: 'grand_total'},
+            {data: 'req_quotation_id', name: 'req_quotation_id'},
+            {data: 'time_diff', name:'time_diff', searchable: false, orderable:false},
+        ],
+    });
+    // Unbinding the search filters then binding functions to them to prevent
+    // binding too many times when reloading the page
+    $('#supp-search').off().on('change', function () {
+        tbl.column('.quotation_tbl_supp').search($(this).val()).draw();
+    });
+    $('#material-search').off().on('change', function () {
+        tbl.draw();
+    });
+    $('#price-search').off().on('change', function () {
+        tbl.draw();
+    });
+    $('#clear-filters').off().on('click', function(){
+        $('.datatable-search').each(function(){
+            $(this).val('');
+        });
+        // Triggering supplier search's change function since it has the special search
+        // arguments attached to it; resetting anything else does nothing to the params
+        $('#supp-search').change();
+        $('#material-search').selectpicker('refresh');
+    });
+    $('th').each(function(item, index){
+        $(this).addClass('text-center');
+    });
+    $('.dataTables_filter').addClass('d-none');
+</script>

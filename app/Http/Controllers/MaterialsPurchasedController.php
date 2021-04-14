@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MaterialPurchased;
-use App\Models\MaterialRequest;
+use App\Models\SuppliersQuotation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
@@ -22,25 +22,26 @@ class MaterialsPurchasedController extends Controller
 
     public function openOrderForm()
     {
-        $material_requests = MaterialRequest::all();
-        return view('modules.buying.newpurchaseorder', ['material_requests' => $material_requests]);
+        $supplier_quotations = SuppliersQuotation::all();
+        return view('modules.buying.newpurchaseorder', ['supplier_quotations' => $supplier_quotations]);
     }
 
     public function view($index)
     {
         $purchase_order = MaterialPurchased::find($index);
-        $material_requests = MaterialRequest::all();
+        //$material_requests = MaterialRequest::all();
+        $quotation_supplier = $purchase_order->supplier_quotation->supplier;
+        $supplier_quotations = SuppliersQuotation::all();
         $items_purchased = $purchase_order->itemsPurchased();
         $req_date = $items_purchased[0]['req_date'];
-        $supplier = $items_purchased[0]['supplier'];
         return view(
             'modules.buying.purchaseorderinfo',
             [
                 'purchase_order' => $purchase_order,
-                'material_requests' => $material_requests,
+                'supplier_quotations' => $supplier_quotations,
                 'items_purchased' => $items_purchased,
                 'req_date' => $req_date,
-                'supplier' => $supplier
+                'supplier' => $quotation_supplier
             ]
         );
     }
@@ -81,9 +82,7 @@ class MaterialsPurchasedController extends Controller
 
             $data->purchase_id = $purchase_id;
 
-            //Commented for now; needs supplier quotation module for it to fully work.
-            //$data->supp_quotation_id =
-
+            $data->supp_quotation_id = $form_data['sq_id'];
             $data->items_list_purchased = json_encode($form_data['materials_purchased']);
             $data->purchase_date = $form_data['purchase_date'];
             $data->total_cost = $form_data['total_price'];

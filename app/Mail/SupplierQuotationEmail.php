@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\URL;
 class SupplierQuotationEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    private $request_id;
+    private $req_quotation_id;
     private $supplier;
     private $message;
     /**
@@ -22,9 +22,9 @@ class SupplierQuotationEmail extends Mailable
      *
      * @return void
      */
-    public function __construct($request_id, Supplier $supplier, $message="")
+    public function __construct($req_quotation_id, Supplier $supplier, $message="")
     {
-        $this->request_id = $request_id;
+        $this->req_quotation_id = $req_quotation_id;
         $this->supplier = $supplier;
         $this->message = $message;
     }
@@ -37,10 +37,9 @@ class SupplierQuotationEmail extends Mailable
     public function build()
     {
         return $this->markdown('emails.supplierquotation', [
-            'link' => URL::signedRoute('debug.mail', [
-                'req_quotation_id' => $this->request_id,
-                'supplier_name' => $this->supplier->company_name,
-                'supplier_id' => $this->supplier->supplier_id,
+            'link' => URL::signedRoute('supplierquotation.create', [
+                'r' => $this->req_quotation_id,
+                's' => $this->supplier->supplier_id,
             ]),
             'message' => $this->message,
             'contact' => $this->supplier->contact_name ?? $this->supplier->company_name,

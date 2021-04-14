@@ -19,7 +19,7 @@ class CreateMaterialsOrderedTable extends Migration
             $table->string('p_receipt_id');
             $table->foreign('p_receipt_id')->references('p_receipt_id')->on('purchase_receipt');
             $table->json('items_list_received');
-            $table->string('mo_status');
+            $table->string('mo_status')->default('Pending');
             $table->timestamps();
         });
     }

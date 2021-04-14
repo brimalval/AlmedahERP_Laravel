@@ -16,69 +16,7 @@ function onChangeFunction() {
     $("#submitOrder").off('click', submitOrder);
     //Re-bind event handler as submitOrder changes id
     //Yes, there may be a better way to do this, I just don't have the time lol
-    $("#submitOrder").click(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': CSRF_TOKEN,
-            }
-        });
-        let transDate = new Date($("#transDate").val());
-        let reqDate = new Date($("#reqDate").val());
-        if (transDate > reqDate) {
-            alert('Transaction date is later than required date of materials!');
-            return;
-        }
-        var form_data = new FormData();
-        var purchased_mats = {};
-        for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
-            reqDate = new Date($("#date" + i).val());
-            if (transDate > reqDate) {
-                alert(`Transaction date is later than required date of ${$("#item" + i).val()}.`);
-                return;
-            }
-            if (parseInt($("#qty" + i).val()) == 0) {
-                alert('No quantity for material ' + $("#item" + i).val() + ' specified.');
-                return;
-            }
-            if (parseFloat($("#rate" + i).val()) == 0) {
-                alert('No rate for material ' + $("#item" + i).val() + ' specified.');
-                return;
-            }
-            let price_string = $("#price" + i).val().replace("₱ ", '');
-            purchased_mats[i] = {
-                "item_code": $("#item" + i).val(),
-                "supplier_id": $("#supplierField").val(),
-                "req_date": $("#date" + i).val(),
-                "qty": parseInt($("#qty" + i).val()),
-                "rate": parseFloat($("#rate" + i).val()),
-                "subtotal": parseFloat(price_string.replaceAll(',', ''))
-            }
-            //
-        }
-        //console.log(JSON.stringify(purchased_mats));
-        if ($("#purch_id").val()) {
-            form_data.append('purchase_id', $("#purch_id").val());
-        }
-
-        form_data.append('purchase_date', $("#transDate").val());
-        form_data.append('total_price', $(`#totalPrice`).val().replace("₱ ", '').replaceAll(',', ''));
-        form_data.set('materials_purchased', JSON.stringify(purchased_mats));
-
-        let url = !$("#mp_status").length ? '/create-order' : '/update-order';
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: form_data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                console.log("Success");
-                loadPurchaseOrder();
-            }
-        });
-    });
+    $("#submitOrder").click(saveOrder);
     $("#submitOrder").attr('id', 'saveOrder');
 }
 
@@ -272,9 +210,69 @@ function submitOrder() {
 //Only works on existing purchase orders
 $("#submitOrder").on('click', submitOrder);
 
+function loadQuotation(id) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    $.ajax({
+        type: "GET",
+        url: `/get-quotation/${id}`,
+        data: id,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            $("#itemTable-content tr").remove();
+            let tbl = $("#itemTable-content");
+            $("#sqID").val(data.quotation.supp_quotation_id);
+            $("#reqDate").val(data.req_date);
+            let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
+            $("#supplierField").val(data.supplier.company_name);
+            $("#suppAddress").val(data.supplier.supplier_address);
+            for (let i = 1; i <= data.items.length; i++) {
+                let subtotal = parseFloat(data.items[i-1].quantity_requested) * parseFloat(data.items[i-1].rate);
+                let price_string = numberWithCommas(subtotal.toFixed(2));
+                tbl.append(`
+                <tr id="item-${i}">
+                    <td>
+                        <div class="form-check">
+                            <input type="checkbox" name="item-chk" id="chk${i}" class="form-check-input" ${chk_status}>
+                        </div>
+                    </td>
+                    <td class="text-black-50">
+                        <input class="form-control" type="text" name="item${i}" id="item${i}" value=${data.items[i-1].item_code} onkeyup="fieldFunction(${i});">
+                    </td>
+                    <td class="text-black-50">
+                        <input class="form-control" type="date" name="date${i}" id="date${i}" value=${$("#reqDate").val()}>
+                    </td>
+                    <td class="text-black-50">
+                        <input class="form-control" type="number" name="qty${i}" id="qty${i}" value=${data.items[i-1].quantity_requested} onchange="calcPrice(${i});">
+                    </td>
+                    <td class="text-black-50">
+                        <input class="form-control" type="number" name="rate${i}" id="rate${i}" value=${data.items[i-1].rate} onchange="calcPrice(${i});">
+                    </td>
+                    <td class="text-black-50">
+                        <input class="form-control" type="text" name="price${i}" id="price${i}" value="₱ ${price_string}" readonly>
+                    </td>
+                    <td class="text-black-50">
+                        <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
+                            <option></option>
+                            <option></option>
+                            <option></option>
+                        </select>
+                    </td>
+                </tr> 
+                `);
+            }
+            getQtyAndPrice();
+        }
+    });
+}
 
+$("#saveOrder").click(saveOrder);
 
-$("#saveOrder").click(function () {
+function saveOrder() {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
@@ -320,6 +318,7 @@ $("#saveOrder").click(function () {
         form_data.append('purchase_id', $("#purch_id").val());
     }
 
+    form_data.append('sq_id', $("#sqID").val());
     form_data.append('purchase_date', $("#transDate").val());
     form_data.append('total_price', $(`#totalPrice`).val().replace("₱ ", '').replaceAll(',', ''));
     form_data.set('materials_purchased', JSON.stringify(purchased_mats));
@@ -338,7 +337,7 @@ $("#saveOrder").click(function () {
             loadPurchaseOrder();
         }
     });
-});
+}
 
 $(document).ready(function () {
     chkBoxFunction();

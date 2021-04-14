@@ -49,15 +49,20 @@
     </thead>
     <tbody>
         @foreach ($receipts as $receipt)
-        <tr>
-            <td class="text-bold">{{ $receipt->p_receipt_id }}</td>
-            <td>{{ $receipt->date_created }}</td>
-            <td>{{ $receipt->purchase_id }}</td>
-            <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary" data-toggle="modal"
-                    data-target="#pr_itemListView">View</button></td>
-            <td class="text-bold">{{ $receipt->grand_total }}</td>
-            <td>{{ $receipt->pr_status }}</td>
-        </tr>
+            <tr>
+                <td class="text-bold">
+                    <a href="javascript:onclick=openPurchaseReceiptInfo({{ $receipt->id }})">
+                        {{ $receipt->p_receipt_id }}
+                    </a>
+                </td>
+                <td>{{ $receipt->date_created }}</td>
+                <td>{{ $receipt->purchase_id }}</td>
+                <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
+                        data-toggle="modal" data-target="#pr_itemListView"
+                        onclick="viewMaterials({{ $receipt->id }})">View</button></td>
+                <td class="text-bold price">{{ $receipt->grand_total }}</td>
+                <td>{{ $receipt->pr_status }}</td>
+            </tr>
         @endforeach
         <!--
         <tr>
@@ -72,14 +77,6 @@
     -->
     </tbody>
 </table>
-
-<script>
-    $(document).ready(function() {
-        x = $('#purchaseReceiptTable').DataTable();
-        z = $('#itemListViewTable').DataTable();
-    });
-
-</script>
 
 <!-- Modal -->
 <div class="modal fade" id="pr_itemListView" tabindex="-1" role="dialog" aria-labelledby="pr_itemListView"
@@ -97,15 +94,11 @@
                     <thead>
                         <tr>
                             <th>Item</th>
-                            <th>Quantity Received</th>
+                            <th>Quantity To Receive</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="receivedMats">
 
-                        <tr>
-                            <td class="text-bold">4</td>
-                            <td>100</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -115,3 +108,46 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        x = $('#purchaseReceiptTable').DataTable();
+        z = $('#itemListViewTable').DataTable();
+
+        $(".price").each(function () {
+            // element == this
+            let price = parseFloat($(this).html());
+            let price_string = "₱ " + numberWithCommas(price.toFixed(2));
+            $(this).html(price_string);
+        });
+    });
+
+    /**From internet function */
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function viewMaterials(id) {
+        $.ajax({
+            type: "GET",
+            url: `/get-received-mats/${id}`,
+            data: id,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                $("#receivedMats tr").remove();
+                for (i = 0; i < data.received_mats.length; i++) {
+                    $("#receivedMats").append(
+                        `
+                        <tr>
+                            <td class="text-bold">${data.received_mats[i]['item_name']}</td>
+                            <td>${data.received_mats[i]['qty']}</td>
+                        </tr>
+                        `
+                    );
+                }
+            }
+        });
+    }
+
+</script>

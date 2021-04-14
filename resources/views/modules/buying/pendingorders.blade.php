@@ -1,13 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
-    <h2 class="navbar-brand" style="font-size: 35px;">Pending Orders</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <h2 class="navbar-brand" style="font-size: 35px;">Pending Orders</h2>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Menu
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -16,130 +18,123 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadPendingOrders();">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                        onclick="loadPendingOrders();">Refresh</button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <div class="card my-2">
-        <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Name">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Title">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Requested For">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body filter">
-            <div class="row">
-                <div class="float-left">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Add Filter
-                    </button>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Clear Filters
-                    </button>
-                </div>
-                <div class=" ml-auto float-right">
-                    <span class="text-muted ">Last Modified On</span>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <table class="table table-bom border-bottom">
-            <thead class="border-top border-bottom bg-light">
-                <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Item Code</td>
-                    <td>Quantity Received</td>
-                    <td>Sales ID</td>
-                    <td>Destination</td>
-                    
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody class="">
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td ><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openPendingOrdersInfo();'>MTL-BAR-SHAFT-CRS-3/4"</a></td>
-                    <td><input type="number" value="200" class="form-control"></td>
-                    <td class="text-black-50">Emulsifier</td>
-                    <td class="text-black-50">Warehouse 1</td>
-                    
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>MTL-BAR-SHAFT-CRS-5"</td>
-                    <td><input type="number" value="200" class="form-control"></td>
-                    <td class="text-black-50">Emulsifier</td>
-                    <td class="text-black-50">Warehouse 1</td>
-                    
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>MTL-BAR-SHAFT-CRS-5/8"</td>
-                    <td><input type="number" value="200" class="form-control"></td>
-                    <td class="text-black-50">Emulsifier</td>
-                    <td class="text-black-50">Warehouse 2</td>
-                    
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Bar Shaft</td>
-                    <td><input type="number" value="200" class="form-control"></td>
-                    <td class="text-black-50">Emulsifier</td>
-                    <td class="text-black-50">Warehouse 2</td>
-                    
-                    <td><span class="fas fa-comments"></span>0</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<?php
+$i = 0;
+?>
 
+<table id="pendingOrdersTable" class="table table-striped table-bordered hover" style="width:100%">
+    <thead>
+        <tr>
+            <th>Pending Order ID</th>
+            <th>Receipt ID</th>
+            <th>Item List Received</th>
+            <th>Total %</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($mat_ordered as $mo)
+            <tr>
+                <td class="text-bold">{{ $mo->mat_ordered_id }}</td>
+                <td>{{ $mo->p_receipt_id }}</td>
+                <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary" data-toggle="modal"
+                        data-target="#po_itemListView" onclick="showProgress({{ $mo->id }})">View</button></td>
+                <td class="text-bold">{{ $totals[$i] }}%</td>
+                <td>{{ $mo->mo_status }}</td>
+            </tr>
+            <?php ++$i; ?>
+        @endforeach
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="po_itemListView" tabindex="-1" role="dialog" aria-labelledby="po_itemListView"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="itemListViewTablePO" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>Quantity Ordered</th>
+                            <th>Quantity Received</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--
+                        <tr>
+                            <td class="text-bold">4</td>
+                            <td class="text-bold">Sample Item</td>
+                            <td>300</td>
+                            <td>100</td>
+                            <td>33%</td>
+                        </tr>-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<style>
-    .conContent {
-        padding: 200px;
+<script type="text/javascript">
+    $(document).ready(function() {
+        x = $('#pendingOrdersTable').DataTable();
+        z = $('#itemListViewTablePO').DataTable();
+    });
+
+    function showProgress(id) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: `/view-progress/${id}`,
+            data: id,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                var item_list = response.items_list;
+                //console.log(item_list);
+                $("#itemListViewTablePO tbody tr").remove();
+                var tbl = $("#itemListViewTablePO tbody");
+                for (var i = 0; i < item_list.length; i++) {
+                    var material = item_list[i].material;
+                    tbl.append(
+                        `
+                        <tr>
+                            <td class="text-bold">${material.item_code}</td>
+                            <td class="text-bold">${material.item_name}</td>
+                            <td>${item_list[i].qty_ordered}</td>
+                            <td>${item_list[i].qty_received}</td>
+                            <td>${item_list[i].curr_progress}%</td>
+                        </tr>
+                        `
+                    );
+                }
+            }
+        });
     }
-</style>
+
+</script>

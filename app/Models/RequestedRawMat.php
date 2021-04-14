@@ -24,8 +24,8 @@ class RequestedRawMat extends Model
         return $this->belongsTo(MaterialRequest::class, 'request_id', 'request_id');
     }
 
-    public function items(){
-        return $this->hasMany(ManufacturingMaterials::class, 'item_code', 'item_code');
+    public function item(){
+        return $this->hasOne(ManufacturingMaterials::class, 'item_code', 'item_code');
     }
 
     public function uom(){

@@ -1,12 +1,30 @@
 <?php
 $today = date('Y-m-d');
+$i = 1;
 ?>
 
 <script src="{{ asset('js/new-purchase-receipt.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        let total_price = 0;
+        let total_qty = 0;
+        for (let i = 1; i <= $('#itemsToReceive tr').length; i++) {
+            total_qty += parseInt($(`#qtyAcc${i}`).val());
+            total_price += parseFloat($(`#amtAcc${i}`).val());
+        }
+        $('#receiveQty').val(total_qty);
+        $('#receivePrice').val(total_price);
+    });
+
+</script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
-            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Receipt #</h2>
+            <a href='javascript:onclick=loadPurchaseReceipt();' class="fas fa-arrow-left back-button"><span></span></a>
+            <h2 class="navbar-brand" style="font-size: 35px;">Receipt <span
+                    id="pr_id">{{ $receipt->p_receipt_id }}</span></h2>
+            <br>
+            <p id="recStatus">{{ $receipt->pr_status }}</p>
         </h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,34 +32,47 @@ $today = date('Y-m-d');
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="loadPurchaseReceipt();">Cancel</button>
-                </li>
-                <li class="nav-item li-bom">
-                    <button type="button" id="saveReceipt" class="btn btn-primary" data-target="#saveSale">
-                        Save
-                    </button>
-                </li>
+                @if ($receipt->pr_status === 'Draft')
+
+                    <li class="nav-item li-bom">
+                        <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                            onclick="loadPurchaseReceipt();">Cancel</button>
+                    </li>
+                    <li class="nav-item li-bom">
+                        <button type="button" id="submitReceipt" class="btn btn-primary" data-target="#saveSale">
+                            Submit
+                        </button>
+                    </li>
+
+                @else
+                    <li class="nav-item li-bom">
+                        <button type="button" id="receiveMaterials" class="btn btn-primary" data-target="#saveSale">
+                            Save Record
+                        </button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
 </nav>
 <div class="accordion" id="accordion">
     <div class="card">
-        <div class="card-header" id="heading1">
-            <h2 class="mb-0">
-                <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
-                    id="dropdownMenunpr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Get Items from
-                </button>
+        @if ($receipt->pr_status === 'Draft')
+            <div class="card-header" id="heading1">
+                <h2 class="mb-0">
+                    <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
+                        id="dropdownMenunpr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Get Items from
+                    </button>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenunpr">
-                    <a class="dropdown-item" href="#" data-toggle="modal"
-                        data-target="#npr_purchaseOrderModal">Purchase Order</a>
-                </div>
-            </h2>
-        </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenunpr">
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            data-target="#npr_purchaseOrderModal">Purchase
+                            Order</a>
+                    </div>
+                </h2>
+            </div>
+        @endif
         <div class="collapse show" id="salesOrderCard1">
             <div class="card-body">
                 <form action="" id="" method="POST">
@@ -53,43 +84,27 @@ $today = date('Y-m-d');
                                 Series
                             </label>
                             <div class="d-flex">
-                                <input type="text" class="form-input form-control" max="6" value="PR-00X" disabled>
+                                <input type="text" class="form-input form-control" id="receiptId" max="6"
+                                    value={{ $receipt->p_receipt_id }} readonly>
                             </div>
                             <br>
                             <label class=" text-nowrap align-middle">
                                 Supplier
                             </label>
-                            <input type="text" required class="form-input form-control" id="suppField">
+                            <input type="text" required class="form-input form-control"
+                                value="{{ $supplier->company_name }}" readonly id="">
                             <br>
-                            <input type="text" required class="form-input form-control" hidden id="orderId">
+                            <input type="text" required class="form-input form-control" hidden id="orderId"
+                                value="{{ $receipt->purchase_id }}">
                         </div>
                         <div class="col">
                             <br>
                             <label class="text-nowrap align-middle">
                                 Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npr_date" readonly value=<?php echo $today;?>>
+                            <input type="date" required class="form-input form-control" id="npr_date" readonly
+                                value={{ $receipt->date_created }}>
                             <br>
-                            <!--
-                            <label class=" text-nowrap align-middle">
-                                Posting Time
-                            </label>
-                            <input type="text" required class="form-input form-control" id="npr_postingT" disabled>
-                            <br>
-                        
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="npr_editpdt">
-                                #More concise form of enableDisable function from front-end
-                                <script type="text/javascript">
-                                    $("#npr_editpdt").change(function () { 
-                                        let bEnable = $(this).prop('checked');
-                                        $('#npr_date').prop('disabled', !bEnable);
-                                        $('#npr_postingT').prop('disabled', !bEnable);
-                                    });
-                                </script>
-                            </div>
-                        
-                            <label for="" class="form-check-label ml-4">Edit Posting Date and Time</label>-->
                         </div>
                     </div>
                 </form>
@@ -113,7 +128,8 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Select Supplier Address
                             </label>
-                            <input type="text" required class="form-input form-control" id="addressField">
+                            <input type="text" required class="form-input form-control" readonly
+                                value="{{ $supplier->supplier_address }}" id="">
                         </div>
                         <div class="form-group">
                             <label class=" text-nowrap align-middle">
@@ -139,7 +155,7 @@ $today = date('Y-m-d');
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
                     data-target="#salesOrderCard5" aria-expanded="false">
-                    MATERIALS TO RECEIVE
+                    RECEIVE MATERIALS
                 </button>
             </h2>
         </div>
@@ -153,29 +169,57 @@ $today = date('Y-m-d');
                                 <tr class="text-muted">
                                     <td>
                                         <div class="form-check">
-                                            <input type="checkbox" id="mainChk" class="form-check-input" disabled>
+                                            <input type="checkbox" id="mainChk" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif class="form-check-input">
                                         </div>
                                     </td>
                                     <td>Item</td>
-                                    <td>Accepted Quantity</td>
+                                    @if ($receipt->pr_status !== 'Draft')
+                                        <td>Accepted Quantity</td>
+                                    @endif
+                                    <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
                                 </tr>
                             </thead>
                             <tbody class="" id="itemsToReceive">
-                                <tr id='nullRow'>
-                                    <td colspan="7" style="text-align: center;">
-                                        NO DATA
+                                @foreach ($materials as $material)
+                                    <tr id="row-<?= $i ?>">
+                                    <td>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="item-chk" id="chk<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif class="form-check-input">
+                                        </div>
                                     </td>
+                                    <td class="text-black-50">
+                                        <input class="form-control" type="text" id="item_code<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif value={{ $material['item_code'] }}>
+                                    </td>
+                                    @if ($receipt->pr_status !== 'Draft')
+                                        <td class="text-black-50">
+                                            <input class="form-control" type="number" id="qtyRec<?= $i ?>" placeholder="Enter quantity...">
+                                        </td>
+                                    @endif
+                                    <td class="text-black-50">
+                                        <input class="form-control" id="qtyAcc<?= $i ?>" type="number" @if ($receipt->pr_status === 'Draft') onchange="calcPrice(<?= $i ?>); onChangeFunction();" @else disabled @endif min="0" value={{ $material['qty'] }}>
+                                    </td> 
+                                    <td class="text-black-50">
+                                        <input class="form-control" id="rateAcc<?= $i ?>" type="text" @if ($receipt->pr_status === 'Draft') readonly onchange="calcPrice(<?= $i ?>); onChangeFunction();" @else disabled @endif min="0" value={{ $material['rate'] }}>
+                                    </td> 
+                                    <td class="text-black-50">
+                                        <input class="form-control" id="amtAcc<?= $i ?>" type="text" @if ($receipt->pr_status === 'Draft') readonly onchange="onChangeFunction();" @else disabled @endif min="0" value={{ $material['amount'] }}>
+                                    </td> 
                                 </tr>
+                                <?php ++$i; ?>
+                                @endforeach
                             </tbody>
                             <tfoot>
+                                @if ($receipt->pr_status === 'Draft')
+                                <td colspan="7" rowspan="5">
+                                    <button id="multBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
+                                    <button id="rowBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Row</button>
+                                    <button id="deleteBtn" class="btn btn-sm btn-sm btn-secondary" style="display: none; background-color: red">Delete</button>
+                                </td>
+                                @endif
                                 <tr>
-                                    <td colspan="7" rowspan="5">
-                                        <button id="multBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
-                                        <button id="rowBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Row</button>
-                                        <button id="deleteBtn" class="btn btn-sm btn-sm btn-secondary" style="display: none; background-color: red">Delete</button>
-                                    </td>
+                                    
                                 </tr>
                             </tfoot>
                         </table>
@@ -216,8 +260,31 @@ $today = date('Y-m-d');
             </div>
         </div>
     </div>
-    
 
+    <!--
+    <div class="card" id="cardMoreInfo">
+        <div id="salesOrderCard9">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class=" text-nowrap align-middle">
+                                Status
+                            </label>
+                            <select id="" class="form-control">
+                                <option selected>Draft</option>
+                                <option>Paid</option>
+                                <option>Unpaid</option>
+                                <option>Overdue</option>
+                                <option>Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+-->
 </div>
 <!-- Modal Purchase Order-->
 <div class="modal fade" id="npr_purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="npr_purchaseOrderModal"
@@ -260,4 +327,3 @@ $today = date('Y-m-d');
         </div>
     </div>
 </div>
-

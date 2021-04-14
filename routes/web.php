@@ -14,6 +14,7 @@ use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
 use App\Http\Controllers\PartsController;
+use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -210,9 +212,8 @@ Route::get('/paymententry', function () {
 });
 
 /**PENDING ORDERS ROUTES */
-Route::get('/pendingorders', function () {
-    return view('modules.buying.pendingorders');
-});
+Route::get('/pendingorders', [PendingOrdersController::class, 'index']);
+Route::get('/view-progress/{id}', [PendingOrdersController::class, 'view_progress']);
 Route::get('/view-pending-order', function () {
     return view('modules.buying.pendingordersinfo');
 });
@@ -265,9 +266,12 @@ Route::get('/loadProjectTemplate', function () {
 /**PURCHASE INVOICE ROUTES */
 Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
 Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
+Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
+Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
+Route::post('/pay-invoice/{receipt_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/purchaseorder', [MaterialsPurchasedController::class,'index']);
+Route::get('/purchaseorder', [MaterialsPurchasedController::class, 'index']);
 Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openOrderForm']);
 Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
 Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
@@ -280,6 +284,11 @@ Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
 Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
 Route::post('/create-receipt', [PurchaseReceiptController::class, 'createReceipt']);
+Route::get('/view-receipt/{receipt_id}', [PurchaseReceiptController::class, 'showReceipt']);
+Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
+Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
+Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
+Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
 
 /**QUALITY ROUTES */
 Route::get('/quality', function () {
@@ -327,8 +336,8 @@ Route::get('/search-customer/{id}', [SalesOrderController::class, 'find_customer
 Route::get('/view/{id}', [SalesOrderController::class, 'viewId']);
 Route::get('/getPaymentLogs/{id}', [SalesOrderController::class, 'getPaymentLogs']);
 Route::patch('/updateStatus/{id}', [SalesOrderController::class, 'update']);
-Route::get('/getPaymentType/{id}' , [SalesOrderController::class, 'getPaymentType']);
-Route::get('/getAmountToBePaid/{id}' , [SalesOrderController::class, 'getAmountToBePaid']);
+Route::get('/getPaymentType/{id}', [SalesOrderController::class, 'getPaymentType']);
+Route::get('/getAmountToBePaid/{id}', [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
@@ -371,9 +380,10 @@ Route::get('/createnewsupplier', function () {
 });
 
 /**SUPPLIER QUOTATION ROUTES */
-Route::get('/supplierquotation', function () {
-    return view('modules.buying.supplierQuotation');
-});
+Route::resource('/supplierquotation', SupplierQuotationController::class);
+Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'getSupplierQuotations'])
+    ->name('supplierquotation.list');
+Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
 Route::get('/load-supplier', function () {
     return view('modules.buying.supplierQuotation1');
 });
