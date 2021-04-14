@@ -46,4 +46,8 @@ class SuppliersQuotation extends Model
     // public function getPurchasedMaterials() {
     //     return $this->hasOne(MaterialPurchased::class, 'supp_quotation_id', 'supp_quotation_id');
     // }
+
+    public function getRouteKeyName(){
+        return 'supp_quotation_id';
+    }
 }

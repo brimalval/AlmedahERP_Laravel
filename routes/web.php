@@ -277,7 +277,7 @@ Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
 Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
 Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
-Route::post('/get-materials', [MaterialPurchasedController::class, 'getMaterials']);
+Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);

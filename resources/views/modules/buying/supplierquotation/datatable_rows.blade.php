@@ -3,7 +3,7 @@
     individually in SupplierQuotationController
 -->
 @section('company_name')
-    <a href='#' onclick="loadIntoPage(this, '{{ route('supplierquotation.show', ['supplierquotation'=>$row->id]) }}')">
+    <a href='#' onclick="loadIntoPage(this, '{{ route('supplierquotation.show', ['supplierquotation'=>$row->supp_quotation_id]) }}')">
         {{ $row->supplier->company_name }}
     </a>
 @endsection
