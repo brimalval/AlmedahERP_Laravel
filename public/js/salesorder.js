@@ -93,14 +93,29 @@ function creationSelectPaymentType() {
     if (paymentType == "Cash") {
         document.getElementById("account_no_div").style.display = "none";
         document.getElementById("account_cheque_no").style.display = "none";
+        document.getElementById("account_name_div").style.display = "none";
         document.getElementById("account_cheque_date").style.display = "none";
+        document.getElementById("with_postdated_div").style.display = "none";
     } else {
-        document.getElementById("account_no_div").style.display = "flex";
-        document.getElementById("account_cheque_no").style.display = "flex";
-        document.getElementById("account_cheque_date").style.display = "flex";
+        document.getElementById("account_no_div").style.display = "";
+        document.getElementById("account_cheque_no").style.display = "";
+        document.getElementById("account_name_div").style.display = "";
+        document.getElementById("account_cheque_date").style.display = "";
+        document.getElementById("with_postdated_div").style.display = "";
     }
 }
 
+function withPostdatedCheque() {
+    var checkbox = document.getElementById("with_postated_cheque");
+    var postDated = document.getElementById("post_date_cheque");
+    if (checkbox.checked) {
+        postDated.disabled = false;
+    } else {
+        postDated.disabled = true;
+    }
+}
+
+//
 //For payment modal
 function selectPaymentType() {
     var paymentType = document.getElementById("view_paymentType").value;
@@ -120,8 +135,8 @@ function installmentType() {
     if (payment_method == "Cash") {
         $("#payments_table_body").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Cash</td><td class="text-center">' +
-                cost +
-                "</td></tr>"
+            cost +
+            "</td></tr>"
         );
     } else {
         installment_type = document.getElementById("installmentType").value;
@@ -129,8 +144,8 @@ function installmentType() {
             .value;
         $("#payments_table_body").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Downpayment </td><td class="text-center">' +
-                saleDownpaymentCost +
-                "</td></tr>"
+            saleDownpaymentCost +
+            "</td></tr>"
         );
         cost -= saleDownpaymentCost;
         switch (installment_type) {
@@ -139,10 +154,10 @@ function installmentType() {
                 for (let index = 0; index < 3; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                            (index + 1) +
-                            '</td><td class="text-center">' +
-                            divider +
-                            "</td></tr>"
+                        (index + 1) +
+                        '</td><td class="text-center">' +
+                        divider +
+                        "</td></tr>"
                     );
                 }
                 break;
@@ -151,10 +166,10 @@ function installmentType() {
                 for (let index = 0; index < 6; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                            (index + 1) +
-                            '</td><td class="text-center">' +
-                            divider +
-                            "</td></tr>"
+                        (index + 1) +
+                        '</td><td class="text-center">' +
+                        divider +
+                        "</td></tr>"
                     );
                 }
                 break;
@@ -163,10 +178,10 @@ function installmentType() {
                 for (let index = 0; index < 12; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                            (index + 1) +
-                            '</td><td class="text-center">' +
-                            divider +
-                            "</td></tr>"
+                        (index + 1) +
+                        '</td><td class="text-center">' +
+                        divider +
+                        "</td></tr>"
                     );
                 }
                 break;
@@ -183,14 +198,14 @@ var createMatRequestItems = [];
 // Adds component into a 2d array. If it is already init adds value instead
 
 
-function contains( names , arr){
+function contains(names, arr) {
     namelist = [];
     for (let index = 0; index < arr.length; index++) {
-        namelist.push( arr[index][0]);
+        namelist.push(arr[index][0]);
     }
 
     for (let index = 0; index < arr.length; index++) {
-        if(namelist[index] == names){
+        if (namelist[index] == names) {
             return true;
         }
 
@@ -202,12 +217,12 @@ function contains( names , arr){
 //Adds product to array
 function addToTable() {
     currentProduct = document.getElementById("saleProductCode").value;
-    if(! contains(currentProduct, currentCart)){
+    if (!contains(currentProduct, currentCart)) {
         currentCart.push([currentProduct, 0]);
         $("#ProductsTable").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
-                currentProduct +
-                '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
+            currentProduct +
+            '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
         );
     }
 }
@@ -257,17 +272,17 @@ function rawMaterials() {
         url: '/getCompo',
         type: "GET",
         data: data,
-        success: function(response){
+        success: function (response) {
             finalizer(response);
         },
         error: function (response, error) {
             // alert("Request: " + JSON.stringify(request));
-        },    
+        },
     })
     //Function here
 }
 
-function finalizer( arr_components) {
+function finalizer(arr_components) {
     $("#create-material-req-btn").html("");
     $(".components tr").remove();
     createMatRequestItems = [];
@@ -302,7 +317,7 @@ function finalizer( arr_components) {
             status = "Available";
         }
 
-        
+
         // append each component to the components table
         $(".components").append(
             `<tr>
@@ -361,10 +376,10 @@ function viewOrderedProducts(id) {
             response.forEach((row) => {
                 $("#viewProductsTable").append(
                     '<tr> <td class="text-center">  ' +
-                        row["product_code"] +
-                        '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value=' +
-                        row["quantity_purchased"] +
-                        " disabled></td></tr>"
+                    row["product_code"] +
+                    '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value=' +
+                    row["quantity_purchased"] +
+                    " disabled></td></tr>"
                 );
             });
         },
@@ -384,44 +399,44 @@ function viewPayments(id) {
                     `<tr>
                     <td class="text-center">
                         ` +
-                        row["id"] +
-                        `
+                    row["id"] +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["date_of_payment"].slice(0, 10) +
-                        `
+                    row["date_of_payment"].slice(0, 10) +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["amount_paid"] +
-                        `
+                    row["amount_paid"] +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["payment_description"] +
-                        `
+                    row["payment_description"] +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["payment_method"] +
-                        `
+                    row["payment_method"] +
+                    `
                     </td>
                     <td class="text-center">
                         <select class="form-select" onchange="updatePayment( ` +
-                        row["id"] +
-                        `, value);">
+                    row["id"] +
+                    `, value);">
                                         <option value="" selected disabled> ` +
-                        row["payment_status"] +
-                        ` </option>
+                    row["payment_status"] +
+                    ` </option>
                                         <option value="Pending">Pending</option>
                                         <option value="Completed">Completed</option>
                         </select>
                     </td>
                     <td class="text-center">
                         ` +
-                        row["customer_rep"] +
-                        `
+                    row["customer_rep"] +
+                    `
                     </td>
                 </tr>`
                 );
