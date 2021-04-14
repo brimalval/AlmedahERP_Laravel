@@ -380,15 +380,14 @@ Route::get('/createnewsupplier', function () {
 
 /**SUPPLIER QUOTATION ROUTES */
 Route::resource('/supplierquotation', SupplierQuotationController::class);
-Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'getSupplierQuotations'])
+Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'get_supplier_quotations'])
     ->name('supplierquotation.list');
-Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
-Route::get('/load-supplier', function () {
-    return view('modules.buying.supplierQuotation1');
-});
-Route::get('/new-supplier', function () {
-    return view('modules.buying.new_supplier_quotation');
-});
+Route::get(
+    '/supplierquotation/{supplierquotation}/load-item-list',
+    [SupplierQuotationController::class, 'load_item_list']
+)
+    ->name('supplierquotation.items');
+Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'get_quotation']);
 
 /**TASK ROUTES */
 Route::get('/openNewTask', function () {

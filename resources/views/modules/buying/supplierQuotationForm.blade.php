@@ -189,10 +189,12 @@
                   </tr>
                 </thead>
                 <tbody class="" id="items-input-rows">
-                  @include('modules.buying.supplierquotation.item_rows', [
-                    'items' => $items,
-                    'units' => $units,
-                  ])
+                  @foreach ($items as $item)
+                    @include('modules.buying.supplierquotation.item_row', [
+                      'item' => $item,
+                      'units' => $units,
+                    ])
+                  @endforeach
                 </tbody>
               </table>
               <div class="row">

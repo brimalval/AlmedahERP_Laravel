@@ -140,7 +140,6 @@
             url: '{{ route('supplierquotation.list', [], false) }}',
             // Including the item code filter to the request
             data: function(data){
-                console.log($('#material-search').val());
                 data.item_code = $('#material-search').val();
             },
         },
