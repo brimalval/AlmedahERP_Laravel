@@ -792,158 +792,171 @@
 
 
 <script type="text/javascript">
-var x;
-// From back-end: to show that data can be shown in table
-$(document).ready(function() {
-    x = $('#salestable').DataTable();
-    // Gets Current date today
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    var yyyy = today.getFullYear();
-    today = mm + '/' + dd + '/' + yyyy;
-    document.getElementById('currentDate').value = today;
-    
-});
-$("#gotoworkorder").click(function(){
-    console.log("Clicked");
-    $("#hiddenworkorder").click();
-})
-function customeridselector(value){
-    if(value == " + Add new" || value==""){
-        document.getElementById('fName').value = "";
-        document.getElementById('lName').value = "";
-        document.getElementById('contactNum').value = "";
-        document.getElementById('custEmail').value = "";
-        document.getElementById('branchName').value = "";
-        document.getElementById('companyName').value = "";
-        document.getElementById('custAddress').value = "";
-    }else{
-        customerDict = findRow(value);
-        document.getElementById('fName').value = customerDict['customer_fname'];
-        document.getElementById('lName').value = customerDict['customer_lname'];
-        document.getElementById('contactNum').value = customerDict['contact_number'];
-        document.getElementById('custEmail').value = customerDict['email_address'];
-        document.getElementById('branchName').value = customerDict['branch_name'];
-        document.getElementById('companyName').value = customerDict['company_name'];
-        document.getElementById('custAddress').value = customerDict['address'];
+    var x;
+    // From back-end: to show that data can be shown in table
+    $(document).ready(function() {
+        x = $('#salestable').DataTable();
+        // Gets Current date today
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+        var yyyy = today.getFullYear();
+        today = mm + '/' + dd + '/' + yyyy;
+        document.getElementById('currentDate').value = today;
+        
+    });
+    $("#gotoworkorder").click(function(){
+        console.log("Clicked");
+        $("#hiddenworkorder").click();
+    })
+    function customeridselector(value){
+        if(value == " + Add new" || value==""){
+            document.getElementById('fName').value = "";
+            document.getElementById('lName').value = "";
+            document.getElementById('contactNum').value = "";
+            document.getElementById('custEmail').value = "";
+            document.getElementById('branchName').value = "";
+            document.getElementById('companyName').value = "";
+            document.getElementById('custAddress').value = "";
+        }else{
+            customerDict = findRow(value);
+            document.getElementById('fName').value = customerDict['customer_fname'];
+            document.getElementById('lName').value = customerDict['customer_lname'];
+            document.getElementById('contactNum').value = customerDict['contact_number'];
+            document.getElementById('custEmail').value = customerDict['email_address'];
+            document.getElementById('branchName').value = customerDict['branch_name'];
+            document.getElementById('companyName').value = customerDict['company_name'];
+            document.getElementById('custAddress').value = customerDict['address'];
+        }
     }
-}
-// Finds the row of the given id
-function findRow(value){
-    @foreach ($customers as $rows)
-        test1={
-            "customer_lname": "{{ $rows->customer_lname}}",
-            "customer_fname": "{{ $rows->customer_fname }}",
-            "contact_number": "{{ $rows->contact_number }}",
-            "email_address": "{{ $rows->email_address }}",
-            "branch_name": "{{ $rows->branch_name}}",
-            "company_name": "{{ $rows->company_name }}",
-            "address": "{{ $rows->address}}"};
-        if ({{$rows->id}} == value){
-            return test1;
-        }
-    @endforeach
-}
-$('#makePaymentForm').submit(function(e){
-    e.preventDefault();
-    $.ajaxSetup({
-         headers: {
-             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-         }
-    });
-    var formData = new FormData(this);
-    theId = document.getElementById('view_savepayment').value;
-    formData.append("id", theId);
-    
-    $.ajax({
-        type:'POST',
-        url:"/addPayment",
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function(data) {
-            console.log("Payment Sucess")
-            document.getElementById('closeModal').click();
-            loadRefresh();
-        },
-        error: function(data) {
-            console.log("error");
-            console.log(data);
-        }
-    });
-})
-
-// For creation of sales order
-$("#sales_order_form").submit(function(e) {
-    e.preventDefault();
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    var formData = new FormData(this);
-    console.log(currentCart);
-    formData.append("cart",currentCart );
-    formData.append("component", JSON.stringify(ultimateComponentTable));
-    formData.append("installmentType", document.getElementById('installmentType').value);
-    $.ajax({
-        type: 'POST',
-        url: "/createsalesorder",
-        data: formData, 
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function(data) {
-            $('#saveSaleOrder1').click(function() {
-                $('#newSalePrompt').modal('hide');
-            });
-            document.getElementById('closeSaleOrderModal').click();
-            console.log(data);
-            loadRefresh();
-            
-        },
-        error: function(data) {
-            console.log("error");
-            console.log(data);
-        }
-    });
-});
-function getCalculatedPrice($name){
-    @foreach ($products as $row)
-        if ("{{$row->product_code}}" == $name)
-            return {{$row->sales_price_wt}}
-    @endforeach
-}
-function loadRefresh(){
-    var stats = "";
-    $.ajax({
-        url: '/refresh',
-        type: 'get',
-        success: function(response){
-            x.clear();
-            response.forEach(row => {
-                if(row['sales_status'] == "Fully Paid"){
-                    stats = "<td class='text-success'>" + row['sales_status']+ " </td>";
-                }else{
-                    stats = "<td class='text-danger'>" + row['sales_status']+ " </td>";
+    // Finds the row of the given id
+    function findRow(value){
+        @foreach ($customers as $rows)
+            test1={
+                "customer_lname": "{{ $rows->customer_lname}}",
+                "customer_fname": "{{ $rows->customer_fname }}",
+                "contact_number": "{{ $rows->contact_number }}",
+                "email_address": "{{ $rows->email_address }}",
+                "branch_name": "{{ $rows->branch_name}}",
+                "company_name": "{{ $rows->company_name }}",
+                "address": "{{ $rows->address}}"};
+            if ({{$rows->id}} == value){
+                return test1;
+            }
+        @endforeach
+    }
+    $('#makePaymentForm').submit(function(e){
+        e.preventDefault();
+        $.ajaxSetup({
+             headers: {
+                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+             }
+        });
+        var formData = new FormData(this);
+        theId = document.getElementById('view_savepayment').value;
+        formData.append("id", theId);
+        
+        $.ajax({
+            type:'POST',
+            url:"/addPayment",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                console.log("Payment Sucess")
+                document.getElementById('closeModal').click();
+                loadRefresh();
+            },
+            error: function(data) {
+                console.log("error");
+                console.log(data);
+            }
+        });
+    })
+    // For creation of sales order
+    $("#sales_order_form").submit(function(e) {
+        e.preventDefault();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        var formData = new FormData(this);
+        console.log(currentCart);
+        formData.append("cart",currentCart );
+        //formData.append("component", JSON.stringify(ultimateComponentTable));
+        formData.append("installmentType", document.getElementById('installmentType').value);
+        $.ajax({
+            type: 'POST',
+            url: "/createsalesorder",
+            data: formData, 
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                $('#saveSaleOrder1').click(function() {
+                    $('#newSalePrompt').modal('hide');
+                });
+                document.getElementById('closeSaleOrderModal').click();
+                if (mat_insufficient) {
+                    // CREATE MATERIAL REQUEST
+                    console.log("DATA FOR REFERENCE");
+                    console.log(createMatRequestItems);
                 }
-               x.row.add([
-                `<tr>
-                    <td class= "text-bold">  ` + row['id'] + ` </td> `,`
-                    <td class= "text-bold"> ` + row['customer_lname'] + `  ` + row['customer_fname'] + `</td> `,`
-                    <td class= "text-bold"> ` + row['payment_mode'] + `</td> `,`
-                    ` + stats + ` `,`
-                    <td class="text-bold"> ` + row['payment_balance'] + `</td> `,`
-                    <td class="text-bold"> ` + row['transaction_date'] + `</td> `,`
-                    <td><button type="button" class="btn btn-primary btn-sm" onclick="viewOrderedProducts( ` + row['id'] + `)" data-toggle="modal" data-target="#viewOrder">View Orders</button>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="viewPayments( ` + row['id'] + ` )" data-toggle="modal" data-target="#viewPayment">Payments</button>
-                    </td>
-                </tr>`
-               ]).draw(false);
-            });
-        }
+                loadRefresh();
+                
+            },
+            error: function(data) {
+                console.log("error");
+                console.log(data);
+            }
+        });
     });
-}
+    function getCalculatedPrice($name){
+        @foreach ($products as $row)
+            if ("{{$row->product_code}}" == $name)
+                return {{$row->sales_price_wt}}
+        @endforeach
+    }
+    function loadRefresh(){
+        var stats = "";
+        $.ajax({
+            url: '/refresh',
+            type: 'get',
+            success: function(response){
+                x.clear();
+                response.forEach(row => {
+                    if(row['sales_status'] == "Fully Paid"){
+                        stats = "<td class='text-success'>" + row['sales_status']+ " </td>";
+                    }else{
+                        stats = "<td class='text-danger'>" + row['sales_status']+ " </td>";
+                    }
+                   x.row.add([
+                    `<tr>
+                        <td class= "text-bold">  ` + row['id'] + ` </td> `,`
+                        <td class= "text-bold"> ` + row['customer_lname'] + `  ` + row['customer_fname'] + `</td> `,`
+                        <td class= "text-bold"> ` + row['payment_mode'] + `</td> `,`
+                        ` + stats + ` `,`
+                        <td class="text-bold"> ` + row['payment_balance'] + `</td> `,`
+                        <td class="text-bold"> ` + row['transaction_date'] + `</td> `,`
+                        <td><button type="button" class="btn btn-primary btn-sm" onclick="viewOrderedProducts( ` + row['id'] + `)" data-toggle="modal" data-target="#viewOrder">View Orders</button>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="viewPayments( ` + row['id'] + ` )" data-toggle="modal" data-target="#viewPayment">Payments</button>
+                        </td>
+                    </tr>`
+                   ]).draw(false);
+                });
+                formReset();
+            }
+        });
+    }
+    function formReset(){
+        document.getElementById('sales_order_form').reset();
+        totalValue = 0;
+        currentCart = [];
+        createMatRequestItems = [];
+        console.log(currentCart);
+        $('#ProductsTable tr').remove();
+        $(".components tr").remove();
+    }
 </script>

@@ -2,11 +2,6 @@ let mat_insufficient = false;
 
 $("#saveSaleOrder").click(function () {
     //continueToWorkOrder("#saveSaleOrder");
-    if (mat_insufficient) {
-        // CREATE MATERIAL REQUEST
-        console.log("DATA FOR REFERENCE");
-        console.log(createMatRequestItems);
-    }
     $("#notif").hide();
 });
 
@@ -245,7 +240,6 @@ function finalizer(arr_components) {
                     quantity_needed_for_request: el["item_qty"] * component[2],
                 })
             );
-            console.log(materialsInComponents);
         } else {
             rawMaterialsOnly.push({
                 component_name: component[0],
