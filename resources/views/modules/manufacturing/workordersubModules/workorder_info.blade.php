@@ -86,7 +86,7 @@
 				<button class="btn btn-secondary btn-sm ml-2" type="button">
 					Cancel
 				</button>
-				<button class="btn btn-primary btn-sm ml-2" type="button">
+				<button class="btn btn-primary btn-sm ml-2" type="submit" id="startWorkOrder">
 					Start
 				</button>
 			</div>
@@ -109,15 +109,15 @@
 				</div>
 				<p class="text-muted">0 Items Produced</p>
 				<br>
-				<div class="group-link">
+				{{-- <div class="group-link">
 					<a class="link" href="#">Pick List<span class="badge text-muted"> </span><span class="badge bg-danger badge-pill text-light"></span><i class="fas fa-plus ml-1 mt-2"> </i></a><br>
 					<a class="link" href="#">Stock Entry<span class="badge text-muted"> </span><span class="badge bg-danger badge-pill text-light"></span><i class="fas fa-plus ml-1 mt-2"> </i></a><br>
 					<a class="link" href="#">Job Card<span class="badge text-muted"> </span><span class="badge bg-danger badge-pill text-light"></span><i class="fas fa-plus ml-1 mt-2"> </i></a><br>
-				</div>
+				</div> --}}
 			</div>
 		</div>
 	</div>
-	<div id="work-dashboard" class="card collapse show p-3">
+	{{-- <div id="work-dashboard" class="card collapse show p-3">
 		<div class="row" style="padding: 1%;">
 			<div class="col-6">
 				<label for="" class="text-muted">Status</label>
@@ -191,7 +191,7 @@
 				<input type="text" class="form-control" disabled="true">
 			</div>
 		</div>
-	</div>
+	</div> --}}
 	<div id="work-dashboard" class="card collapse show p-3">
 		<h5 class="text-muted">REQUIRED ITEMS</h5>
 		<br>
@@ -313,3 +313,26 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	function startWorkOrder(){
+		$.ajax({
+            url: "/startWorkOrder",
+            type: "get",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (request, error) {},
+        });
+	}
+	// $('#startWorkOrder').on('click', function(){
+	// 	$.ajax({
+    //         url: "/startWorkOrder",
+    //         type: "get",
+    //         success: function (data) {
+    //             console.log(data);
+    //         },
+    //         error: function (request, error) {},
+    //     });
+	// });
+</script>

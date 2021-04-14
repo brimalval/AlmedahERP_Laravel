@@ -162,6 +162,8 @@ function loadWorkOrder() {
 
 function loadWorkOrderInfo(workOrderDetails, itemName) {
     $("#requiredItems").html("");
+    console.log(workOrderDetails);
+    // $("#startWorkOrder").click(startWorkOrder());
     $(document).ready(function () {
         $("#contentWorkOrder").load("/loadWorkOrderInfo", function () {
             $("#componentName").text(itemName);
@@ -328,15 +330,15 @@ function loadSupplier() {
 }
 
 function openSupplierInfo(id) {
-  $(document).ready(function () {
-    $('#contentSupplier').load(`/view-supplier/${id}`);
-  });
+    $(document).ready(function () {
+        $("#contentSupplier").load(`/view-supplier/${id}`);
+    });
 }
 
 function openSaleInfo(id) {
-  $(document).ready(function () {
-    $('#contentSalesOrder').load(`/view-sales-order/${id}`);
-  });
+    $(document).ready(function () {
+        $("#contentSalesOrder").load(`/view-sales-order/${id}`);
+    });
 }
 
 function loadSalesOrder() {
@@ -357,9 +359,9 @@ function loadPurchaseOrder() {
 }
 
 function viewPurchaseOrder(id) {
-  $(document).ready(function () {
-    $('#contentPurchaseOrder').load(`/view-order/${id}`);
-  })
+    $(document).ready(function () {
+        $("#contentPurchaseOrder").load(`/view-order/${id}`);
+    });
 }
 
 function openNewPurchaseOrder() {
@@ -525,43 +527,47 @@ function loadSupplierQuotation() {
 }
 
 function openNewSupplierQuotation() {
-  $(document).ready(function () {
-    $('#contentSupplierQuotation').load('/new-supplier');
-  });
+    $(document).ready(function () {
+        $("#contentSupplierQuotation").load("/new-supplier");
+    });
 }
 
 function openNewPurchaseInvoice() {
-  $(document).ready(function () {
-    $('#contentPurchaseInvoice').load('/new-invoice');
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseInvoice").load("/new-invoice");
+    });
 }
 
 function loadPurchaseInvoice() {
-  $(document).ready(function () {
-    $('#contentPurchaseInvoice').load('/purchaseinvoice');
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseInvoice").load("/purchaseinvoice");
+    });
 }
 
-function openPurchaseInvoiceInfo(id) {
-  $(document).ready(function () {
-    $('#contentPurchaseInvoice').load(`/view-invoice/${id}`);
-  });
+function openPurchaseInvoiceInfo() {
+    $(document).ready(function () {
+        $("#contentPurchaseInvoice").load(
+            "modules/buying/purchaseInvoiceInfo.php"
+        );
+    });
 }
 
 function openNewPurchaseReceipt() {
-  $(document).ready(function () {
-    $('#contentPurchaseReceipt').load('/new-receipt');
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseReceipt").load("/new-receipt");
+    });
 }
 
-function openPurchaseReceiptInfo(id) {
-  $(document).ready(function () {
-    $('#contentPurchaseReceipt').load(`/view-receipt/${id}`);
-  });
+function openPurchaseReceiptInfo() {
+    $(document).ready(function () {
+        $("#contentPurchaseReceipt").load(
+            "modules/buying/PurchaseReceiptInfo.php"
+        );
+    });
 }
 
 function loadPurchaseReceipt() {
-  $(document).ready(function () {
-    $('#contentPurchaseReceipt').load('/purchasereceipt');
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseReceipt").load("/purchasereceipt");
+    });
 }

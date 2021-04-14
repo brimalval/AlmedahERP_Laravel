@@ -248,6 +248,12 @@ class SalesOrderController extends Controller
         }
     }
 
+    function getRawMaterialQuantity($raw_material){
+        $raw_material = ManufacturingMaterials::where('item_name', $raw_material)->first();
+        $raw_material_qty = $raw_material->rm_quantity;
+        return response($raw_material_qty);
+    }
+
     function getPaymentLogs($id){
         $logs = payment_logs::where('sales_id', $id)->get();
         return response($logs);
@@ -368,9 +374,8 @@ class SalesOrderController extends Controller
     function getCompo(Request $request){
         $products = $request->input('products');
         $qty = $request->input('qty');
-
         $components = array();
-
+        $raw_materials_in_components = array();
         for ($i=0; $i < count($products); $i++) { 
 
             $product = ManufacturingProducts::where('product_code', $products[$i])->first();
@@ -396,7 +401,8 @@ class SalesOrderController extends Controller
                 $raw_material_category = "Component";
                 $raw_material_name = $raw_material->component_name;
                 $raw_material_quantity = 0;
-                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity]);
+                $raw_materials_needed = $raw_material->item_code;
+                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
             }
             //name, cat, neededVal, stockVal
         }

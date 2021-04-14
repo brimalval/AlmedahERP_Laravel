@@ -55,6 +55,7 @@ $("#idBtn").on("click", function () {
 //    this.remove();
 //  });
 //}
+let mat_insufficient = false;
 
 $("#saveSaleOrder").click(function () {
     //continueToWorkOrder("#saveSaleOrder");
@@ -215,7 +216,6 @@ var currentCart = [];
 var createMatRequestItems = [];
 // Adds component into a 2d array. If it is already init adds value instead
 
-
 function contains(names, arr) {
     namelist = [];
     for (let index = 0; index < arr.length; index++) {
@@ -283,11 +283,11 @@ function rawMaterials() {
         products[index] = currentCart[index][0];
         qty[index] = currentCart[index][1];
     }
-    data['products'] = products;
-    data['qty'] = qty;
+    data["products"] = products;
+    data["qty"] = qty;
 
     $.ajax({
-        url: '/getCompo',
+        url: "/getCompo",
         type: "GET",
         data: data,
         success: function (response) {
@@ -303,7 +303,14 @@ function rawMaterials() {
 function finalizer(arr_components) {
     $("#create-material-req-btn").html("");
     $(".components tr").remove();
+
+    // Raw materials that are insufficient are stored in this array
     createMatRequestItems = [];
+    // Raw Materials inside Components
+    materialsInComponents = [];
+    // Raw Materials only
+    rawMaterialsOnly = [];
+    mat_insufficient = false;
     for (let index = 0; index < arr_components.length; index++) {
         component = [
             arr_components[index][2],
@@ -312,25 +319,41 @@ function finalizer(arr_components) {
             arr_components[index][3],
         ];
 
+        /* 
+            Checks if it is a component, if it is, it gets its JSON data and adds it to the
+            materialsInComponents array.
+        */
+        if (arr_components[index][4] != null) {
+            let materials_needed = JSON.parse(arr_components[index][4]);
+            materials_needed.forEach((el) =>
+                materialsInComponents.push({
+                    component_name: el["item_name"],
+                    category: "Component",
+                    quantity_needed_for_request: el["item_qty"] * component[2],
+                })
+            );
+        } else {
+            rawMaterialsOnly.push({
+                component_name: component[0],
+                category: component[1],
+                quantity_needed: component[2],
+                quantity_avail: component[3],
+            });
+        }
+
         // set status of each component
         if (component[3] <= 0) {
             status = "Out of stock";
         } else if (component[3] > 0 && component[3] < component[2]) {
             status = "Insufficient";
-
-            // Dynamically placing a create material request button if a raw material is insufficient
-            $("#create-material-req-btn").html(
-                '<button class="btn btn-primary btn-sm float-right">Create Material Request</button>'
-            );
-
+            mat_insufficient = true;
+            // showCreateMaterialRequestBtn();
             // Add this insufficient material to array for material request processing
             createMatRequestItems.push({
                 component_name: component[0],
                 category: component[1],
-                quantity_need: component[2],
-                quantity_avail: component[3],
+                quantity_needed_for_request: component[2] - component[3],
             });
-
         } else if (component[2] >= component[2]) {
             status = "Available";
         }
@@ -370,7 +393,78 @@ function finalizer(arr_components) {
         </tr>`
         );
     }
+
+    /* 
+       Checks each raw material in Components if it already has the raw material in the table.
+       If it does, then it adjusts the quantity that is needed per material. And if it doesn't 
+       It gets the quantity available data of the raw material inside the component and it 
+       checks if its raw material quantity is insufficient. 
+    */
+    materialsInComponents.forEach((matComponent) => {
+        let find = rawMaterialsOnly.find(
+            (rawMat) =>
+                rawMat["component_name"] == matComponent["component_name"]
+        );
+        if (find) {
+            let rawMaterialsNeeded =
+                parseInt(find["quantity_needed"]) +
+                parseInt(matComponent["quantity_needed_for_request"]) -
+                parseInt(find["quantity_avail"]);
+
+            if (rawMaterialsNeeded > 0) {
+                // showCreateMaterialRequestBtn();
+                // Add this insufficient material to array for material request processing
+
+                let matItemExists = createMatRequestItems.find(
+                    (matItem) =>
+                        matItem["component_name"] == find["component_name"]
+                );
+                if (!matItemExists) {
+                    createMatRequestItems.push({
+                        component_name: find["component_name"],
+                        category: find["category"],
+                        quantity_needed_for_request: rawMaterialsNeeded,
+                    });
+                }
+            }
+        } else {
+            let quantity_avail = getRawMaterialQuantity(
+                matComponent["component_name"]
+            );
+            if (matComponent["quantity_needed_for_request"] > quantity_avail) {
+                createMatRequestItems.push({
+                    component_name: matComponent["component_name"],
+                    category: "Component",
+                    quantity_needed_for_request:
+                        matComponent["quantity_needed_for_request"] -
+                        quantity_avail,
+                });
+            }
+        }
+    });
+    console.log("Below is the data you need for Material Request");
+    console.log(createMatRequestItems);
 }
+
+function getRawMaterialQuantity(rawMaterial) {
+    let data = "";
+    $.ajax({
+        url: "getRawMaterialQuantity/" + rawMaterial,
+        type: "get",
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+    });
+    return data;
+}
+
+// Dynamically placing a create material request button if a raw material is insufficient
+// function showCreateMaterialRequestBtn() {
+//     $("#create-material-req-btn").html(
+//         '<button class="btn btn-primary btn-sm float-right">Create Material Request</button>'
+//     );
+// }
 
 $("#saleQuantity").keyup(function () {
     new_values = [];
