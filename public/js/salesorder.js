@@ -120,9 +120,27 @@ function withPostdatedCheque() {
 function selectPaymentType() {
     var paymentType = document.getElementById("view_paymentType").value;
     if (paymentType == "Cash") {
-        document.getElementById("viewaccount_no_div").style.display = "none";
+        document.getElementById("view_cheque_no_div").style.display = "none";
+        document.getElementById("view_account_no_div").style.display = "none";
+        document.getElementById("view_account_name_div").style.display = "none";
+        document.getElementById("view_postdated_checkbox_div").style.display = "none";
+        document.getElementById("view_postdated_cheque_div").style.display = "none";
     } else {
-        document.getElementById("viewaccount_no_div").style.display = "flex";
+        document.getElementById("view_cheque_no_div").style.display = "";
+        document.getElementById("view_account_no_div").style.display = "";
+        document.getElementById("view_account_name_div").style.display = "";
+        document.getElementById("view_postdated_checkbox_div").style.display = "";
+        document.getElementById("view_postdated_cheque_div").style.display = "";
+    }
+}
+
+function PostdatedCheque() {
+    var viewcheckbox = document.getElementById("view_postated_cheque");
+    var viewpostDated = document.getElementById("view_post_date_cheque");
+    if (viewcheckbox.checked) {
+        viewpostDated.disabled = false;
+    } else {
+        viewpostDated.disabled = true;
     }
 }
 

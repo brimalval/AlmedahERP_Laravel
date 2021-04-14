@@ -639,15 +639,40 @@
                                 <br>
                             </div>
                             <br>
-                            
-                            <div class="col" style="display:none" id="viewaccount_no_div">
+                            <div class="col" id="view_cheque_no_div" name="view_cheque_no_div" style="display:none">
+                                <label  >
+                                    Cheque No.
+                                </label>
+                                <br>
+                                <input type="text" class="form-input form-control" id="view_cheque_no" name="view_cheque_no" placeholder="Cheque No">
+                            </div>
+                            <br>
+                            <div class="col" id="view_account_no_div" name="view_account_no_div" style="display:none">
                                 <label >
                                     Account No.
                                 </label>
-                                <input type="text" class="form-input form-control" placeholder="Account No" name="view_account_no">
+                                <input type="text" class="form-input form-control" id="aview_ccount_no" name="view_account_no" placeholder="Account No">
                             </div>
                             <br>
-
+                            <div class="col " id="view_account_name_div" name="view_account_name_div" style="display:none">
+                                <label >
+                                    Account Name.
+                                </label>
+                                <input type="text" class="form-input form-control" id="view_account_name" name="view_account_name" placeholder="Account Name">
+                            </div>
+                            <br>
+                            <div class="col" id="view_postdated_checkbox_div" name="view_postdated_checkbox_div" style="display:none; padding-left: 37px;">
+                                <input type="checkbox" class="form-check-input"  id="view_postated_cheque" name="with_postated_cheque" onclick="PostdatedCheque()">
+                                <label>Post-Dated Cheque</label>
+                            </div>
+                            <br>
+                            <div class="col" id="view_postdated_cheque_div" name="view_postdated_cheque_div" style="display:none">
+                                <label >
+                                    Date of Post-Dated Cheque
+                                </label>
+                                <input type="date" class="form-input form-control" id="view_post_date_cheque" name="view_post_date_cheque" placeholder="Cheque Date" disabled>
+                            </div>
+                            <br>
                             <div class="col" id="viewaccount_no_div">
                                 <label >
                                     Customer Representative
