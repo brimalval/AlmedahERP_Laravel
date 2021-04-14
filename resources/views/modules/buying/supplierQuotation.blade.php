@@ -43,14 +43,23 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <input type="text" class="form-control datatable-search" id="material-search" placeholder="Raw Material">
+                {{-- <input type="text" class="form-control datatable-search" id="material-search" placeholder="Raw Material"> --}}
+                <select id="material-search" class="form-control selectpicker datatable-search" data-live-search="true">
+                    <option value="" data-subtext="None" selected>Raw Material</option>
+                    @foreach ($materials as $material)
+                        <option value="{{ $material->item_code }}" data-subtext="{{ $material->item_code }}">
+                            {{ $material->item_name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
         </div>
-        <div class="col-4">
+        {{-- Search based on grand total, not yet known how to handle this --}}
+        {{-- <div class="col-4">
             <div class="form-group">
                 <input type="number" min="1" class="form-control datatable-search" id="price-search" placeholder="Grand Total">
             </div>
-        </div>
+        </div> --}}
         <!--
             <div class="col-4">
             <div class="form-group">
@@ -74,7 +83,7 @@
         </div>
     -->
         <div class="float-left">
-            <button class="btn btn-outline-light btn-sm text-muted shadow-sm" id="clear-filters">
+            <button class="btn btn-outline-secondary btn-sm shadow-sm" id="clear-filters">
                 Clear Filters
             </button>
         </div>
@@ -164,6 +173,7 @@
         // Triggering supplier search's change function since it has the special search
         // arguments attached to it; resetting anything else does nothing to the params
         $('#supp-search').change();
+        $('#material-search').selectpicker('refresh');
     });
     $('th').each(function(item, index){
         $(this).addClass('text-center');

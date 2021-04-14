@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SupplierQuotationEmail;
+use App\Models\ManufacturingMaterials;
 use App\Models\MaterialQuotation;
 use App\Models\MaterialRequest;
 use App\Models\MaterialUOM;
@@ -31,9 +32,11 @@ class SupplierQuotationController extends Controller
      */
     public function index()
     {
+        $materials = ManufacturingMaterials::get();
         $squotations = SuppliersQuotation::with('supplier')->get();
         return view('modules.buying.supplierQuotation', [
             'squotations' => $squotations,
+            'materials' => $materials,
         ]);
     }
 
