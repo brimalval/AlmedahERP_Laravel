@@ -860,7 +860,6 @@ function loadRefresh(){
                 </tr>`
                ]).draw(false);
             });
-            formReset();
         }
     });
 }
