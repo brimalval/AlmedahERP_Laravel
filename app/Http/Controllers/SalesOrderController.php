@@ -124,7 +124,7 @@ class SalesOrderController extends Controller
                     $payment_logs->payment_status = "Pending";
                     $payment_logs->cheque_no = $form_data['cheque_no'];
                     $payment_logs->account_name = $form_data['account_name'];
-                    $payment_logs->post_date_cheque = $form_data['account_cheque_date'];
+                    $payment_logs->post_date_cheque = $form_data['post_date_cheque'];
                 }else{
                     $payment_logs->payment_balance = 0;
                     $data->payment_balance = 0;
