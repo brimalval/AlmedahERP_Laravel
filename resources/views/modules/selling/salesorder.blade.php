@@ -1,4 +1,3 @@
-<!-- Datatable links -->
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
@@ -433,7 +432,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Method
                                     </label>
-                                    <select class="form-control sellable" id="salePaymentMethod" required name="salePaymentMethod" onchange="selectPaymentMethod();">
+                                    <select class="form-control sellable" required id="salePaymentMethod"  name="salePaymentMethod" onchange="selectPaymentMethod();">
                                         <option selected disabled>Please Select</option>
                                         <option value="Cash">Full Payment(Cash)</option>
                                         <option value="Installment">Installment</option>
@@ -444,7 +443,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Type
                                     </label>
-                                    <select class="form-control sellable" onchange="creationSelectPaymentType()" id="paymentType" required name="paymentType" >
+                                    <select class="form-control sellable" required onchange="creationSelectPaymentType()" id="paymentType"  name="paymentType" >
                                         <option selected disabled>Payment Type</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Cheque">Cheque</option>
@@ -459,6 +458,20 @@
                                     Account No.
                                 </label>
                                 <input type="text" class="form-input form-control" id="account_no" name="account_no" placeholder="Account No">
+                            </div>
+                            <br>
+                            <div class="col" id="account_cheque_no" name="account_cheque_no" style="display:none">
+                                <label >
+                                    Cheque No.
+                                </label>
+                                <input type="text" class="form-input form-control" id="cheque_no" name="cheque_no" placeholder="Cheque No">
+                            </div>
+                            <br>
+                            <div class="col" id="account_cheque_date" name="account_cheque_date" style="display:none">
+                                <label >
+                                    Cheque Date
+                                </label>
+                                <input type="date" class="form-input form-control" id="cheque_date" name="cheque_date" placeholder="Cheque Date">
                             </div>
                             <br>
 
@@ -796,8 +809,6 @@ $("#gotoworkorder").click(function(){
     console.log("Clicked");
     $("#hiddenworkorder").click();
 })
-
-
 function customeridselector(value){
     if(value == " + Add new" || value==""){
         document.getElementById('fName').value = "";
@@ -834,7 +845,6 @@ function findRow(value){
         }
     @endforeach
 }
-
 $('#makePaymentForm').submit(function(e){
     e.preventDefault();
     $.ajaxSetup({
@@ -865,7 +875,6 @@ $('#makePaymentForm').submit(function(e){
     });
 })
 
-
 // For creation of sales order
 $("#sales_order_form").submit(function(e) {
     e.preventDefault();
@@ -890,9 +899,7 @@ $("#sales_order_form").submit(function(e) {
             $('#saveSaleOrder1').click(function() {
                 $('#newSalePrompt').modal('hide');
             });
-
             document.getElementById('closeSaleOrderModal').click();
-
             console.log(data);
             loadRefresh();
             
@@ -903,14 +910,12 @@ $("#sales_order_form").submit(function(e) {
         }
     });
 });
-
 function getCalculatedPrice($name){
     @foreach ($products as $row)
         if ("{{$row->product_code}}" == $name)
             return {{$row->sales_price_wt}}
     @endforeach
 }
-
 function loadRefresh(){
     var stats = "";
     $.ajax({
@@ -919,13 +924,11 @@ function loadRefresh(){
         success: function(response){
             x.clear();
             response.forEach(row => {
-
                 if(row['sales_status'] == "Fully Paid"){
                     stats = "<td class='text-success'>" + row['sales_status']+ " </td>";
                 }else{
                     stats = "<td class='text-danger'>" + row['sales_status']+ " </td>";
                 }
-
                x.row.add([
                 `<tr>
                     <td class= "text-bold">  ` + row['id'] + ` </td> `,`
@@ -943,5 +946,4 @@ function loadRefresh(){
         }
     });
 }
-
 </script>

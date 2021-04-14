@@ -83,7 +83,8 @@
                     </td>
                     <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $items[$index] }}`)'> {{ $items[$index] }} </a></td>
                     <td>{{ $work_order->work_order_status }}</td>
-                    <td class="text-black-50">{{ $work_order->purchase_id }}</td>
+                    {{-- <td class="text-black-50">{{ $work_order->purchase_id }}</td> --}}
+                    <td class="text-black-50"> </td>
                     <td class="text-black-50">{{ $work_order->product_code }}</td>
                     <td><!--<input type="checkbox">-->{{ $work_order->sales_id }}</td>
                     <td><span class="fas fa-comments"></span>0</td>

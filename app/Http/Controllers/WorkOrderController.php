@@ -34,4 +34,8 @@ class WorkOrderController extends Controller
         $component = Component::where('component_name', $selected)->first();
         return response($component->item_code);
     }
+
+    function startWorkOrder(){
+        return response('gumagana');
+    }
 }
