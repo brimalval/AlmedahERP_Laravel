@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SupplierQuotationEmail;
+use App\Models\ManufacturingMaterials;
 use App\Models\MaterialQuotation;
 use App\Models\MaterialRequest;
 use App\Models\MaterialUOM;
@@ -12,6 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class SupplierQuotationController extends Controller
 {
@@ -19,7 +21,8 @@ class SupplierQuotationController extends Controller
      * Constructor.
      * 
      */
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('signed')->only('create');
     }
     /**
@@ -29,9 +32,11 @@ class SupplierQuotationController extends Controller
      */
     public function index()
     {
+        $materials = ManufacturingMaterials::get();
         $squotations = SuppliersQuotation::with('supplier')->get();
         return view('modules.buying.supplierQuotation', [
             'squotations' => $squotations,
+            'materials' => $materials,
         ]);
     }
 
@@ -42,8 +47,8 @@ class SupplierQuotationController extends Controller
      */
     public function create(Request $request)
     {
-        $rfq = MaterialQuotation::where('req_quotation_id','=',request('r'))->first();
-        $supplier = Supplier::where('supplier_id','=',request('s'))->first();
+        $rfq = MaterialQuotation::where('req_quotation_id', '=', request('r'))->first();
+        $supplier = Supplier::where('supplier_id', '=', request('s'))->first();
         $units = MaterialUOM::get();
         return view('modules.buying.supplierquotationform', [
             'items' => $rfq->item_list(),
@@ -53,13 +58,13 @@ class SupplierQuotationController extends Controller
         ]);
     }
 
-    public function getQuotation($id) 
+    public function getQuotation($id)
     {
         $quotation = SuppliersQuotation::find($id);
         $supplier = $quotation->supplier;
         $items = $quotation->items();
         $req_date = $quotation->req_quotation->material_request->required_date;
-        
+
         return ['quotation' => $quotation, 'supplier' => $supplier, 'items' => $items, 'req_date' => date_format($req_date, "Y-m-d")];
     }
 
@@ -71,15 +76,13 @@ class SupplierQuotationController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-
-        ];
+        $rules = [];
 
         $validator = Validator::make($request->all(), $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
-        try{
+        try {
             $supp_quotation = new SuppliersQuotation();
             $supp_quotation->supp_quotation_id = 'new';
             $supp_quotation->date_created = Carbon::now();
@@ -94,7 +97,7 @@ class SupplierQuotationController extends Controller
             $rates = request('rate');
             $units = request('uom_id');
             $items_list_rate_amt = array();
-            for($i=0, $len=sizeof($item_codes); $i < $len; $i++){
+            for ($i = 0, $len = sizeof($item_codes); $i < $len; $i++) {
                 $item = [
                     'item_code' => $item_codes[$i],
                     'quantity_requested' => $quantities[$i],
@@ -104,8 +107,8 @@ class SupplierQuotationController extends Controller
                 array_push($items_list_rate_amt, $item);
             }
             $supp_quotation->items_list_rate_amt = json_encode($items_list_rate_amt);
-            
-            foreach($items_list_rate_amt as $item){
+
+            foreach ($items_list_rate_amt as $item) {
                 $supp_quotation->grand_total += ($item['quantity_requested'] * $item['rate']);
             }
             $supp_quotation->save();
@@ -113,7 +116,7 @@ class SupplierQuotationController extends Controller
             $supp_quotation->supp_quotation_id = "PUR-SQTN-" . Carbon::now()->year . "-" . str_pad($id, 5, '0', STR_PAD_LEFT);
             $supp_quotation->save();
             dd($supp_quotation);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->withErrors([
                 'exception' => $e->getMessage(),
             ]);
@@ -165,5 +168,56 @@ class SupplierQuotationController extends Controller
     public function destroy(SuppliersQuotation $suppliersQuotation)
     {
         //
+    }
+
+    /**
+     * Return supplier quotation table data.
+     * 
+     * @return array
+     */
+    public function getSupplierQuotations(Request $request)
+    {
+        $query = SuppliersQuotation::where(
+            'items_list_rate_amt', 'LIKE', '%'.$request->item_code.'%'
+        )->with('supplier');
+        return DataTables::of($query)
+            ->editColumn('supplier.company_name', function ($row) {
+                return $this->getSection($row, 'company_name');
+            })
+            ->editColumn('grand_total', function ($row) {
+                return $this->getSection($row, 'grand_total');
+            })
+            ->editColumn('date_created', function ($row) {
+                return $this->getSection($row, 'date_created');
+            })
+            ->editColumn('sq_status', function ($row) {
+                return $this->getSection($row, 'sq_status');
+            })
+            ->editColumn('time_diff', function ($row) {
+                return $this->getSection($row, 'time_diff');
+            })
+            ->rawColumns([
+                'supplier.company_name',
+                'date_created',
+                'grand_total',
+                'sq_status',
+                'time_diff',
+            ])
+            ->make(true);
+    }
+
+    /**
+     * Used to return the HTML of a section within datatable_rows.
+     *
+     * @param array $row
+     * @param string $section_name
+     * @return string
+     */
+    private function getSection($row, $section_name)
+    {
+        $view = view('modules.buying.supplierquotation.datatable_rows', ['row' => $row]);
+        // Return a collection of section => html pairs
+        $sections = $view->renderSections();
+        return $sections[$section_name];
     }
 }

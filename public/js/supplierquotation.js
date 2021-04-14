@@ -1,8 +1,3 @@
-function loadIntoPage(element, route){
-    let parentPane = $(element).parents('.tab-pane');
-    parentPane.load(route);
-}
-
 $(document).ready(function(){
     $('.selectpicker').each(function(){
         $(this).selectpicker();
