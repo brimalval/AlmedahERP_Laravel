@@ -825,7 +825,7 @@ $("#sales_order_form").submit(function(e) {
     console.log(currentCart);
     formData.append("cart",currentCart );
     //formData.append("component", JSON.stringify(ultimateComponentTable));
-    formData.append("installmentType", document.getElementById('installmentType').value);
+    //formData.append("installmentType", document.getElementById('installmentType').value);
     $.ajax({
         type: 'POST',
         url: "/createsalesorder",

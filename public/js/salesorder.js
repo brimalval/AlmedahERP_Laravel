@@ -466,6 +466,7 @@ function viewPayments(id) {
         url: "getPaymentType/" + id,
         type: "get",
         success: function (response) {
+            console.log(response);
             //Remove options
             var i,
                 L =
