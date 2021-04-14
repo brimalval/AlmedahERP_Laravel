@@ -820,7 +820,6 @@
         console.log(currentCart);
         formData.append("cart",currentCart );
         //formData.append("component", JSON.stringify(ultimateComponentTable));
-        formData.append("installmentType", document.getElementById('installmentType').value);
         $.ajax({
             type: 'POST',
             url: "/createsalesorder",
@@ -829,6 +828,7 @@
             contentType: false,
             processData: false,
             success: function(data) {
+                console.log(data);
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
