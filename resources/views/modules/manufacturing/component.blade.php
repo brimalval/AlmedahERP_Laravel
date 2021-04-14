@@ -113,6 +113,7 @@
 <script>
     let i = 1;
     let raw_materials = [];
+   
     function addRowNewComponent() {
         let item_code = $('#componentItemCode').val();
         var tableBody = $("#rawMats");
@@ -125,23 +126,32 @@
                 type: "GET",
                 data: { 'item_code': item_code },
                 success: function (data) {
-                    raw_materials.push(item_code);
+                    let item_name = data.item_name;
                     tableBody.append(
                     `
                         <tr class="center">
-                            <td><input type="checkbox" id="check`+data.id+`"></td>
-                            <td><p name="rawMat${i}" id="`+data.item_name+`">`+data.item_name+`</p></td>
-                            <td><p name="qty${i}" id="qty${i}" min="1">`+i+`</p></td>
+                            <td><input type="checkbox" id="check${data.id}"></td>
+                            <td><p name="rawMat${i}">`+item_name+`</p></td>
+                            <td><input type="number" name="qty${i}" id="${item_name}" min="1"></td>
                         </tr>
                     `
                     );
-                    console.log(raw_materials);
+                    raw_materials.push({"item_name":item_name, "item_qty": ""});
+                    $("#"+item_name).change(function(){
+                        let material = raw_materials.find(material=>material.item_name==item_name);
+                        console.log(material);
+                        material.item_qty = $("#"+item_name).val();
+                        console.log("rawmats"+JSON.stringify(material));
+                    });
+                    // console.log(raw_materials);
+                    console.log(tableBody);
                 }, error: () =>
                     console.log('No item Found')
             });
             i++;
         }
     }
+
 
     $('#addComponentForm').on('submit', function(e){
         e.preventDefault();

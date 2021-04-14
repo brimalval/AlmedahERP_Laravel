@@ -339,9 +339,11 @@ Route::get('/getPaymentType/{id}', [SalesOrderController::class, 'getPaymentType
 Route::get('/getAmountToBePaid/{id}', [SalesOrderController::class, 'getAmountToBePaid']);
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
-Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
-Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getComponents']);
 
+Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
+Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
+Route::get('/getCompo' , [SalesOrderController::class, 'getCompo']);
+Route::get('/getRawMaterialQuantity/{selected}' , [SalesOrderController::class, 'getRawMaterialQuantity']);
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');
@@ -423,6 +425,7 @@ Route::get('/loadWorkOrderInfo', function () {
     return view('modules.manufacturing.workordersubModules.workorder_info');
 });
 Route::get('/getRawMaterialsWork/{selected}', [WorkOrderController::class, 'getRawMaterials']);
+Route::get('/startWorkOrder', [WorkOrderController::class, 'startWorkOrder']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

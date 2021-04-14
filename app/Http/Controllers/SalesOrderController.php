@@ -54,23 +54,40 @@ class SalesOrderController extends Controller
             $raw_material_quantity = $raw_material->rm_quantity;
             $category = MaterialCategory::where('id', $raw_material_category_id)->first();
             $raw_material_category = $category->category_title;
-            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name]);
+            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
         }
         return response($materials);
     }
 
     function getComponents($selected){
         $product = ManufacturingProducts::where('product_code', $selected)->first();
+        $material = json_decode($product->materials, true);
         $component = json_decode($product->components, true);
+
         $components = array();
-        for ($x = 0; $x < count($component); $x++) {
-            $component_id = $component[$x]['component_id'];
-            $component_qty = $component[$x]['component_qty'];
-            $component_db = Component::where('id', $component_id)->first();
-            $component_name = $component_db->component_name;
-            $component_category = "Component";
-            array_push($components, [$component_qty, $component_category, $component_name]);
+
+        for ($x = 0; $x < count($material); $x++) {
+            $material_id = $material[$x]['material_id'];
+            $material_qty = $material[$x]['material_qty'];
+            $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
+            $raw_material_name = $raw_material->item_name;
+            $raw_material_category_id = $raw_material->category_id;
+            $raw_material_quantity = $raw_material->rm_quantity;
+            $category = MaterialCategory::where('id', $raw_material_category_id)->first();
+            $raw_material_category = $category->category_title;
+            array_push($components, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
         }
+
+        for ($x = 0; $x < count($component); $x++) {
+            $component_id = $component[$x]['id'];
+            $component_qty = $component[$x]['component_qty'];
+            $raw_material = Component::where('id', $component_id)->first();
+            $raw_material_category = "Component";
+            $raw_material_name = $raw_material->component_name;
+            $raw_material_quantity = 0;
+            array_push($components, [$component_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
+        }
+
         return response($components);
     }
 
@@ -156,6 +173,8 @@ class SalesOrderController extends Controller
                     
                     $payment_logs->account_no = $form_data['account_no'];
                     $payment_logs->payment_status = "Pending";
+                    $payment_logs->cheque_no = $form_data['cheque_no'];
+                    $payment_logs->cheque_date = $form_data['cheque_date'];
                 }else{
                     $payment_logs->payment_balance = 0;
                     $data->payment_balance = 0;
@@ -180,10 +199,11 @@ class SalesOrderController extends Controller
                     
                     $payment_logs->account_no = $form_data['account_no'];
                     $payment_logs->payment_status = "Pending";
+                    $payment_logs->cheque_no = $form_data['cheque_no'];
+                    $payment_logs->cheque_date = $form_data['cheque_date'];
                 }else{
                     $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
                     $data->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
-
                     $payment_logs->payment_status = "Completed";
                 }
             }
@@ -240,22 +260,22 @@ class SalesOrderController extends Controller
             //         array_push($new_component, $c);
             //     }
             // }
+ 
+            foreach ($cart as $row){        
+                // $material_purchased = new MaterialPurchased();
+                // $material_purchased->supp_quotation_id = generateRandomString();
+                // $material_purchased->purchase_id = generateRandomString();
+                // $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
+                // $material_purchased->mp_status = "ExStatus";   
+                // $material_purchased->items_list_purchased = json_encode($new_component);   
+                // $material_purchased->save();
 
-            // foreach ($cart as $row){        
-            //     $material_purchased = new MaterialPurchased();
-            //     $material_purchased->supp_quotation_id = generateRandomString();
-            //     $material_purchased->purchase_id = generateRandomString();
-            //     $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
-            //     $material_purchased->mp_status = "ExStatus";   
-            //     $material_purchased->items_list_purchased = json_encode($new_component);   
-            //     $material_purchased->save();
-
-            //     $order = new ordered_products();
-            //     $order->sales_id = $data->id;
-            //     $order->product_code = $row[0];
-            //     $order->quantity_purchased = $row[1];
-            //     $order->save();
-            // }
+                $order = new ordered_products();
+                $order->sales_id = $data->id;
+                $order->product_code = $row[0];
+                $order->quantity_purchased = $row[1];
+                $order->save();
+            }
 
             // foreach($new_component as $c){
             //     $work_order = new WorkOrder();
@@ -269,11 +289,18 @@ class SalesOrderController extends Controller
             //     $work_order->save();
             // }
 
-            // return response($new_component);
+            //return "Sucess";
+            return response("Sucess");
 
         }catch(Exception $e){
             return $e;
         }
+    }
+
+    function getRawMaterialQuantity($raw_material){
+        $raw_material = ManufacturingMaterials::where('item_name', $raw_material)->first();
+        $raw_material_qty = $raw_material->rm_quantity;
+        return response($raw_material_qty);
     }
 
     function getPaymentLogs($id){
@@ -371,6 +398,12 @@ class SalesOrderController extends Controller
 
         $data->payment_balance = $payment['payment_balance'] - $form_data['view_totalamount'];
 
+        if($data->payment_balance <= 0.00){
+            $data->sales_status = "Fully Paid";
+        }else{
+            $sales->sales_status = "With Outstanding Balance";
+        }
+
         $sales->save();
         $data->save();
     }
@@ -383,4 +416,68 @@ class SalesOrderController extends Controller
 
         return $salesorders;
     }
+
+    function getCompo(Request $request){
+        $products = $request->input('products');
+        $qty = $request->input('qty');
+        $components = array();
+        $raw_materials_in_components = array();
+        for ($i=0; $i < count($products); $i++) { 
+
+            $product = ManufacturingProducts::where('product_code', $products[$i])->first();
+            $material = json_decode($product->materials, true);
+            $component = json_decode($product->components, true);
+
+            for ($x = 0; $x < count($material); $x++) {
+                $material_id = $material[$x]['material_id'];
+                $material_qty = $material[$x]['material_qty'];
+                $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
+                $raw_material_name = $raw_material->item_name;
+                $raw_material_category_id = $raw_material->category_id;
+                $raw_material_quantity = $raw_material->rm_quantity;
+                $category = MaterialCategory::where('id', $raw_material_category_id)->first();
+                $raw_material_category = $category->category_title;
+                array_push($components, [$material_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity]);
+            }
+
+            for ($x = 0; $x < count($component); $x++) {
+                $component_id = $component[$x]['component_id'];
+                $component_qty = $component[$x]['component_qty'];
+                $raw_material = Component::where('id', $component_id)->first();
+                $raw_material_category = "Component";
+                $raw_material_name = $raw_material->component_name;
+                $raw_material_quantity = 0;
+                $raw_materials_needed = $raw_material->item_code;
+                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
+            }
+            //name, cat, neededVal, stockVal
+        }
+
+        $finalComponent = array();
+        
+        for ($i=0; $i < count($components); $i++) { 
+            $tester = self::contains($components[$i][2] , $finalComponent);
+            if( $tester == -1){
+                array_push($finalComponent , $components[$i]);
+            }else{
+                $finalComponent[$tester][0] += $components[$i][0];
+            }
+        }
+
+        return response($finalComponent);
+    }
+
+    function contains($name, $arr){
+        $names = [];
+        for ($i=0; $i < count($arr); $i++) { 
+            array_push($names, $arr[$i][2]);
+        }
+
+        for ($i=0; $i < count($names); $i++) { 
+            if( $names[$i] == $name){
+                return $i;
+            }
+        }
+        return -1;
+    }   
 }
