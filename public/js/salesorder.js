@@ -225,8 +225,8 @@ function finalizer(arr_components) {
             arr_components[index][1],
             arr_components[index][0],
             arr_components[index][3],
+            arr_components[index]["item_code"],
         ];
-
         /* 
             Checks if it is a component, if it is, it gets its JSON data and adds it to the
             materialsInComponents array.
@@ -238,6 +238,7 @@ function finalizer(arr_components) {
                     component_name: el["item_name"],
                     category: "Component",
                     quantity_needed_for_request: el["item_qty"] * component[2],
+                    item_code: el["item_code"],
                 })
             );
         } else {
@@ -246,6 +247,7 @@ function finalizer(arr_components) {
                 category: component[1],
                 quantity_needed: component[2],
                 quantity_avail: component[3],
+                item_code: component[4],
             });
         }
 
@@ -261,6 +263,7 @@ function finalizer(arr_components) {
                 component_name: component[0],
                 category: component[1],
                 quantity_needed_for_request: component[2] - component[3],
+                item_code: component[4],
             });
         } else if (component[2] >= component[2]) {
             status = "Available";
@@ -331,6 +334,7 @@ function finalizer(arr_components) {
                         component_name: find["component_name"],
                         category: find["category"],
                         quantity_needed_for_request: rawMaterialsNeeded,
+                        item_code: find["item_code"],
                     });
                 }
             }
@@ -345,6 +349,7 @@ function finalizer(arr_components) {
                     quantity_needed_for_request:
                         matComponent["quantity_needed_for_request"] -
                         quantity_avail,
+                    item_code: matComponent["item_code"],
                 });
             }
         }

@@ -433,11 +433,12 @@ class SalesOrderController extends Controller
                 $material_qty = $material[$x]['material_qty'];
                 $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
                 $raw_material_name = $raw_material->item_name;
+                $raw_material_code = $raw_material->item_code;
                 $raw_material_category_id = $raw_material->category_id;
                 $raw_material_quantity = $raw_material->rm_quantity;
                 $category = MaterialCategory::where('id', $raw_material_category_id)->first();
                 $raw_material_category = $category->category_title;
-                array_push($components, [$material_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity]);
+                array_push($components, [$material_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, "item_code" => $raw_material_code]);
             }
 
             for ($x = 0; $x < count($component); $x++) {
