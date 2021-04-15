@@ -19,13 +19,13 @@ class PurchaseInvoiceController extends Controller
     }
 
     public function openInvoiceForm() {
-        $receipts = PurchaseReceipt::where('pr_status', 'To Bill')->get();
+        $receipts = PurchaseReceipt::where('pr_status', 'NOT LIKE', 'Draft')->get();
         return view('modules.buying.newPurchaseInvoice', ['receipts' => $receipts]);
     }
 
     public function viewInvoice($id) {
         $invoice = PurchaseInvoice::find($id);
-        $received_items = $invoice->receipt->receivedMats();
+        $received_items = $invoice->receipt->order->itemsPurchased();
         $supplier = $invoice->receipt->order->supplier_quotation->supplier;
         return view('modules.buying.purchaseInvoiceInfo', ['invoice' => $invoice, 'received_items' => $received_items, 'supplier' => $supplier]);
     }
@@ -54,21 +54,17 @@ class PurchaseInvoiceController extends Controller
             $nextId = ($lastInvoice) ? $lastInvoice->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-            $to_append = 0;
-            $digit_flag = 1;
-            while ($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
+            $to_append = strlen((string)$nextId);
 
-            $invoice_id = "PI-" . str_pad($nextId, 3 - $to_append, '0', STR_PAD_LEFT);
+            $invoice_id = "PI-" . str_pad($nextId, 3 - $to_append + 1, '0', STR_PAD_LEFT);
 
             $data->p_invoice_id = $invoice_id;
             $data->p_receipt_id = $form_data['receipt_id'];
             $data->date_created = $form_data['date_created'];
-            $data->due_date_of_payment = $form_data['due_date'];
+            //$data->due_date_of_payment = $form_data['due_date'];
             $data->mode_payment = $form_data['payment_mode'];
-            $data->paid_amount = $form_data['amount'];
+            $data->grand_total = $form_data['amount'];
+            $data->payment_balance = $form_data['amount'];
 
             $data->save();
         } catch (Exception $e) {
