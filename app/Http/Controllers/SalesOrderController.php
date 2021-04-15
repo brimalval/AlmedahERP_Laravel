@@ -41,57 +41,6 @@ class SalesOrderController extends Controller
         ['sales_order' => $sales_order, 'product' => $product, 'customer' => $customer_info]);
     }
 
-    function getRawMaterials($selected){
-        $product = ManufacturingProducts::where('product_code', $selected)->first();
-        $material = json_decode($product->materials, true);
-        $materials = array();
-        for ($x = 0; $x < count($material); $x++) {
-            $material_id = $material[$x]['material_id'];
-            $material_qty = $material[$x]['material_qty'];
-            $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
-            $raw_material_name = $raw_material->item_name;
-            $raw_material_category_id = $raw_material->category_id;
-            $raw_material_quantity = $raw_material->rm_quantity;
-            $category = MaterialCategory::where('id', $raw_material_category_id)->first();
-            $raw_material_category = $category->category_title;
-            array_push($materials, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
-        }
-        return response($materials);
-    }
-
-    function getComponents($selected){
-        $product = ManufacturingProducts::where('product_code', $selected)->first();
-        $material = json_decode($product->materials, true);
-        $component = json_decode($product->components, true);
-
-        $components = array();
-
-        for ($x = 0; $x < count($material); $x++) {
-            $material_id = $material[$x]['material_id'];
-            $material_qty = $material[$x]['material_qty'];
-            $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
-            $raw_material_name = $raw_material->item_name;
-            $raw_material_category_id = $raw_material->category_id;
-            $raw_material_quantity = $raw_material->rm_quantity;
-            $category = MaterialCategory::where('id', $raw_material_category_id)->first();
-            $raw_material_category = $category->category_title;
-            array_push($components, [$material_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
-        }
-
-        for ($x = 0; $x < count($component); $x++) {
-            $component_id = $component[$x]['id'];
-            $component_qty = $component[$x]['component_qty'];
-            $raw_material = Component::where('id', $component_id)->first();
-            $raw_material_category = "Component";
-            $raw_material_name = $raw_material->component_name;
-            $raw_material_quantity = 0;
-            array_push($components, [$component_qty, $raw_material_category, $raw_material_name, $raw_material_quantity]);
-        }
-
-        return response($components);
-    }
-
-
     function create(Request $request){
         
         function generateRandomString($length = 10) {
@@ -434,11 +383,22 @@ class SalesOrderController extends Controller
                 $raw_material = ManufacturingMaterials::where('id', $material_id)->first();
                 $raw_material_name = $raw_material->item_name;
                 $raw_material_code = $raw_material->item_code;
+                $raw_material_reorder_qty = $raw_material->reorder_qty;
+                $raw_material_reorder_level = $raw_material->reorder_level;
                 $raw_material_category_id = $raw_material->category_id;
                 $raw_material_quantity = $raw_material->rm_quantity;
                 $category = MaterialCategory::where('id', $raw_material_category_id)->first();
                 $raw_material_category = $category->category_title;
-                array_push($components, [$material_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, "item_code" => $raw_material_code]);
+                array_push($components, 
+                [
+                    $material_qty * $qty[$i], 
+                    $raw_material_category,
+                    $raw_material_name, 
+                    $raw_material_quantity, 
+                    "item_code" => $raw_material_code,
+                    "reorder_qty" => $raw_material_reorder_qty,
+                    "reorder_level" => $raw_material_reorder_level
+                ]);
             }
 
             for ($x = 0; $x < count($component); $x++) {
@@ -466,6 +426,15 @@ class SalesOrderController extends Controller
         }
 
         return response($finalComponent);
+    }
+
+    function getReorderLevelAndQty($raw_material){
+        $data = array();
+        $raw_material = ManufacturingMaterials::where('item_name', $raw_material)->first();
+        $raw_material_reorder_qty = $raw_material->reorder_qty;
+        $raw_material_reorder_level = $raw_material->reorder_level;
+        array_push($data, $raw_material_reorder_qty, $raw_material_reorder_level);
+        return response($data);
     }
 
     function contains($name, $arr){
