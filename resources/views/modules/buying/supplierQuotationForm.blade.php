@@ -35,7 +35,7 @@
 
 <form  id="squotation-form" method="POST" action="{{ route('supplierquotation.store') }}">
 @csrf
-<input type="hidden" name="req_quotation_id" value="{{ $req_quotation_id }}">
+<input type="hidden" name="req_quotation_id" value="{{ $req_quotation_id ?? '' }}">
 <input type="hidden" name="supplier_id" value="{{ $supplier->supplier_id }}">
 <div id="accordion">
 <br>
@@ -175,8 +175,10 @@
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
                     <th>
-                      <div class="form-check">
-                        <input type="checkbox" class="form-check-input">
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input sq-check-all-box">
+                        </div>
                       </div>
                     </th>
 
@@ -185,6 +187,7 @@
                     <th>Stock UOM</th>
                     <th>Rate</th>
                     <th>Sub-total</th>
+                    <th></th>
                     
                   </tr>
                 </thead>

@@ -23,7 +23,6 @@ class SupplierQuotationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('signed')->only('create');
     }
     /**
      * Display a listing of the resource.
@@ -47,15 +46,23 @@ class SupplierQuotationController extends Controller
      */
     public function create(Request $request)
     {
-        $rfq = MaterialQuotation::where('req_quotation_id', '=', request('r'))->first();
-        $supplier = Supplier::where('supplier_id', '=', request('s'))->first();
         $units = MaterialUOM::get();
-        return view('modules.buying.supplierquotationform', [
-            'items' => $rfq->item_list(),
-            'supplier' => $supplier,
-            'req_quotation_id' => $rfq->req_quotation_id,
+        $items = ManufacturingMaterials::get();
+        $vars = [
             'units' => $units,
-        ]);
+            'items' => $items,
+        ];
+        if(count($request->all())){
+            if(!$request->hasValidSignature()){
+                abort(403);
+            }
+            $rfq = MaterialQuotation::where('req_quotation_id', '=', request('r'))->first();
+            $supplier = Supplier::where('supplier_id', '=', request('s'))->first();
+            $vars['items'] = $rfq->item_list();
+            $vars['supplier'] = $supplier;
+            $vars['req_quotation_id'] = $rfq->req_quotation_id;
+        }
+        return view('modules.buying.supplierquotationform', $vars);
     }
 
     public function getQuotation($id)
@@ -97,7 +104,7 @@ class SupplierQuotationController extends Controller
             $rates = request('rate');
             $units = request('uom_id');
             $items_list_rate_amt = array();
-            for ($i = 0, $len = sizeof($item_codes); $i < $len; $i++) {
+            for ($i = 0, $len = count($item_codes); $i < $len; $i++) {
                 $item = [
                     'item_code' => $item_codes[$i],
                     'quantity_requested' => $quantities[$i],
@@ -132,10 +139,12 @@ class SupplierQuotationController extends Controller
     public function show(SuppliersQuotation $supplierquotation)
     {
         $units = MaterialUOM::get();
+        $items = ManufacturingMaterials::get();
         return view('modules.buying.supplierQuotationInfo', [
             'sq' => $supplierquotation,
             'units' => $units,
             'suppliers' => array(),
+            'items' => $items,
         ]);
     }
 
@@ -149,11 +158,13 @@ class SupplierQuotationController extends Controller
     {
         $units = MaterialUOM::get();
         $suppliers = Supplier::get();
+        $items = ManufacturingMaterials::get();
         return view('modules.buying.supplierQuotationInfo', [
             'sq' => $supplierquotation,
             'units' => $units,
             'editable' => true,
             'suppliers' => $suppliers,
+            'items' => $items,
         ]);
     }
 
@@ -161,12 +172,46 @@ class SupplierQuotationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SuppliersQuotation  $suppliersQuotation
+     * @param  \App\Models\SuppliersQuotation  $supplierquotation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SuppliersQuotation $suppliersQuotation)
+    public function update(Request $request, SuppliersQuotation $supplierquotation)
     {
-        //
+        try {
+            $supplierquotation->date_created = Carbon::now();
+            $supplierquotation->supplier_id = request('supplier_id');
+            $supplierquotation->grand_total = 0;
+            $supplierquotation->remarks = request('remarks') ?? '';
+            $supplierquotation->supplier_id = request('supplier_id');
+
+            $item_codes = request('item_code');
+            $quantities = request('qty_requested');
+            $rates = request('rate');
+            $units = request('uom_id');
+            $items_list_rate_amt = array();
+            for ($i = 0, $len = count($item_codes); $i < $len; $i++) {
+                $item = [
+                    'item_code' => $item_codes[$i],
+                    'quantity_requested' => $quantities[$i],
+                    'rate' => $rates[$i] ?? 0,
+                    'uom_id' => $units[$i],
+                ];
+                array_push($items_list_rate_amt, $item);
+            }
+            $supplierquotation->items_list_rate_amt = json_encode($items_list_rate_amt);
+
+            foreach ($items_list_rate_amt as $item) {
+                $supplierquotation->grand_total += ($item['quantity_requested'] * $item['rate']);
+            }
+            $supplierquotation->save();
+            return response()->json([
+                'message' => 'Successfully updated ' . $supplierquotation->supp_quotation_id,
+            ]);
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors([
+                'exception' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -235,5 +280,19 @@ class SupplierQuotationController extends Controller
             $this->datatable_sections = $view->renderSections();
         }
         return $this->datatable_sections[$section_name];
+    }
+
+    /**
+     * Change the status of a draft supplierquotation to submitted.
+     *
+     * @param SuppliersQuotation $supplierquotation
+     * @return void
+     */
+    public function submit(SuppliersQuotation $supplierquotation){
+        $supplierquotation->sq_status = "Submitted";
+        $supplierquotation->save();
+        return response()->json([
+            'message' => $supplierquotation->supp_quotation_id . " has been submitted!",
+        ]);
     }
 }

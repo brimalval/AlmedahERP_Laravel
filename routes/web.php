@@ -340,10 +340,10 @@ Route::get('/getAmountToBePaid/{id}', [SalesOrderController::class, 'getAmountTo
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 
-Route::get('/getRawMaterials/{selected}',[SalesOrderController::class, 'getRawMaterials']);
-Route::get('/getComponents/{selected}',[SalesOrderController::class, 'getComponents']);
-Route::get('/getCompo' , [SalesOrderController::class, 'getCompo']);
-Route::get('/getRawMaterialQuantity/{selected}' , [SalesOrderController::class, 'getRawMaterialQuantity']);
+Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
+Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getComponents']);
+Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
+Route::get('/getRawMaterialQuantity/{selected}', [SalesOrderController::class, 'getRawMaterialQuantity']);
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');
@@ -384,11 +384,17 @@ Route::get('/createnewsupplier', function () {
 Route::resource('/supplierquotation', SupplierQuotationController::class);
 Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'get_supplier_quotations'])
     ->name('supplierquotation.list');
+
 Route::get(
     '/supplierquotation/{supplierquotation}/load-item-list',
     [SupplierQuotationController::class, 'load_item_list']
-)
-    ->name('supplierquotation.items');
+)->name('supplierquotation.items');
+
+Route::post(
+    'supplierquotation/{supplierquotation}/submit',
+    [SupplierQuotationController::class, 'submit']
+)->name('supplierquotation.submit');
+
 Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'get_quotation']);
 
 /**TASK ROUTES */

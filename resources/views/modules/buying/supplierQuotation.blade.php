@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <script src="js/supplierquotation.js"></script>
     <h2 class="navbar-brand tab-list-title">
         <a href='javascript:onclick=loadBuyingRequestForQuotation();'
             class="fas fa-arrow-left back-button"><span></span></a>
@@ -179,3 +178,4 @@
     });
     $('.dataTables_filter').addClass('d-none');
 </script>
+<script src="js/supplierquotation.js"></script>

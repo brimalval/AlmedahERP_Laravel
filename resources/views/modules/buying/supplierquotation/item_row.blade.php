@@ -1,23 +1,40 @@
 <tr>
     <td>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input">
+        <div class="form-group">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input row-checkbox">
+            </div>
+        </div>
+    </td>
+    <td>
+    <div class="form-group">
+        @if (isset($item))
+            <select readonly name="item_code[]" id="" 
+            class="form-control selectpicker" data-live-search="true">
+                <option value="{{ $item->item_code ?? '' }}">
+                    {{ $item->item_code }}
+                </option>
+            </select>
+        @else
+            <select name="item_code[]" id="" 
+            class="form-control selectpicker" data-live-search="true">
+                @foreach ($items as $mat)
+                    <option value="{{ $mat->item_code }}" data-subtext="{{ $mat->item_name }}">
+                        {{ $mat->item_code }}
+                    </option>
+                @endforeach
+            </select>
+        @endif
     </div>
     </td>
     <td>
     <div class="form-group">
-        <input readonly value="{{ $item->item_code ?? '' }}" type="text"
-        class="form-control" name="item_code[]" placeholder="">
+        <input @if(isset($item)) readonly @endif value="{{ $item->quantity_requested ?? '' }}" 
+        type="text" class="form-control" id="qty-req" min="1" name="qty_requested[]" placeholder="">
     </div>
     </td>
     <td>
-    <div class="form-group">
-        <input readonly value="{{ $item->quantity_requested ?? '' }}" type="text"
-        class="form-control" id="qty-req" name="qty_requested[]" placeholder="">
-    </div>
-    </td>
-    <td>
-    <select disabled required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
+    <select @if(isset($item)) readonly @endif required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
         @foreach ($units as $unit)
             <option value="{{ $unit->uom_id }}" @if($unit->uom_id == ($item->item->uom_id ?? '')) selected @endif data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</option>
         @endforeach
@@ -39,5 +56,12 @@
         <input readonly type="text" value="@if(isset($item->rate)) {{ $item->rate * $item->quantity_requested }} @endif" 
         class="subtotal form-control" placeholder="">
     </div>
+    </td>
+    <td>
+        @if (isset($deletable))
+            <a href="#" class="btn btn-outline-light btn-sm delete-btn text-muted">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+            </a>
+        @endif
     </td>
 </tr>

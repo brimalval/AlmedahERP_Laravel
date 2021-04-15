@@ -29,7 +29,10 @@
                                 class="float-right small">Ctrl+B</span></a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#submit">Submit</button>
+                @if($sq->sq_status == "Draft")
+                  <button type="button" class="btn btn-primary ml-1" onclick="$('#submit').modal('show')">Submit</button>
+                  <button type="button" class="btn btn-primary" onclick="$('#sq-form').submit()">Save</button>
+                @endif
             </div>
         </div>
     </div>
@@ -40,7 +43,7 @@
 <div class="container-fluid" style="margin: 0; padding: 0;">
 
 
-<form  id="req-forquotation" class="update" method="POST" 
+<form  id="sq-form" class="update" method="POST" 
 action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quotation_id]) }}">
 @csrf
 @method('PATCH')
@@ -82,11 +85,12 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
               <div class="col-6">
                 <div class="form-group">
                   <label for="supplier_group">Supplier</label>
-                  <select name="supplier_id" id="supplier_id" class="form-control selectpicker"
-                  data-live-search="true">
+                  <select name="supplier_id" id="supplier_id" class="form-control selectpicker">
                     @forelse ($suppliers as $supplier)
                         <option value="{{ $supplier->supplier_id }}"
-                          @if($supplier->supplier_id == $sq->supplier->supplier_id) selected @endif>
+                        data-live-search="true" data-contact="{{ $supplier->contact_name }}" 
+                        data-email="{{ $supplier->supplier_email }}"
+                        @if($supplier->supplier_id == $sq->supplier->supplier_id) selected @endif>
                           {{ $supplier->company_name }}
                         </option>
                     @empty
@@ -110,7 +114,7 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
               <div class="col-6">
                 <div class="form-group">
                   <label for="remarks">Supplier Remarks</label>
-                  <textarea class="form-control" id="remarks" rows="5">{{ $sq->remarks }}</textarea>
+                  <textarea class="form-control" name="remarks" id="remarks" rows="5">{{ $sq->remarks }}</textarea>
                 </div>
               </div>
 
@@ -189,8 +193,10 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
                     <th>
-                      <div class="form-check">
-                        <input type="checkbox" class="form-check-input">
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input sq-check-all-box">
+                        </div>
                       </div>
                     </th>
 
@@ -199,41 +205,52 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
                     <th>Stock UOM</th>
                     <th>Rate</th>
                     <th>Sub-total</th>
+                    <th></th>
                     
                   </tr>
                 </thead>
                 <tbody class="" id="items-input-rows">
-                  @foreach ($sq->items() as $item)
-                    @include('modules.buying.supplierquotation.item_row', [
-                      'item' => $item,
-                      'units' => $units,
-                    ])
-                  @endforeach
+                  {{-- If the supplier quotation is a draft, then rows of the item table should be
+                  deletable --}}
+                  @if ($sq->sq_status == "Draft")
+                    @foreach ($sq->items() as $item)
+                      @include('modules.buying.supplierquotation.item_row', [
+                        'item' => $item,
+                        'units' => $units,
+                        'deletable' => true,
+                      ])
+                    @endforeach
+                  @else
+                    @foreach ($sq->items() as $item)
+                      @include('modules.buying.supplierquotation.item_row', [
+                        'item' => $item,
+                        'units' => $units,
+                      ])
+                    @endforeach
+                  @endif
                 </tbody>
                 @if ($sq->sq_status == "Draft")
                   <tfoot>
                     <tr>
-                      <td colspan="2">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="">
-                          Add Row
-                        </button>
+                      <td colspan="6">
+                        <div class="d-flex">
+                          <div class="m-1">
+                            <button type="button" class="btn btn-secondary btn-sm sq-add-row-btn">
+                              Add Row
+                            </button>
+                          </div>
+                          <div class="m-1">
+                            <button type="button" class="d-none btn btn-danger btn-sm sq-delete-rows-btn">
+                              Delete Selected
+                            </button>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   </tfoot>
 
                 @endif
               </table>
-              <table class="d-none">
-                <tbody class="row-sample">
-                  @include('modules.buying.supplierquotation.item_row',[
-                    'item' => null,
-                    'units' => $units,
-                  ])
-                </tbody>
-              </table>
-              <!--<td colspan="7" rowspan="5">
-                <button type="button" onclick="addRow3()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-              </td>-->
               <div class="row">
               <div class="col-6">
                 
@@ -282,15 +299,29 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
         
       </div>
       <div class="modal-body">
-        <p>Permanently submit *INSERT SQ ID* ?</p>
+        <p>Permanently submit {{ $sq->supp_quotation_id }} ?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" onclick="$('#submit').modal('hide')">Cancel</button>
+        <form action="{{ route('supplierquotation.submit', ['supplierquotation'=>$sq->supp_quotation_id]) }}" method="post">
+          @csrf
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
+{{-- This is the sample row that is being copied and appended to the items table --}}
+<table class="d-none">
+  <tbody class="row-sample">
+    @include('modules.buying.supplierquotation.item_row',[
+      'item' => null,
+      'items' => $items,
+      'units' => $units,
+      'deletable' => true,
+    ])
+  </tbody>
+</table>
 @if (!isset($editable))
   <script>
     // Preventing the information from being editable
@@ -304,3 +335,27 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
     $('.item-rate').off();
   </script>
 @endif
+<script>
+  $(document).off('submit', 'form').on('submit', 'form', function(){
+    $.ajax({
+        type: 'POST',
+        url: this.action,
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function(data){
+          // In case there's more than one modal that ends up on this page in the future
+          $('.modal').each(function(){
+            $(this).modal('hide');
+          });
+
+          loadIntoPage($('.tab-pane form')[0], "{{ route('supplierquotation.index') }}");
+        },
+        error: function(data){
+          alert("Error " + data.message);
+        }
+    });
+    return false;
+  }); 
+</script>
