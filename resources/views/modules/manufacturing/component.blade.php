@@ -136,7 +136,7 @@
                         </tr>
                     `
                     );
-                    raw_materials.push({"item_name":item_name, "item_qty": ""});
+                    raw_materials.push({"item_name":item_name, "item_qty": "", "item_code": item_code});
                     $("#"+item_name).change(function(){
                         let material = raw_materials.find(material=>material.item_name==item_name);
                         console.log(material);

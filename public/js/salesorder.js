@@ -225,33 +225,52 @@ function finalizer(arr_components) {
             arr_components[index][1],
             arr_components[index][0],
             arr_components[index][3],
+            arr_components[index]["item_code"],
+            arr_components[index]["reorder_qty"],
+            arr_components[index]["reorder_level"],
         ];
-
         /* 
             Checks if it is a component, if it is, it gets its JSON data and adds it to the
             materialsInComponents array.
         */
         if (arr_components[index][4] != null) {
             let materials_needed = JSON.parse(arr_components[index][4]);
-            materials_needed.forEach((el) =>
+            materials_needed.forEach((el) => {
+                let reorder_data = getReorderLevelAndQty(el["item_name"]);
                 materialsInComponents.push({
                     component_name: el["item_name"],
                     category: "Component",
                     quantity_needed_for_request: el["item_qty"] * component[2],
-                })
-            );
+                    item_code: el["item_code"],
+                    reorder_qty: reorder_data[0],
+                    reorder_level: reorder_data[1],
+                });
+            });
         } else {
             rawMaterialsOnly.push({
                 component_name: component[0],
                 category: component[1],
                 quantity_needed: component[2],
                 quantity_avail: component[3],
+                item_code: component[4],
+                reorder_qty: component[5],
+                reorder_level: component[6],
             });
         }
 
         // set status of each component
         if (component[3] <= 0) {
             status = "Out of stock";
+            mat_insufficient = true;
+            if (arr_components[index][4] == null) {
+                createMatRequestItems.push({
+                    component_name: component[0],
+                    category: component[1],
+                    quantity_needed_for_request:
+                        component[2] - component[3] + component[5],
+                    item_code: component[4],
+                });
+            }
         } else if (component[3] > 0 && component[3] < component[2]) {
             status = "Insufficient";
             mat_insufficient = true;
@@ -260,10 +279,22 @@ function finalizer(arr_components) {
             createMatRequestItems.push({
                 component_name: component[0],
                 category: component[1],
-                quantity_needed_for_request: component[2] - component[3],
+                quantity_needed_for_request:
+                    component[2] - component[3] + component[5],
+                item_code: component[4],
             });
-        } else if (component[2] >= component[2]) {
+        } else if (component[3] >= component[2]) {
             status = "Available";
+            mat_insufficient = true;
+            if (component[3] - component[2] <= component[6]) {
+                console.log("hit reorder level");
+                createMatRequestItems.push({
+                    component_name: component[0],
+                    category: component[1],
+                    quantity_needed_for_request: component[5],
+                    item_code: component[4],
+                });
+            }
         }
 
         // append each component to the components table
@@ -308,15 +339,15 @@ function finalizer(arr_components) {
        checks if its raw material quantity is insufficient. 
     */
     materialsInComponents.forEach((matComponent) => {
-        let find = rawMaterialsOnly.find(
+        let rawMatFound = rawMaterialsOnly.find(
             (rawMat) =>
                 rawMat["component_name"] == matComponent["component_name"]
         );
-        if (find) {
+        if (rawMatFound) {
             let rawMaterialsNeeded =
-                parseInt(find["quantity_needed"]) +
+                parseInt(rawMatFound["quantity_needed"]) +
                 parseInt(matComponent["quantity_needed_for_request"]) -
-                parseInt(find["quantity_avail"]);
+                parseInt(rawMatFound["quantity_avail"]);
 
             if (rawMaterialsNeeded > 0) {
                 // showCreateMaterialRequestBtn();
@@ -324,27 +355,46 @@ function finalizer(arr_components) {
 
                 let matItemExists = createMatRequestItems.find(
                     (matItem) =>
-                        matItem["component_name"] == find["component_name"]
+                        matItem["component_name"] ==
+                        rawMatFound["component_name"]
                 );
+                /* 
+                    Check if raw material exists in createMatRequest array and add quantity of 
+                    raw material if present, if not, add it to the array.
+                */
                 if (!matItemExists) {
                     createMatRequestItems.push({
-                        component_name: find["component_name"],
-                        category: find["category"],
+                        component_name: rawMatFound["component_name"],
+                        category: rawMatFound["category"],
                         quantity_needed_for_request: rawMaterialsNeeded,
+                        item_code: rawMatFound["item_code"],
                     });
+                } else {
+                    matItemExists["quantity_needed_for_request"] +=
+                        matComponent["quantity_needed_for_request"];
                 }
             }
         } else {
             let quantity_avail = getRawMaterialQuantity(
                 matComponent["component_name"]
             );
-            if (matComponent["quantity_needed_for_request"] > quantity_avail) {
+            if (matComponent["quantity_needed_for_request"] >= quantity_avail) {
                 createMatRequestItems.push({
                     component_name: matComponent["component_name"],
                     category: "Component",
                     quantity_needed_for_request:
                         matComponent["quantity_needed_for_request"] -
-                        quantity_avail,
+                        quantity_avail +
+                        matComponent["reorder_qty"],
+                    item_code: matComponent["item_code"],
+                });
+            } else if (quantity_avail <= matComponent["reorder_level"]) {
+                console.log("hit reorder level");
+                createMatRequestItems.push({
+                    component_name: matComponent["component_name"],
+                    category: "Component",
+                    quantity_needed_for_request: matComponent["reorder_qty"],
+                    item_code: matComponent["item_code"],
                 });
             }
         }
@@ -357,6 +407,19 @@ function getRawMaterialQuantity(rawMaterial) {
     let data = "";
     $.ajax({
         url: "getRawMaterialQuantity/" + rawMaterial,
+        type: "get",
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+    });
+    return data;
+}
+
+function getReorderLevelAndQty(rawMaterial) {
+    let data = "";
+    $.ajax({
+        url: "getReorderLevelAndQty/" + rawMaterial,
         type: "get",
         async: false,
         success: function (response) {
