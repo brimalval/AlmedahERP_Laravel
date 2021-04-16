@@ -242,8 +242,8 @@ function finalizer(arr_components) {
                     category: "Component",
                     quantity_needed_for_request: el["item_qty"] * component[2],
                     item_code: el["item_code"],
-                    reorder_qty: reorder_data["reorder_qty"],
-                    reorder_level: reorder_data["reorder_level"],
+                    reorder_qty: reorder_data[0],
+                    reorder_level: reorder_data[1],
                 });
             });
         } else {
@@ -331,6 +331,7 @@ function finalizer(arr_components) {
         </tr>`
         );
     }
+
     /* 
        Checks each raw material in Components if it already has the raw material in the table.
        If it does, then it adjusts the quantity that is needed per material. And if it doesn't 
