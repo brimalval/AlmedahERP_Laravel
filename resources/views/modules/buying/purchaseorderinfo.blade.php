@@ -167,7 +167,7 @@ $i = 1; ?>
         <a href="#submenuCurrencyandPriceList" data-toggle="collapse" aria-expanded="false"
             class="bg-white list-group-item list-group-item-action">
 
-            <span class="menu-collapsed align-middle smaller menu"> PRICE LIST</span>
+            <span class="menu-collapsed align-middle smaller menu">PRICE LIST</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
 
         </a>

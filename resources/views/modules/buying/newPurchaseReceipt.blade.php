@@ -157,7 +157,7 @@ $today = date('Y-m-d');
                                         </div>
                                     </td>
                                     <td>Item</td>
-                                    <td>Accepted Quantity</td>
+                                    <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
                                 </tr>

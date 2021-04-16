@@ -68,10 +68,11 @@ $today = date('Y-m-d');
                             </label>
                             <input type="date" required class="form-input form-control" id="npi_date" readonly value=<?=$today?>>
                             <br>
+                            <!--
                             <label id="" class=" text-nowrap align-middle">
                                 Due Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_due_date" value=<?=$today?>>
+                            <input type="date" required class="form-input form-control" id="npi_due_date" value=>>-->
                         </div>
                     </div>
                 </form>
@@ -130,20 +131,14 @@ $today = date('Y-m-d');
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <label class=" text-nowrap align-middle">Item</label>
+                        <label class=" text-nowrap align-middle">Item Prices</label>
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromReceipt">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input">
-                                        </div>
-                                    </td>
                                     <td>Item</td>
-                                    <td>Accepted Quantity</td>
+                                    <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
-                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody class="" id="itemsReceived">
@@ -153,14 +148,6 @@ $today = date('Y-m-d');
                                     </td>
                                 </tr>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="7" rowspan="5">
-                                        <button class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
-                                        <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -182,7 +169,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Mode of Payment
                             </label>
-                            <select id="paymentMethod" class="form-control">
+                            <select id="paymentMode" class="form-control">
                                 <option value="" selected hidden disabled>Select Mode of Payment...</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Installment">Installment</option>
@@ -194,8 +181,19 @@ $today = date('Y-m-d');
                                 <label class=" text-nowrap align-middle">
                                     Total (PHP)
                                 </label>
-                                <input type="number" required class="form-input form-control" id="priceToPay">
+                                <input type="number" reaodnly required class="form-input form-control" id="priceToPay">
                             </div>
+                        </div>
+                        <div class="col-6 form-group" id="installmentGrp" hidden>
+                            <label class=" text-nowrap align-middle">
+                                Installment Duration
+                            </label>
+                            <select id="installmentType" class="form-control">
+                                <option value="" selected hidden disabled>Select Installment Duration...</option>
+                                <option value="3 Months">3 Months</option>
+                                <option value="6 Months">6 Months</option>
+                            </select>
+                            <br>
                         </div>
                     </div>
                 </div>
