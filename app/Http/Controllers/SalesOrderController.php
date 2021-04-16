@@ -404,7 +404,7 @@ class SalesOrderController extends Controller
                 $raw_materials_needed = $raw_material->item_code;
                 array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
             }
-            //name, cat, neededVal, stockVal
+            
         }
 
         $finalComponent = array();
