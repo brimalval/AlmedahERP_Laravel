@@ -433,7 +433,7 @@ class SalesOrderController extends Controller
         $raw_material = ManufacturingMaterials::where('item_name', $raw_material)->first();
         $raw_material_reorder_qty = $raw_material->reorder_qty;
         $raw_material_reorder_level = $raw_material->reorder_level;
-        array_push($data, $raw_material_reorder_qty, $raw_material_reorder_level);
+        array_push($data, ["reorder_qty" => $raw_material_reorder_qty, "reorder_level" => $raw_material_reorder_level]);
         return response($data);
     }
 

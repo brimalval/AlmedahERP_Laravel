@@ -242,8 +242,8 @@ function finalizer(arr_components) {
                     category: "Component",
                     quantity_needed_for_request: el["item_qty"] * component[2],
                     item_code: el["item_code"],
-                    reorder_qty: reorder_data[0],
-                    reorder_level: reorder_data[1],
+                    reorder_qty: reorder_data["reorder_qty"],
+                    reorder_level: reorder_data["reorder_level"],
                 });
             });
         } else {
@@ -285,6 +285,7 @@ function finalizer(arr_components) {
             });
         } else if (component[3] >= component[2]) {
             status = "Available";
+            mat_insufficient = true;
             if (component[3] - component[2] <= component[6]) {
                 console.log("hit reorder level");
                 createMatRequestItems.push({
@@ -337,15 +338,15 @@ function finalizer(arr_components) {
        checks if its raw material quantity is insufficient. 
     */
     materialsInComponents.forEach((matComponent) => {
-        let find = rawMaterialsOnly.find(
+        let rawMatFound = rawMaterialsOnly.find(
             (rawMat) =>
                 rawMat["component_name"] == matComponent["component_name"]
         );
-        if (find) {
+        if (rawMatFound) {
             let rawMaterialsNeeded =
-                parseInt(find["quantity_needed"]) +
+                parseInt(rawMatFound["quantity_needed"]) +
                 parseInt(matComponent["quantity_needed_for_request"]) -
-                parseInt(find["quantity_avail"]);
+                parseInt(rawMatFound["quantity_avail"]);
 
             if (rawMaterialsNeeded > 0) {
                 // showCreateMaterialRequestBtn();
@@ -353,14 +354,19 @@ function finalizer(arr_components) {
 
                 let matItemExists = createMatRequestItems.find(
                     (matItem) =>
-                        matItem["component_name"] == find["component_name"]
+                        matItem["component_name"] ==
+                        rawMatFound["component_name"]
                 );
+                /* 
+                    Check if raw material exists in createMatRequest array and add quantity of 
+                    raw material if present, if not, add it to the array.
+                */
                 if (!matItemExists) {
                     createMatRequestItems.push({
-                        component_name: find["component_name"],
-                        category: find["category"],
+                        component_name: rawMatFound["component_name"],
+                        category: rawMatFound["category"],
                         quantity_needed_for_request: rawMaterialsNeeded,
-                        item_code: find["item_code"],
+                        item_code: rawMatFound["item_code"],
                     });
                 } else {
                     matItemExists["quantity_needed_for_request"] +=
