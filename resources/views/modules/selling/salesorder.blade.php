@@ -22,7 +22,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                <!-- @TODO -->
+
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" id="refreshBtn" onclick="loadRefresh()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
@@ -35,100 +35,6 @@
     </div>
 </nav>
 
-<!--Front-end's version of table. Just change it back if necessary.-->
-<!--
-<div class="container">
-    <div class="card my-2">
-        <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Name">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Item">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body filter">
-            <div class="row">
-                <div class="float-left">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Add Filter
-                    </button>
-                </div>
-                <div class=" ml-auto float-right">
-                    <span class="text-muted ">Last Modified On</span>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <table class="table table-bom border-bottom">
-            <thead class="border-top border-bottom bg-light">
-                <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Product Code</td>
-                    <td>Payment Status</td>
-                    <td>Installment Status</td>
-                    <td>Payment Balance</td>
-                    <td>Date</td>
-                    <td><td>
-                </tr>
-            </thead>
-            <tbody class="custom-input">
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openSaleInfo();'>Emulsifier</a></td>
-                    <td class="text-danger">Pending</td>
-                    <td>4th/6</td>
-                    <td class="text-bold">10,000.00</td>
-                    <td class="text-bold">2021-01-01</td>
-                    <td><button type="button" class="btn btn-primary btn-sm" disabled>Release</button></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openSaleInfo();'>Emulsifier</a></td>
-                    <td class="text-success">Complete</td>
-                    <td>6th/6</td>
-                    <td class="text-bold">0.00</td>
-                    <td class="text-bold">2021-01-01</td>
-                    <td><button type="button" class="btn btn-primary btn-sm">Release</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <div class="col-1 text-center">
-            <button type="submit" class="custom-input"> <span class="fas fa-chevron-left"></span></button>
-        </div>
-        <div class="col-1 text-center">
-            <p>4 of 4</p>
-        </div>
-        <div class="col-1 text-center">
-            <button type="submit" class="custom-input"> <span class="fas fa-chevron-right"></span></button>
-        </div>
-    </div>
-</div>
--->
-
-<!--Back-end's version of table. Used to test if data is being sent to the tables.-->
 <table id="salestable" class="table table-striped table-bordered hover" style="width:100%">
         <thead>
             <tr>
@@ -205,17 +111,8 @@
                                         <label class=" text-nowrap align-middle">
                                             Customer ID
                                         </label>
-                                        <!--
-                                            Old input for searching customer id: change back when needed
-                                            <div class="d-flex">
-                                                <input type="number" class="form-input form-control" max="6" value="0000001" id="custId" required>
-                                                <button class="btn btn-primary">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
-                                            <br>
-                                        -->
-                                        <input list="customers" class="form-input form-control" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
+
+                                        <input list="customers" class="form-input form-control" id="customer_id" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
                                         <datalist id="customers">
                                         @foreach ($customers as $row)
                                           <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
@@ -452,7 +349,14 @@
                                 <br>
                             </div>
                             <br>
-                            
+                            <div class="col" id="account_cheque_no" name="account_cheque_no" style="display:none">
+                                <label  >
+                                    Cheque No.
+                                </label>
+                                <br>
+                                <input type="text" class="form-input form-control" id="cheque_no" name="cheque_no" placeholder="Cheque No">
+                            </div>
+                            <br>
                             <div class="col" id="account_no_div" name="account_no_div" style="display:none">
                                 <label >
                                     Account No.
@@ -460,21 +364,25 @@
                                 <input type="text" class="form-input form-control" id="account_no" name="account_no" placeholder="Account No">
                             </div>
                             <br>
-                            <div class="col" id="account_cheque_no" name="account_cheque_no" style="display:none">
+                            <div class="col " id="account_name_div" name="account_name_div" style="display:none">
                                 <label >
-                                    Cheque No.
+                                    Account Name.
                                 </label>
-                                <input type="text" class="form-input form-control" id="cheque_no" name="cheque_no" placeholder="Cheque No">
+                                <input type="text" class="form-input form-control" id="account_name" name="account_name" placeholder="Account Name">
+                            </div>
+                            <br>
+                            <div class="col" id="with_postdated_div" name="with_postdated" style="display:none; padding-left: 37px;">
+                                <input type="checkbox" class="form-check-input"  id="with_postated_cheque" name="with_postated_cheque" onclick="withPostdatedCheque()">
+                                <label>Wtih Post-Dated Cheque?</label>
                             </div>
                             <br>
                             <div class="col" id="account_cheque_date" name="account_cheque_date" style="display:none">
                                 <label >
-                                    Cheque Date
+                                    Date of Post-Dated Cheque
                                 </label>
-                                <input type="date" class="form-input form-control" id="cheque_date" name="cheque_date" placeholder="Cheque Date">
+                                <input type="date" class="form-input form-control" id="post_date_cheque" name="post_date_cheque" placeholder="Cheque Date" disabled>
                             </div>
                             <br>
-
                             <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()" >
                                 <div class="col">
                                     <label class="text-nowrap align-middle">
@@ -730,15 +638,40 @@
                                 <br>
                             </div>
                             <br>
-                            
-                            <div class="col" style="display:none" id="viewaccount_no_div">
+                            <div class="col" id="view_cheque_no_div" name="view_cheque_no_div" style="display:none">
+                                <label  >
+                                    Cheque No.
+                                </label>
+                                <br>
+                                <input type="text" class="form-input form-control" id="view_cheque_no" name="view_cheque_no" placeholder="Cheque No">
+                            </div>
+                            <br>
+                            <div class="col" id="view_account_no_div" name="view_account_no_div" style="display:none">
                                 <label >
                                     Account No.
                                 </label>
-                                <input type="text" class="form-input form-control" placeholder="Account No" name="view_account_no">
+                                <input type="text" class="form-input form-control" id="aview_ccount_no" name="view_account_no" placeholder="Account No">
                             </div>
                             <br>
-
+                            <div class="col " id="view_account_name_div" name="view_account_name_div" style="display:none">
+                                <label >
+                                    Account Name.
+                                </label>
+                                <input type="text" class="form-input form-control" id="view_account_name" name="view_account_name" placeholder="Account Name">
+                            </div>
+                            <br>
+                            <div class="col" id="view_postdated_checkbox_div" name="view_postdated_checkbox_div" style="display:none; padding-left: 37px;">
+                                <input type="checkbox" class="form-check-input"  id="view_postated_cheque" name="with_postated_cheque" onclick="PostdatedCheque()">
+                                <label>Post-Dated Cheque</label>
+                            </div>
+                            <br>
+                            <div class="col" id="view_postdated_cheque_div" name="view_postdated_cheque_div" style="display:none">
+                                <label >
+                                    Date of Post-Dated Cheque
+                                </label>
+                                <input type="date" class="form-input form-control" id="view_post_date_cheque" name="view_post_date_cheque" placeholder="Cheque Date" disabled>
+                            </div>
+                            <br>
                             <div class="col" id="viewaccount_no_div">
                                 <label >
                                     Customer Representative
@@ -805,6 +738,7 @@
         document.getElementById('currentDate').value = today;
         
     });
+
     $("#gotoworkorder").click(function(){
         console.log("Clicked");
         $("#hiddenworkorder").click();
@@ -886,7 +820,6 @@
         console.log(currentCart);
         formData.append("cart",currentCart );
         //formData.append("component", JSON.stringify(ultimateComponentTable));
-        formData.append("installmentType", document.getElementById('installmentType').value);
         $.ajax({
             type: 'POST',
             url: "/createsalesorder",
@@ -895,6 +828,7 @@
             contentType: false,
             processData: false,
             success: function(data) {
+                console.log(data);
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });

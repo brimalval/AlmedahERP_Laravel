@@ -21,11 +21,16 @@ class payment_logs extends Model
         'payment_description',
         'payment_status',
         'payment_balance',
-        'account_no'
+
+        'cheque_no',
+        'account_no',
+        'account_name',
+        'post_date_cheque'
     ];
 
     protected $casts = [
         'date_of_payment' => 'date',
+        'post_date_cheque' =>'date',
     ];
 
     public function salesOrder() {

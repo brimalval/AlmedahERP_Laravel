@@ -1,3 +1,60 @@
+// // Functions here will not work on the full page tab of a new sale as there are duplicates
+
+$(document).ready(function () {
+    $("#notif").hide();
+});
+$("#idBtn").on("click", function () {
+    var id = $("#custId").val();
+    $.ajax({
+        url: "/search-customer/" + id,
+        type: "GET",
+        data: { id: id },
+        success: function (data) {
+            $("#fName").val(data.customer_data[0].customer_fname);
+            $("#lName").val(data.customer_data[0].customer_lname);
+            $("#contactNum").val(data.customer_data[0].contact_number);
+            $("#branchName").val(data.customer_data[0].branch_name);
+            $("#companyName").val(data.customer_data[0].company_name);
+            $("#custEmail").val(data.customer_data[0].email_address);
+            $("#custAddress").val(data.customer_data[0].address);
+        },
+    });
+});
+
+// Creating a custom reset method since the native reset
+// function also resets the values of the materials in case
+// they've been changed in the inventory tab
+//function resetForm() {
+//  $('#product_name').val(null);
+//  $('#internal_description').val(null);
+//  // Making the image field required again in case it was set as not required
+//  // for whatever reason (such as making the create form an update form)
+//  $('#picture').attr('required', 'required');
+//  $('#product_type').val(null);
+//  $('#product_type').selectpicker('refresh');
+//  $('#unit').val(null);
+//  $('#product-form').attr('action', 'create-product');
+//  $('#img_tmp').attr('src', 'images/thumbnail.png');
+//  $('#unit').selectpicker('refresh');
+//  $('#attribute').val(null);
+//  $('#attribute').selectpicker('refresh');
+//  $('#materials').val(null);
+//  $('#materials').selectpicker('refresh');
+//  $('[name="product_category"]').val("none");
+//  $('[name="procurement_method"]').val("none");
+//  // Changing the input type to reset the file list
+//  // $('input[name="picture"]')[0].type='';
+//  // $('input[name="picture"]')[0].type='file';
+//  $('#bar_code').val(null);
+//  $('#sales_price_wt').val(null);
+//  materialList = [];
+//  attributeList = [];
+//  $('#attributes_div').html('');
+//  // Removing each of the selected material badges
+//  $('.material-badge').each(function () {
+//    this.remove();
+//  });
+//}
 let mat_insufficient = false;
 
 $("#saveSaleOrder").click(function () {
@@ -37,21 +94,54 @@ function creationSelectPaymentType() {
     if (paymentType == "Cash") {
         document.getElementById("account_no_div").style.display = "none";
         document.getElementById("account_cheque_no").style.display = "none";
+        document.getElementById("account_name_div").style.display = "none";
         document.getElementById("account_cheque_date").style.display = "none";
+        document.getElementById("with_postdated_div").style.display = "none";
     } else {
-        document.getElementById("account_no_div").style.display = "flex";
-        document.getElementById("account_cheque_no").style.display = "flex";
-        document.getElementById("account_cheque_date").style.display = "flex";
+        document.getElementById("account_no_div").style.display = "";
+        document.getElementById("account_cheque_no").style.display = "";
+        document.getElementById("account_name_div").style.display = "";
+        document.getElementById("account_cheque_date").style.display = "";
+        document.getElementById("with_postdated_div").style.display = "";
     }
 }
 
+function withPostdatedCheque() {
+    var checkbox = document.getElementById("with_postated_cheque");
+    var postDated = document.getElementById("post_date_cheque");
+    if (checkbox.checked) {
+        postDated.disabled = false;
+    } else {
+        postDated.disabled = true;
+    }
+}
+
+//
 //For payment modal
 function selectPaymentType() {
     var paymentType = document.getElementById("view_paymentType").value;
     if (paymentType == "Cash") {
-        document.getElementById("viewaccount_no_div").style.display = "none";
+        document.getElementById("view_cheque_no_div").style.display = "none";
+        document.getElementById("view_account_no_div").style.display = "none";
+        document.getElementById("view_account_name_div").style.display = "none";
+        document.getElementById("view_postdated_checkbox_div").style.display = "none";
+        document.getElementById("view_postdated_cheque_div").style.display = "none";
     } else {
-        document.getElementById("viewaccount_no_div").style.display = "flex";
+        document.getElementById("view_cheque_no_div").style.display = "";
+        document.getElementById("view_account_no_div").style.display = "";
+        document.getElementById("view_account_name_div").style.display = "";
+        document.getElementById("view_postdated_checkbox_div").style.display = "";
+        document.getElementById("view_postdated_cheque_div").style.display = "";
+    }
+}
+
+function PostdatedCheque() {
+    var viewcheckbox = document.getElementById("view_postated_cheque");
+    var viewpostDated = document.getElementById("view_post_date_cheque");
+    if (viewcheckbox.checked) {
+        viewpostDated.disabled = false;
+    } else {
+        viewpostDated.disabled = true;
     }
 }
 
@@ -64,8 +154,8 @@ function installmentType() {
     if (payment_method == "Cash") {
         $("#payments_table_body").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Cash</td><td class="text-center">' +
-                cost +
-                "</td></tr>"
+            cost +
+            "</td></tr>"
         );
     } else {
         installment_type = document.getElementById("installmentType").value;
@@ -73,8 +163,8 @@ function installmentType() {
             .value;
         $("#payments_table_body").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Downpayment </td><td class="text-center">' +
-                saleDownpaymentCost +
-                "</td></tr>"
+            saleDownpaymentCost +
+            "</td></tr>"
         );
         cost -= saleDownpaymentCost;
         switch (installment_type) {
@@ -83,10 +173,10 @@ function installmentType() {
                 for (let index = 0; index < 3; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                            (index + 1) +
-                            '</td><td class="text-center">' +
-                            divider +
-                            "</td></tr>"
+                        (index + 1) +
+                        '</td><td class="text-center">' +
+                        divider +
+                        "</td></tr>"
                     );
                 }
                 break;
@@ -95,10 +185,10 @@ function installmentType() {
                 for (let index = 0; index < 6; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                            (index + 1) +
-                            '</td><td class="text-center">' +
-                            divider +
-                            "</td></tr>"
+                        (index + 1) +
+                        '</td><td class="text-center">' +
+                        divider +
+                        "</td></tr>"
                     );
                 }
                 break;
@@ -107,10 +197,10 @@ function installmentType() {
                 for (let index = 0; index < 12; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                            (index + 1) +
-                            '</td><td class="text-center">' +
-                            divider +
-                            "</td></tr>"
+                        (index + 1) +
+                        '</td><td class="text-center">' +
+                        divider +
+                        "</td></tr>"
                     );
                 }
                 break;
@@ -136,9 +226,11 @@ function contains(names, arr) {
         if (namelist[index] == names) {
             return true;
         }
+
     }
     return false;
 }
+
 
 //Adds product to array
 function addToTable() {
@@ -147,8 +239,8 @@ function addToTable() {
         currentCart.push([currentProduct, 0]);
         $("#ProductsTable").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
-                currentProduct +
-                '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
+            currentProduct +
+            '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
         );
     }
 }
@@ -158,7 +250,7 @@ function changeQuantity(r) {
     index = r.parentNode.parentNode.rowIndex - 1;
     productName = currentCart[index][0];
     currentCart[index] = [productName, r.value];
-    $("#btnSalesCalculate").click();
+    $('#btnSalesCalculate').click();
 }
 
 //Deletes product from array
@@ -204,7 +296,7 @@ function rawMaterials() {
         error: function (response, error) {
             // alert("Request: " + JSON.stringify(request));
         },
-    });
+    })
     //Function here
 }
 
@@ -266,6 +358,7 @@ function finalizer(arr_components) {
             status = "Available";
         }
 
+
         // append each component to the components table
         $(".components").append(
             `<tr>
@@ -276,26 +369,26 @@ function finalizer(arr_components) {
         </td>
         <td class="text-center">
         ` +
-                component[0] +
-                `
+            component[0] +
+            `
         </td>
         <td class="text-center">
         ` +
-                component[1] +
-                `
+            component[1] +
+            `
         </td>
         <td class="mt-available" style="text-align: center;">` +
-                component[3] +
-                `</td>
+            component[3] +
+            `</td>
         <td class="mt-needed text-center">
         ` +
-                component[2] +
-                `
+            component[2] +
+            `
         </td>
         <td class="mt-needed text-center">
         ` +
-                status +
-                `
+            status +
+            `
         </td>
         </tr>`
         );
@@ -395,10 +488,10 @@ function viewOrderedProducts(id) {
             response.forEach((row) => {
                 $("#viewProductsTable").append(
                     '<tr> <td class="text-center">  ' +
-                        row["product_code"] +
-                        '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value=' +
-                        row["quantity_purchased"] +
-                        " disabled></td></tr>"
+                    row["product_code"] +
+                    '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value=' +
+                    row["quantity_purchased"] +
+                    " disabled></td></tr>"
                 );
             });
         },
@@ -418,44 +511,44 @@ function viewPayments(id) {
                     `<tr>
                     <td class="text-center">
                         ` +
-                        row["id"] +
-                        `
+                    row["id"] +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["date_of_payment"].slice(0, 10) +
-                        `
+                    row["date_of_payment"].slice(0, 10) +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["amount_paid"] +
-                        `
+                    row["amount_paid"] +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["payment_description"] +
-                        `
+                    row["payment_description"] +
+                    `
                     </td>
                     <td class="text-center">
                         ` +
-                        row["payment_method"] +
-                        `
+                    row["payment_method"] +
+                    `
                     </td>
                     <td class="text-center">
                         <select class="form-select" onchange="updatePayment( ` +
-                        row["id"] +
-                        `, value);">
+                    row["id"] +
+                    `, value);">
                                         <option value="" selected disabled> ` +
-                        row["payment_status"] +
-                        ` </option>
+                    row["payment_status"] +
+                    ` </option>
                                         <option value="Pending">Pending</option>
                                         <option value="Completed">Completed</option>
                         </select>
                     </td>
                     <td class="text-center">
                         ` +
-                        row["customer_rep"] +
-                        `
+                    row["customer_rep"] +
+                    `
                     </td>
                 </tr>`
                 );
@@ -467,6 +560,7 @@ function viewPayments(id) {
         url: "getPaymentType/" + id,
         type: "get",
         success: function (response) {
+            console.log(response);
             //Remove options
             var i,
                 L =
