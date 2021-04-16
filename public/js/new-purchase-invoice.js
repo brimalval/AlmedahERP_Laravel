@@ -9,7 +9,6 @@ $("#saveInvoice").click(function () {
 
     let formData = new FormData();
     let createDate = $("#npi_date").val();
-    let dueDate = $("#npi_due_date").val();
 
     if(createDate > dueDate) {
         alert("The due date is earlier than the date of creation.");
@@ -23,8 +22,7 @@ $("#saveInvoice").click(function () {
 
     formData.append('receipt_id', $("#receiptId").val());
     formData.append('date_created', $("#npi_date").val());
-    formData.append('due_date', $("#npi_due_date").val());
-    formData.append('payment_mode', $("#paymentMode").val());
+    formData.append('payment_method', $("#paymentMethod").val());
     formData.append('amount', $("#priceToPay").val());
 
     $.ajax({

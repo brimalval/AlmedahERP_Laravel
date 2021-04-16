@@ -34,7 +34,6 @@ class MaterialPurchased extends Model
             array_push($items_purchased_array,
                 array(
                     'item_code' => $item->item_code,
-                    'supplier' => $item->supplier_id,
                     'req_date' => $item->req_date,
                     'qty' => $item->qty,
                     'rate' => $item->rate,

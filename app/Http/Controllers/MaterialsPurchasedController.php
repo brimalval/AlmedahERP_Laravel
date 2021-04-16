@@ -71,14 +71,11 @@ class MaterialsPurchasedController extends Controller
             $nextId = ($lastPurchase) ? MaterialPurchased::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-            $to_append = 0;
-            $digit_flag = 1;
-            while ($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
+            $to_append = strlen(strval($nextId));
 
-            $purchase_id = "PUR-ORD-" . Carbon::now()->year . '-' . str_pad($nextId, 5 - $to_append, '0', STR_PAD_LEFT);
+            echo $to_append;
+
+            $purchase_id = "PUR-ORD-" . Carbon::now()->year . '-' . str_pad($nextId, 5 - $to_append + 1, '0', STR_PAD_LEFT);
 
             $data->purchase_id = $purchase_id;
 
