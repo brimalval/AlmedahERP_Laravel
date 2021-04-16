@@ -1,22 +1,30 @@
 $('.selectpicker').each(function(){
-    $(this).selectpicker();
+    try{
+        $(this).selectpicker();
+    }catch(e){
+        console.log("Todo: find what is causing selectpicker error");
+    }
 });
 
 // Subtract the "old" value from the grand total and store it in the session
-$(document).off('focus', '.item-rate').on('focus', '.item-rate', function(){
+$(document).off('focus', '.item-rate').on('focus', '.item-rate', function(e){
     let row = $(this).parents('tr');
     let qty = Number(row.find('#qty-req').val());
-    if(qty == "" || qty == 0)
+    if(qty == "" || qty == 0){
+        e.preventDefault();
         return false;
+    }
     sessionStorage.setItem('currval', Number($('#grand_total').val()) - (qty * Number($(this).val())));
 });
 // Upon clicking out of the item rate, get the difference between the new and old value
 // and add it to the grand total
-$(document).off('focusout', '.item-rate').on('focusout', '.item-rate', function(){
+$(document).off('focusout', '.item-rate').on('focusout', '.item-rate', function(e){
     let row = $(this).parents('tr');
     let qty = Number(row.find('#qty-req').val());
-    if(qty == "" || qty == 0)
+    if(qty == "" || qty == 0){
+        e.preventDefault();       
         return false;
+    }
     let subtotal = row.find('.subtotal');
     $('#grand_total').val(Number(sessionStorage.getItem('currval')) + (qty * Number($(this).val())));
     let subtotalCommaNum = String(qty * Number($(this).val())).split(/(?=(?:...)*$)/).join(',');

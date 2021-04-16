@@ -1,7 +1,8 @@
-<head>
-  @include('layouts.imports')
-</head>
-<script src="{{ asset('js/supplierquotation.js') }}"></script>
+@isset($from_email)
+  <head>
+      @include('layouts.imports')
+  </head>
+@endisset
 @foreach($errors->all() as $error)
   <div class="alert alert-primary alert-dismissible fade show" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -20,8 +21,14 @@
         <div class="navbar-nav ml-auto">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary" onClick="#">Cancel</button>
-                    
+                {{-- If there is no supplier provided, then the form must have been opened
+                from the site itself; allow the user to cancel --}}
+                @if (!isset($supplier))
+                  <button type="button" class="btn btn-secondary" 
+                  onclick="loadIntoPage(this, '{{ route('supplierquotation.index') }}')">
+                    Cancel
+                  </button>
+                @endif
                 </div>
                 <button type="button" class="btn btn-primary ml-1" href="#" onclick="$('#squotation-form').submit()">Save</button>
             </div>
@@ -36,7 +43,6 @@
 <form  id="squotation-form" method="POST" action="{{ route('supplierquotation.store') }}">
 @csrf
 <input type="hidden" name="req_quotation_id" value="{{ $req_quotation_id ?? '' }}">
-<input type="hidden" name="supplier_id" value="{{ $supplier->supplier_id }}">
 <div id="accordion">
 <br>
   <div class="card">
@@ -79,7 +85,26 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="supplier_group">Supplier</label>
-                  <input readonly value="{{ $supplier->company_name }}" type="text" id="supplier_group" class="form-control">
+                  {{-- If a supplier quotation is being made with a specific supplier in mind,
+                  render only the supplier passed as an argument in the url --}}
+                  @if (isset($supplier))
+                    <select name="supplier_id" id="supplier_id" class="form-control selectpicker">
+                      <option value="{{ $supplier->supplier_id }}" 
+                        data-subtext="{{ $supplier->supplier_id }}">
+                        {{ $supplier->company_name }}
+                      </option>
+                    </select>
+                  @else
+                    <select name="supplier_id" id="supplier_id" class="form-control selectpicker"
+                    data-live-search="true">
+                      @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->supplier_id }}" 
+                          data-subtext="{{ $supplier->supplier_id }}">
+                          {{ $supplier->company_name }}
+                        </option>
+                      @endforeach
+                    </select>
+                  @endif
                 </div>
               </div>
             </div>
@@ -104,7 +129,11 @@
                 <div class="form-group">
                   <label for="sq_status">Status</label>
                   <select class="form-control selectpicker" name="sq_status" id="sq_status">
-                    <option value="Draft">Draft</option>
+                    @if (isset($from_email) && $from_email)
+                      <option value="Submitted">Submitted</option>
+                    @else
+                      <option value="Draft">Draft</option>
+                    @endif
                   </select>
                 </div>
                </div>
@@ -143,7 +172,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="supplier_email">Email Address</label>
-                  <input readonly value="{{ $supplier->supplier_email }}" type="text" name="supplier_email" id="supplier_email" class="form-control">
+                  <input readonly value="{{ $supplier->supplier_email ?? '' }}" type="text" name="supplier_email" id="supplier_email" class="form-control">
                 </div>
               </div>
             </div>
@@ -192,13 +221,35 @@
                   </tr>
                 </thead>
                 <tbody class="" id="items-input-rows">
-                  @foreach ($items as $item)
-                    @include('modules.buying.supplierquotation.item_row', [
-                      'item' => $item,
-                      'units' => $units,
-                    ])
-                  @endforeach
+                  @if (isset($req_items))
+                    @foreach ($req_items as $item)
+                      @include('modules.buying.supplierquotation.item_row', [
+                        'item' => $item,
+                        'units' => $units,
+                      ])
+                    @endforeach
+                  @endif
                 </tbody>
+                @if (!isset($from_email))
+                  <tfoot>
+                    <tr>
+                      <td colspan="6">
+                        <div class="d-flex">
+                          <div class="m-1">
+                            <button type="button" class="btn btn-secondary btn-sm sq-add-row-btn">
+                              Add Row
+                            </button>
+                          </div>
+                          <div class="m-1">
+                            <button type="button" class="d-none btn btn-danger btn-sm sq-delete-rows-btn">
+                              Delete Selected
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                @endif
               </table>
               <div class="row">
               <div class="col-6">
@@ -258,3 +309,17 @@
     </div>
   </div>
 </div>
+
+{{-- This is the sample row that is being copied and appended to the items table --}}
+<table class="d-none">
+  <tbody class="row-sample">
+    @include('modules.buying.supplierquotation.item_row',[
+      'item' => null,
+      'items' => $items,
+      'units' => $units,
+      'deletable' => true,
+    ])
+  </tbody>
+</table>
+
+<script src="{{ asset('js/supplierquotation.js') }}"></script>

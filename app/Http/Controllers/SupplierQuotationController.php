@@ -58,9 +58,12 @@ class SupplierQuotationController extends Controller
             }
             $rfq = MaterialQuotation::where('req_quotation_id', '=', request('r'))->first();
             $supplier = Supplier::where('supplier_id', '=', request('s'))->first();
-            $vars['items'] = $rfq->item_list();
+            $vars['req_items'] = $rfq->item_list();
             $vars['supplier'] = $supplier;
             $vars['req_quotation_id'] = $rfq->req_quotation_id;
+            $vars['from_email'] = true;
+        } else{
+            $vars['suppliers'] = Supplier::get();
         }
         return view('modules.buying.supplierquotationform', $vars);
     }
@@ -97,7 +100,7 @@ class SupplierQuotationController extends Controller
             $supp_quotation->supplier_id = request('supplier_id');
             $supp_quotation->grand_total = 0;
             $supp_quotation->remarks = request('remarks') ?? '';
-            $supp_quotation->sq_status = "Submitted";
+            $supp_quotation->sq_status = request('sq_status');
 
             $item_codes = request('item_code');
             $quantities = request('qty_requested');
