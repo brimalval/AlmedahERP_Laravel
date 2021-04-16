@@ -416,7 +416,7 @@ class SalesOrderController extends Controller
                 $raw_materials_needed = $raw_material->item_code;
                 array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
             }
-            //name, cat, neededVal, stockVal
+            
         }
 
         $finalComponent = array();
@@ -454,5 +454,26 @@ class SalesOrderController extends Controller
             }
         }
         return -1;
-    }   
+    }
+
+    function minusStocks(Request $request){
+        $products = $request->input('products');
+        $qty = $request->input('qty');
+
+        for ($i=0; $i < count($products); $i++) { 
+            # code...
+            $raw_material = ManufacturingMaterials::where('item_code', $products[$i])->first();
+            $raw_mat_qty = $raw_material->rm_quantity;
+
+            if($raw_material != null or $raw_material != ""){
+                if($qty[$i] >= $raw_mat_qty){
+                    $raw_material->rm_quantity = 0;
+                }else{
+                    $raw_material->rm_quantity = $raw_material->rm_quantity - $qty[$i];
+                }
+                $raw_material->save();
+            }
+        }
+        return "Sucess";
+    }
 }

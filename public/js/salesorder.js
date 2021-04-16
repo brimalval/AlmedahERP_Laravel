@@ -214,7 +214,10 @@ var totalValue = 0;
 var currentCart = [];
 // Array for storing Insufficient Quantity Items to be used for Material Request
 var createMatRequestItems = [];
-// Adds component into a 2d array. If it is already init adds value instead
+
+//Array for storing stocks to be minus from components needed
+var componentsOrder;
+var materialsInComponents;
 
 function contains(names, arr) {
     namelist = [];
@@ -301,6 +304,7 @@ function rawMaterials() {
 }
 
 function finalizer(arr_components) {
+    componentsOrder = arr_components;
     $("#create-material-req-btn").html("");
     $(".components tr").remove();
 
@@ -389,7 +393,7 @@ function finalizer(arr_components) {
             }
         }
 
-
+        
         // append each component to the components table
         $(".components").append(
             `<tr>
@@ -711,4 +715,39 @@ function updatePayment(id, value) {
 
 function enableAddtoProduct() {
     document.getElementById("btnAddProduct").disabled = false;
+}
+
+function minusStocks(arr, materialsInComponents){
+    var products = [];
+    var qty = [];
+    arr.forEach(element => {
+        products.push( element[2]);
+        qty.push( element[0]);
+    });
+    materialsInComponents.forEach(element => {
+        products.push( element['item_code']);
+        qty.push( element['quantity_needed_for_request']);
+    });
+
+    data = {}
+    data['products'] = products;
+    data['qty'] = qty;
+    console.log("These are in minusstocks: " + products);
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr("content"),
+        },
+    });
+
+    $.ajax({
+        url: "/minusStocks",
+        type: "POST",
+        data: data,
+        success: function (response) {
+            console.log(response)
+        },
+        error: function (response, error) {
+            // alert("Request: " + JSON.stringify(request));
+        },
+    });
 }
