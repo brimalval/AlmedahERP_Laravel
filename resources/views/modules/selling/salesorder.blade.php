@@ -841,7 +841,7 @@
                 loadRefresh();
                 
                 //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
-                minusStocks(componentsOrder, materials);
+                minusStocks(componentsOrder, materialsInComponents);
             },
             error: function(data) {
                 console.log("error");
