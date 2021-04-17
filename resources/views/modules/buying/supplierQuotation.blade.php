@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <script src="js/supplierquotation.js"></script>
     <h2 class="navbar-brand tab-list-title">
         <a href='javascript:onclick=loadBuyingRequestForQuotation();'
             class="fas fa-arrow-left back-button"><span></span></a>
@@ -140,7 +139,6 @@
             url: '{{ route('supplierquotation.list', [], false) }}',
             // Including the item code filter to the request
             data: function(data){
-                console.log($('#material-search').val());
                 data.item_code = $('#material-search').val();
             },
         },
@@ -180,3 +178,4 @@
     });
     $('.dataTables_filter').addClass('d-none');
 </script>
+<script src="js/supplierquotation.js"></script>

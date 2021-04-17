@@ -17,12 +17,17 @@ $i = 1; ?>
                         onclick="loadPurchaseInvoice();">Cancel</button>
                 </li>
                 @if ($invoice->pi_status === 'Draft')
-                <li class="nav-item li-bom">
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" onclick="payInvoice()" data-target="#saveSale"
+                            id="submitInvoice">
+                            Submit
+                        </button>
+                    </li>
+                @else
                     <button type="button" class="btn btn-primary" onclick="payInvoice()" data-target="#saveSale"
                         id="submitInvoice">
-                        Submit
+                        Save Record
                     </button>
-                </li>
                 @endif
             </ul>
         </div>
@@ -30,20 +35,20 @@ $i = 1; ?>
 </nav>
 <div class="accordion" id="accordion">
     <div class="card">
-        @if($invoice->pi_status == 'Draft')
-        <div class="card-header" id="heading1">
-            <h2 class="mb-0">
-                <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
-                    id="dropdownMenunpi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Get Items from
-                </button>
+        @if ($invoice->pi_status == 'Draft')
+            <div class="card-header" id="heading1">
+                <h2 class="mb-0">
+                    <button class="btn-sm btn-primary dropdown-toggle float-right" href="#" role="button"
+                        id="dropdownMenunpi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Get Items from
+                    </button>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenunpi">
-                    <a class="dropdown-item" href="#" data-toggle="modal"
-                        data-target="#npi_purchaseReceiptModal">Purchase Receipt</a>
-                </div>
-            </h2>
-        </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenunpi">
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            data-target="#npi_purchaseReceiptModal">Purchase Receipt</a>
+                    </div>
+                </h2>
+            </div>
         @endif
         <div class="collapse show" id="salesOrderCard1">
             <div class="card-body">
@@ -173,7 +178,7 @@ $i = 1; ?>
                                             <input class="form-control" id="rateAcc<?= $i ?>" type="text" min="0" value={{ $item['rate'] }}>
                                         </td> 
                                         <td class="text-black-50">
-                                            <input class="form-control" id="amtAcc<?= $i ?>" type="text" min="0" value={{ $item['amount'] }}>
+                                            <input class="form-control" id="amtAcc<?= $i ?>" type="text" min="0" value={{ $item['subtotal'] }}>
                                         </td> 
                                     </tr>
                                 @endforeach
@@ -210,7 +215,7 @@ $i = 1; ?>
                             <select id="paymentMode" class="form-control">
                                 <option value="" selected hidden readonly>{{ $invoice->mode_payment }}</option>
                                 <option value="Cash">Cash</option>
-                                <option value="Cheque">Cheque</option>
+                                <option value="Installment">Installment</option>
                             </select>
                             <br>
                         </div>
@@ -226,7 +231,7 @@ $i = 1; ?>
                 </div>
             </div>
         </div>
-        @if($invoice->pi_status !== 'Draft')
+        @if ($invoice->pi_status !== 'Draft')
         <div class="card" id="cardPaymentLogs">
             <div class="card-header">
                 <h2 class="mb-0">
@@ -260,6 +265,7 @@ $i = 1; ?>
                             <td>1000</td>
                             <td>emp001</td>
                         </tr>
+                        <!--
                         <tr>
                             <td class= "text-bold">PI-LOG-002</td>
                             <td>April/28/2021</td>
@@ -278,6 +284,7 @@ $i = 1; ?>
                             <td>1000</td>
                             <td>emp001</td>
                         </tr>
+                    -->
                     </tbody>
                   </table>
                 </div>

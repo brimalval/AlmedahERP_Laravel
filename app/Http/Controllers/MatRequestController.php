@@ -56,8 +56,6 @@ class MatRequestController extends Controller
         $rules = [
             'item_code' => 'required|array',
             'item_code.*' => 'required|string|exists:env_raw_materials,item_code',
-            // MAY NEED TO CHANGE TO STATION_ID INSTEAD OF JUST ID    -v-
-            'station_id.*' => 'required|string|exists:stations,station_id',
             'quantity_requested.*' => 'required|integer|min:0',
             'procurement_method.*' => 'required|string',
             'required_date' => 'required|date',
@@ -86,8 +84,9 @@ class MatRequestController extends Controller
                 $requestItem->item_code = request('item_code')[$i];
                 $requestItem->quantity_requested = request('quantity_requested')[$i];
                 $requestItem->procurement_method = request('procurement_method')[$i];
-                $requestItem->uom_id = request('uom_id')[$i];
-                $requestItem->station_id = request('station_id')[$i];
+                $requestItem->uom_id = request('uom_id')[$i] ?? 'nos';
+                $defaultStationID = Station::first()->station_id;
+                $requestItem->station_id = request('station_id')[$i] ?? $defaultStationID;
                 $requestItem->save();
             }
 

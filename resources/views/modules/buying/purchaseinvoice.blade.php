@@ -42,8 +42,6 @@
             <th>Purchase Invoice ID</th>
             <th>Receipt ID</th>
             <th>Date Created</th>
-            <th>Payment Due Date</th>
-            <th>Mode of Payment</th>
             <th>Paid Amount</th>
             <th>Status</th>
         </tr>
@@ -58,9 +56,7 @@
             </td>
             <td>{{ $invoice->p_receipt_id }}</td>
             <td>{{ $invoice->date_created }}</td>
-            <td class="text-bold">{{ $invoice->due_date_of_payment }}</td>
-            <td class="text-bold">{{ $invoice->mode_payment }}</td>
-            <td class="text-bold price">{{ $invoice->grand_total }}</td>
+            <td class="text-bold total_price">{{ $invoice->grand_total }}</td>
             <td>{{ $invoice->pi_status }}</td>
         </tr>
         @endforeach
@@ -80,7 +76,7 @@
     $(document).ready(function() {
         x = $('#salestable').DataTable();
 
-        $(".price").each(function () {
+        $(".total_price").each(function () {
             // element == this
             let price = parseFloat($(this).html());
             let price_string = "₱ " + numberWithCommas(price.toFixed(2));

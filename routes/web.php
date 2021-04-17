@@ -277,7 +277,7 @@ Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
 Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
 Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
-Route::post('/get-materials', [MaterialPurchasedController::class, 'getMaterials']);
+Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
@@ -341,10 +341,12 @@ Route::get('/getAmountToBePaid/{id}', [SalesOrderController::class, 'getAmountTo
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 
-Route::get('/getCompo' , [SalesOrderController::class, 'getCompo']);
-Route::get('/getRawMaterialQuantity/{selected}' , [SalesOrderController::class, 'getRawMaterialQuantity']);
-Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
 Route::post('/minusStocks' , [SalesOrderController::class, 'minusStocks']);
+Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
+Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getComponents']);
+Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
+Route::get('/getRawMaterialQuantity/{selected}', [SalesOrderController::class, 'getRawMaterialQuantity']);
+Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');
@@ -383,15 +385,20 @@ Route::get('/createnewsupplier', function () {
 
 /**SUPPLIER QUOTATION ROUTES */
 Route::resource('/supplierquotation', SupplierQuotationController::class);
-Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'getSupplierQuotations'])
+Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'get_supplier_quotations'])
     ->name('supplierquotation.list');
-Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
-Route::get('/load-supplier', function () {
-    return view('modules.buying.supplierQuotation1');
-});
-Route::get('/new-supplier', function () {
-    return view('modules.buying.new_supplier_quotation');
-});
+
+Route::get(
+    '/supplierquotation/{supplierquotation}/load-item-list',
+    [SupplierQuotationController::class, 'load_item_list']
+)->name('supplierquotation.items');
+
+Route::post(
+    'supplierquotation/{supplierquotation}/submit',
+    [SupplierQuotationController::class, 'submit']
+)->name('supplierquotation.submit');
+
+Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'get_quotation']);
 
 /**TASK ROUTES */
 Route::get('/openNewTask', function () {

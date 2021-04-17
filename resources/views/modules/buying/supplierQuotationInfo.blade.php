@@ -1,16 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <script src="js/supplierquotation.js"></script>
-    <script>
-      $(document).ready(function(){
-        $('input, textarea').each(function(){
-          $(this).attr('readonly', 'true');
-        });
-
-        $('select').each(function(){
-          $(this).attr('disabled', 'true');
-        });
-      });
-    </script>
     <h2 class="navbar-brand tab-list-title">
         <a href="#" onclick="loadIntoPage(this, '{{ route('supplierquotation.index') }}')"
             class="fas fa-arrow-left back-button"><span></span></a>
@@ -40,7 +29,10 @@
                                 class="float-right small">Ctrl+B</span></a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#submit">Submit</button>
+                @if($sq->sq_status == "Draft")
+                  <button type="button" class="btn btn-primary ml-1" onclick="$('#submit').modal('show')">Submit</button>
+                  <button type="button" class="btn btn-primary" onclick="$('#sq-form').submit()">Save</button>
+                @endif
             </div>
         </div>
     </div>
@@ -51,7 +43,8 @@
 <div class="container-fluid" style="margin: 0; padding: 0;">
 
 
-<form  id="req-forquotation" class="update" action="">
+<form  id="sq-form" class="update" method="POST" 
+action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quotation_id]) }}">
 @csrf
 @method('PATCH')
 <div id="accordion">
@@ -92,7 +85,20 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="supplier_group">Supplier</label>
-                  <input value="{{ $sq->supplier->company_name }}" type="text" id="supplier_group" class="form-control">
+                  <select name="supplier_id" id="supplier_id" class="form-control selectpicker">
+                    @forelse ($suppliers as $supplier)
+                        <option value="{{ $supplier->supplier_id }}"
+                        data-live-search="true" data-contact="{{ $supplier->contact_name }}" 
+                        data-email="{{ $supplier->supplier_email }}"
+                        @if($supplier->supplier_id == $sq->supplier->supplier_id) selected @endif>
+                          {{ $supplier->company_name }}
+                        </option>
+                    @empty
+                        <option value="{{ $sq->supplier->supplier_id }}">
+                          {{ $sq->supplier->company_name }}
+                        </option>
+                    @endforelse
+                  </select>
                 </div>
               </div>
 
@@ -108,7 +114,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="remarks">Supplier Remarks</label>
-                  <textarea class="form-control" id="remarks" rows="5">{{ $sq->remarks }}</textarea>
+                  <textarea class="form-control" name="remarks" id="remarks" rows="5">{{ $sq->remarks }}</textarea>
                 </div>
               </div>
 
@@ -148,14 +154,14 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="contact_name">Contact Name</label>
-                  <input value="{{ $sq->supplier->contact_name }}" type="text" name="contact_name" id="contact_name" class="form-control">
+                  <input readonly value="{{ $sq->supplier->contact_name }}" type="text" name="contact_name" id="contact_name" class="form-control">
                 </div>
               </div>
 
               <div class="col-6">
                 <div class="form-group">
                   <label for="supplier_email">Email Address</label>
-                  <input value="{{ $sq->supplier->supplier_email }}" type="text" name="supplier_email" id="supplier_email" class="form-control">
+                  <input readonly value="{{ $sq->supplier->supplier_email }}" type="text" name="supplier_email" id="supplier_email" class="form-control">
                 </div>
               </div>
             </div>
@@ -187,8 +193,10 @@
                 <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
                     <th>
-                      <div class="form-check">
-                        <input type="checkbox" class="form-check-input">
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input sq-check-all-box">
+                        </div>
                       </div>
                     </th>
 
@@ -197,52 +205,52 @@
                     <th>Stock UOM</th>
                     <th>Rate</th>
                     <th>Sub-total</th>
+                    <th></th>
                     
                   </tr>
                 </thead>
                 <tbody class="" id="items-input-rows">
-                  @foreach ($sq->items() as $item)
+                  {{-- If the supplier quotation is a draft, then rows of the item table should be
+                  deletable --}}
+                  @if ($sq->sq_status == "Draft")
+                    @foreach ($sq->items() as $item)
+                      @include('modules.buying.supplierquotation.item_row', [
+                        'item' => $item,
+                        'units' => $units,
+                        'deletable' => true,
+                      ])
+                    @endforeach
+                  @else
+                    @foreach ($sq->items() as $item)
+                      @include('modules.buying.supplierquotation.item_row', [
+                        'item' => $item,
+                        'units' => $units,
+                      ])
+                    @endforeach
+                  @endif
+                </tbody>
+                @if ($sq->sq_status == "Draft")
+                  <tfoot>
                     <tr>
-                      <td>
-                        <div class="form-check">
-                          <input type="checkbox" class="form-check-input">
-                        </div>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <input readonly value="{{ $item->item_code }}" type="text"
-                            class="form-control" name="item_code[]" placeholder="">
-                        </div>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <input readonly value="{{ $item->quantity_requested }}" type="text"
-                            class="form-control" id="qty-req" name="qty_requested[]" placeholder="">
-                        </div>
-                      </td>
-                      <td>
-                        <select required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
-                            <option value="{{ $item->uom_id }}">{{ $item->uom->item_uom }}</option>
-                        </select>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <input type="number" min="0" required value="{{ $item->rate }}"
-                            class="form-control item-rate" name="rate[]" placeholder="₱" value="0">
-                        </div>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <input readonly type="text" value="{{ $item->rate * $item->quantity_requested }}" class="subtotal form-control" placeholder="">
+                      <td colspan="6">
+                        <div class="d-flex">
+                          <div class="m-1">
+                            <button type="button" class="btn btn-secondary btn-sm sq-add-row-btn">
+                              Add Row
+                            </button>
+                          </div>
+                          <div class="m-1">
+                            <button type="button" class="d-none btn btn-danger btn-sm sq-delete-rows-btn">
+                              Delete Selected
+                            </button>
+                          </div>
                         </div>
                       </td>
                     </tr>
-                  @endforeach
-                </tbody>
+                  </tfoot>
+
+                @endif
               </table>
-              <!--<td colspan="7" rowspan="5">
-                <button type="button" onclick="addRow3()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-              </td>-->
               <div class="row">
               <div class="col-6">
                 
@@ -258,7 +266,7 @@
                       </div>
                     </div>
                     <div class="col">
-                      <input type="hidden" name="grand_total" id="grand_total">
+                      <input type="hidden" name="grand_total" id="grand_total" value="{{ $sq->grand_total ?? 0 }}">
                       <input value="{{ $sq->grand_total }}" readonly type="text" id="grand_total_display" class="form-control">
                     </div>
                   </div>
@@ -291,12 +299,63 @@
         
       </div>
       <div class="modal-body">
-        <p>Permanently submit *INSERT SQ ID* ?</p>
+        <p>Permanently submit {{ $sq->supp_quotation_id }} ?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" onclick="$('#submit').modal('hide')">Cancel</button>
+        <form action="{{ route('supplierquotation.submit', ['supplierquotation'=>$sq->supp_quotation_id]) }}" method="post">
+          @csrf
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
+{{-- This is the sample row that is being copied and appended to the items table --}}
+<table class="d-none">
+  <tbody class="row-sample">
+    @include('modules.buying.supplierquotation.item_row',[
+      'item' => null,
+      'items' => $items,
+      'units' => $units,
+      'deletable' => true,
+    ])
+  </tbody>
+</table>
+@if (!isset($editable))
+  <script>
+    // Preventing the information from being editable
+    $('input, textarea').each(function(){
+      $(this).attr('readonly', 'true');
+    });
+    $('select').each(function(){
+      $(this).attr('disabled', 'true');
+    });
+    // Unbinding functions attached to item-rate
+    $('.item-rate').off();
+  </script>
+@endif
+<script>
+  $(document).off('submit', 'form').on('submit', 'form', function(){
+    $.ajax({
+        type: 'POST',
+        url: this.action,
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function(data){
+          // In case there's more than one modal that ends up on this page in the future
+          $('.modal').each(function(){
+            $(this).modal('hide');
+          });
+
+          loadIntoPage($('.tab-pane form')[0], "{{ route('supplierquotation.index') }}");
+        },
+        error: function(data){
+          alert("Error " + data.message);
+        }
+    });
+    return false;
+  }); 
+</script>
