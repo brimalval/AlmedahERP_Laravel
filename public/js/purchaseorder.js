@@ -266,6 +266,7 @@ function loadQuotation(id) {
                 `);
             }
             getQtyAndPrice();
+            chkBoxFunction();
         }
     });
 }
