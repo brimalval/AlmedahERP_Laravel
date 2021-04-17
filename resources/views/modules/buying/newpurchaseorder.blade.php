@@ -197,7 +197,6 @@ $i = 1;
                             <td>Quantity</td>
                             <td>Rate</td>
                             <td>Amount</td>
-                            <td></td>
                         </tr>
                     </thead>
                     <tbody class="" id="itemTable-content">
@@ -222,14 +221,6 @@ $i = 1;
                             <td class="text-black-50">
                                 <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00" readonly>
                             </td>
-                            <td class="text-black-50">
-                                <select class="input--style-4" type="text" name="sampleOne"
-                                    style="width:50px;height:30px;">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
-                                </select>
-                            </td>
                         </tr>
                     </tbody>
                    
@@ -242,8 +233,6 @@ $i = 1;
                             <td><button type="button" id="deleteRow"
                                     style="background-color: red; display:none;">Delete</button></td>
                             <td></td>
-                            <td><button id="button1">Download</button></td>
-                            <td><button id="button1">Upload</button></td>
                         </tr>
                     </tfoot>
 

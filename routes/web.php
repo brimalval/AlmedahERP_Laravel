@@ -268,6 +268,7 @@ Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
 Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
 Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
 Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
+Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
 Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
 Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 
@@ -399,7 +400,7 @@ Route::post(
     [SupplierQuotationController::class, 'submit']
 )->name('supplierquotation.submit');
 
-Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'get_quotation']);
+Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
 
 /**TASK ROUTES */
 Route::get('/openNewTask', function () {

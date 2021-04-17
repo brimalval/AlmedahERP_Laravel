@@ -46,20 +46,6 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
-    //function getMaterials(Request $request) {
-    //    try {
-    //        $materialsByID = array();
-    //        $ids = $request->input('req_ids');
-    //        $request_ids = json_decode($ids);
-    //        foreach($request_ids as $request_id) {
-    //            $materialsByID[] = MaterialPurchased::where('request_id', $request_id)->get()->itemsPurchased();
-    //        }
-    //        return ['purchases' => $materialsByID];
-    //    } catch (Exception $e) {
-    //        return $e;
-    //    }
-    //}
-
     public function store(Request $request)
     {
         try {

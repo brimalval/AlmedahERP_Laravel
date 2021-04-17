@@ -24,7 +24,7 @@ $i = 1;
             <h2 class="navbar-brand" style="font-size: 35px;">Receipt <span
                     id="pr_id">{{ $receipt->p_receipt_id }}</span></h2>
             <br>
-            <p id="recStatus">{{ $receipt->pr_status }}</p>
+            <p id="">{{ $receipt->pr_status }}</p>
         </h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -167,11 +167,12 @@ $i = 1;
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromOrder">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
+                                    <!--
                                     <td>
                                         <div class="form-check">
                                             <input type="checkbox" id="mainChk" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif class="form-check-input">
                                         </div>
-                                    </td>
+                                    </td>-->
                                     <td>Item</td>
                                     @if ($receipt->pr_status !== 'Draft')
                                         <td>Accepted Quantity</td>
@@ -184,11 +185,12 @@ $i = 1;
                             <tbody class="" id="itemsToReceive">
                                 @foreach ($materials as $material)
                                     <tr id="row-<?= $i ?>">
+                                        <!--
                                     <td>
                                         <div class="form-check">
                                             <input type="checkbox" name="item-chk" id="chk<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif class="form-check-input">
                                         </div>
-                                    </td>
+                                    </td>-->
                                     <td class="text-black-50">
                                         <input class="form-control" type="text" id="item_code<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif value={{ $material['item_code'] }}>
                                     </td>
@@ -210,6 +212,7 @@ $i = 1;
                                 <?php ++$i; ?>
                                 @endforeach
                             </tbody>
+                            <!--
                             <tfoot>
                                 @if ($receipt->pr_status === 'Draft')
                                 <td colspan="7" rowspan="5">
@@ -221,7 +224,7 @@ $i = 1;
                                 <tr>
                                     
                                 </tr>
-                            </tfoot>
+                            </tfoot>-->
                         </table>
                     </div>
                 </div>
@@ -260,8 +263,6 @@ $i = 1;
             </div>
         </div>
     </div>
-
-    <!--
     <div class="card" id="cardMoreInfo">
         <div id="salesOrderCard9">
             <div class="card-body">
@@ -271,12 +272,8 @@ $i = 1;
                             <label class=" text-nowrap align-middle">
                                 Status
                             </label>
-                            <select id="" class="form-control">
-                                <option selected>Draft</option>
-                                <option>Paid</option>
-                                <option>Unpaid</option>
-                                <option>Overdue</option>
-                                <option>Cancelled</option>
+                            <select id="recStatus" readonly class="form-control">
+                                <option selected>{{ $receipt->pr_status }}</option>
                             </select>
                         </div>
                     </div>
@@ -284,7 +281,6 @@ $i = 1;
             </div>
         </div>
     </div>
--->
 </div>
 <!-- Modal Purchase Order-->
 <div class="modal fade" id="npr_purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="npr_purchaseOrderModal"

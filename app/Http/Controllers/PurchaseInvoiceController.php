@@ -86,11 +86,16 @@ class PurchaseInvoiceController extends Controller
         $invoice->payment_balance = $new_balance;
         if ($new_price == $invoice->grand_total) {
             $new_status = "Paid";
-            $receipt = PurchaseReceipt::where('p_receipt_id', $invoice->p_receipt_id)->first();
-            $receipt->pr_status = "Completed";
+            $receipt = $invoice->receipt;
+            if($receipt->pr_status === 'To Receive and Bill') {
+                $new_pr_status = "To Receive";
+            } else {
+                $new_pr_status = "Completed";
+            }
+            $receipt->pr_status = $new_pr_status;
             $receipt->save();
-            $order = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
-            $order->mp_status = "Completed";
+            $order = $receipt->order;
+            $order->mp_status = $new_pr_status;
             $order->save();
         } else {
             $new_status = "With Outstanding Balance";
@@ -132,6 +137,11 @@ class PurchaseInvoiceController extends Controller
         } catch (Exception $e) {
             return $e;
         }
+    }
+
+    public function viewCheck($id) {
+        $log = PaymentInvoiceLog::find($id);
+        return ['acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no];
     }
 
     public function updateInvoice()

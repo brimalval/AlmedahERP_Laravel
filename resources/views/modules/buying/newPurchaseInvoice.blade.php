@@ -242,7 +242,7 @@ $today = date('Y-m-d');
                             <th>Purchase Receipt ID</th>
                             <th>Date Created</th>
                             <th>Purchase ID</th>
-                            <th>Item List Received</th>
+                            <!--<th>Item List Received</th>-->
                             <th>Grand Total(PHP)</th>
                             <th></th>
                         </tr>
@@ -253,8 +253,9 @@ $today = date('Y-m-d');
                             <td class="text-bold">{{ $receipt->p_receipt_id }}</td>
                             <td>{{ $receipt->date_created }}</td>
                             <td>{{ $receipt->purchase_id }}</td>
+                            <!--
                             <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-toggle="modal">View</button></td>
+                                    data-toggle="modal">View</button></td>-->
                             <td class="price">{{ $receipt->grand_total }}</td>
                             <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                     data-dismiss="modal" onclick="loadMaterials({{ $receipt->id }})">Select</button></td>

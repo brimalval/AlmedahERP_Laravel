@@ -151,11 +151,6 @@ $today = date('Y-m-d');
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromOrder">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" id="mainChk" class="form-check-input" disabled>
-                                        </div>
-                                    </td>
                                     <td>Item</td>
                                     <td>Quantity Ordered</td>
                                     <td>Rate</td>
@@ -169,15 +164,6 @@ $today = date('Y-m-d');
                                     </td>
                                 </tr>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="7" rowspan="5">
-                                        <button id="multBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
-                                        <button id="rowBtn" class="btn btn-sm btn-sm btn-secondary mx-2">Add Row</button>
-                                        <button id="deleteBtn" class="btn btn-sm btn-sm btn-secondary" style="display: none; background-color: red">Delete</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>

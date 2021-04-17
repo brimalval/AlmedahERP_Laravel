@@ -2,6 +2,25 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
 $("#saveInvoice").on('click', createInvoice);
 
+function viewChequeDetails(id) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    $.ajax({
+        type: "GET",
+        url: `/view-chq/${id}`,
+        data: id,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            $('#chq-accNo').html(response.acct_no);
+            $('#chq-num').html(response.chq_no);
+        }
+    });
+}
+
 $("#payInvoice").click(function () {
     $.ajaxSetup({
         headers: {

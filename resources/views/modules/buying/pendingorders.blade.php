@@ -48,7 +48,13 @@ $i = 0;
                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary" data-toggle="modal"
                         data-target="#po_itemListView" onclick="showProgress({{ $mo->id }})">View</button></td>
                 <td class="text-bold">{{ $totals[$i] }}%</td>
-                <td>{{ $mo->mo_status }}</td>
+                <td
+                    @if ($mo->mo_status === 'Pending')
+                        class="text-danger"
+                    @else
+                        class="text-success"
+                    @endif
+                >{{ $mo->mo_status }}</td>
             </tr>
             <?php ++$i; ?>
         @endforeach

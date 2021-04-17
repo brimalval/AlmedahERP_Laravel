@@ -189,7 +189,7 @@ $i = 1; ?>
                             <label class=" text-nowrap align-middle">
                                 Mode of Payment
                             </label>
-                            <select id="paymentMode" class="form-control">
+                            <select id="paymentMode" disabled class="form-control">
                                 <option value="" selected hidden readonly>{{ $invoice->payment_mode }}</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Installment">Installment</option>
@@ -200,7 +200,7 @@ $i = 1; ?>
                                 <label class=" text-nowrap align-middle">
                                     Installment Duration
                                 </label>
-                                <select id="installmentType" class="form-control">
+                                <select disabled id="installmentType" class="form-control">
                                     <option value="" selected>{{ $invoice->installment_type }}</option>
                                     <option value="3 Months">3 Months</option>
                                     <option value="6 Months">6 Months</option>
@@ -208,6 +208,7 @@ $i = 1; ?>
                             </div>
                             <br>
                             @endif
+                            @if ($invoice->pi_status !== 'Draft')
                             <label class=" text-nowrap align-middle">
                                 Method of Payment
                             </label>
@@ -216,6 +217,7 @@ $i = 1; ?>
                                 <option value="Cash">Cash</option>
                                 <option value="Cheque">Cheque</option>
                             </select>
+                            @endif
                             <br>
                             <div id="chq" hidden>
                                 <label class="text-nowrap align-middle">
@@ -240,9 +242,16 @@ $i = 1; ?>
                                     <label class=" text-nowrap align-middle">
                                         Amount to Pay
                                     </label>
-                                    <input type="number" min="0" required class="form-input form-control" placeholder="Enter Amount to Pay..." id="payAmount">
+                                    <input type="number" min="0" required class="form-input form-control" 
+                                        @if ($invoice->payment_mode === 'Cash')
+                                            readonly
+                                            value = {{ $invoice->grand_total }}
+                                        @else
+                                            placeholder="Enter Amount to Pay..." 
+                                        @endif 
+                                    id="payAmount">
+                                    <br>
                                 @endif
-                                <br>
                                 <label class=" text-nowrap align-middle">
                                     Date of Transaction
                                 </label>
@@ -273,7 +282,7 @@ $i = 1; ?>
                             <th>Payment Method</th>
                             <th>Payment Description</th>
                             <th>Amount Paid</th>
-                            <td></td>
+                            <th>View Cheque Details</th>
                             <!--<th>Handler</th>employee ID-->
                         </tr>
                     </thead>
@@ -285,7 +294,12 @@ $i = 1; ?>
                             <td class="text-bold">{{ $log->payment_method }}</td>
                             <td class="text-bold">{{ $log->payment_description }}</td>
                             <td>{{ $log->amount_paid }}</td>
-                            <td></td>
+                            <td>
+                                @if ($log->payment_method === 'Cheque')
+                                <button type="button" class="btn-sm btn-primary" data-toggle="modal"
+                                data-target="#npi_chequeInfo" onclick="viewChequeDetails({{ $log->id }})">View</button>
+                                @endif
+                            </td>
                         </tr>
                         @empty
                             
@@ -341,12 +355,8 @@ $i = 1; ?>
                                 <label class=" text-nowrap align-middle">
                                     Status
                                 </label>
-                                <select id="" class="form-control">
-                                    <option selected>Draft</option>
-                                    <option>Paid</option>
-                                    <option>Unpaid</option>
-                                    <option>Overdue</option>
-                                    <option>Cancelled</option>
+                                <select disabled id="" class="form-control">
+                                    <option selected>{{ $invoice->pi_status }}</option>
                                 </select>
                             </div>
                         </div>
@@ -377,7 +387,6 @@ $i = 1; ?>
                         </tr>
                     </thead>
                     <tbody>
-
                         <tr>
                             <td class="text-bold">4</td>
                             <td>100</td>
@@ -404,7 +413,7 @@ $i = 1; ?>
                 </button>
             </div>
             <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                <table id="chqTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Account No.</th>
@@ -412,10 +421,9 @@ $i = 1; ?>
                         </tr>
                     </thead>
                     <tbody>
-
                         <tr>
-                            <td class="text-bold">1001001234</td>
-                            <td>0123</td>
+                            <td id="chq-accNo" class="text-bold"></td>
+                            <td id="chq-num"></td>
                         </tr>
                     </tbody>
                 </table>

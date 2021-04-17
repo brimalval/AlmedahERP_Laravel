@@ -193,7 +193,16 @@ class PurchaseReceiptController extends Controller
             if($is_complete) {
                 $pending_order->mo_status = 'Completed';
                 $pending_order->save();
-                $receipt->pr_status = 'To Bill';
+                $invoice = $receipt->invoice;
+                if($invoice) {
+                    $new_status = ($invoice->pi_status === 'Paid') ? 'Completed' : 'To Bill';
+                } else {
+                    $new_status = 'To Bill';
+                }
+                $order = $receipt->order;
+                $order->mp_status =$new_status;
+                $order->save();
+                $receipt->pr_status = $new_status;
                 $receipt->save();
             } 
 
