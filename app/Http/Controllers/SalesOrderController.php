@@ -352,7 +352,7 @@ class SalesOrderController extends Controller
 
         $data->payment_balance = $payment['payment_balance'] - $form_data['view_totalamount'];
 
-        if($data->payment_balance <= 0.00){
+        if($sales->payment_balance <= 0.00){
             $sales->sales_status = "Fully Paid";
         }else{
             $sales->sales_status = "With Outstanding Balance";
