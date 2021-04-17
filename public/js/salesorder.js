@@ -732,7 +732,7 @@ function minusStocks(arr, materialsInComponents){
     data = {}
     data['products'] = products;
     data['qty'] = qty;
-    console.log("These are in minusstocks: " + products);
+    
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr("content"),
