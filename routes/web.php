@@ -347,6 +347,7 @@ Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawM
 Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getComponents']);
 Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
 Route::get('/getRawMaterialQuantity/{selected}', [SalesOrderController::class, 'getRawMaterialQuantity']);
+Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');

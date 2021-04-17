@@ -89,8 +89,8 @@ class MaterialsController extends Controller
             $data->category->quantity += $data->stock_quantity;
             $data->category->save();
             // MAKE THESE FIELDS NOT-STATIC
-            $data->reorder_level = 123;
-            $data->reorder_qty = 45;
+            $data->reorder_level = 30;
+            $data->reorder_qty = 50;
             ///////////
             $data->rm_status = $form_data['rm_status'];
             $data->item_image = json_encode($imagePath);
