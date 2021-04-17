@@ -840,6 +840,8 @@
                 }
                 loadRefresh();
                 
+                //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
+                minusStocks(componentsOrder, materialsInComponents);
             },
             error: function(data) {
                 console.log("error");
@@ -889,8 +891,11 @@
         totalValue = 0;
         currentCart = [];
         createMatRequestItems = [];
+        minusStocks = [];
+        materialsInComponents= [];
         console.log(currentCart);
         $('#ProductsTable tr').remove();
         $(".components tr").remove();
     }
+    
 </script>
