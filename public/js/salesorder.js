@@ -738,10 +738,9 @@ function minusStocks(arr, materialsInComponents){
             "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr("content"),
         },
     });
-
     $.ajax({
-        url: "/minusStocks",
         type: "POST",
+        url: "/minusStocks",
         data: data,
         success: function (response) {
             console.log(response)

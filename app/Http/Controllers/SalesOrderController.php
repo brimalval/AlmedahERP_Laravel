@@ -174,6 +174,7 @@ class SalesOrderController extends Controller
                 $customerCheck->address = $form_data['custAddress'];
                 $customerCheck->email_address = $form_data['custEmail'];
                 $customerCheck->company_name = $form_data['companyName'];
+                $customerCheck->profile_picture = "";
                 $customerCheck->save();
                 #Get id
                 $data->customer_id = $customerCheck->id;
@@ -457,6 +458,7 @@ class SalesOrderController extends Controller
     }
 
     function minusStocks(Request $request){
+        
         $products = $request->input('products');
         $qty = $request->input('qty');
 
@@ -474,6 +476,6 @@ class SalesOrderController extends Controller
                 $raw_material->save();
             }
         }
-        return "Sucess";
+        return "Sucess in MinusStocks";
     }
 }

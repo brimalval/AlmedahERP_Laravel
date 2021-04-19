@@ -112,7 +112,7 @@
                                             Customer ID
                                         </label>
 
-                                        <input list="customers" class="form-input form-control" id="customer_id" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
+                                        <input list="customers" class="form-input form-control" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
                                         <datalist id="customers">
                                         @foreach ($customers as $row)
                                           <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
@@ -737,6 +737,8 @@
         var yyyy = today.getFullYear();
         today = mm + '/' + dd + '/' + yyyy;
         document.getElementById('currentDate').value = today;
+        var componentsOrder;
+        var materialsInComponents;
         
     });
 
@@ -874,10 +876,9 @@
                     }
                 });
                 }
-                loadRefresh();
-                
                 //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
                 minusStocks(componentsOrder, materialsInComponents);
+                loadRefresh(); 
             },
             error: function(data) {
                 console.log("error");
@@ -933,5 +934,4 @@
         $('#ProductsTable tr').remove();
         $(".components tr").remove();
     }
-    
 </script>
