@@ -163,7 +163,7 @@ $i = 1;
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <label class=" text-nowrap align-middle">Items</label>
+                        <label class=" text-nowrap align-middle">Items to Receive</label>
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromOrder">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
@@ -173,7 +173,8 @@ $i = 1;
                                             <input type="checkbox" id="mainChk" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif class="form-check-input">
                                         </div>
                                     </td>-->
-                                    <td>Item</td>
+                                    <td>Item Code</td>
+                                    <td>Item Name</td>
                                     @if ($receipt->pr_status !== 'Draft')
                                         <td>Accepted Quantity</td>
                                     @endif
@@ -193,6 +194,9 @@ $i = 1;
                                     </td>-->
                                     <td class="text-black-50">
                                         <input class="form-control" type="text" id="item_code<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif value={{ $material['item_code'] }}>
+                                    </td>
+                                    <td class="text-black-50">
+                                        <input class="form-control" type="text" id="prItemName<?= $i ?>" @if ($receipt->pr_status === 'Draft') onchange="onChangeFunction();" @else disabled @endif value="{{ $material['item_name'] }}">
                                     </td>
                                     @if ($receipt->pr_status !== 'Draft')
                                         <td class="text-black-50">

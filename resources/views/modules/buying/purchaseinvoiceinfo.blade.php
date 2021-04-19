@@ -50,7 +50,7 @@ $i = 1; ?>
                 </h2>
             </div>
         @endif
-        <div class="collapse show" id="salesOrderCard1">
+        <div class="collapse show" id="">
             <div class="card-body">
                 <form action="" id="">
                     <div class="row">
@@ -91,12 +91,12 @@ $i = 1; ?>
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard4" aria-expanded="false">
+                    data-target="#piSupplier" aria-expanded="false">
                     ADDRESS AND CONTACTS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard4" class="collapse">
+        <div id="piSupplier" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
@@ -130,12 +130,12 @@ $i = 1; ?>
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard5" aria-expanded="false">
+                    data-target="#piItems" aria-expanded="false">
                     ITEMS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard5" class="collapse">
+        <div id="piItems" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
@@ -144,6 +144,7 @@ $i = 1; ?>
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
                                     <td>Item Code</td>
+                                    <td>Item Name</td>
                                     <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
@@ -153,7 +154,10 @@ $i = 1; ?>
                                 @foreach ($received_items as $item)
                                     <tr id="row-<?= $i ?>">
                                         <td class="text-black-50">
-                                            <input class="form-control" readonly type="text" id="item_code<?= $i ?>" value={{ $item['item_code'] }}>
+                                            <input class="form-control" readonly type="text" id="item_code<?= $i ?>" value={{ $item['item']->item_code }}>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <input class="form-control" readonly type="text" id="item_name<?= $i ?>" value={{ $item['item']->item_name }}>
                                         </td>
                                         <td class="text-black-50">
                                             <input class="form-control" readonly id="qtyAcc<?= $i ?>" type="number" min="0" value={{ $item['qty'] }}>
@@ -177,12 +181,12 @@ $i = 1; ?>
             <div class="card-header">
                 <h2 class="mb-0">
                     <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                        data-target="#salesOrderCard6" aria-expanded="false">
+                        data-target="#piPayment" aria-expanded="false">
                         PAYMENT
                     </button>
                 </h2>
             </div>
-            <div id="salesOrderCard6" class="collapse">
+            <div id="piPayment" class="collapse">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6 form-group">
@@ -267,12 +271,12 @@ $i = 1; ?>
             <div class="card-header">
                 <h2 class="mb-0">
                     <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                        data-target="#salesOrderCard7" aria-expanded="false">
+                        data-target="#paymentLogs" aria-expanded="false">
                         PAYMENT LOGS
                     </button>
                 </h2>
             </div>
-            <div id="salesOrderCard7" class="collapse">
+            <div id="paymentLogs" class="collapse">
                 <div class="card-body">
                   <table id="paymentLogsTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
@@ -302,7 +306,9 @@ $i = 1; ?>
                             </td>
                         </tr>
                         @empty
-                            
+                            <td colspan="6">
+                                <center>NO PAYMENT LOGS CREATED</center>
+                            </td>
                         @endforelse
                         <!--
                         <tr>
@@ -347,7 +353,15 @@ $i = 1; ?>
         </div>
         @endif
         <div class="card" id="cardMoreInfo">
-            <div id="salesOrderCard9">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                        data-target="#piInfo" aria-expanded="false">
+                        MORE INFORMATION
+                    </button>
+                </h2>
+            </div>
+            <div id="piInfo" class="collapse">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
@@ -367,7 +381,7 @@ $i = 1; ?>
     </div>
 </div>
 
-<!-- Modal itemlist-->
+<!-- Modal itemlist
 <div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -399,7 +413,7 @@ $i = 1; ?>
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <!-- Modal chequeInfo-->
 <div class="modal fade" id="npi_chequeInfo" tabindex="-1" role="dialog" aria-labelledby="npi_chequeInfo"

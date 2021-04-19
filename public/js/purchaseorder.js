@@ -36,6 +36,9 @@ $("#rowBtn").on('click', function () {
             <input class="form-control" type="text" name="item${nextRow}" id="item${nextRow}" onkeyup="fieldFunction(${nextRow});">
         </td>
         <td class="text-black-50">
+            <input class="form-control" type="text" name="itemName${nextRow}" id="itemName${nextRow}" onkeyup="fieldFunction(1);">
+        </td>
+        <td class="text-black-50">
             <input class="form-control" type="date" name="date${nextRow}" id="date${nextRow}" value=${$("#reqDate").val()}>
         </td>
         <td class="text-black-50">
@@ -46,13 +49,6 @@ $("#rowBtn").on('click', function () {
         </td>
         <td class="text-black-50">
             <input class="form-control" type="text" name="price${nextRow}" id="price${nextRow}" value="₱ 0.00" readonly>
-        </td>
-        <td class="text-black-50">
-            <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
-                <option></option>
-                <option></option>
-                <option></option>
-            </select>
         </td>
     </tr> 
     `);
@@ -86,6 +82,9 @@ $("#deleteRow").click(function () {
                     <input class="form-control" type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
                 </td>
                 <td class="text-black-50">
+                    <input class="form-control" type="text" name="itemName1" id="itemName1" onkeyup="fieldFunction(1);">
+                </td>
+                <td class="text-black-50">
                     <input class="form-control" type="date" name="date1" id="date1" value=${$("#reqDate").val()}>
                 </td>
                 <td class="text-black-50">
@@ -96,13 +95,6 @@ $("#deleteRow").click(function () {
                 </td>
                 <td class="text-black-50">
                     <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00" readonly>
-                </td>
-                <td class="text-black-50">
-                    <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
-                        <option></option>
-                        <option></option>
-                        <option></option>
-                    </select>
                 </td>
             </tr> 
             `
@@ -126,6 +118,10 @@ $("#deleteRow").click(function () {
                 $("#item" + i).attr('name', 'item' + new_id);
                 $("#item" + i).attr('onkeyup', 'fieldFunction(' + new_id + ');');
                 $("#item" + i).attr('id', 'item' + new_id);
+
+                $("#item" + i).attr('name', 'itemName' + new_id);
+                $("#item" + i).attr('onkeyup', 'fieldFunction(' + new_id + ');');
+                $("#item" + i).attr('id', 'itemName' + new_id);
 
                 $("#date" + i).attr('name', 'date' + new_id);
                 $("#date" + i).attr('id', 'date' + new_id);
@@ -163,7 +159,7 @@ $("#masterChk").change(function () {
         for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
             $("#chk" + i).prop("checked", true);
         }
-        $("#deleteRow").css('display', 'block');
+        $("#deleteRow").css('display', 'inline-block');
     } else {
         for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
             $("#chk" + i).prop("checked", false);
@@ -231,7 +227,7 @@ function loadQuotation(id) {
             $("#supplierField").val(data.supplier.company_name);
             $("#suppAddress").val(data.supplier.supplier_address);
             for (let i = 1; i <= data.items.length; i++) {
-                let subtotal = parseFloat(data.items[i-1].quantity_requested) * parseFloat(data.items[i-1].rate);
+                let subtotal = parseFloat(data.items[i - 1].quantity_requested) * parseFloat(data.items[i - 1].rate);
                 let price_string = numberWithCommas(subtotal.toFixed(2));
                 tbl.append(`
                 <tr id="item-${i}">
@@ -241,30 +237,31 @@ function loadQuotation(id) {
                         </div>
                     </td>
                     <td class="text-black-50">
-                        <input class="form-control" type="text" name="item${i}" id="item${i}" value=${data.items[i-1].item_code} onkeyup="fieldFunction(${i});">
+                        <input class="form-control" type="text" name="item${i}" id="item${i}" value=${data.items[i - 1].item_code} onkeyup="fieldFunction(${i});">
+                    </td>
+                    <td class="text-black-50">
+                        <input class="form-control" type="text" name="itemName${i}" id="itemName${i}" value="${data.items[i - 1].item.item_name}" onkeyup="fieldFunction(${i});">
                     </td>
                     <td class="text-black-50">
                         <input class="form-control" type="date" name="date${i}" id="date${i}" value=${$("#reqDate").val()}>
                     </td>
                     <td class="text-black-50">
-                        <input class="form-control" type="number" name="qty${i}" id="qty${i}" value=${data.items[i-1].quantity_requested} onchange="calcPrice(${i});">
+                        <input class="form-control" type="number" name="qty${i}" id="qty${i}" value=${data.items[i - 1].quantity_requested} onchange="calcPrice(${i});">
                     </td>
                     <td class="text-black-50">
-                        <input class="form-control" type="number" name="rate${i}" id="rate${i}" value=${data.items[i-1].rate} onchange="calcPrice(${i});">
+                        <input class="form-control" type="number" name="rate${i}" id="rate${i}" value=${data.items[i - 1].rate} onchange="calcPrice(${i});">
                     </td>
                     <td class="text-black-50">
                         <input class="form-control" type="text" name="price${i}" id="price${i}" value="₱ ${price_string}" readonly>
                     </td>
-                    <td class="text-black-50">
-                        <select class="input--style-4" type="text" name="sampleOne" style="width:50px;height:30px;">
-                            <option></option>
-                            <option></option>
-                            <option></option>
-                        </select>
-                    </td>
                 </tr> 
                 `);
             }
+            let new_array = [];
+            for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
+                new_array[i - 1] = $("#item" + i).val();
+            }
+            item_codes = new_array;
             getQtyAndPrice();
             chkBoxFunction();
         }
@@ -283,7 +280,7 @@ function saveOrder() {
     let transDate = new Date($("#transDate").val());
     let reqDate = new Date($("#reqDate").val());
     if (transDate > reqDate) {
-        alert('Transaction date is later than required date of materials!');
+        alert('Order date is later than required date of materials!');
         return;
     }
 
@@ -397,7 +394,7 @@ function chkBoxFunction() {
     $('input[name="item-chk"]').each(function () {
         $(this).change(function () {
             if ($(this).is(":checked"))
-                $("#deleteRow").css('display', 'block');
+                $("#deleteRow").css('display', 'inline-block');
             else {
                 let size = $("#itemTable tbody tr").length;
                 for (let i = 1; i <= size; i++) {

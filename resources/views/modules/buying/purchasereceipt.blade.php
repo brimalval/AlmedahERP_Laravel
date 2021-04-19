@@ -64,7 +64,7 @@
                 <td
                     @if ($receipt->pr_status === 'Completed')
                         class="text-success"
-                    @elseif ($receipt->pr_status === 'To Bill'|| $receipt->pr_status === 'To Receive and Bill')
+                    @elseif ($receipt->pr_status === 'To Bill'|| $receipt->pr_status === 'To Receive and Bill' || $receipt->pr_status === 'To Receive')
                         class="text-danger"
                     @endif
                 >{{ $receipt->pr_status }}</td>
@@ -143,11 +143,12 @@
             success: function(data) {
                 $("#receivedMats tr").remove();
                 for (i = 0; i < data.received_mats.length; i++) {
+                    var qtyDisplay = (data.received_mats[i]['qty'] == 0) ? `<span class="text-success">Fully Received</span>` : data.received_mats[i]['qty'];
                     $("#receivedMats").append(
                         `
                         <tr>
                             <td class="text-bold">${data.received_mats[i]['item_name']}</td>
-                            <td>${data.received_mats[i]['qty']}</td>
+                            <td>${qtyDisplay}</td>
                         </tr>
                         `
                     );

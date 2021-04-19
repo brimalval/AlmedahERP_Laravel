@@ -41,7 +41,7 @@ $today = date('Y-m-d');
                 </div>
             </h2>
         </div>
-        <div class="collapse show" id="salesOrderCard1">
+        <div class="collapse show" id="">
             <div class="card-body">
                 <form action="" id="">
                     <div class="row">
@@ -84,12 +84,12 @@ $today = date('Y-m-d');
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard4" aria-expanded="false">
+                    data-target="#piSupplier" aria-expanded="false">
                     ADDRESS AND CONTACTS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard4" class="collapse">
+        <div id="piSupplier" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
@@ -122,12 +122,12 @@ $today = date('Y-m-d');
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard5" aria-expanded="false">
+                    data-target="#piItems" aria-expanded="false">
                     ITEMS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard5" class="collapse">
+        <div id="piItems" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
@@ -135,7 +135,8 @@ $today = date('Y-m-d');
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromReceipt">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
-                                    <td>Item</td>
+                                    <td>Item Code</td>
+                                    <td>Item Name</td>
                                     <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
@@ -157,12 +158,12 @@ $today = date('Y-m-d');
             <div class="card-header">
                 <h2 class="mb-0">
                     <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                        data-target="#salesOrderCard6" aria-expanded="false">
+                        data-target="#piPayment" aria-expanded="false">
                         PAYMENT
                     </button>
                 </h2>
             </div>
-            <div id="salesOrderCard6" class="collapse">
+            <div id="piPayment" class="collapse">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6 form-group">
@@ -236,7 +237,7 @@ $today = date('Y-m-d');
                 </button>
             </div>
             <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                <table id="prTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Purchase Receipt ID</th>
@@ -282,7 +283,7 @@ $today = date('Y-m-d');
     </div>
 </div>
 
-<!-- Modal itemlist-->
+<!-- Modal itemlist
 <div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -315,7 +316,7 @@ $today = date('Y-m-d');
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <script type="text/javascript">
     //$('#itemsFromReceipt').DataTable();

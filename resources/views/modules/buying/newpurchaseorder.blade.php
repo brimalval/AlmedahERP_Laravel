@@ -24,7 +24,8 @@ $i = 1;
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <!--<li><a class="dropdown-item" href="#">Product Bundle</a></li>-->
-                        <li><a class="dropdown-item" data-toggle="modal" data-target="#sq_modal">Supplier Quotation</a></li>
+                        <li><a class="dropdown-item" data-toggle="modal" data-target="#sq_modal">Supplier Quotation</a>
+                        </li>
                         <!--<li><a class="dropdown-item" href="#">Supplier Quotation</a></li>-->
                     </ul>
                 </li>
@@ -47,8 +48,7 @@ $i = 1;
 </nav>
 
 <!-- Modal Purchase Order-->
-<div class="modal fade" id="sq_modal" tabindex="-1" role="dialog" aria-labelledby="sq_modal"
-    aria-hidden="true">
+<div class="modal fade" id="sq_modal" tabindex="-1" role="dialog" aria-labelledby="sq_modal" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -75,7 +75,8 @@ $i = 1;
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-toggle="modal" data-target="#npr_itemListView">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                        data-dismiss="modal" onclick="loadQuotation({{ $quotation->id }})">Select</button></td>   
+                                        data-dismiss="modal"
+                                        onclick="loadQuotation({{ $quotation->id }})">Select</button></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -89,207 +90,202 @@ $i = 1;
 </div>
 
 
-
-<div class="container">
-    <form id="newpurchaseorderForm" name="newpurchaseForm" role="form" method="POST">
-        @csrf
-        <div class="row">
-            <div class="col-6">
-                <div class="input-group">
-                    <label class="label">Series</label>
-                    <select class="form-control" type="text" name="series" style="width:512px;height:38px;" disabled>
-                        <option>PUR-ORD-.YYYY.-</option>
-                    </select>
-                </div>
+<div class="accordion" id="accordion">
+    <div class="card">
+        <div class="collapse show">
+            <div class="card-body">
+                <form action="" id="" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-6">
+                            <label class=" text-nowrap align-middle">Series</label>
+                            <div class="d-flex">
+                                <select class="form-input form-control" type="text" name="series"
+                                    style="width:512px;height:38px;" disabled>
+                                    <option>PUR-ORD-.YYYY.-</option>
+                                </select>
+                            </div>
+                            <br>
+                            <input type="text" id="sqID" hidden>
+                            <label class=" text-nowrap align-middle" for="supplier">Supplier</label>
+                            <input class="form-input form-control" readonly type="text" id="supplierField"
+                                name="supplier">
+                        </div>
+                        <div class="col-6">
+                            <label for="date">Date</label>
+                            <input type="date" readonly id="transDate" name="date"
+                                value="<?php echo $today; ?>"
+                                class="form-input form-control">
+                            <br>
+                            <label for="reqdbydate">Reqd by Date</label>
+                            <input readonly type="date" name="reqdbydate" id="reqDate" class="form-input form-control">
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="date">Date</label>
-
-                    <input type="date" id="transDate" name="date"
-                        value="<?php echo $today; ?>" class="form-control">
-                </div>
-            </div>
-
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="supplier">Supplier</label>
-                    <input type="text" id="supplierField" name="supplier" class="form-control">
-                </div>
-            </div>
-
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="reqdbydate">Reqd by Date</label>
-                    <input type="date" name="reqdbydate" id="reqDate" class="form-control">
-                </div>
-            </div>
-            <input type="input" name="" id="sqID" class="form-control" readonly hidden>
         </div>
-
-
-
-        <!---Address and Contacts-->
-        <a href="#submenuAddressandContacts" data-toggle="collapse" aria-expanded="false"
-            class="bg-white list-group-item list-group-item-action">
-
-            <span class="menu-collapsed align-middle smaller menu"> ADDRESS AND CONTACTS</span>
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
-
-        </a>
-
-        <div id='submenuAddressandContacts' class="collapse sidebar-submenu">
-            <br>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="selectsuppadd">Select Supplier Address</label>
-                        <input type="text" id="suppAddress" class="form-control">
+    </div>
+    <div class="card" id="poAddressContacts">
+        <div class="card-header">
+            <h2 class="mb-0">
+                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                    data-target="#poAddCon" aria-expanded="false">
+                    ADDRESS AND CONTACTS
+                </button>
+            </h2>
+        </div>
+        <div id="poAddCon" class="collapse">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="selectsuppadd">Select Supplier Address</label>
+                            <input type="text" id="suppAddress" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactperson">Contact Person</label>
+                            <input type="text" class="form-control">
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="selectshipadd">Select Shipping Address</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="contactperson">Contact Person</label>
-                        <input type="text" class="form-control">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="selectshipadd">Select Shipping Address</label>
+                            <input type="text" class="form-control">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!----End of Address and Contacts-->
-        <!---Currency and Price List-->
-        <a href="#submenuCurrencyandPriceList" data-toggle="collapse" aria-expanded="false"
-            class="bg-white list-group-item list-group-item-action">
-
-            <span class="menu-collapsed align-middle smaller menu"> PRICE LIST</span>
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
-
-        </a>
-        <div id='submenuCurrencyandPriceList' class="collapse sidebar-submenu">
-            <br>
-            <div class="row">
-              
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="settargetWh">Set Target Warehouse</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-
-                <br>
-
-                <table class="table table-bom border-bottom" id="itemTable">
-                    <thead class="border-top border-bottom bg-light">
-                        <tr class="text-muted">
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" id="masterChk" class="form-check-input">
-                                </div>
-                            </td>
-                            <td>Item Code</td>
-                            <td>Reqd By Date</td>
-                            <td>Quantity</td>
-                            <td>Rate</td>
-                            <td>Amount</td>
-                        </tr>
-                    </thead>
-                    <tbody class="" id="itemTable-content">
-                        <tr id="item-1">
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" name="item-chk" id="chk1" class="form-check-input">
-                                </div>
-                            </td>
-                            <td class="text-black-50">
-                                <input class="form-control" type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
-                            </td>
-                            <td class="text-black-50">
-                                <input class="form-control" type="date" name="date1" id="date1">
-                            </td>
-                            <td class="text-black-50">
-                                <input class="form-control" type="number" name="qty1" id="qty1" value="0" min="1" onchange="calcPrice(1);">
-                            </td>
-                            <td class="text-black-50">
-                                <input class="form-control" type="number" name="rate1" id="rate1" value="0" min="1" onchange="calcPrice(1);">
-                            </td>
-                            <td class="text-black-50">
-                                <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00" readonly>
-                            </td>
-                        </tr>
-                    </tbody>
-                   
-                    <tfoot>
-                        <tr>
-                            <td><button type="button" id="multBtn" style="background-color: #007bff;">Add
-                                    Multiple</button></td>
-                            <td><button type="button" id="rowBtn" style="background-color: #007bff;">Add Row</button>
-                            </td>
-                            <td><button type="button" id="deleteRow"
-                                    style="background-color: red; display:none;">Delete</button></td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-
-                    <style>
-                        #multBtn,
-                        #rowBtn,
-                        #deleteRow {
-                            border-radius: 4px;
-                            padding: 5px;
-                            color: white;
-                        }
-                    </style>
-                </table>
-                <hr>
-                <br>
-
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="totalphp">Total (PHP)</label>
-                        <input type="text" class="form-control" id="totalPrice" value="₱ 0.00" readonly>
-                    </div>
-                </div>
-
-                <div class="col-6">
-                    <div class="form-group">
-                    </div>
-                </div>
-
-            </div>
-
+    </div>
+    <div class="card" id="poPriceList">
+        <div class="card-header">
+            <h2 class="mb-0">
+                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                    data-target="#poPrices" aria-expanded="false">
+                    MATERIALS AND PRICE LIST
+                </button>
+            </h2>
         </div>
-        <a href="#submenuMoreInfo" data-toggle="collapse" aria-expanded="false"
-            class="bg-white list-group-item list-group-item-action">
-
-            <span class="menu-collapsed align-middle smaller menu"> MORE INFORMATION</span>
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
-
-        </a>
-        <div id='submenuMoreInfo' class="collapse sidebar-submenu">
-            <br>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Status</label>
-                        <input type="text" class="form-control">
+        <div id="poPrices" class="collapse">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="settargetWh">Set Target Warehouse</label>
+                            <input type="text" class="form-input form-control">
+                        </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="form-group">
+                <div class="row">
+                    <table class="table border-bottom table-hover table-bordered" id="itemTable">
+                        <thead class="border-top border-bottom bg-light">
+                            <tr class="text-muted">
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" id="masterChk" class="form-check-input">
+                                    </div>
+                                </td>
+                                <td>Item Code</td>
+                                <td>Item Name</td>
+                                <td>Reqd By Date</td>
+                                <td>Quantity</td>
+                                <td>Rate</td>
+                                <td>Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody class="" id="itemTable-content">
+                            <tr id="item-1">
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" name="item-chk" id="chk1" class="form-check-input">
+                                    </div>
+                                </td>
+                                <td class="text-black-50">
+                                    <input class="form-control" type="text" name="item1" id="item1"
+                                        onkeyup="fieldFunction(1);">
+                                </td>
+                                <td class="text-black-50">
+                                    <input class="form-control" type="text" name="itemName1" id="itemName1"
+                                        onkeyup="fieldFunction(1);">
+                                </td>
+                                <td class="text-black-50">
+                                    <input class="form-control" type="date" name="date1" id="date1">
+                                </td>
+                                <td class="text-black-50">
+                                    <input class="form-control" type="number" name="qty1" id="qty1" value="0" min="1"
+                                        onchange="calcPrice(1);">
+                                </td>
+                                <td class="text-black-50">
+                                    <input class="form-control" type="number" name="rate1" id="rate1" value="0" min="1"
+                                        onchange="calcPrice(1);">
+                                </td>
+                                <td class="text-black-50">
+                                    <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00"
+                                        readonly>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <td colspan="7" rowspan="5">
+                                <button type="button" id="multBtn" style="background-color: #007bff;">Add
+                                    Multiple</button>
+                                <button type="button" id="rowBtn" style="background-color: #007bff;">Add
+                                    Row</button>
+                                <button type="button" id="deleteRow"
+                                    style="background-color: red; display:none;">Delete</button>
+                            </td>
+                        </tfoot>
+                        <style>
+                            #multBtn,
+                            #rowBtn,
+                            #deleteRow {
+                                border-radius: 4px;
+                                padding: 5px;
+                                color: white;
+                            }
+
+                        </style>
+                    </table>
+                    <hr>
+                    <br>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="totalphp">Total (PHP)</label>
+                            <input type="text" class="form-control" id="totalPrice" value="₱ 0.00" readonly>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                        </div>
                     </div>
                 </div>
-            
             </div>
-
         </div>
-
-    </form>
-    <br>
-    
+    </div>
+    <div class="card" id="poMoreInfo">
+        <div class="card-header">
+            <h2 class="mb-0">
+                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                    data-target="#poInfo" aria-expanded="false">
+                    MORE INFORMATION
+                </button>
+            </h2>
+        </div>
+        <div id="poInfo" class="collapse">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -162,7 +162,10 @@ function loadMaterials(id) {
                     `
                     <tr id="row-${i}">
                         <td class="text-black-50">
-                            <input class="form-control" readonly type="text" id="item_code${i}" value=${data.ordered_mats[i - 1]['item_code']}>
+                            <input class="form-control" readonly type="text" id="item_code${i}" value=${data.ordered_mats[i - 1]['item'].item_code}>
+                        </td>
+                        <td class="text-black-50">
+                            <input class="form-control" readonly type="text" id="prItemName${i}" value=${data.ordered_mats[i - 1]['item'].item_name}>
                         </td>
                         <td class="text-black-50">
                             <input class="form-control" readonly id="qtyAcc${i}" type="number" min="0" value=${data.ordered_mats[i - 1]['qty']} onchange="calcPrice(${i})">

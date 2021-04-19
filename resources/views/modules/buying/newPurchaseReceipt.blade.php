@@ -147,11 +147,12 @@ $today = date('Y-m-d');
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <label class=" text-nowrap align-middle">Items</label>
+                        <label class=" text-nowrap align-middle">Items to Receive</label>
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromOrder">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
-                                    <td>Item</td>
+                                    <td>Item Code</td>
+                                    <td>Item Name</td>
                                     <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
