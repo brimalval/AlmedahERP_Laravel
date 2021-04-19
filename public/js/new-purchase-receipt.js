@@ -161,22 +161,20 @@ function loadMaterials(id) {
                 table.append(
                     `
                     <tr id="row-${i}">
-                        <td>
-                            <div class="form-check">
-                                <input type="checkbox" name="item-chk" id="chk${i}" class="form-check-input">
-                            </div>
+                        <td class="text-black-50">
+                            <input class="form-control" readonly type="text" id="item_code${i}" value=${data.ordered_mats[i - 1]['item'].item_code}>
                         </td>
                         <td class="text-black-50">
-                            <input class="form-control" type="text" id="item_code${i}" value=${data.ordered_mats[i - 1]['item_code']}>
+                            <input class="form-control" readonly type="text" id="prItemName${i}" value=${data.ordered_mats[i - 1]['item'].item_name}>
                         </td>
                         <td class="text-black-50">
-                            <input class="form-control" id="qtyAcc${i}" type="number" min="0" value=${data.ordered_mats[i - 1]['qty']} onchange="calcPrice(${i})">
+                            <input class="form-control" readonly id="qtyAcc${i}" type="number" min="0" value=${data.ordered_mats[i - 1]['qty']} onchange="calcPrice(${i})">
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" id="rateAcc${i}" type="text" min="0" value=${data.ordered_mats[i - 1]['rate']} onchange="calcPrice(${i})">
+                            <input class="form-control" readonly id="rateAcc${i}" type="text" min="0" value=${data.ordered_mats[i - 1]['rate']} onchange="calcPrice(${i})">
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" id="amtAcc${i}" type="text" min="0" value=${data.ordered_mats[i - 1]['subtotal']}>
+                            <input class="form-control" readonly id="amtAcc${i}" type="text" min="0" value=${data.ordered_mats[i - 1]['subtotal']}>
                         </td> 
                     </tr>
                     `
@@ -233,11 +231,6 @@ $("#rowBtn").click(function () {
     table.append(
         `
         <tr id="row-${nextRow}">
-            <td>
-                <div class="form-check">
-                    <input type="checkbox" name="item-chk" id="chk${nextRow}" class="form-check-input">
-                </div>
-            </td>
             <td class="text-black-50">
                 <input class="form-control" type="text" id="item_code${nextRow}">
             </td>
@@ -284,7 +277,6 @@ $("#deleteBtn").click(function () {
                 // assign new ids and attributes to unchecked elements
                 // reassign attributes first before id's
                 // otherwise, the attributes of wrong id will be reassigned
-                $("#chk" + i).attr('id', 'chk' + new_id);
 
                 $("#item_code" + i).attr('id', 'item_code' + new_id);
 

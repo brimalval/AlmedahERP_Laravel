@@ -193,13 +193,14 @@
                                             
                                         </div>
                                     </div>
+                                    <?php $today = date('Y-m-d'); ?>
                                     <div class="col">
                                         <div class="form-group">
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Transaction Date
                                             </label>
-                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" required>
+                                            <input class="form-control" type="date" value=<?=$today?> id="saleDate" name="saleDate" required>
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Add to list

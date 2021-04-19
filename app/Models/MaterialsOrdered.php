@@ -30,11 +30,11 @@ class MaterialsOrdered extends Model
         $i = 0;
         $items_list_received = array();
         foreach ($ordered_mats as $item) {
-            if ($items[$i]['item_code'] === $item['item_code']) {
+            if ($items[$i]['item_code'] === $item['item']->item_code) {
                 array_push(
                     $items_list_received,
                     array(
-                        'material' => ManufacturingMaterials::where('item_code', $item['item_code'])->first(),
+                        'material' => ManufacturingMaterials::where('item_code', $item['item']->item_code)->first(),
                         'qty_received' => $items[$i]['qty_received'],
                         'qty_ordered' =>  $item['qty'],
                         'curr_progress' => intval(($items[$i]['qty_received']/$item['qty'])*100)

@@ -268,7 +268,9 @@ Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
 Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
 Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
 Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
-Route::post('/pay-invoice/{receipt_id}', [PurchaseInvoiceController::class, 'payInvoice']);
+Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
+Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
+Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 
 /**PURCHASE ORDER ROUTES */
 Route::get('/purchaseorder', [MaterialsPurchasedController::class, 'index']);
@@ -283,6 +285,7 @@ Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterial
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
 Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
+Route::get('/get-materials-from-mp/{receipt_id}', [PurchaseReceiptController::class, 'getOrderedMaterialsFromInvoice']);
 Route::post('/create-receipt', [PurchaseReceiptController::class, 'createReceipt']);
 Route::get('/view-receipt/{receipt_id}', [PurchaseReceiptController::class, 'showReceipt']);
 Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
@@ -398,7 +401,7 @@ Route::post(
     [SupplierQuotationController::class, 'submit']
 )->name('supplierquotation.submit');
 
-Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'get_quotation']);
+Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuotation']);
 
 /**TASK ROUTES */
 Route::get('/openNewTask', function () {
