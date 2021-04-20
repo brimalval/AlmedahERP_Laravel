@@ -112,7 +112,7 @@
                                             Customer ID
                                         </label>
 
-                                        <input list="customers" class="form-input form-control" id="customer_id" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
+                                        <input list="customers" class="form-input form-control" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
                                         <datalist id="customers">
                                         @foreach ($customers as $row)
                                           <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
@@ -372,16 +372,11 @@
                                 <input type="text" class="form-input form-control" id="account_name" name="account_name" placeholder="Account Name">
                             </div>
                             <br>
-                            <div class="col" id="with_postdated_div" name="with_postdated" style="display:none; padding-left: 37px;">
-                                <input type="checkbox" class="form-check-input"  id="with_postated_cheque" name="with_postated_cheque" onclick="withPostdatedCheque()">
-                                <label>Wtih Post-Dated Cheque?</label>
-                            </div>
-                            <br>
-                            <div class="col" id="account_cheque_date" name="account_cheque_date" style="display:none">
-                                <label >
-                                    Date of Post-Dated Cheque
+                            <div class="col" id="bank_name_div" name="bank_name_div" style="display:none">
+                                <label>
+                                    Bank Name
                                 </label>
-                                <input type="date" class="form-input form-control" id="post_date_cheque" name="post_date_cheque" placeholder="Cheque Date" disabled>
+                                <input type="text" class="form-input form-control" id="bank_name" name="bank_name" placeholder="Bank Name">
                             </div>
                             <br>
                             <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()" >
@@ -651,7 +646,7 @@
                                 <label >
                                     Account No.
                                 </label>
-                                <input type="text" class="form-input form-control" id="aview_ccount_no" name="view_account_no" placeholder="Account No">
+                                <input type="text" class="form-input form-control" id="view_account_no" name="view_account_no" placeholder="Account No">
                             </div>
                             <br>
                             <div class="col " id="view_account_name_div" name="view_account_name_div" style="display:none">
@@ -661,23 +656,18 @@
                                 <input type="text" class="form-input form-control" id="view_account_name" name="view_account_name" placeholder="Account Name">
                             </div>
                             <br>
-                            <div class="col" id="view_postdated_checkbox_div" name="view_postdated_checkbox_div" style="display:none; padding-left: 37px;">
-                                <input type="checkbox" class="form-check-input"  id="view_postated_cheque" name="with_postated_cheque" onclick="PostdatedCheque()">
-                                <label>Post-Dated Cheque</label>
-                            </div>
-                            <br>
-                            <div class="col" id="view_postdated_cheque_div" name="view_postdated_cheque_div" style="display:none">
+                            <div class="col" id="view_bank_name_div" name="view_bank_name_div" style="display:none">
                                 <label >
-                                    Date of Post-Dated Cheque
+                                    Bank Name
                                 </label>
-                                <input type="date" class="form-input form-control" id="view_post_date_cheque" name="view_post_date_cheque" placeholder="Cheque Date" disabled>
+                                <input type="text" class="form-input form-control" id="view_bank_name" name="view_bank_name" placeholder="Bank Name">
                             </div>
                             <br>
                             <div class="col" id="viewaccount_no_div">
                                 <label >
                                     Customer Representative
                                 </label>
-                                <input type="text" class="form-input form-control" placeholder="Customer Rep" name="view_customer_rep" required>
+                                <input type="text" class="form-input form-control" placeholder="Customer Rep" id="view_customer_rep" name="view_customer_rep" required>
                             </div>
                             <br>
 
@@ -737,6 +727,8 @@
         var yyyy = today.getFullYear();
         today = mm + '/' + dd + '/' + yyyy;
         document.getElementById('currentDate').value = today;
+        var componentsOrder;
+        var materialsInComponents;
         
     });
 
@@ -874,8 +866,9 @@
                     }
                 });
                 }
-                loadRefresh();
-                
+                //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
+                minusStocks(componentsOrder, materialsInComponents);
+                loadRefresh(); 
             },
             error: function(data) {
                 console.log("error");
@@ -925,6 +918,8 @@
         totalValue = 0;
         currentCart = [];
         createMatRequestItems = [];
+        minusStocks = [];
+        materialsInComponents= [];
         console.log(currentCart);
         $('#ProductsTable tr').remove();
         $(".components tr").remove();

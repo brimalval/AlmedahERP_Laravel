@@ -31,6 +31,7 @@ class CreatePaymentLogsTable extends Migration
             $table->string('account_no')->nullable();
             $table->string('account_name')->nullable();
             $table->date('post_date_cheque')->nullable();
+            $table->string('bank_name')->nullable();
         });
     }
 

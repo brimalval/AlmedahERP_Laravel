@@ -96,23 +96,13 @@ function creationSelectPaymentType() {
         document.getElementById("account_cheque_no").style.display = "none";
         document.getElementById("account_name_div").style.display = "none";
         document.getElementById("account_cheque_date").style.display = "none";
-        document.getElementById("with_postdated_div").style.display = "none";
+        document.getElementById("bank_name_div").style.display = "none";
     } else {
         document.getElementById("account_no_div").style.display = "";
         document.getElementById("account_cheque_no").style.display = "";
         document.getElementById("account_name_div").style.display = "";
         document.getElementById("account_cheque_date").style.display = "";
-        document.getElementById("with_postdated_div").style.display = "";
-    }
-}
-
-function withPostdatedCheque() {
-    var checkbox = document.getElementById("with_postated_cheque");
-    var postDated = document.getElementById("post_date_cheque");
-    if (checkbox.checked) {
-        postDated.disabled = false;
-    } else {
-        postDated.disabled = true;
+        document.getElementById("bank_name_div").style.display = "";
     }
 }
 
@@ -124,14 +114,12 @@ function selectPaymentType() {
         document.getElementById("view_cheque_no_div").style.display = "none";
         document.getElementById("view_account_no_div").style.display = "none";
         document.getElementById("view_account_name_div").style.display = "none";
-        document.getElementById("view_postdated_checkbox_div").style.display = "none";
-        document.getElementById("view_postdated_cheque_div").style.display = "none";
+        document.getElementById("view_bank_name_div").style.display = "none";
     } else {
         document.getElementById("view_cheque_no_div").style.display = "";
         document.getElementById("view_account_no_div").style.display = "";
         document.getElementById("view_account_name_div").style.display = "";
-        document.getElementById("view_postdated_checkbox_div").style.display = "";
-        document.getElementById("view_postdated_cheque_div").style.display = "";
+        document.getElementById("view_bank_name_div").style.display = "";
     }
 }
 
@@ -214,7 +202,10 @@ var totalValue = 0;
 var currentCart = [];
 // Array for storing Insufficient Quantity Items to be used for Material Request
 var createMatRequestItems = [];
-// Adds component into a 2d array. If it is already init adds value instead
+
+//Array for storing stocks to be minus from components needed
+var componentsOrder;
+var materialsInComponents;
 
 function contains(names, arr) {
     namelist = [];
@@ -301,6 +292,7 @@ function rawMaterials() {
 }
 
 function finalizer(arr_components) {
+    componentsOrder = arr_components;
     $("#create-material-req-btn").html("");
     $(".components tr").remove();
 
@@ -389,7 +381,7 @@ function finalizer(arr_components) {
             }
         }
 
-
+        
         // append each component to the components table
         $(".components").append(
             `<tr>
@@ -563,6 +555,8 @@ function viewOrderedProducts(id) {
 
 //Get paymentlogs
 function viewPayments(id) {
+    document.getElementById("makePaymentForm").reset();
+
     $.ajax({
         url: "getPaymentLogs/" + id,
         type: "get",
@@ -711,4 +705,38 @@ function updatePayment(id, value) {
 
 function enableAddtoProduct() {
     document.getElementById("btnAddProduct").disabled = false;
+}
+
+function minusStocks(arr, materialsInComponents){
+    var products = [];
+    var qty = [];
+    arr.forEach(element => {
+        products.push( element[2]);
+        qty.push( element[0]);
+    });
+    materialsInComponents.forEach(element => {
+        products.push( element['item_code']);
+        qty.push( element['quantity_needed_for_request']);
+    });
+
+    data = {}
+    data['products'] = products;
+    data['qty'] = qty;
+    
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr("content"),
+        },
+    });
+    $.ajax({
+        type: "POST",
+        url: "/minusStocks",
+        data: data,
+        success: function (response) {
+            console.log(response)
+        },
+        error: function (response, error) {
+            // alert("Request: " + JSON.stringify(request));
+        },
+    });
 }

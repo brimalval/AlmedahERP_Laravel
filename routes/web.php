@@ -344,6 +344,7 @@ Route::get('/getAmountToBePaid/{id}', [SalesOrderController::class, 'getAmountTo
 Route::post('/addPayment', [SalesOrderController::class, 'addPayment']);
 Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 
+Route::post('/minusStocks' , [SalesOrderController::class, 'minusStocks']);
 Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
 Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getComponents']);
 Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);

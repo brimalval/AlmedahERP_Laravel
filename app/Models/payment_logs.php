@@ -25,7 +25,7 @@ class payment_logs extends Model
         'cheque_no',
         'account_no',
         'account_name',
-        'post_date_cheque'
+        'bank_name'
     ];
 
     protected $casts = [

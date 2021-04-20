@@ -124,7 +124,7 @@ class SalesOrderController extends Controller
                     $payment_logs->payment_status = "Pending";
                     $payment_logs->cheque_no = $form_data['cheque_no'];
                     $payment_logs->account_name = $form_data['account_name'];
-                    $payment_logs->post_date_cheque = $form_data['post_date_cheque'];
+                    $payment_logs->bank_name = $form_data['bank_name'];
                 }else{
                     $payment_logs->payment_balance = 0;
                     $data->payment_balance = 0;
@@ -151,7 +151,7 @@ class SalesOrderController extends Controller
                     $payment_logs->payment_status = "Pending";
                     $payment_logs->cheque_no = $form_data['cheque_no'];
                     $payment_logs->account_name = $form_data['account_name'];
-                    $payment_logs->post_date_cheque = $form_data['post_date_cheque'];
+                    $payment_logs->bank_name = $form_data['bank_name'];
                 }else{
                     $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
                     $data->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
@@ -174,6 +174,7 @@ class SalesOrderController extends Controller
                 $customerCheck->address = $form_data['custAddress'];
                 $customerCheck->email_address = $form_data['custEmail'];
                 $customerCheck->company_name = $form_data['companyName'];
+                $customerCheck->profile_picture = "";
                 $customerCheck->save();
                 #Get id
                 $data->customer_id = $customerCheck->id;
@@ -296,8 +297,7 @@ class SalesOrderController extends Controller
         $sale = salesorder::find($id);
         //Gets the last payment
         $payment = payment_logs::where('sales_id',$sale->id)->latest('id')->first();
-        
-        if ($sale['payment_mode'] == "Cash" || $payment['payment_balance'] == 0.00){
+        if ($sale['payment_mode'] == "Cash" || $sale['payment_balance'] == 0.00){
             return "Cash";
         }else if($payment['payment_status'] == "Pending"){
             return "Payment still pending";
@@ -341,7 +341,6 @@ class SalesOrderController extends Controller
             $data->payment_status = "Pending";
             $data->cheque_no = $form_data['view_account_no'];
             $data->account_name = $form_data['view_account_name'];
-            $data->post_date_cheque = $form_data['view_post_date_cheque'];
         }else{
             $data->payment_status = "Completed";
             $sales->payment_balance = $sales->payment_balance - $form_data['view_totalamount'];
@@ -352,8 +351,8 @@ class SalesOrderController extends Controller
 
         $data->payment_balance = $payment['payment_balance'] - $form_data['view_totalamount'];
 
-        if($data->payment_balance <= 0.00){
-            $data->sales_status = "Fully Paid";
+        if($sales->payment_balance <= 0.00){
+            $sales->sales_status = "Fully Paid";
         }else{
             $sales->sales_status = "With Outstanding Balance";
         }
@@ -416,7 +415,7 @@ class SalesOrderController extends Controller
                 $raw_materials_needed = $raw_material->item_code;
                 array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
             }
-            //name, cat, neededVal, stockVal
+            
         }
 
         $finalComponent = array();
@@ -454,5 +453,27 @@ class SalesOrderController extends Controller
             }
         }
         return -1;
-    }   
+    }
+
+    function minusStocks(Request $request){
+        
+        $products = $request->input('products');
+        $qty = $request->input('qty');
+
+        for ($i=0; $i < count($products); $i++) { 
+            # code...
+            $raw_material = ManufacturingMaterials::where('item_code', $products[$i])->first();
+            $raw_mat_qty = $raw_material->rm_quantity;
+
+            if($raw_material != null or $raw_material != ""){
+                if($qty[$i] >= $raw_mat_qty){
+                    $raw_material->rm_quantity = 0;
+                }else{
+                    $raw_material->rm_quantity = $raw_material->rm_quantity - $qty[$i];
+                }
+                $raw_material->save();
+            }
+        }
+        return "Sucess in MinusStocks";
+    }
 }
