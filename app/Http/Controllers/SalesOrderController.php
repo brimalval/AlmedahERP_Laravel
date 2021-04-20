@@ -124,7 +124,7 @@ class SalesOrderController extends Controller
                     $payment_logs->payment_status = "Pending";
                     $payment_logs->cheque_no = $form_data['cheque_no'];
                     $payment_logs->account_name = $form_data['account_name'];
-                    $payment_logs->post_date_cheque = $form_data['post_date_cheque'];
+                    $payment_logs->bank_name = $form_data['bank_name'];
                 }else{
                     $payment_logs->payment_balance = 0;
                     $data->payment_balance = 0;
@@ -151,7 +151,7 @@ class SalesOrderController extends Controller
                     $payment_logs->payment_status = "Pending";
                     $payment_logs->cheque_no = $form_data['cheque_no'];
                     $payment_logs->account_name = $form_data['account_name'];
-                    $payment_logs->post_date_cheque = $form_data['post_date_cheque'];
+                    $payment_logs->bank_name = $form_data['bank_name'];
                 }else{
                     $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
                     $data->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
@@ -297,8 +297,7 @@ class SalesOrderController extends Controller
         $sale = salesorder::find($id);
         //Gets the last payment
         $payment = payment_logs::where('sales_id',$sale->id)->latest('id')->first();
-        
-        if ($sale['payment_mode'] == "Cash" || $payment['payment_balance'] == 0.00){
+        if ($sale['payment_mode'] == "Cash" || $sale['payment_balance'] == 0.00){
             return "Cash";
         }else if($payment['payment_status'] == "Pending"){
             return "Payment still pending";
@@ -342,7 +341,6 @@ class SalesOrderController extends Controller
             $data->payment_status = "Pending";
             $data->cheque_no = $form_data['view_account_no'];
             $data->account_name = $form_data['view_account_name'];
-            $data->post_date_cheque = $form_data['view_post_date_cheque'];
         }else{
             $data->payment_status = "Completed";
             $sales->payment_balance = $sales->payment_balance - $form_data['view_totalamount'];
