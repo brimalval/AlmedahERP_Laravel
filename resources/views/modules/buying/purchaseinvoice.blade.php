@@ -42,9 +42,9 @@
             <th>Purchase Invoice ID</th>
             <th>Receipt ID</th>
             <th>Date Created</th>
-            <th>Payment Due Date</th>
-            <th>Mode of Payment</th>
             <th>Paid Amount</th>
+            <th>Total Price</th>
+            <th>Amount Unpaid</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -58,10 +58,17 @@
             </td>
             <td>{{ $invoice->p_receipt_id }}</td>
             <td>{{ $invoice->date_created }}</td>
-            <td class="text-bold">{{ $invoice->due_date_of_payment }}</td>
-            <td class="text-bold">{{ $invoice->mode_payment }}</td>
-            <td class="text-bold price">{{ $invoice->grand_total }}</td>
-            <td>{{ $invoice->pi_status }}</td>
+            <td class="text-bold pi_price">{{ $invoice->total_amount_paid }}</td>
+            <td class="text-bold pi_price">{{ $invoice->grand_total }}</td>
+            <td class="text-bold pi_price">{{ $invoice->payment_balance }}</td>
+            
+            <td
+                @if($invoice->pi_status === 'Unpaid' || $invoice->pi_status === 'With Outstanding Balance')
+                    class = "text-danger"
+                @elseif($invoice->pi_status === 'Paid')
+                    class = "text-success" 
+                @endif
+            >{{ $invoice->pi_status }}</td>
         </tr>
         @endforeach
         <!--<tr>
@@ -80,7 +87,7 @@
     $(document).ready(function() {
         x = $('#salestable').DataTable();
 
-        $(".price").each(function () {
+        $(".pi_price").each(function () {
             // element == this
             let price = parseFloat($(this).html());
             let price_string = "₱ " + numberWithCommas(price.toFixed(2));

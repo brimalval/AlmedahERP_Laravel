@@ -112,7 +112,7 @@
                                             Customer ID
                                         </label>
 
-                                        <input list="customers" class="form-input form-control" id="customer_id" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
+                                        <input list="customers" class="form-input form-control" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
                                         <datalist id="customers">
                                         @foreach ($customers as $row)
                                           <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
@@ -193,13 +193,14 @@
                                             
                                         </div>
                                     </div>
+                                    <?php $today = date('Y-m-d'); ?>
                                     <div class="col">
                                         <div class="form-group">
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Transaction Date
                                             </label>
-                                            <input class="form-control" type="date" value="2021-01-01" id="saleDate" name="saleDate" required>
+                                            <input class="form-control" type="date" value=<?=$today?> id="saleDate" name="saleDate" required>
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Add to list
@@ -736,6 +737,8 @@
         var yyyy = today.getFullYear();
         today = mm + '/' + dd + '/' + yyyy;
         document.getElementById('currentDate').value = today;
+        var componentsOrder;
+        var materialsInComponents;
         
     });
 
@@ -837,9 +840,45 @@
                     // CREATE MATERIAL REQUEST
                     console.log("DATA FOR REFERENCE");
                     console.log(createMatRequestItems);
+                var fd = new FormData();
+                createMatRequestItems.forEach(element => {
+                    fd.append('item_code[]', element.item_code);
+                    fd.append('quantity_requested[]', element.quantity_needed_for_request);
+                    fd.append('procurement_method[]', 'buy');
+                });
+                var requiredDate = new Date();
+                requiredDate.setDate(requiredDate.getDate() + 7);
+                var requiredYear = requiredDate.getFullYear();
+                var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
+                var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
+                var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
+                fd.append('required_date', formattedDate);
+                var currProd = $('#saleProductCode').val();
+                fd.append('purpose', 'Replenishing required materials for ' + currProd);
+                fd.append('mr_status', 'Draft');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "/materialrequest",
+                    data: fd, 
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        console.log(data);
+                    },
+                    error: function(data){
+
+                    }
+                });
                 }
-                loadRefresh();
-                
+                //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
+                minusStocks(componentsOrder, materialsInComponents);
+                loadRefresh(); 
             },
             error: function(data) {
                 console.log("error");
@@ -889,6 +928,8 @@
         totalValue = 0;
         currentCart = [];
         createMatRequestItems = [];
+        minusStocks = [];
+        materialsInComponents= [];
         console.log(currentCart);
         $('#ProductsTable tr').remove();
         $(".components tr").remove();

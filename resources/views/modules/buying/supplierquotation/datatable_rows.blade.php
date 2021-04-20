@@ -3,9 +3,15 @@
     individually in SupplierQuotationController
 -->
 @section('company_name')
-    <a href='#' onclick="loadIntoPage(this, '{{ route('supplierquotation.show', ['supplierquotation'=>$row->id]) }}')">
-        {{ $row->supplier->company_name }}
-    </a>
+    @if ($row->sq_status == "Submitted")
+        <a href='#' onclick="loadIntoPage(this, '{{ route('supplierquotation.show', ['supplierquotation'=>$row->supp_quotation_id]) }}')">
+            {{ $row->supplier->company_name }}
+        </a>
+    @else
+        <a href='#' onclick="loadIntoPage(this, '{{ route('supplierquotation.edit', ['supplierquotation'=>$row->supp_quotation_id]) }}')">
+            {{ $row->supplier->company_name }}
+        </a>
+    @endif
 @endsection
 
 @section('date_created')

@@ -25,7 +25,7 @@ class MaterialQuotationController extends Controller
      */
     public function index()
     {
-        $rfquotations = MaterialQuotation::with(['request_quotation', 'suppliers'])->get();
+        $rfquotations = MaterialQuotation::with(['material_request', 'suppliers'])->get();
         return view('modules.buying.requestforquotation', [
             'rfquotations' => $rfquotations,
         ]);

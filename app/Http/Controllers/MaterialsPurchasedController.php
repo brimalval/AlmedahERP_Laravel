@@ -46,20 +46,6 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
-    //function getMaterials(Request $request) {
-    //    try {
-    //        $materialsByID = array();
-    //        $ids = $request->input('req_ids');
-    //        $request_ids = json_decode($ids);
-    //        foreach($request_ids as $request_id) {
-    //            $materialsByID[] = MaterialPurchased::where('request_id', $request_id)->get()->itemsPurchased();
-    //        }
-    //        return ['purchases' => $materialsByID];
-    //    } catch (Exception $e) {
-    //        return $e;
-    //    }
-    //}
-
     public function store(Request $request)
     {
         try {
@@ -71,14 +57,9 @@ class MaterialsPurchasedController extends Controller
             $nextId = ($lastPurchase) ? MaterialPurchased::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-            $to_append = 0;
-            $digit_flag = 1;
-            while ($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
-
-            $purchase_id = "PUR-ORD-" . Carbon::now()->year . '-' . str_pad($nextId, 5 - $to_append, '0', STR_PAD_LEFT);
+            $to_append = strlen(strval($nextId));
+            
+            $purchase_id = "PUR-ORD-" . Carbon::now()->year . '-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
 
             $data->purchase_id = $purchase_id;
 

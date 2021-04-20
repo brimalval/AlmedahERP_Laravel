@@ -544,12 +544,10 @@ function loadPurchaseInvoice() {
     });
 }
 
-function openPurchaseInvoiceInfo() {
-    $(document).ready(function () {
-        $("#contentPurchaseInvoice").load(
-            "modules/buying/purchaseInvoiceInfo.php"
-        );
-    });
+function openPurchaseInvoiceInfo(id) {
+  $(document).ready(function () {
+    $('#contentPurchaseInvoice').load(`/view-invoice/${id}`);
+  });
 }
 
 function openNewPurchaseReceipt() {
@@ -558,12 +556,10 @@ function openNewPurchaseReceipt() {
     });
 }
 
-function openPurchaseReceiptInfo() {
-    $(document).ready(function () {
-        $("#contentPurchaseReceipt").load(
-            "modules/buying/PurchaseReceiptInfo.php"
-        );
-    });
+function openPurchaseReceiptInfo(id) {
+  $(document).ready(function () {
+    $('#contentPurchaseReceipt').load(`/view-receipt/${id}`);
+  });
 }
 
 function loadPurchaseReceipt() {

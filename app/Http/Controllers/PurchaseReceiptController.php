@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MaterialsOrdered;
 use App\Models\MaterialPurchased;
+use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
 use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
@@ -41,10 +42,23 @@ class PurchaseReceiptController extends Controller
     {
         try {
             $mat_purchased = MaterialPurchased::find($id);
-            $supplier = SuppliersQuotation::where('supp_quotation_id', $mat_purchased->supp_quotation_id)->first()->supplier;
+            $supplier = $mat_purchased->supplier_quotation->supplier;
             $ordered_mats = $mat_purchased->itemsPurchased();
             $purchase_id = $mat_purchased->purchase_id;
             return ['ordered_mats' => $ordered_mats, 'purchase_id' => $purchase_id, 'supplier' => $supplier];
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getOrderedMaterialsFromInvoice($receipt_id)
+    {
+        try {
+            $receipt = PurchaseReceipt::find($receipt_id);
+            $mat_purchased = $receipt->order;
+            $supplier = $mat_purchased->supplier_quotation->supplier;
+            $ordered_mats = $mat_purchased->itemsPurchased();
+            return ['ordered_mats' => $ordered_mats, 'p_receipt_id' => $receipt->p_receipt_id, 'supplier' => $supplier];
         } catch (Exception $e) {
             return $e;
         }
@@ -66,20 +80,15 @@ class PurchaseReceiptController extends Controller
             //$mat_purchased->items_list_purchased = json_encode($materials_ordered);
             //$mat_purchased->save();
 
-            $receipt->pr_status = "To Bill";
+            $receipt->pr_status = "To Receive and Bill";
             $receipt->save();
 
             $lastMatOrder = MaterialsOrdered::orderby('id', 'desc')->first();
             $nextOrderId = ($lastMatOrder) ? MaterialsOrdered::orderby('id', 'desc')->first()->id + 1 : 1;
 
-            $to_append = 0;
-            $digit_flag = 1;
-            while ($nextOrderId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
+            $to_append = strlen((string) $nextOrderId);
 
-            $mo_id = "MAT-ORD-" . str_pad($nextOrderId, 4 - $to_append, '0', STR_PAD_LEFT);
+            $mo_id = "MAT-ORD-" . str_pad($nextOrderId, 3, '0', STR_PAD_LEFT);
 
             $pending_item_list = array();
             $items = $receipt->receivedMats();
@@ -142,7 +151,9 @@ class PurchaseReceiptController extends Controller
             $i = 1;
 
             foreach ($receipt_mats as $key => $mat) {
-                $receipt_mats[$key]['qty_received'] = strval(intval($receipt_mats[$key]['qty_received']) - intval($received_mats[$i]['qty_received']));
+                $curr_quantity = intval($receipt_mats[$key]['qty_received']) - intval($received_mats[$i]['qty_received']);
+                $receipt_mats[$key]['qty_received'] = strval($curr_quantity);
+                $receipt_mats[$key]['amount'] = strval($curr_quantity * intval($receipt_mats[$key]['rate']));
                 $i++;
             }
 
@@ -167,6 +178,34 @@ class PurchaseReceiptController extends Controller
             //dd($order_items);
             $pending_order->items_list_received = json_encode($order_items);
             $pending_order->save();
+
+            $pending_order = $receipt->order_record;
+            $pending_order_items = $pending_order->items_list();
+            $is_complete = true;
+
+            foreach($pending_order_items as $item) {
+                if($item['curr_progress'] != '100') {
+                    $is_complete = false;
+                    break;
+                }
+            } 
+
+            if($is_complete) {
+                $pending_order->mo_status = 'Completed';
+                $pending_order->save();
+                $invoice = $receipt->invoice;
+                if($invoice) {
+                    $new_status = ($invoice->pi_status === 'Paid') ? 'Completed' : 'To Bill';
+                } else {
+                    $new_status = 'To Bill';
+                }
+                $order = $receipt->order;
+                $order->mp_status =$new_status;
+                $order->save();
+                $receipt->pr_status = $new_status;
+                $receipt->save();
+            } 
+
         } catch (Exception $e) {
             return $e;
         }
@@ -183,14 +222,9 @@ class PurchaseReceiptController extends Controller
             $nextId = ($lastReceipt) ? PurchaseReceipt::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-            $to_append = 0;
-            $digit_flag = 1;
-            while ($nextId >= $digit_flag) {
-                ++$to_append;
-                $digit_flag *= 10;
-            }
+            $to_append = strlen((string) $nextId);
 
-            $receipt_id = "PR-" . str_pad($nextId, 4 - $to_append, '0', STR_PAD_LEFT);
+            $receipt_id = "PR-" . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 
             $data->p_receipt_id = $receipt_id;
             $data->date_created = $form_data['date_created'];
