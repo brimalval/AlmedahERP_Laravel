@@ -41,7 +41,7 @@ $today = date('Y-m-d');
                 </div>
             </h2>
         </div>
-        <div class="collapse show" id="salesOrderCard1">
+        <div class="collapse show" id="">
             <div class="card-body">
                 <form action="" id="">
                     <div class="row">
@@ -68,10 +68,11 @@ $today = date('Y-m-d');
                             </label>
                             <input type="date" required class="form-input form-control" id="npi_date" readonly value=<?=$today?>>
                             <br>
+                            <!--
                             <label id="" class=" text-nowrap align-middle">
                                 Due Date
                             </label>
-                            <input type="date" required class="form-input form-control" id="npi_due_date" value=<?=$today?>>
+                            <input type="date" required class="form-input form-control" id="npi_due_date" value=>>-->
                         </div>
                     </div>
                 </form>
@@ -83,12 +84,12 @@ $today = date('Y-m-d');
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard4" aria-expanded="false">
+                    data-target="#piSupplier" aria-expanded="false">
                     ADDRESS AND CONTACTS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard4" class="collapse">
+        <div id="piSupplier" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
@@ -121,29 +122,24 @@ $today = date('Y-m-d');
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard5" aria-expanded="false">
+                    data-target="#piItems" aria-expanded="false">
                     ITEMS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard5" class="collapse">
+        <div id="piItems" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <label class=" text-nowrap align-middle">Item</label>
+                        <label class=" text-nowrap align-middle">Item Prices</label>
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromReceipt">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input">
-                                        </div>
-                                    </td>
-                                    <td>Item</td>
-                                    <td>Accepted Quantity</td>
+                                    <td>Item Code</td>
+                                    <td>Item Name</td>
+                                    <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
-                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody class="" id="itemsReceived">
@@ -153,14 +149,6 @@ $today = date('Y-m-d');
                                     </td>
                                 </tr>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="7" rowspan="5">
-                                        <button class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
-                                        <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -170,19 +158,19 @@ $today = date('Y-m-d');
             <div class="card-header">
                 <h2 class="mb-0">
                     <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                        data-target="#salesOrderCard6" aria-expanded="false">
+                        data-target="#piPayment" aria-expanded="false">
                         PAYMENT
                     </button>
                 </h2>
             </div>
-            <div id="salesOrderCard6" class="collapse">
+            <div id="piPayment" class="collapse">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6 form-group">
                             <label class=" text-nowrap align-middle">
                                 Mode of Payment
                             </label>
-                            <select id="paymentMethod" class="form-control">
+                            <select id="paymentMode" class="form-control">
                                 <option value="" selected hidden disabled>Select Mode of Payment...</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Installment">Installment</option>
@@ -194,8 +182,19 @@ $today = date('Y-m-d');
                                 <label class=" text-nowrap align-middle">
                                     Total (PHP)
                                 </label>
-                                <input type="number" required class="form-input form-control" id="priceToPay">
+                                <input type="number" reaodnly required class="form-input form-control" id="priceToPay">
                             </div>
+                        </div>
+                        <div class="col-6 form-group" id="installmentGrp" hidden>
+                            <label class=" text-nowrap align-middle">
+                                Installment Duration
+                            </label>
+                            <select id="installmentType" class="form-control">
+                                <option value="" selected hidden disabled>Select Installment Duration...</option>
+                                <option value="3 Months">3 Months</option>
+                                <option value="6 Months">6 Months</option>
+                            </select>
+                            <br>
                         </div>
                     </div>
                 </div>
@@ -238,13 +237,13 @@ $today = date('Y-m-d');
                 </button>
             </div>
             <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                <table id="prTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Purchase Receipt ID</th>
                             <th>Date Created</th>
                             <th>Purchase ID</th>
-                            <th>Item List Received</th>
+                            <!--<th>Item List Received</th>-->
                             <th>Grand Total(PHP)</th>
                             <th></th>
                         </tr>
@@ -255,8 +254,9 @@ $today = date('Y-m-d');
                             <td class="text-bold">{{ $receipt->p_receipt_id }}</td>
                             <td>{{ $receipt->date_created }}</td>
                             <td>{{ $receipt->purchase_id }}</td>
+                            <!--
                             <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-toggle="modal">View</button></td>
+                                    data-toggle="modal">View</button></td>-->
                             <td class="price">{{ $receipt->grand_total }}</td>
                             <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                     data-dismiss="modal" onclick="loadMaterials({{ $receipt->id }})">Select</button></td>
@@ -283,7 +283,7 @@ $today = date('Y-m-d');
     </div>
 </div>
 
-<!-- Modal itemlist-->
+<!-- Modal itemlist
 <div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -316,7 +316,7 @@ $today = date('Y-m-d');
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <script type="text/javascript">
     //$('#itemsFromReceipt').DataTable();

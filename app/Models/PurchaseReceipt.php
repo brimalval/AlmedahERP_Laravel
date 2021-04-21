@@ -52,4 +52,8 @@ class PurchaseReceipt extends Model
     public function order_record() {
         return $this->hasOne(MaterialsOrdered::class, 'p_receipt_id', 'p_receipt_id');
     }
+
+    public function invoice() {
+        return $this->hasOne(PurchaseInvoice::class, 'p_receipt_id', 'p_receipt_id');
+    }
 }

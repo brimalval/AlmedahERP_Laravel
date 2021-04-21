@@ -1,4 +1,5 @@
 <?php
+$today = date('Y-m-d');
 $i = 1; ?>
 <script src="{{ asset('js/new-purchase-invoice.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
@@ -18,14 +19,13 @@ $i = 1; ?>
                 </li>
                 @if ($invoice->pi_status === 'Draft')
                     <li class="nav-item li-bom">
-                        <button type="button" class="btn btn-primary" onclick="payInvoice()" data-target="#saveSale"
-                            id="submitInvoice">
+                        <button type="button" class="btn btn-primary" onclick="updateInvoiceStatus()"
+                            data-target="#saveSale" id="submitInvoice">
                             Submit
                         </button>
                     </li>
                 @else
-                    <button type="button" class="btn btn-primary" onclick="payInvoice()" data-target="#saveSale"
-                        id="submitInvoice">
+                    <button type="button" class="btn btn-primary" data-target="#saveSale" id="payInvoice">
                         Save Record
                     </button>
                 @endif
@@ -50,7 +50,7 @@ $i = 1; ?>
                 </h2>
             </div>
         @endif
-        <div class="collapse show" id="salesOrderCard1">
+        <div class="collapse show" id="">
             <div class="card-body">
                 <form action="" id="">
                     <div class="row">
@@ -80,11 +80,6 @@ $i = 1; ?>
                             <input type="date" required class="form-input form-control" id="npi_date" readonly
                                 value={{ $invoice->date_created }}>
                             <br>
-                            <label id="" class=" text-nowrap align-middle">
-                                Due Date
-                            </label>
-                            <input type="date" required class="form-input form-control" id="npi_due_date" readonly
-                                value={{ $invoice->due_date_of_payment }}>
                         </div>
                     </div>
                 </form>
@@ -96,12 +91,12 @@ $i = 1; ?>
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard4" aria-expanded="false">
+                    data-target="#piSupplier" aria-expanded="false">
                     ADDRESS AND CONTACTS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard4" class="collapse">
+        <div id="piSupplier" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
@@ -135,62 +130,48 @@ $i = 1; ?>
         <div class="card-header">
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                    data-target="#salesOrderCard5" aria-expanded="false">
+                    data-target="#piItems" aria-expanded="false">
                     ITEMS
                 </button>
             </h2>
         </div>
-        <div id="salesOrderCard5" class="collapse">
+        <div id="piItems" class="collapse">
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <label class=" text-nowrap align-middle">Item</label>
+                        <label class=" text-nowrap align-middle">Item Pricing</label>
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromReceipt">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input">
-                                        </div>
-                                    </td>
-                                    <td>Item</td>
-                                    <td>Accepted Quantity</td>
+                                    <td>Item Code</td>
+                                    <td>Item Name</td>
+                                    <td>Quantity Ordered</td>
                                     <td>Rate</td>
                                     <td>Amount</td>
-                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody class="" id="itemsReceived">
                                 @foreach ($received_items as $item)
                                     <tr id="row-<?= $i ?>">
-                                        <td>
-                                            <div class="form-check">
-                                                <input type="checkbox" name="item-chk" id="chk<?= $i ?>" class="form-check-input">
-                                            </div>
+                                        <td class="text-black-50">
+                                            <input class="form-control" readonly type="text" id="item_code<?= $i ?>" value={{ $item['item']->item_code }}>
                                         </td>
                                         <td class="text-black-50">
-                                            <input class="form-control" type="text" id="item_code<?= $i ?>" value={{ $item['item_code'] }}>
+                                            <input class="form-control" readonly type="text" id="item_name<?= $i ?>" value={{ $item['item']->item_name }}>
                                         </td>
                                         <td class="text-black-50">
-                                            <input class="form-control" id="qtyAcc<?= $i ?>" type="number" min="0" value={{ $item['qty'] }}>
+                                            <input class="form-control" readonly id="qtyAcc<?= $i ?>" type="number" min="0" value={{ $item['qty'] }}>
                                         </td> 
                                         <td class="text-black-50">
-                                            <input class="form-control" id="rateAcc<?= $i ?>" type="text" min="0" value={{ $item['rate'] }}>
+                                            <input class="form-control" readonly id="rateAcc<?= $i ?>" type="text" min="0" value={{ $item['rate'] }}>
                                         </td> 
                                         <td class="text-black-50">
-                                            <input class="form-control" id="amtAcc<?= $i ?>" type="text" min="0" value={{ $item['subtotal'] }}>
+                                            <input class="form-control" readonly id="amtAcc<?= $i ?>" type="text" min="0" value={{ $item['subtotal'] }}>
                                         </td> 
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="7" rowspan="5">
-                                        <button class="btn btn-sm btn-sm btn-secondary mx-2">Add Multiple</button>
-                                        <button class="btn btn-sm btn-sm btn-secondary">Add Row</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
+                            
                         </table>
                     </div>
                 </div>
@@ -200,31 +181,85 @@ $i = 1; ?>
             <div class="card-header">
                 <h2 class="mb-0">
                     <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                        data-target="#salesOrderCard6" aria-expanded="false">
+                        data-target="#piPayment" aria-expanded="false">
                         PAYMENT
                     </button>
                 </h2>
             </div>
-            <div id="salesOrderCard6" class="collapse">
+            <div id="piPayment" class="collapse">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6 form-group">
                             <label class=" text-nowrap align-middle">
                                 Mode of Payment
                             </label>
-                            <select id="paymentMode" class="form-control">
-                                <option value="" selected hidden readonly>{{ $invoice->mode_payment }}</option>
+                            <select id="paymentMode" disabled class="form-control">
+                                <option value="" selected hidden readonly>{{ $invoice->payment_mode }}</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Installment">Installment</option>
                             </select>
                             <br>
+                            @if ($invoice->payment_mode === 'Installment') 
+                            <div id="installmentGrp">
+                                <label class=" text-nowrap align-middle">
+                                    Installment Duration
+                                </label>
+                                <select disabled id="installmentType" class="form-control">
+                                    <option value="" selected>{{ $invoice->installment_type }}</option>
+                                    <option value="3 Months">3 Months</option>
+                                    <option value="6 Months">6 Months</option>
+                                </select>
+                            </div>
+                            <br>
+                            @endif
+                            @if ($invoice->pi_status !== 'Draft')
+                            <label class=" text-nowrap align-middle">
+                                Method of Payment
+                            </label>
+                            <select id="paymentMethod" class="form-control">
+                                <option value="" selected hidden readonly>Select Method of Payment...</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Cheque">Cheque</option>
+                            </select>
+                            @endif
+                            <br>
+                            <div id="chq" hidden>
+                                <label class="text-nowrap align-middle">
+                                    Account Number
+                                </label>
+                                <input type="number" min="0" required class="form-input form-control" placeholder="Enter Account Number of Cheque" id="acctNo">
+                                <br>
+                                <label class="text-nowrap align-middle">
+                                    Cheque Number
+                                </label>
+                                <input type="number" min="0" required class="form-input form-control" placeholder="Enter Cheque Number..." id="chqNo">
+                            </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class=" text-nowrap align-middle">
                                     Total (PHP)
                                 </label>
-                                <input type="number" required class="form-input form-control" value={{ $invoice->grand_total }} id="priceToPay">
+                                <input type="number" readonly required class="form-input form-control" value={{ $invoice->grand_total }} id="priceToPay">
+                                <br>
+                                @if ($invoice->pi_status !== 'Draft')
+                                    <label class=" text-nowrap align-middle">
+                                        Amount to Pay
+                                    </label>
+                                    <input type="number" min="0" required class="form-input form-control" 
+                                        @if ($invoice->payment_mode === 'Cash')
+                                            readonly
+                                            value = {{ $invoice->grand_total }}
+                                        @else
+                                            placeholder="Enter Amount to Pay..." 
+                                        @endif 
+                                    id="payAmount">
+                                    <br>
+                                @endif
+                                <label class=" text-nowrap align-middle">
+                                    Date of Transaction
+                                </label>
+                                <input type="date" readonly required class="form-input form-control" value=<?=$today?> id="transDate">
                             </div>
                         </div>
                     </div>
@@ -236,35 +271,45 @@ $i = 1; ?>
             <div class="card-header">
                 <h2 class="mb-0">
                     <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
-                        data-target="#salesOrderCard7" aria-expanded="false">
+                        data-target="#paymentLogs" aria-expanded="false">
                         PAYMENT LOGS
                     </button>
                 </h2>
             </div>
-            <div id="salesOrderCard7" class="collapse">
+            <div id="paymentLogs" class="collapse">
                 <div class="card-body">
                   <table id="paymentLogsTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Logs ID</th>
                             <th>Date of Payment</th>
-                            <th>Payment Mode</th>
                             <th>Payment Method</th>
                             <th>Payment Description</th>
                             <th>Amount Paid</th>
-                            <th>Handler</th><!--employee ID-->
+                            <th>View Cheque Details</th>
+                            <!--<th>Handler</th>employee ID-->
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse ($logs as $log)
                         <tr>
-                            <td class= "text-bold">PI-LOG-001</td>
-                            <td>March/28/2021</td>
-                            <td class="text-danger">Installment</td>
-                            <td class="text-bold">Cash</td>
-                            <td class="text-bold">Downpayment</td>
-                            <td>1000</td>
-                            <td>emp001</td>
+                            <td class= "text-bold">{{ $log->pi_logs_id }}</td>
+                            <td>{{ $log->date_of_payment }}</td>
+                            <td class="text-bold">{{ $log->payment_method }}</td>
+                            <td class="text-bold">{{ $log->payment_description }}</td>
+                            <td>{{ $log->amount_paid }}</td>
+                            <td>
+                                @if ($log->payment_method === 'Cheque')
+                                <button type="button" class="btn-sm btn-primary" data-toggle="modal"
+                                data-target="#npi_chequeInfo" onclick="viewChequeDetails({{ $log->id }})">View</button>
+                                @endif
+                            </td>
                         </tr>
+                        @empty
+                            <td colspan="6">
+                                <center>NO PAYMENT LOGS CREATED</center>
+                            </td>
+                        @endforelse
                         <!--
                         <tr>
                             <td class= "text-bold">PI-LOG-002</td>
@@ -286,13 +331,37 @@ $i = 1; ?>
                         </tr>
                     -->
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <label class=" text-nowrap align-middle">
+                                    Total Amount Paid
+                                </label>
+                                <input type="number" required class="form-input form-control" readonly id="amountPaid" value="{{ $invoice->total_amount_paid }}">
+                            </td>
+                            <td colspan="3">
+                                <label class=" text-nowrap align-middle">
+                                    Balance Unpaid
+                                </label>
+                                <input type="number" required class="form-input form-control" readonly id="unpaidAmt" value="{{ $invoice->payment_balance }}">
+                            </td>
+                        </tr>
+                    </tfoot>
                   </table>
                 </div>
             </div>
         </div>
         @endif
         <div class="card" id="cardMoreInfo">
-            <div id="salesOrderCard9">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                        data-target="#piInfo" aria-expanded="false">
+                        MORE INFORMATION
+                    </button>
+                </h2>
+            </div>
+            <div id="piInfo" class="collapse">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
@@ -300,12 +369,8 @@ $i = 1; ?>
                                 <label class=" text-nowrap align-middle">
                                     Status
                                 </label>
-                                <select id="" class="form-control">
-                                    <option selected>Draft</option>
-                                    <option>Paid</option>
-                                    <option>Unpaid</option>
-                                    <option>Overdue</option>
-                                    <option>Cancelled</option>
+                                <select disabled id="" class="form-control">
+                                    <option selected>{{ $invoice->pi_status }}</option>
                                 </select>
                             </div>
                         </div>
@@ -316,7 +381,7 @@ $i = 1; ?>
     </div>
 </div>
 
-<!-- Modal itemlist-->
+<!-- Modal itemlist
 <div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -336,7 +401,6 @@ $i = 1; ?>
                         </tr>
                     </thead>
                     <tbody>
-
                         <tr>
                             <td class="text-bold">4</td>
                             <td>100</td>
@@ -349,7 +413,7 @@ $i = 1; ?>
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <!-- Modal chequeInfo-->
 <div class="modal fade" id="npi_chequeInfo" tabindex="-1" role="dialog" aria-labelledby="npi_chequeInfo"
@@ -363,7 +427,7 @@ $i = 1; ?>
                 </button>
             </div>
             <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                <table id="chqTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Account No.</th>
@@ -371,10 +435,9 @@ $i = 1; ?>
                         </tr>
                     </thead>
                     <tbody>
-
                         <tr>
-                            <td class="text-bold">1001001234</td>
-                            <td>0123</td>
+                            <td id="chq-accNo" class="text-bold"></td>
+                            <td id="chq-num"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -386,8 +449,3 @@ $i = 1; ?>
     </div>
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        x = $('#paymentLogsTable').DataTable();
-    });
-</script>

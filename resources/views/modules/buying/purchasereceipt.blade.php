@@ -61,7 +61,13 @@
                         data-toggle="modal" data-target="#pr_itemListView"
                         onclick="viewMaterials({{ $receipt->id }})">View</button></td>
                 <td class="text-bold price">{{ $receipt->grand_total }}</td>
-                <td>{{ $receipt->pr_status }}</td>
+                <td
+                    @if ($receipt->pr_status === 'Completed')
+                        class="text-success"
+                    @elseif ($receipt->pr_status === 'To Bill'|| $receipt->pr_status === 'To Receive and Bill' || $receipt->pr_status === 'To Receive')
+                        class="text-danger"
+                    @endif
+                >{{ $receipt->pr_status }}</td>
             </tr>
         @endforeach
         <!--
@@ -84,7 +90,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Materials To Receive</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -137,11 +143,12 @@
             success: function(data) {
                 $("#receivedMats tr").remove();
                 for (i = 0; i < data.received_mats.length; i++) {
+                    var qtyDisplay = (data.received_mats[i]['qty'] == 0) ? `<span class="text-success">Fully Received</span>` : data.received_mats[i]['qty'];
                     $("#receivedMats").append(
                         `
                         <tr>
                             <td class="text-bold">${data.received_mats[i]['item_name']}</td>
-                            <td>${data.received_mats[i]['qty']}</td>
+                            <td>${qtyDisplay}</td>
                         </tr>
                         `
                     );

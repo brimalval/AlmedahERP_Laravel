@@ -13,15 +13,20 @@ class PurchaseInvoice extends Model
     
     protected $fillable = [
         'p_invoice_id',
-        'p_receipt',
+        'p_receipt_id',
         'date_created',
-        'due_date_of_payment',
-        'mode_payment',
-        'paid_amount',
+        'total_amount_paid',
+        'payment_balance',
+        'payment_mode',
+        'grand_total',
         'pi_status'
     ]; 
 
     public function receipt() {
         return $this->belongsTo(PurchaseReceipt::class, 'p_receipt_id', 'p_receipt_id');
+    }
+
+    public function invoice_logs() {
+        return $this->hasMany(PaymentInvoiceLog::class, 'p_invoice_id', 'p_invoice_id');
     }
 }
