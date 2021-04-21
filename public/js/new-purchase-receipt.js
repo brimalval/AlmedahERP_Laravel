@@ -94,6 +94,10 @@ $("#receiveMaterials").click(function () {
     var receipt_id = $("#receiptId").val();
     var received_mats = {};
     for (let i = 1; i <= $('#itemsToReceive tr').length; i++) {
+        if(parseInt($(`#qtyRec${i}`).val()) > parseInt($(`#qtyAcc${i}`).val()) || parseInt($(`#qtyRec${i}`).val()) < 0) {
+            alert(`Quantity for ${$(`#item_code${i}`).val()} is invalid.`);
+            return;
+        }
         received_mats[i] = {
             "item_code": $(`#item_code${i}`).val(),
             "qty_received": $(`#qtyRec${i}`).val(),

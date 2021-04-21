@@ -26,9 +26,9 @@ class CreateSuppliersQuotationTable extends Migration
             $table->timestamps();
         });
 
-        // Schema::table('materials_purchased', function(Blueprint $table){
-        //     $table->foreign('supp_quotation_id')->references('supp_quotation_id')->on('suppliers_quotation');
-        // });
+        Schema::table('materials_purchased', function(Blueprint $table){
+            $table->foreign('supp_quotation_id')->references('supp_quotation_id')->on('suppliers_quotation');
+        });
 
     }
 
