@@ -95,14 +95,14 @@ function creationSelectPaymentType() {
         document.getElementById("account_no_div").style.display = "none";
         document.getElementById("account_cheque_no").style.display = "none";
         document.getElementById("account_name_div").style.display = "none";
-        document.getElementById("account_cheque_date").style.display = "none";
         document.getElementById("bank_name_div").style.display = "none";
+        document.getElementById("branch_location_div").style.display = "none";
     } else {
         document.getElementById("account_no_div").style.display = "";
         document.getElementById("account_cheque_no").style.display = "";
         document.getElementById("account_name_div").style.display = "";
-        document.getElementById("account_cheque_date").style.display = "";
         document.getElementById("bank_name_div").style.display = "";
+        document.getElementById("branch_location_div").style.display = "";
     }
 }
 
@@ -115,11 +115,13 @@ function selectPaymentType() {
         document.getElementById("view_account_no_div").style.display = "none";
         document.getElementById("view_account_name_div").style.display = "none";
         document.getElementById("view_bank_name_div").style.display = "none";
+        document.getElementById("view_branch_location_div").style.display = "none";
     } else {
         document.getElementById("view_cheque_no_div").style.display = "";
         document.getElementById("view_account_no_div").style.display = "";
         document.getElementById("view_account_name_div").style.display = "";
         document.getElementById("view_bank_name_div").style.display = "";
+        document.getElementById("view_branch_location_div").style.display = "none";
     }
 }
 
