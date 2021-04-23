@@ -125,6 +125,7 @@ class SalesOrderController extends Controller
                     $payment_logs->cheque_no = $form_data['cheque_no'];
                     $payment_logs->account_name = $form_data['account_name'];
                     $payment_logs->bank_name = $form_data['bank_name'];
+                    $payment_logs->branch_location = $form_data['branch_location'];
                 }else{
                     $payment_logs->payment_balance = 0;
                     $data->payment_balance = 0;
@@ -152,6 +153,7 @@ class SalesOrderController extends Controller
                     $payment_logs->cheque_no = $form_data['cheque_no'];
                     $payment_logs->account_name = $form_data['account_name'];
                     $payment_logs->bank_name = $form_data['bank_name'];
+                    $payment_logs->branch_location = $form_data['branch_location'];
                 }else{
                     $payment_logs->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
                     $data->payment_balance = $form_data['costPrice'] - $form_data['saleDownpaymentCost'];
@@ -341,6 +343,8 @@ class SalesOrderController extends Controller
             $data->payment_status = "Pending";
             $data->cheque_no = $form_data['view_account_no'];
             $data->account_name = $form_data['view_account_name'];
+            $payment_logs->bank_name = $form_data['view_bank_name'];
+            $data->branch_location = $form_data['view_branch_location'];
         }else{
             $data->payment_status = "Completed";
             $sales->payment_balance = $sales->payment_balance - $form_data['view_totalamount'];

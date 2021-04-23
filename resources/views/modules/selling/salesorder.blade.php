@@ -379,6 +379,13 @@
                                 <input type="text" class="form-input form-control" id="bank_name" name="bank_name" placeholder="Bank Name">
                             </div>
                             <br>
+                            <div class="col" id="branch_location_div" name="branch_location_div" style="display:none">
+                                <label>
+                                    Bank Name
+                                </label>
+                                <input type="text" class="form-input form-control" id="branch_location" name="branch_location" placeholder="Bank Name">
+                            </div>
+                            <br>
                             <div class="row" id="paymentInstallment" style="display:none;" onchange="installmentType()" >
                                 <div class="col">
                                     <label class="text-nowrap align-middle">
@@ -661,6 +668,13 @@
                                     Bank Name
                                 </label>
                                 <input type="text" class="form-input form-control" id="view_bank_name" name="view_bank_name" placeholder="Bank Name">
+                            </div>
+                            <br>
+                            <div class="col" id="view_branch_location_div" name="view_branch_location_div" style="display:none">
+                                <label >
+                                    Branch Location
+                                </label>
+                                <input type="text" class="form-input form-control" id="view_branch_location" name="view_branch_location" placeholder="Bank Name">
                             </div>
                             <br>
                             <div class="col" id="viewaccount_no_div">
