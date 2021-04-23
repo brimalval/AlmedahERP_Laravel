@@ -229,17 +229,17 @@ class SalesOrderController extends Controller
                 $order->save();
             }
 
-            // foreach($new_component as $c){
-            //     $work_order = new WorkOrder();
-            //     $work_order->purchase_id = $material_purchased->purchase_id;
-            //     $work_order->sales_id = $data->id;
-            //     $work_order->planned_start_date = null;
-            //     $work_order->planned_end_date = null;
-            //     $work_order->real_start_date = null;
-            //     $work_order->real_end_date = null;
-            //     $work_order->work_order_status = "Not Started";
-            //     $work_order->save();
-            // }
+            foreach($new_component as $c){
+                $work_order = new WorkOrder();
+                $work_order->mat_ordered_id = null;
+                $work_order->sales_id = $data->id;
+                $work_order->planned_start_date = null;
+                $work_order->planned_end_date = null;
+                $work_order->real_start_date = null;
+                $work_order->real_end_date = null;
+                $work_order->work_order_status = "Not Started";
+                $work_order->save();
+            }
 
             //return "Sucess";
             return response("Sucess");

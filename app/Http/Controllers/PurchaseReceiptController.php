@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\MaterialsOrdered;
+use App\Models\MaterialRequest;
 use App\Models\MaterialPurchased;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
 use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
+use App\Models\RequestQuotationSuppliers;
+use App\Models\WorkOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
@@ -108,6 +111,22 @@ class PurchaseReceiptController extends Controller
             $mat_order->p_receipt_id = $receipt->p_receipt_id;
             $mat_order->items_list_received = json_encode($pending_item_list);
             $mat_order->save();
+
+            $mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
+            $supp_quotation_id = $mat_purchased->supp_quotation_id;
+
+            $supp_quotation = SuppliersQuotation::where('supp_quotation_id', $supp_quotation_id);
+            $req_quotation_id = $supp_quotation->req_quotation_id;
+
+            $req_quotation = RequestQuotationSuppliers::where('req_quotation_id', $req_quotation_id);
+            $request_id = $req_quotation->request_id;
+
+            $mat_request = MaterialRequest::where('request_id', $request_id);
+            $work_order_no = $mat_request->work_order_no;
+
+            $work_order = WorkOrder::where('work_order_no', $work_order_no);
+            $work_order->mat_ordered_id = $mo_id;
+            $work_order->save();
         } catch (Exception $e) {
             return $e;
         }
