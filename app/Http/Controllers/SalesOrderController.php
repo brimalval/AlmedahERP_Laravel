@@ -207,13 +207,10 @@ class SalesOrderController extends Controller
             //     }
             // }
             
-            // $new_component = array();
-            // $index = 1;
-            // foreach(json_decode($component, true) as $key => $c){
-            //     if($c[$index] == 'Component'){
-            //         array_push($new_component, $c);
-            //     }
-            // }
+            $new_component = array();
+            foreach(json_decode($component, true) as $c){
+                array_push($new_component, $c);
+            }
  
             foreach ($cart as $row){        
                 // $material_purchased = new MaterialPurchased();

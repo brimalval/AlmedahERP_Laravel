@@ -825,8 +825,8 @@
         });
         var formData = new FormData(this);
         console.log(currentCart);
-        formData.append("cart",currentCart );
-        //formData.append("component", JSON.stringify(ultimateComponentTable));
+        formData.append("cart", currentCart);
+        formData.append("component", JSON.stringify(componentsOnly));
         $.ajax({
             type: 'POST',
             url: "/createsalesorder",

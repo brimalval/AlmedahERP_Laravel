@@ -81,7 +81,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $items[$index] }}`)'> {{ $items[$index] }} </a></td>
+                    <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $items[$index] }}`, `{{ $work_order->sales_id }}`)'> {{ $items[$index] }} </a></td>
                     <td>{{ $work_order->work_order_status }}</td>
                     {{-- <td class="text-black-50">{{ $work_order->purchase_id }}</td> --}}
                     <td class="text-black-50"> </td>
@@ -107,8 +107,8 @@
 </div>
 
 <script>
-    function workOrderInfo(workOrderDetails, itemName){
+    function workOrderInfo(workOrderDetails, itemName, salesOrderId){
         console.log(workOrderDetails);
-        loadWorkOrderInfo(workOrderDetails, itemName);
+        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId);
     }
 </script>

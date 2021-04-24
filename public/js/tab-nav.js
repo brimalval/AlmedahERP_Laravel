@@ -160,9 +160,11 @@ function loadWorkOrder() {
     });
 }
 
-function loadWorkOrderInfo(workOrderDetails, itemName) {
+function loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId) {
     $("#requiredItems").html("");
     console.log(workOrderDetails);
+    console.log(itemName);
+    console.log(salesOrderId);
     // $("#startWorkOrder").click(startWorkOrder());
     $(document).ready(function () {
         $("#contentWorkOrder").load("/loadWorkOrderInfo", function () {
@@ -170,10 +172,13 @@ function loadWorkOrderInfo(workOrderDetails, itemName) {
             $("#componentStatus").text(workOrderDetails.work_order_status);
             $("#componentPurchaseID").text(workOrderDetails.purchase_id);
             $.ajax({
-                url: "/getRawMaterialsWork/" + itemName,
+                url: "/getRawMaterialsWork/" + itemName + "/" + salesOrderId,
                 type: "GET",
                 success: function (datas) {
-                    for (let [index, data] of JSON.parse(datas).entries()) {
+                    console.log(datas);
+                    for (let [index, data] of JSON.parse(
+                        datas["item_code"]
+                    ).entries()) {
                         let sequence = index + 1;
                         $("#requiredItems").append(
                             `
@@ -191,12 +196,16 @@ function loadWorkOrderInfo(workOrderDetails, itemName) {
                             </div>
                           </td>
                           <td>` +
-                                data +
+                                data["item_code"] +
                                 `</td>
                           <td>Test` +
                                 index +
                                 `</td>
-                          <td>0</td>
+                          <td>` +
+                                datas["component_qty"] *
+                                    datas["quantity_purchased"] *
+                                    parseInt(data["item_qty"]) +
+                                `</td>
                           <td>0</td>
                           <td>0</td>
                           <td style="padding: 1%;" class="h-100">
@@ -545,9 +554,9 @@ function loadPurchaseInvoice() {
 }
 
 function openPurchaseInvoiceInfo(id) {
-  $(document).ready(function () {
-    $('#contentPurchaseInvoice').load(`/view-invoice/${id}`);
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseInvoice").load(`/view-invoice/${id}`);
+    });
 }
 
 function openNewPurchaseReceipt() {
@@ -557,9 +566,9 @@ function openNewPurchaseReceipt() {
 }
 
 function openPurchaseReceiptInfo(id) {
-  $(document).ready(function () {
-    $('#contentPurchaseReceipt').load(`/view-receipt/${id}`);
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseReceipt").load(`/view-receipt/${id}`);
+    });
 }
 
 function loadPurchaseReceipt() {

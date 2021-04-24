@@ -15,8 +15,8 @@ class CreateWorkOrderTable extends Migration
     {
         Schema::create('work_order', function (Blueprint $table) {
             $table->bigIncrements('work_order_no');
-            $table->string('mat_ordered_id');
-            $table->foreign('mat_ordered_id')->nullable()->references('mat_ordered_id')->on('materials_ordered');
+            $table->string('mat_ordered_id')->nullable();
+            $table->foreign('mat_ordered_id')->references('mat_ordered_id')->on('materials_ordered');
             $table->unsignedBigInteger('sales_id');
             $table->foreign('sales_id')->references('id')->on('salesOrder');
             $table->date('planned_start_date')->nullable();
