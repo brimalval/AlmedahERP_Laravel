@@ -62,7 +62,7 @@ $i = 1;
                     <thead>
                         <tr>
                             <th>Supplier Quotation ID</th>
-                            <th>Supplier ID</th>
+                            <th>Supplier</th>
                             <th>Item List</th>
                             <th></th>
                         </tr>
@@ -71,9 +71,9 @@ $i = 1;
                         @foreach ($supplier_quotations as $quotation)
                             <tr>
                                 <td class="text-bold">{{ $quotation->supp_quotation_id }}</td>
-                                <td>{{ $quotation->supplier_id }}</td>
+                                <td>{{ $quotation->supplier->company_name }}</td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                        data-toggle="modal" data-target="#npr_itemListView">View</button></td>
+                                        data-toggle="modal" data-target="#npo_itemListView">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-dismiss="modal"
                                         onclick="loadQuotation({{ $quotation->id }})">Select</button></td>
@@ -88,7 +88,6 @@ $i = 1;
         </div>
     </div>
 </div>
-
 
 <div class="accordion" id="accordion">
     <div class="card">
@@ -285,6 +284,46 @@ $i = 1;
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="npo_itemListView" tabindex="-1" role="dialog" aria-labelledby="npo_itemListView"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="order_itemList" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>Quantity Ordered</th>
+                            <th>Quantity Received</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--
+                        <tr>
+                            <td class="text-bold">4</td>
+                            <td class="text-bold">Sample Item</td>
+                            <td>300</td>
+                            <td>100</td>
+                            <td>33%</td>
+                        </tr>-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

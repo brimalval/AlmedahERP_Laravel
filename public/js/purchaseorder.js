@@ -202,6 +202,10 @@ function submitOrder() {
     }
 }
 
+function viewQuotationItems(id) {
+    
+}
+
 //For permanently changing purchase orders
 //Only works on existing purchase orders
 $("#submitOrder").on('click', submitOrder);
