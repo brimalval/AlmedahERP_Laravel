@@ -233,6 +233,16 @@ $i = 1; ?>
                                     Cheque Number
                                 </label>
                                 <input type="number" min="0" required class="form-input form-control" placeholder="Enter Cheque Number..." id="chqNo">
+                                <br>
+                                <label class="text-nowrap align-middle">
+                                    Bank Name
+                                </label>
+                                <input type="text" required class="form-input form-control" placeholder="Enter Bank Name..." id="bankName">
+                                <br>
+                                <label class="text-nowrap align-middle">
+                                    Branch of Bank
+                                </label>
+                                <input type="text" required class="form-input form-control" placeholder="Indicate Branch of Bank..." id="bankBranch">
                             </div>
                         </div>
                         <div class="col-6">
@@ -307,7 +317,7 @@ $i = 1; ?>
                         </tr>
                         @empty
                             <td colspan="6">
-                                <center>NO PAYMENT LOGS CREATED</center>
+                                <center>NO PAYMENT LOGS AVAILABLE</center>
                             </td>
                         @endforelse
                         <!--
@@ -432,12 +442,16 @@ $i = 1; ?>
                         <tr>
                             <th>Account No.</th>
                             <th>Cheque No.</th>
+                            <th>Bank</th>
+                            <th>Bank Location</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td id="chq-accNo" class="text-bold"></td>
                             <td id="chq-num"></td>
+                            <td id="chq-bank"></td>
+                            <td id="chq-branch"></td>
                         </tr>
                     </tbody>
                 </table>

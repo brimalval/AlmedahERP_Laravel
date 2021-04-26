@@ -17,6 +17,8 @@ function viewChequeDetails(id) {
         success: function (response) {
             $('#chq-accNo').html(response.acct_no);
             $('#chq-num').html(response.chq_no);
+            $('#chq-bank').html(response.bank_name);
+            $('#chq-branch').html(response.branch);
         }
     });
 }
@@ -37,16 +39,22 @@ $("#payInvoice").click(function () {
 
     if (!$("#chq").prop('hidden')) {
         var msg = '';
-        if (!$('#acctNo').val() || !$('#chqNo').val()) {
+        if (!$('#acctNo').val() || !$('#chqNo').val() || $("#bankName").val() || $("#bankBranch").val()) {
             if (!$('#acctNo').val())
                 msg = 'account number';
             else if (!$('#chqNo').val())
                 msg = 'cheque number';
+            else if (!$('#bankName').val())
+                msg = 'bank';
+            else if (!$('#bankBranch').val())
+                msg = 'bank location';
             alert(`Please provide the check's ${msg}.`);
             return;
         } else {
             formData.append('account_no', $('#acctNo').val());
             formData.append('cheque_no', $('#chqNo').val());
+            formData.append('bank_name', $("#bankName").val());
+            formData.append('bank_location', $("#bankBranch").val());
         }
     }
 
