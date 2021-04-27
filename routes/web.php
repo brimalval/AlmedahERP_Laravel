@@ -390,12 +390,13 @@ Route::get('/createnewsupplier', function () {
 Route::resource('/supplierquotation', SupplierQuotationController::class);
 Route::get('/supplierquotation-list', [SupplierQuotationController::class, 'get_supplier_quotations'])
     ->name('supplierquotation.list');
-
+/*
 Route::get(
     '/supplierquotation/{supplierquotation}/load-item-list',
     [SupplierQuotationController::class, 'load_item_list']
 )->name('supplierquotation.items');
-
+*/
+Route::get('/view-sq-items/{id}', [SupplierQuotationController::class, 'get_items']);
 Route::post(
     'supplierquotation/{supplierquotation}/submit',
     [SupplierQuotationController::class, 'submit']
