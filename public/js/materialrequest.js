@@ -226,6 +226,7 @@ function loadIntoPage(element, url){
     let parentPane = $(element).parents('.tab-pane');
     parentPane.html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
     parentPane.load(url);
+    return parentPane.length;
 }
 
 // These two listeners will fix stacking modals
