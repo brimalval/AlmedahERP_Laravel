@@ -17,10 +17,10 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadMaterialRequest();">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadIntoPage(this, '{{ route('materialrequest.index') }}');">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="openNewMaterialRequest();" style="float: left;">New</button>
+                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('materialrequest.create') }}');" style="float: left;">New</button>
                 </li>
             </ul>
         </div>
@@ -70,7 +70,7 @@
                     <td class="text-black-50 mr-purpose">{{ $mat_request->purpose }}</td>
                     <td>
                     @if ($mat_request->mr_status == 'Draft')
-                        <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
+                        {{-- <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button> --}}
                         <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
                             @csrf
                             @method('DELETE')

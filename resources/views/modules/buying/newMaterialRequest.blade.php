@@ -1,4 +1,3 @@
-<script src="{{ asset('js/materialrequest.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
   <div class="container-fluid">
     <h2 class="navbar-brand" style="font-size: 35px;">New Material Request</h2>
@@ -18,7 +17,7 @@
         </li>
         </li>
         <li class="nav-item li-bom">
-          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadMaterialRequest();">Cancel</button>
+          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadIntoPage(this, '{{ route('materialrequest.index') }}')">Cancel</button>
         </li>
         <li class="nav-item li-bom">
           <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" onclick="$('#mat-req').submit();">Save</button>

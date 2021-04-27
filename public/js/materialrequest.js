@@ -144,7 +144,8 @@ $('.edit-quantity').focusout(function(){
     let final_cf = (selected_cf / uom_cf).toFixed(2);
     parentPane.find('.edit-stock-quantity').val($(this).val() * final_cf);
 });
-$('#mat-req').submit(function(){
+$('#mat-req').off('submit').on('submit', function(){
+    let formElement = this;
     let parentPane = $(this).parents('.tab-pane');
     $.ajax({
         type: 'POST',
@@ -154,19 +155,20 @@ $('#mat-req').submit(function(){
         processData: false,
         cache: false,
         success: function(data){
+            loadIntoPage(formElement, data.redirect);
             if(data.status == 'success'){ 
                 // If the form's objective is to update, update the row
-                if(data.update){
-                    let row = parentPane.find(`#mr-row-${data.materialrequest.id}`);
-                    row.children('td.mr-req-date').text(data.required_date);
-                    row.children('td.mr-purpose').text(data.materialrequest.purpose);
-                    parentPane.find('.editModal').modal('hide');
-                    parentPane.find('#mat-req').remove();
-                }
+                // if(data.update){
+                //     let row = parentPane.find(`#mr-row-${data.materialrequest.id}`);
+                //     row.children('td.mr-req-date').text(data.required_date);
+                //     row.children('td.mr-purpose').text(data.materialrequest.purpose);
+                //     parentPane.find('.editModal').modal('hide');
+                //     parentPane.find('#mat-req').remove();
+                // }
                 // Otherwise, go back
-                else{
-                    loadMaterialRequest();
-                }
+                // else{
+                //     loadIntoPage(formElement, data.redirect);
+                // }
             } else{
                 alert('Error! Please ensure that all fields are filled in and valid!');
             }

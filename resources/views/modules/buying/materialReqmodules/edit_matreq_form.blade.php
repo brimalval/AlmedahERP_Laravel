@@ -1,4 +1,3 @@
-<script src="{{ asset('js/materialrequest.js') }}"></script>
 @if (!$editable)
   <script>
     $(document).ready(function(){
@@ -21,14 +20,21 @@
         <h2 class="navbar-brand" style="font-size: 35px;">{{ $materialRequest->request_id }}</h2>
     </h2>
 @endif
-<form id="mr-submit" action="{{ route('materialrequest.submit', ['materialrequest'=>$materialRequest->id]) }}" method="post">
-  @csrf
   @if ($materialRequest->mr_status == "Draft")
-    <button class="btn btn-primary btn-sm ml-4" href="#" role="button">
-      Submit
-    </button>
+  <div class="row">
+    <div class="col-1">
+      <form id="mr-submit" action="{{ route('materialrequest.submit', ['materialrequest'=>$materialRequest->id]) }}" method="post">
+        @csrf
+        <button class="btn btn-primary btn-sm ml-4" role="button">
+          Submit
+        </button>
+      </form>
+    </div>
+    <div class="col-1">
+      <button type="button" class="btn btn-primary btn-sm" onclick="$('#mat-req').submit()">Save</button>
+    </div>
+  </div>
   @endif
-</form>
 <form  id="mat-req" class="update" action="{{ route('materialrequest.update', ['materialrequest' => $materialRequest->id]) }}">
 @csrf
 @method('PATCH')
