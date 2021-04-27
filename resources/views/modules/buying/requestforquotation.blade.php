@@ -19,8 +19,8 @@
                         <a class="dropdown-item" href="#">Settings</a>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-1" onclick="loadIntoQuotationPage('{{ route('rfquotation.index') }}')">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="loadIntoQuotationPage('{{ route('rfquotation.create') }}')">New</button>
+                <button type="button" class="btn btn-primary ml-1" onclick="loadIntoPage(this, '{{ route('rfquotation.index') }}')">Refresh</button>
+                <button type="button" class="btn btn-info ml-1" onclick="loadIntoPage(this, '{{ route('rfquotation.create') }}')">New</button>
             </div>
         </div>
     </div>
@@ -59,7 +59,7 @@
                     </div>
                 </td>
                 <td>
-                    <button type="button" class="text-primary" onclick="loadIntoQuotationPage('{{ route('rfquotation.edit', ['rfquotation'=>$rfquotation->id]) }}')">{{ $rfquotation->req_quotation_id }}</button>
+                    <button type="button" class="text-primary" onclick="loadIntoPage(this, '{{ route('rfquotation.edit', ['rfquotation'=>$rfquotation->id]) }}')">{{ $rfquotation->req_quotation_id }}</button>
                 </td>
                 <td>
                     <?php
