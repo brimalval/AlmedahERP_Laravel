@@ -10,7 +10,7 @@ class JobSchedulingModel extends Model
     use HasFactory;
     protected $table = 'jobs_scheduling';
     public $timestamps = true;
-    protected $fillable = [
+    /*protected $fillable = [
         'wbs_code',
         'predecessor',
         'successor',
@@ -28,5 +28,14 @@ class JobSchedulingModel extends Model
         'js_status',
         'employee_id',
         'mfg_order_no'
+    ];*/
+    protected $fillable = [
+        'jobs_sched_id',
+        'start_date',
+        'start_time',
+        'js_status',
+        'employee_id',
+        'work_order_no',
+        'operations'
     ];
 }
