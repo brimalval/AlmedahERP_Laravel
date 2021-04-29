@@ -6,8 +6,7 @@
             </div>
             <div class="row pb-2">
                 <div class="col-12 text-right">
-                    <p><button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal"
-                            data-target="#newComponentModal"><i class="fas fa-plus" aria-hidden="true"></i> Add
+                    <p><button type="button" class="btn btn-outline-primary btn-sm" onclick="$('#newComponentModal').modal('toggle')"><i class="fas fa-plus" aria-hidden="true"></i> Add
                             New</button></p>
                 </div>
             </div>
@@ -38,8 +37,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="newComponentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="newComponentModal">
     <form action="" id="addComponentForm">
         @csrf
         <div class="modal-dialog modal-lg" role="document">
@@ -94,6 +92,7 @@
                                 <th class="center"><input type="checkbox" name="" id=""></th>
                                 <th>Raw Materials Name</th>
                                 <th>Qty</th>
+                                <th>Action</th>
                             </thead>
                             <tbody id="rawMats">
 
@@ -113,12 +112,21 @@
 <script>
     let i = 1;
     let raw_materials = [];
-   
     function addRowNewComponent() {
+        let include = false;
         let item_code = $('#componentItemCode').val();
         var tableBody = $("#rawMats");
         console.log(item_code);
-        if(raw_materials.includes(item_code)){
+        console.log(raw_materials);
+        if(raw_materials){
+            raw_materials.forEach(rawMat=>{
+                console.log(rawMat['item_code']);
+                if(rawMat['item_code']==item_code){
+                    include = true;
+                }
+            });
+        }
+        if(include){
             alert('Item already included in Component')
         }else{ 
             $.ajax({
@@ -133,6 +141,7 @@
                             <td><input type="checkbox" id="check${data.id}"></td>
                             <td><p name="rawMat${i}">`+item_name+`</p></td>
                             <td><input type="number" name="qty${i}" id="${item_name}" min="1"></td>
+                            <td><input type="button" value="Delete" class="btn btn-danger" onclick="removeRow(`+item_name+`)"/></td>
                         </tr>
                     `
                     );
@@ -152,6 +161,17 @@
         }
     }
 
+    function removeRow(item_name){
+        var td = event.target.parentNode; 
+        var tr = td.parentNode; // the row to be removed
+        tr.parentNode.removeChild(tr);
+        raw_materials = raw_materials.filter(rawMat=>
+            rawMat['item_name'] == item_name
+        );
+        console.log(raw_materials);
+    }
+    
+
 
     $('#addComponentForm').on('submit', function(e){
         e.preventDefault();
@@ -168,7 +188,8 @@
             data: $("#addComponentForm").serialize(),
             success: function (r) {
                 console.log(r.status);
-                $('#newComponentModal').modal('hide');
+                $('#newComponentModal').modal('toggle');
+                $('#componentItemCode').val("hidden");
                 // $('#componentItemCode').val('');
                 raw_materials = [];
             },

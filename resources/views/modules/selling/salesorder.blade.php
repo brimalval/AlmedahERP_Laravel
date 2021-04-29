@@ -825,8 +825,8 @@
         });
         var formData = new FormData(this);
         console.log(currentCart);
-        formData.append("cart",currentCart );
-        //formData.append("component", JSON.stringify(ultimateComponentTable));
+        formData.append("cart", currentCart);
+        formData.append("component", JSON.stringify(componentsOnly));
         $.ajax({
             type: 'POST',
             url: "/createsalesorder",
@@ -835,50 +835,50 @@
             contentType: false,
             processData: false,
             success: function(data) {
-                console.log(data);
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
                 document.getElementById('closeSaleOrderModal').click();
                 if (mat_insufficient) {
-                    // CREATE MATERIAL REQUEST
-                    console.log("DATA FOR REFERENCE");
-                    console.log(createMatRequestItems);
-                var fd = new FormData();
-                createMatRequestItems.forEach(element => {
-                    fd.append('item_code[]', element.item_code);
-                    fd.append('quantity_requested[]', element.quantity_needed_for_request);
-                    fd.append('procurement_method[]', 'buy');
-                });
-                var requiredDate = new Date();
-                requiredDate.setDate(requiredDate.getDate() + 7);
-                var requiredYear = requiredDate.getFullYear();
-                var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
-                var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
-                var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
-                fd.append('required_date', formattedDate);
-                var currProd = $('#saleProductCode').val();
-                fd.append('purpose', 'Replenishing required materials for ' + currProd);
-                fd.append('mr_status', 'Draft');
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type: 'POST',
-                    url: "/materialrequest",
-                    data: fd, 
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(data){
-                        console.log(data);
-                    },
-                    error: function(data){
+                        // CREATE MATERIAL REQUEST
+                        console.log("DATA FOR REFERENCE");
+                        console.log(createMatRequestItems);
+                    var fd = new FormData();
+                    createMatRequestItems.forEach(element => {
+                        fd.append('item_code[]', element.item_code);
+                        fd.append('quantity_requested[]', element.quantity_needed_for_request);
+                        fd.append('procurement_method[]', 'buy');
+                    });
+                    var requiredDate = new Date();
+                    requiredDate.setDate(requiredDate.getDate() + 7);
+                    var requiredYear = requiredDate.getFullYear();
+                    var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
+                    var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
+                    var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
+                    fd.append('required_date', formattedDate);
+                    var currProd = $('#saleProductCode').val();
+                    fd.append('purpose', 'Replenishing required materials for ' + currProd);
+                    fd.append('mr_status', 'Draft');
+                    fd.append('work_order_no', data);
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: "/materialrequest",
+                        data: fd, 
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(data){
+                            console.log(data);
+                        },
+                        error: function(data){
 
-                    }
-                });
+                        }
+                    });
                 }
                 //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
                 minusStocks(componentsOrder, materialsInComponents);
