@@ -1,51 +1,50 @@
-
 function loadBuyingRequestForQuotation() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/rfquotation');
-  });
+    $(document).ready(function () {
+        $("#contentRequestforQuotation").load("/rfquotation");
+    });
 }
 function openBuyingRequestForQuotationForm() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/new-quotation');
-  });
+    $(document).ready(function () {
+        $("#contentRequestforQuotation").load("/new-quotation");
+    });
 }
 function viewBuyingRequestForQuotationForm() {
-  $(document).ready(function () {
-    $('#contentRequestforQuotation').load('/view-quotation');
-  });
+    $(document).ready(function () {
+        $("#contentRequestforQuotation").load("/view-quotation");
+    });
 }
 
-function loadIntoQuotationPage(url){
-  $('#contentRequestforQuotation').load(url);
+function loadIntoQuotationPage(url) {
+    $("#contentRequestforQuotation").load(url);
 }
 
-$(document).on('submit', '#req-forquotation-form', function(){
+$(document).on("submit", "#req-forquotation-form", function () {
     $.ajax({
-        type: 'POST',
+        type: "POST",
         url: this.action,
         data: new FormData(this),
         contentType: false,
         processData: false,
         cache: false,
-        success: function(data){
-          console.log(data);
-          $('#contentRequestforQuotation').load(data.redirect);
+        success: function (data) {
+            console.log(data);
+            $("#contentRequestforQuotation").load(data.redirect);
         },
-        error: function(data){
-          alert("Error! Make sure that all the fields are filled in");
-        }
+        error: function (data) {
+            alert("Error! Make sure that all the fields are filled in");
+        },
     });
     return false;
 });
 
-function addRFQ(){
-  $('#req-forquotation-form').submit();
+function addRFQ() {
+    $("#req-forquotation-form").submit();
 }
 
-function addSupplier(){
-  $('#no-suppliers').remove();
-  let nextID = $('#rfq-suppliers-tbl tr:last').data('id') + 1 ?? 0;
-  $('#suppliers-input-rows').append(`
+function addSupplier() {
+    $("#no-suppliers").remove();
+    let nextID = $("#rfq-suppliers-tbl tr:last").data("id") + 1 ?? 0;
+    $("#suppliers-input-rows").append(`
     <tr data-id="${nextID}">
       <td>
         <div class="form-check">
@@ -70,18 +69,23 @@ function addSupplier(){
       </td>
     </tr>
   `);
-  $('#selects select[data-id="supplier_id"]').clone().appendTo(`#rfq-suppliers-tbl tr:last .rfq-supplier`).selectpicker();
-  $('#rfq-suppliers-tbl tr:last .rfq-email input').val($('#rfq-suppliers-tbl tr:last .rfq-supplier :selected').data('email'));
+    $('#selects select[data-id="supplier_id"]')
+        .clone()
+        .appendTo(`#rfq-suppliers-tbl tr:last .rfq-supplier`)
+        .selectpicker();
+    $("#rfq-suppliers-tbl tr:last .rfq-email input").val(
+        $("#rfq-suppliers-tbl tr:last .rfq-supplier :selected").data("email")
+    );
 }
 
-function rfqAddItem(){
-    if($('#rfq-items-tbl #no-data')[0]){
-        $('#rfq-items-tbl #no-data').remove();
+function rfqAddItem() {
+    if ($("#rfq-items-tbl #no-data")[0]) {
+        $("#rfq-items-tbl #no-data").remove();
     }
-    let lastRow = $('#rfq-input-rows tr:last');
-    let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
-    $('#rfq-input-rows').append(
-    `
+    let lastRow = $("#rfq-input-rows tr:last");
+    let nextID = lastRow.length != 0 ? lastRow.data("id") + 1 : 0;
+    $("#rfq-input-rows").append(
+        `
     <tr data-id="${nextID}">
         <td>
         <div class="form-check">
@@ -108,41 +112,61 @@ function rfqAddItem(){
             </button>
         </td>
     </tr>
-    `);
-    $('#selects select[data-id="item_code"]').eq(0).clone().appendTo(`#rfq-items-tbl tr:last .mr-code-input`).selectpicker();
-    $('#selects select[data-id="station_id"]').eq(0).clone().appendTo(`#rfq-items-tbl tr:last .mr-target-input`).selectpicker();
-    $('#selects select[data-id="uom_id"]').eq(0).clone().appendTo(`#rfq-items-tbl tr:last .mr-unit-input`).selectpicker();
-    $('#rfq-items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
-    $('#contentRequestforQuotation').find('#no-data').remove();
+    `
+    );
+    $('#selects select[data-id="item_code"]')
+        .eq(0)
+        .clone()
+        .appendTo(`#rfq-items-tbl tr:last .mr-code-input`)
+        .selectpicker();
+    $('#selects select[data-id="station_id"]')
+        .eq(0)
+        .clone()
+        .appendTo(`#rfq-items-tbl tr:last .mr-target-input`)
+        .selectpicker();
+    $('#selects select[data-id="uom_id"]')
+        .eq(0)
+        .clone()
+        .appendTo(`#rfq-items-tbl tr:last .mr-unit-input`)
+        .selectpicker();
+    $(
+        '#rfq-items-tbl tr:last select[name="procurement_method[]"]'
+    ).selectpicker();
+    $("#contentRequestforQuotation").find("#no-data").remove();
 }
 
-function fillSupplierRow(select){
-  let row = select.parents('tr');
-  let email = select.find(':selected').data('email');
-  console.log(email);
-  row.find('.rfq-email input').val(email);
+function fillSupplierRow(select) {
+    let row = select.parents("tr");
+    let email = select.find(":selected").data("email");
+    console.log(email);
+    row.find(".rfq-email input").val(email);
 }
 
 // Element argument is the HTML element that calls the function
-function saveRequestLink(element){
-  let parentPane = $(element).parents('.tab-pane');
-  let selected = $(element).parents('.modal').find('#request-id-link-select').find(':selected');
-  let tbody = parentPane.find('.mr-link-input-rows');
-  tbody.html('');
-  // If "None" was selected just clear the table for material request items and move on
-  if(selected.val() == 'none'){
-    return;
-  }
-  let items = JSON.parse(JSON.stringify(selected.data('items')));
-  $('#rfq-request-id').val(selected.val());
-  items.forEach(function(val, idx, array){
-    var procurementMethodTitle;
-    // Turn the procurement method into a title case string
-    // like this -> Like This
-    procurementMethodTitle = val.procurement_method.toLowerCase().replace(/\b[a-z]/g, function(c){
-      return c.toUpperCase();
-    });
-    tbody.append(`
+function saveRequestLink(element) {
+    let parentPane = $(element).parents(".tab-pane");
+    let selected = $(element)
+        .parents(".modal")
+        .find("#request-id-link-select")
+        .find(":selected");
+    let tbody = parentPane.find(".mr-link-input-rows");
+    tbody.html("");
+    // If "None" was selected just clear the table for material request items and move on
+    if (selected.val() == "none") {
+        return;
+    }
+    let items = JSON.parse(JSON.stringify(selected.data("items")));
+    $("#rfq-request-id").val(selected.val());
+    items.forEach(function (val, idx, array) {
+        var procurementMethodTitle;
+        // Turn the procurement method into a title case string
+        // like this -> Like This
+        procurementMethodTitle = val.procurement_method
+            .toLowerCase()
+            .replace(/\b[a-z]/g, function (c) {
+                return c.toUpperCase();
+            });
+        tbody.append(`
     <tr>
           <td>
           <div class="form-check">
@@ -170,43 +194,61 @@ function saveRequestLink(element){
           <td>
           </td>
       </tr>
-    `)
-    let itemCodeSelector = tbody.find('tr:last .mr-code-input select')[0]
-    let targetSelector = tbody.find('tr:last .mr-target-input select')[0]
-    let uomSelector = tbody.find('tr:last .mr-unit-input select')[0]
-    $(`#selects select[data-id="item_code"] option[value="${val.item_code}"]`).eq(0).clone().appendTo(itemCodeSelector);
-    $(`#selects select[data-id="station_id"] option[value="${val.station_id}"]`).eq(0).clone().appendTo(targetSelector);
-    $(`#selects select[data-id="uom_id"] option[value="${val.uom_id}"]`).eq(0).clone().appendTo(uomSelector);
-    tbody.find('tr:last select[name="procurement_method[]"]').selectpicker();
-    $(itemCodeSelector).selectpicker();
-    $(targetSelector).selectpicker();
-    $(uomSelector).selectpicker();
-  });
-  $('#rfq-items-tbl #no-data').remove();
-  $(element).parents('.modal').modal('hide');
+    `);
+        let itemCodeSelector = tbody.find("tr:last .mr-code-input select")[0];
+        let targetSelector = tbody.find("tr:last .mr-target-input select")[0];
+        let uomSelector = tbody.find("tr:last .mr-unit-input select")[0];
+        $(
+            `#selects select[data-id="item_code"] option[value="${val.item_code}"]`
+        )
+            .eq(0)
+            .clone()
+            .appendTo(itemCodeSelector);
+        $(
+            `#selects select[data-id="station_id"] option[value="${val.station_id}"]`
+        )
+            .eq(0)
+            .clone()
+            .appendTo(targetSelector);
+        $(`#selects select[data-id="uom_id"] option[value="${val.uom_id}"]`)
+            .eq(0)
+            .clone()
+            .appendTo(uomSelector);
+        tbody
+            .find('tr:last select[name="procurement_method[]"]')
+            .selectpicker();
+        $(itemCodeSelector).selectpicker();
+        $(targetSelector).selectpicker();
+        $(uomSelector).selectpicker();
+    });
+    $("#rfq-items-tbl #no-data").remove();
+    $(element).parents(".modal").modal("hide");
 }
 
-function closeRequestLink(element){
-  let parentPane = $(element).parents('.tab-pane');
-  parentPane.find('#request-id-link-select').val('none').selectpicker('refresh'); 
-  $(element).parents('.modal').modal('hide');
+function closeRequestLink(element) {
+    let parentPane = $(element).parents(".tab-pane");
+    parentPane
+        .find("#request-id-link-select")
+        .val("none")
+        .selectpicker("refresh");
+    $(element).parents(".modal").modal("hide");
 }
 
 // When pressing the submit button on the editing form, trigger this
-function submitRFQ(form){
+function submitRFQ(form) {
     $.ajax({
-        type: 'POST',
+        type: "POST",
         url: form.action,
         data: new FormData(form),
         contentType: false,
         processData: false,
         cache: false,
-        success: function(data){
-          loadBuyingRequestForQuotation();
+        success: function (data) {
+            loadBuyingRequestForQuotation();
         },
-        error: function(data){
-          alert("Error! Make sure that all the fields are filled in");
-        }
+        error: function (data) {
+            console.log(data);
+        },
     });
     return false;
 }

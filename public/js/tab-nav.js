@@ -160,17 +160,36 @@ function loadWorkOrder() {
     });
 }
 
-function loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId) {
-    $("#requiredItems").html("");
+function loadWorkOrderInfo(
+    workOrderDetails,
+    itemName,
+    salesOrderId,
+    quantity,
+    dates
+) {
+    let planned_dates = JSON.parse(dates);
     console.log(workOrderDetails);
-    console.log(itemName);
-    console.log(salesOrderId);
+    $("#requiredItems").html("");
+    materials_qty = JSON.parse(quantity);
+    console.log(materials_qty);
+    materials_complete = [];
     // $("#startWorkOrder").click(startWorkOrder());
     $(document).ready(function () {
         $("#contentWorkOrder").load("/loadWorkOrderInfo", function () {
+            $("#startWorkOrder").on("click", function () {
+                startWorkOrder(workOrderDetails["work_order_no"]);
+            });
             $("#componentName").text(itemName);
             $("#componentStatus").text(workOrderDetails.work_order_status);
             $("#componentPurchaseID").text(workOrderDetails.purchase_id);
+            $("#plannedStartDate").attr("value", planned_dates[0]);
+            $("#plannedEndDate").attr("value", planned_dates[1]);
+            if (workOrderDetails.real_start_date) {
+                $("#actualStartDate").attr(
+                    "value",
+                    workOrderDetails.real_start_date
+                );
+            }
             $.ajax({
                 url: "/getRawMaterialsWork/" + itemName + "/" + salesOrderId,
                 type: "GET",
@@ -180,6 +199,19 @@ function loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId) {
                         datas["item_code"]
                     ).entries()) {
                         let sequence = index + 1;
+                        let transferred_qty = materials_qty[index];
+                        let required_qty =
+                            datas["component_qty"] *
+                            datas["quantity_purchased"] *
+                            parseInt(data["item_qty"]);
+                        if (transferred_qty === undefined) {
+                            materials_complete.push(true);
+                            transferred_qty = "item stock quantity";
+                        } else {
+                            transferred_qty >= required_qty
+                                ? materials_complete.push(true)
+                                : materials_complete.push(false);
+                        }
                         $("#requiredItems").append(
                             `
                         <tr>
@@ -202,12 +234,11 @@ function loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId) {
                                 index +
                                 `</td>
                           <td>` +
-                                datas["component_qty"] *
-                                    datas["quantity_purchased"] *
-                                    parseInt(data["item_qty"]) +
+                                required_qty +
                                 `</td>
-                          <td>0</td>
-                          <td>0</td>
+                          <td>` +
+                                (materials_qty[index] ?? transferred_qty) +
+                                `</td>
                           <td style="padding: 1%;" class="h-100">
                             <div class="input-group mb-3">
                               <select class="custom-select border-0" id="inputGroupSelect02">
@@ -221,11 +252,16 @@ function loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId) {
                        </tr>`
                         );
                     }
+                    console.log("mat_complete" + materials_complete);
+                    if (materials_complete.includes(false)) {
+                        $("#startWorkOrder").prop("disabled", true);
+                    }
                 },
                 error: function (request, error) {
                     alert("Request: " + JSON.stringify(request));
                 },
             });
+            console.log(materials_complete);
         });
     });
 }

@@ -835,7 +835,6 @@
             contentType: false,
             processData: false,
             success: function(data) {
-                console.log(data);
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
@@ -860,6 +859,7 @@
                     var currProd = $('#saleProductCode').val();
                     fd.append('purpose', 'Replenishing required materials for ' + currProd);
                     fd.append('mr_status', 'Draft');
+                    fd.append('work_order_no', data);
                     $.ajaxSetup({
                         headers: {
                             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')

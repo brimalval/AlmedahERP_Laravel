@@ -67,10 +67,9 @@
                     </td>
                     <td>Item to Manufacture</td>
                     <td>Status</td>
-                    <td>Purchase ID</td>
+                    <td>Materials Ordered ID</td>
                     <td>For Product?</td>
                     <td>Sales ID</td>
-                    <td> </td>
                 </tr>
             </thead>
             <tbody class="">
@@ -81,13 +80,17 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $items[$index] }}`, `{{ $work_order->sales_id }}`)'> {{ $items[$index] }} </a></td>
-                    <td>{{ $work_order->work_order_status }}</td>
-                    {{-- <td class="text-black-50">{{ $work_order->purchase_id }}</td> --}}
-                    <td class="text-black-50"> </td>
-                    <td class="text-black-50">{{ $work_order->product_code }}</td>
+                    @if($work_order->mat_ordered_id)
+                        <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $components[$index] }}`, `{{ $work_order->sales_id }}`, `{{ json_encode($quantity[$index] ?? null) }}`, `{{ json_encode($planned_dates[$index]) }}` )'> {{ $components[$index] }} </a></td>
+                        <td>{{ $work_order->work_order_status }}</td>
+                        <td class="text-black-50">{{ $work_order->mat_ordered_id }}</td>
+                    @else
+                        <td> {{ $components[$index] }} </a></td>
+                        <td>{{ $work_order->work_order_status }}</td>
+                        <td class="text-black-50"> </td>
+                    @endif
+                    <td class="text-black-50">{{ $items[$index] }}</td>
                     <td><!--<input type="checkbox">-->{{ $work_order->sales_id }}</td>
-                    <td><span class="fas fa-comments"></span>0</td>
                 </tr>
             @endforeach
             </tbody>
@@ -107,8 +110,7 @@
 </div>
 
 <script>
-    function workOrderInfo(workOrderDetails, itemName, salesOrderId){
-        console.log(workOrderDetails);
-        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId);
+    function workOrderInfo(workOrderDetails, itemName, salesOrderId, quantity, dates){
+        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId, quantity, dates);
     }
 </script>

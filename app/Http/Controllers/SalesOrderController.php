@@ -241,7 +241,7 @@ class SalesOrderController extends Controller
             }
 
             //return "Sucess";
-            return response("Sucess");
+            return response($work_order->id);
 
         }catch(Exception $e){
             return $e;
