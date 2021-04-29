@@ -15,7 +15,7 @@ class RemovePurchaseIdAndSalesIdColumn extends Migration
     {
         Schema::table('work_order', function($table) {
             $table->dropColumn('purchase_id');
-            $table->bigIncrements('work_order_no');
+            $table->bigIncrements('work_order_no')->unique();
             $table->string('mat_ordered_id')->nullable();
             $table->foreign('mat_ordered_id')->references('mat_ordered_id')->on('materials_ordered');
          });
