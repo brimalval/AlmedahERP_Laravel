@@ -27,6 +27,7 @@ class AddWorkOrderNoToEnvMaterialRequests extends Migration
     public function down()
     {
         Schema::table('env_material_requests', function (Blueprint $table) {
+            $table->dropForeign(['work_order_no']);
             $table->dropColumn('work_order_no');
         });
     }

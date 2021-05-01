@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class RemovePurchaseIdAndSalesIdColumn extends Migration
@@ -32,7 +33,9 @@ class RemovePurchaseIdAndSalesIdColumn extends Migration
         Schema::table('work_order', function(Blueprint $table){
             $table->string('purchase_id')->nullable();
             $table->foreign('purchase_id')->references('purchase_id')->on('materials_purchased');
+            //$table->dropForeign(['work_order_no']);
             $table->dropColumn('work_order_no');
+            $table->dropForeign(['mat_ordered_id']);
             $table->dropColumn('mat_ordered_id');
         });
     }
