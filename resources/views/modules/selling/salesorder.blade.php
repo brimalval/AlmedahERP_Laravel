@@ -249,7 +249,7 @@
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" name="saleSupplyMethod" required onchange="selectSalesMethod();">
+                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod"  onchange="selectSalesMethod();">
                                             <option selected disabled>Please Select</option>
                                             <option value="Produce">Instock</option>
                                             <option value="Purchase">Purchase</option>
@@ -294,20 +294,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input">
-                                                <label class="form-check-label text-muted">Add Selected to Work
-                                                    Order</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input">
-                                                <label class="form-check-label text-muted">Re-Order Selected Raw
-                                                    Materials</label>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -330,7 +316,7 @@
                                     <label class="text-nowrap align-middle">
                                         Payment Method
                                     </label>
-                                    <select class="form-control sellable" required id="salePaymentMethod"  name="salePaymentMethod" onchange="selectPaymentMethod();">
+                                    <select class="form-control sellable" required id="salePaymentMethod" name="salePaymentMethod" onchange="selectPaymentMethod();">
                                         <option selected disabled>Please Select</option>
                                         <option value="Cash">Full Payment(Cash)</option>
                                         <option value="Installment">Installment</option>
@@ -452,12 +438,14 @@
             <script src="{{ asset('js/salesorder.js') }}"></script>
             <div class="modal-footer d-flex">
                 <div class="col">
-                    <button class="btn btn-primary m-1 float-right menu" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing" id="hiddenworkorder" hidden> </button>
-                    <button type="submit" class="btn btn-primary m-1" id="gotoworkorder" value="Submit" class="btn btn-primary m-1 float-right menu" id="toWorkOrder">
-                        Save go to work order
+                    <button class="btn btn-primary m-1 float-right menu" data-dismiss="modal" hidden> </button>
+                    <button type="submit" class="btn btn-primary m-1" value="Submit" class="btn btn-primary m-1 float-right menu" id="toWorkOrder">
+                        Save
                     </button>
                 </div>
-                <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
+                <span id="notif" class="mr-auto text-danger">
+                    
+                </span>
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
             </div>
         </div>
@@ -887,6 +875,13 @@
             error: function(data) {
                 console.log("error");
                 console.log(data);
+
+                $('#notif').text('');
+                $('#notif').html(
+                     @foreach ($errors->all() as $error)
+                             <li>{{ $error }}</li>
+                     @endforeach
+                );
             }
         });
     });

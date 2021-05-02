@@ -74,6 +74,10 @@ class SalesOrderController extends Controller
             'account_name' => 'nullable|alpha',
         ]);
 
+        if(!$validator->passes()){
+            return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
+        }
+
         try{
 
             $form_data = $request->input();

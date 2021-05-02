@@ -1,8 +1,6 @@
 // // Functions here will not work on the full page tab of a new sale as there are duplicates
 
-$(document).ready(function () {
-    $("#notif").hide();
-});
+
 $("#idBtn").on("click", function () {
     var id = $("#custId").val();
     $.ajax({
@@ -56,17 +54,6 @@ $("#idBtn").on("click", function () {
 //  });
 //}
 let mat_insufficient = false;
-
-$("#saveSaleOrder").click(function () {
-    //continueToWorkOrder("#saveSaleOrder");
-    $("#notif").hide();
-});
-
-//Might be unnecessary will check @TODO
-//from old version of front-end js file
-$("#saveSaleOrder1").click(function () {
-    continueToWorkOrder("#saveSaleOrder1");
-});
 
 function selectSalesMethod() {
     var selected = document.getElementById("saleSupplyMethod").value;
