@@ -197,6 +197,7 @@ var createMatRequestItems = [];
 //Array for storing stocks to be minus from components needed
 var componentsOrder;
 var materialsInComponents;
+var componentsOnly;
 
 function contains(names, arr) {
     namelist = [];

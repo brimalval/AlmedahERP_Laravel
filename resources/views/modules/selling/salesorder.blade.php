@@ -698,6 +698,9 @@
                         </div>
                             <div class="row">
                               <div class="col-12 d-flex justify-content-center">
+                                <span id="view_notif" class="mr-auto text-danger">
+
+                                </span>
                                 <button type="submit" class="btn btn-primary m-1" id="view_savepayment">
                                   <a style="text-decoration: none;color:white" >
                                     Save Payment
@@ -731,7 +734,6 @@
         document.getElementById('currentDate').value = today;
         var componentsOrder;
         var materialsInComponents;
-        
     });
 
     $("#gotoworkorder").click(function(){
@@ -800,6 +802,11 @@
             error: function(data) {
                 console.log("error");
                 console.log(data);
+
+                $('#view_notif').text('');
+                $('#view_notif').html(
+                    '<li>' + data.responseJSON["message"] + '</li>'
+                );
             }
         });
     })
@@ -878,9 +885,7 @@
 
                 $('#notif').text('');
                 $('#notif').html(
-                     @foreach ($errors->all() as $error)
-                             <li>{{ $error }}</li>
-                     @endforeach
+                    '<li>' + data.responseJSON["message"] + '</li>'
                 );
             }
         });
@@ -929,8 +934,11 @@
         createMatRequestItems = [];
         minusStocks = [];
         materialsInComponents= [];
+        componentsOnly = [];
         console.log(currentCart);
         $('#ProductsTable tr').remove();
         $(".components tr").remove();
+        $('#notif').text('');
+        $('#view_notif').text('');
     }
 </script>
