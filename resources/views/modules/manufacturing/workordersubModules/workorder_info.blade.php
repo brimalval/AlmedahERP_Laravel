@@ -86,7 +86,7 @@
 				<button class="btn btn-secondary btn-sm ml-2" type="button">
 					Cancel
 				</button>
-				<button class="btn btn-primary btn-sm ml-2" type="submit" id="startWorkOrder">
+				<button id="startWorkOrder" class="btn btn-primary btn-sm ml-2">
 					Start
 				</button>
 			</div>
@@ -214,7 +214,6 @@
 							<td>Source Warehouse</td>
 							<td>Required Qty</td>
 							<td>Transferred Qty</td>
-							<td>Consumed Qty</td>
 							<td style="padding: 1%;" class="h-100">
 								<div class="input-group mb-3">
 									<select class="custom-select border-0" id="inputGroupSelect02">
@@ -240,17 +239,17 @@
 		<div class="row">
 			<div class="col-6">
 				<label for="" class="text-muted">Planned Start Date</label>
-				<input type="text" class="form-control" disabled="true">
+				<input type="text" class="form-control" disabled="true" id="plannedStartDate">
 			</div>
 			<div class="col-6">
 				<label for="" class="text-muted">Actual Start Date</label>
-				<input type="text" class="form-control" disabled="true">
+				<input type="text" class="form-control" disabled="true" id="actualStartDate">
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-6">
 				<label for="" class="text-muted">Planned End Date</label>
-				<input type="text" class="form-control" disabled="true">
+				<input type="text" class="form-control" disabled="true" id="plannedEndDate">
 			</div>
 			<div class="col-6">
 				<label for="" class="text-muted">Actual End Date</label>
@@ -315,16 +314,19 @@
 </div>
 
 <script>
-	function startWorkOrder(){
+	function startWorkOrder(workOrderId){
 		$.ajax({
-            url: "/startWorkOrder",
+            url: "/startWorkOrder/"+workOrderId,
             type: "get",
             success: function (data) {
-                console.log(data);
+                $("#componentStatus").text(data['work_order_status']);
+				$("#actualStartDate").attr('value', data['real_start_date']);
             },
             error: function (request, error) {},
         });
 	}
+
+	console.log($("#requiredItems"));
 	// $('#startWorkOrder').on('click', function(){
 	// 	$.ajax({
     //         url: "/startWorkOrder",

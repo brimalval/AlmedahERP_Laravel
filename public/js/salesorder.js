@@ -102,13 +102,15 @@ function selectPaymentType() {
         document.getElementById("view_account_no_div").style.display = "none";
         document.getElementById("view_account_name_div").style.display = "none";
         document.getElementById("view_bank_name_div").style.display = "none";
-        document.getElementById("view_branch_location_div").style.display = "none";
+        document.getElementById("view_branch_location_div").style.display =
+            "none";
     } else {
         document.getElementById("view_cheque_no_div").style.display = "";
         document.getElementById("view_account_no_div").style.display = "";
         document.getElementById("view_account_name_div").style.display = "";
         document.getElementById("view_bank_name_div").style.display = "";
-        document.getElementById("view_branch_location_div").style.display = "none";
+        document.getElementById("view_branch_location_div").style.display =
+            "none";
     }
 }
 
@@ -131,8 +133,8 @@ function installmentType() {
     if (payment_method == "Cash") {
         $("#payments_table_body").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Cash</td><td class="text-center">' +
-            cost +
-            "</td></tr>"
+                cost +
+                "</td></tr>"
         );
     } else {
         installment_type = document.getElementById("installmentType").value;
@@ -140,8 +142,8 @@ function installmentType() {
             .value;
         $("#payments_table_body").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Downpayment </td><td class="text-center">' +
-            saleDownpaymentCost +
-            "</td></tr>"
+                saleDownpaymentCost +
+                "</td></tr>"
         );
         cost -= saleDownpaymentCost;
         switch (installment_type) {
@@ -150,10 +152,10 @@ function installmentType() {
                 for (let index = 0; index < 3; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                        (index + 1) +
-                        '</td><td class="text-center">' +
-                        divider +
-                        "</td></tr>"
+                            (index + 1) +
+                            '</td><td class="text-center">' +
+                            divider +
+                            "</td></tr>"
                     );
                 }
                 break;
@@ -162,10 +164,10 @@ function installmentType() {
                 for (let index = 0; index < 6; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                        (index + 1) +
-                        '</td><td class="text-center">' +
-                        divider +
-                        "</td></tr>"
+                            (index + 1) +
+                            '</td><td class="text-center">' +
+                            divider +
+                            "</td></tr>"
                     );
                 }
                 break;
@@ -174,10 +176,10 @@ function installmentType() {
                 for (let index = 0; index < 12; index++) {
                     $("#payments_table_body").append(
                         '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Installment ' +
-                        (index + 1) +
-                        '</td><td class="text-center">' +
-                        divider +
-                        "</td></tr>"
+                            (index + 1) +
+                            '</td><td class="text-center">' +
+                            divider +
+                            "</td></tr>"
                     );
                 }
                 break;
@@ -206,11 +208,9 @@ function contains(names, arr) {
         if (namelist[index] == names) {
             return true;
         }
-
     }
     return false;
 }
-
 
 //Adds product to array
 function addToTable() {
@@ -219,8 +219,8 @@ function addToTable() {
         currentCart.push([currentProduct, 0]);
         $("#ProductsTable").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
-            currentProduct +
-            '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
+                currentProduct +
+                '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
         );
     }
 }
@@ -230,7 +230,7 @@ function changeQuantity(r) {
     index = r.parentNode.parentNode.rowIndex - 1;
     productName = currentCart[index][0];
     currentCart[index] = [productName, r.value];
-    $('#btnSalesCalculate').click();
+    $("#btnSalesCalculate").click();
 }
 
 //Deletes product from array
@@ -276,7 +276,7 @@ function rawMaterials() {
         error: function (response, error) {
             // alert("Request: " + JSON.stringify(request));
         },
-    })
+    });
     //Function here
 }
 
@@ -291,6 +291,8 @@ function finalizer(arr_components) {
     materialsInComponents = [];
     // Raw Materials only
     rawMaterialsOnly = [];
+    // Component Names only
+    componentsOnly = [];
     mat_insufficient = false;
     for (let index = 0; index < arr_components.length; index++) {
         component = [
@@ -307,6 +309,7 @@ function finalizer(arr_components) {
             materialsInComponents array.
         */
         if (arr_components[index][4] != null) {
+            componentsOnly.push({ component_name: component[0] });
             let materials_needed = JSON.parse(arr_components[index][4]);
             materials_needed.forEach((el) => {
                 let reorder_data = getReorderLevelAndQty(el["item_name"]);
@@ -370,7 +373,6 @@ function finalizer(arr_components) {
             }
         }
 
-        
         // append each component to the components table
         $(".components").append(
             `<tr>
@@ -381,26 +383,26 @@ function finalizer(arr_components) {
         </td>
         <td class="text-center">
         ` +
-            component[0] +
-            `
+                component[0] +
+                `
         </td>
         <td class="text-center">
         ` +
-            component[1] +
-            `
+                component[1] +
+                `
         </td>
         <td class="mt-available" style="text-align: center;">` +
-            component[3] +
-            `</td>
+                component[3] +
+                `</td>
         <td class="mt-needed text-center">
         ` +
-            component[2] +
-            `
+                component[2] +
+                `
         </td>
         <td class="mt-needed text-center">
         ` +
-            status +
-            `
+                status +
+                `
         </td>
         </tr>`
         );
@@ -532,10 +534,10 @@ function viewOrderedProducts(id) {
             response.forEach((row) => {
                 $("#viewProductsTable").append(
                     '<tr> <td class="text-center">  ' +
-                    row["product_code"] +
-                    '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value=' +
-                    row["quantity_purchased"] +
-                    " disabled></td></tr>"
+                        row["product_code"] +
+                        '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value=' +
+                        row["quantity_purchased"] +
+                        " disabled></td></tr>"
                 );
             });
         },
@@ -557,44 +559,44 @@ function viewPayments(id) {
                     `<tr>
                     <td class="text-center">
                         ` +
-                    row["id"] +
-                    `
+                        row["id"] +
+                        `
                     </td>
                     <td class="text-center">
                         ` +
-                    row["date_of_payment"].slice(0, 10) +
-                    `
+                        row["date_of_payment"].slice(0, 10) +
+                        `
                     </td>
                     <td class="text-center">
                         ` +
-                    row["amount_paid"] +
-                    `
+                        row["amount_paid"] +
+                        `
                     </td>
                     <td class="text-center">
                         ` +
-                    row["payment_description"] +
-                    `
+                        row["payment_description"] +
+                        `
                     </td>
                     <td class="text-center">
                         ` +
-                    row["payment_method"] +
-                    `
+                        row["payment_method"] +
+                        `
                     </td>
                     <td class="text-center">
                         <select class="form-select" onchange="updatePayment( ` +
-                    row["id"] +
-                    `, value);">
+                        row["id"] +
+                        `, value);">
                                         <option value="" selected disabled> ` +
-                    row["payment_status"] +
-                    ` </option>
+                        row["payment_status"] +
+                        ` </option>
                                         <option value="Pending">Pending</option>
                                         <option value="Completed">Completed</option>
                         </select>
                     </td>
                     <td class="text-center">
                         ` +
-                    row["customer_rep"] +
-                    `
+                        row["customer_rep"] +
+                        `
                     </td>
                 </tr>`
                 );
@@ -696,22 +698,22 @@ function enableAddtoProduct() {
     document.getElementById("btnAddProduct").disabled = false;
 }
 
-function minusStocks(arr, materialsInComponents){
+function minusStocks(arr, materialsInComponents) {
     var products = [];
     var qty = [];
-    arr.forEach(element => {
-        products.push( element[2]);
-        qty.push( element[0]);
+    arr.forEach((element) => {
+        products.push(element[2]);
+        qty.push(element[0]);
     });
-    materialsInComponents.forEach(element => {
-        products.push( element['item_code']);
-        qty.push( element['quantity_needed_for_request']);
+    materialsInComponents.forEach((element) => {
+        products.push(element["item_code"]);
+        qty.push(element["quantity_needed_for_request"]);
     });
 
-    data = {}
-    data['products'] = products;
-    data['qty'] = qty;
-    
+    data = {};
+    data["products"] = products;
+    data["qty"] = qty;
+
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr("content"),
@@ -722,7 +724,7 @@ function minusStocks(arr, materialsInComponents){
         url: "/minusStocks",
         data: data,
         success: function (response) {
-            console.log(response)
+            console.log(response);
         },
         error: function (response, error) {
             // alert("Request: " + JSON.stringify(request));

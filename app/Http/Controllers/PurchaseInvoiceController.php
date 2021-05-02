@@ -74,9 +74,14 @@ class PurchaseInvoiceController extends Controller
         $data->payment_method = $form_data['payment_method'];
         $data->payment_description = $description;
         $data->amount_paid = $form_data['amount_paid'];
-        if(isset($form_data['account_no']) && isset($form_data['cheque_no'])) {
+        if(
+            isset($form_data['account_no']) && isset($form_data['cheque_no'])
+            && isset($form_data['bank_name']) && isset($form_data['bank_location'])
+        ) {
             $data->account_no = $form_data['account_no'];
             $data->cheque_no = $form_data['cheque_no'];
+            $data->bank_name = $form_data['bank_name'];
+            $data->bank_location = $form_data['bank_location'];
         }
         $data->save();
 
@@ -141,7 +146,7 @@ class PurchaseInvoiceController extends Controller
 
     public function viewCheck($id) {
         $log = PaymentInvoiceLog::find($id);
-        return ['acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no];
+        return ['acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no, 'bank_name' => $log->bank_name, 'branch' => $log->bank_location];
     }
 
     public function updateInvoice()

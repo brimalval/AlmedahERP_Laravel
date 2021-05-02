@@ -74,6 +74,9 @@ class MatRequestController extends Controller
             $matRequest->required_date = request('required_date');
             $matRequest->purpose = request('purpose') ?? 'No description provided.';
             $matRequest->mr_status = request('mr_status');
+            if(request('work_order_no')){
+                $matRequest->work_order_no = request('work_order_no');
+            }
             $matRequest->request_id = "REQ";
             $matRequest->save();
             $matRequest->request_id = $id_copy = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);

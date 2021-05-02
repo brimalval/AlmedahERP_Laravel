@@ -202,6 +202,42 @@ function submitOrder() {
     }
 }
 
+function viewQuotationItems(id) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    $.ajax({
+        type: "GET",
+        url: `/view-sq-items/${id}`,
+        data: id,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            let table = $("#order_itemList tbody");
+            $("#order_itemList tbody tr").remove();
+            let items = response.items;
+            for(let i=0; i<items.length; i++) {
+                let subtotal = parseFloat(items[i].rate) * parseFloat(items[i].quantity_requested);
+                let price_string = numberWithCommas(subtotal.toFixed(2));
+                table.append(
+                    `
+                    <tr>
+                        <td>${items[i].item_code}</td>
+                        <td>${items[i].item.item_name}</td>
+                        <td>${items[i].quantity_requested}</td>
+                        <td>${items[i].rate}</td>
+                        <td>₱ ${price_string}</td>
+                    </tr>
+                    `
+                );
+            }    
+        }
+    });
+
+}
+
 //For permanently changing purchase orders
 //Only works on existing purchase orders
 $("#submitOrder").on('click', submitOrder);
