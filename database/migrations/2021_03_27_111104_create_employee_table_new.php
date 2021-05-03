@@ -33,6 +33,6 @@ class CreateEmployeeTableNew extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_table_new');
+        Schema::dropIfExists('env_employees');
     }
 }

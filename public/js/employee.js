@@ -82,7 +82,7 @@ $("#Click").on("click", function () {
 
 function employeeCreate() {
     $("#create-employee-form").on("submit", function (e) {
-        console.log("burat");
+        console.log("success");
         e.preventDefault();
         $.ajax({
             type: "POST",
