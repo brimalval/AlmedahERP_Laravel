@@ -144,7 +144,10 @@ class SalesOrderController extends Controller
                 
                 $data->sales_status = "With Outstanding Balance";
 
-                $data->installment_type = $form_data['installmentType'];
+                if(isset($form_data['installmentType'])) {
+                    $data->installment_type = $form_data['installmentType'];
+                }
+                
                 $payment_logs->amount_paid = $form_data['saleDownpaymentCost'];
 
                 $payment_logs->payment_description = "Downpayment";
