@@ -17,12 +17,9 @@ class Employee extends Authenticatable
         'last_name',
         'first_name',
         'position',
-        'profile_picture',
         'gender',
         'contact_number',
         'email',
-        'password',
-        'active_status',
     ];
     
     protected $hidden = [
