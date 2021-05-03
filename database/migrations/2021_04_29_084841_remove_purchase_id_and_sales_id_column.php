@@ -14,11 +14,15 @@ class RemovePurchaseIdAndSalesIdColumn extends Migration
      */
     public function up()
     {
+        if(Schema::hasColumn('work_order', 'work_order_no')) {
+            Schema::table('work_order', function(Blueprint $table) {
+                $table->dropColumn('work_order_no');
+            });
+        }
         Schema::table('work_order', function(Blueprint $table) {
             $table->dropForeign(['purchase_id']);
             $table->dropColumn('purchase_id');
-            $table->bigInteger('work_order_no')->unsigned()->change();
-            $table->primary('work_order_no')->change();
+            $table->bigIncrements('work_order_no');
             $table->string('mat_ordered_id')->nullable();
             $table->foreign('mat_ordered_id')->references('mat_ordered_id')->on('materials_ordered')->change();
          });
