@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateEmployeeTableNew extends Migration
@@ -13,6 +14,8 @@ class CreateEmployeeTableNew extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('jobs_scheduling');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('env_employees');
         Schema::create('env_employees', function (Blueprint $table) {
             $table->string('employee_id')->unique();
@@ -24,6 +27,7 @@ class CreateEmployeeTableNew extends Migration
             $table->string('email');
             $table->timestamps();
         });
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     /**

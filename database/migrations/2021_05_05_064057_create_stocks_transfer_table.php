@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStockTransferTable extends Migration
+class CreateStocksTransferTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,6 +13,7 @@ class CreateStockTransferTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('stock_transfer');
         Schema::create('stock_transfer', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tracking_id')->constrained('stock_moves');
