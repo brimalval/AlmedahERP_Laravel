@@ -561,3 +561,35 @@ function loadAddress() {
     $('#contentAddress').load('/address');
   });
 }
+
+
+function loadBOM() {
+  $(document).ready(function () {
+    $('#contentBom').load('/newbom');
+  });
+}
+function loadBOMtable() {
+  $(document).ready(function () {
+    $('#contentBom').load('/bom');
+  });
+}
+function loadmachineinfo() {
+  $(document).ready(function () {
+    $('#contentMachineManual').load('/machinemanualinfo');
+  });
+}
+function loadmachine() {
+  $(document).ready(function () {
+    $('#contentMachineManual').load('/machinemanual');
+  });
+}
+function loadnewRouting() {
+  $(document).ready(function () {
+    $('#contentNewRouting').load('/newrouting');
+  });
+}
+function loadnewworkcenter() {
+  $(document).ready(function () {
+    $('#contentNewRouting').load('/newworkcenter');
+  });
+}

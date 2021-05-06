@@ -513,3 +513,25 @@ Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
+
+/**BOM */
+Route::get('/bom', function () {
+    return view('modules.BOM.bom');
+});
+
+Route::get('/newbom', function () {
+    return view('modules.BOM.bominfo');
+});
+
+Route::get('/machinemanual', function () {
+    return view('modules.BOM.machinemanual');
+});
+Route::get('/machinemanualinfo', function () {
+    return view('modules.BOM.machineinfo');
+});
+Route::get('/newrouting', function () {
+    return view('modules.BOM.newrouting');
+});
+Route::get('/newworkcenter', function () {
+    return view('modules.BOM.newWorkCenter');
+});
