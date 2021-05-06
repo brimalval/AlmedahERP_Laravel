@@ -42,7 +42,7 @@
             <th>Purchase Receipt ID</th>
             <th>Date Created</th>
             <th>Purchase ID</th>
-            <th>Item List Received</th>
+            <th>Pending Items</th>
             <th>Grand Total</th>
             <th>Status</th>
         </tr>

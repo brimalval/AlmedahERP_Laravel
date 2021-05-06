@@ -17,7 +17,7 @@
                         <th>Component Name</th>
                         <th>Image</th>
                         <th>Description</th>
-                        <th>Item Code</th>
+                        <th>Raw Materials</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,9 +25,9 @@
                         <tr id="<?=$row["id"]?>">
                             <td class="text-black-50"><?=$row["component_code"]?></td>
                             <td class="text-black-50"><?=$row["component_name"]?></td>
-                            <td class="text-black-50"><a href="">View</a></td>
+                            <td class="text-black-50"><a class="btn btn-primary btn-sm" href="">View</a></td>
                             <td class="text-black-50"><?=$row["component_description"]?></td>
-                            <td class="text-black-50"><?=$row["item_code"]?></td>
+                            <td class="text-black-50"><button class="btn btn-primary btn-sm" onclick='showRawMaterials(<?=$row["item_code"]?>)'>View</button></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -44,9 +44,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add new component</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -70,9 +67,15 @@
                             <label class="text-nowrap align-middle">
                                 Item Code
                             </label>
-                            <input type="text" class="form-input form-control sellable" id="componentItemCode"
-                                name="item_code">
-                                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addRowNewComponent()">Add Item</button>
+                            <input list="raw_materials" class="form-input form-control" name="item_code" id="componentItemCode" autocomplete="off">
+                            <datalist id="raw_materials">
+                            @foreach ($raw_materials as $row)
+                                <option value="{{$row->item_code}}">{{$row->item_name}} </option>
+                            @endforeach
+                            </datalist> 
+                            {{-- <input type="text" class="form-input form-control sellable" id="componentItemCode"
+                                name="item_code"> --}}
+                            <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addRowNewComponent()">Add Item</button>
                         </div>
                         <div class="col">
                             <label for="" class="text-nowrap align-middle">Image</label><br>
@@ -90,7 +93,7 @@
                         <table id="newComponentTable" class="table table-striped table-bordered hover">
                             <thead>
                                 <th class="center"><input type="checkbox" name="" id=""></th>
-                                <th>Raw Materials Name</th>
+                                <th>Raw Material Name</th>
                                 <th>Qty</th>
                                 <th>Action</th>
                             </thead>
@@ -98,26 +101,56 @@
 
                             </tbody>
                         </table>
+                        <div id="noItems">
+
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" onclick="$('#newComponentModal').modal('toggle')">Close</button>
                     <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
+<div class="modal fade" id="rawMaterials">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Raw Materials</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row mt-2 m-1 d-flex justify-content-center">
+                        <table id="newComponentTable" class="table table-striped table-bordered hover">
+                            <thead>
+                                <th>Raw Material Name</th>
+                                <th>Item Code</th>
+                                <th>Qty</th>
+                            </thead>
+                            <tbody id="rawMatsShow">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="$('#rawMaterials').modal('toggle')">Close</button>
+                </div>
+            </div>
+        </div>
+</div>
 <!-- End of Modal -->
 <script>
     let i = 1;
     let raw_materials = [];
+    ifEmpty();
     function addRowNewComponent() {
         let include = false;
         let item_code = $('#componentItemCode').val();
         var tableBody = $("#rawMats");
         console.log(item_code);
-        console.log(raw_materials);
         if(raw_materials){
             raw_materials.forEach(rawMat=>{
                 console.log(rawMat['item_code']);
@@ -146,6 +179,7 @@
                     `
                     );
                     raw_materials.push({"item_name":item_name, "item_qty": "", "item_code": item_code});
+                    ifEmpty();
                     $("#"+item_name).change(function(){
                         let material = raw_materials.find(material=>material.item_name==item_name);
                         console.log(material);
@@ -161,6 +195,32 @@
         }
     }
 
+    function ifEmpty(){
+        if(raw_materials.length == 0){
+            $("#noItems").html('<p>There are no items yet</p>')
+        }else{
+            $("#noItems").html('')
+        }
+    }
+
+    function showRawMaterials(item_code){
+        $("#rawMaterials").modal('toggle');
+        console.log(item_code);
+        var tableBody = $("#rawMatsShow");
+        item_code.forEach(el => {
+            tableBody.append(
+            `
+                <tr class="center">
+                    <td><p>`+el.item_name+`</p></td>
+                    <td><p>`+el.item_code+`</p></td>
+                    <td><p>`+el.item_qty+`</p></td>
+                   
+                </tr>
+            `
+            );
+        });
+    }
+
     function removeRow(item_name){
         var td = event.target.parentNode; 
         var tr = td.parentNode; // the row to be removed
@@ -168,6 +228,7 @@
         raw_materials = raw_materials.filter(rawMat=>
             rawMat['item_name'] == item_name
         );
+        ifEmpty();
         console.log(raw_materials);
     }
     
@@ -203,5 +264,6 @@
     $(document).ready(function() {
         $('#componentTable').DataTable();
     });
+
 
 </script>

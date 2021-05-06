@@ -18,8 +18,10 @@ class ComponentController extends Controller
     public function index()
     {
         $components = Component::get();
+        $raw_materials = ManufacturingMaterials::get();
         return view('modules.manufacturing.component', [
             'components' => $components,
+            'raw_materials' => $raw_materials,
         ]);
     }
 
