@@ -202,7 +202,7 @@
                                                         Select an Option
                                                     </option>
                                                     @foreach ($products as $row)
-                                                        <option value="{{ $row->product_code }}">
+                                                        <option value="{{ $row->product_code }}" data-price = "{{ $row->sales_price_wt }}" data-stock = "{{ $row->stock_unit }}">
                                                             {{ $row->product_code }}</option>
                                                     @endforeach
                                                 </select>
@@ -233,7 +233,9 @@
                                             <tr class="text-muted">
                                               <td></td>
                                               <td class="font-weight-bold text-center">Product Code</td>
-                                              <td class="font-weight-bold text-center">Quantity Purchased</td>
+                                              <td class="font-weight-bold text-center">Quantity to Purchase</td>
+                                              <td class="font-weight-bold text-center">Stock </td>
+                                              <td class="font-weight-bold text-center">Price </td>
                                               <td class="font-weight-bold text-center">Actions</td>
                                             </tr>
                                           </thead>
@@ -242,7 +244,7 @@
                                           </tbody>
                                           <tfoot>
                                             <tr>
-                                              <td colspan="4">
+                                              <td colspan="6">
                                                 <label class="text-nowrap align-middle">
                                                     Cost Price
                                                 </label>
@@ -849,6 +851,7 @@
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
+                //@TODO
                 document.getElementById('closeSaleOrderModal').click();
                 if (mat_insufficient) {
                         // CREATE MATERIAL REQUEST

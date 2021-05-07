@@ -216,12 +216,20 @@ function contains(names, arr) {
 //Adds product to array
 function addToTable() {
     currentProduct = document.getElementById("saleProductCode").value;
+    currentProductPrice = document.getElementById("saleProductCode");
+    currentProductPrice = $('option:selected', currentProductPrice).attr('data-price');
+    currentProductStock = document.getElementById("saleProductCode");
+    currentProductStock = $('option:selected', currentProductStock).attr('data-stock');
+
     if (!contains(currentProduct, currentCart)) {
         currentCart.push([currentProduct, 0]);
         $("#ProductsTable").append(
-            '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
+            `<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ` +
                 currentProduct +
-                '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
+            `</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td>
+            <td class="text-center">` + currentProductPrice +
+            `<td class="text-center">` + currentProductStock +
+            `<td class="text-center">   <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>`
         );
     }
 }

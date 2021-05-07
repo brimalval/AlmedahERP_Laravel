@@ -511,7 +511,7 @@ class SalesOrderController extends Controller
                     $raw_material->save();
                 }
             } catch (\Throwable $th) {
-                //Should just end when minusing from components;
+                //Should just end when subtracting from components;
             }
         }
         return "Sucess in MinusStocks";
