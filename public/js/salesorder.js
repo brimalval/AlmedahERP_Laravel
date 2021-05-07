@@ -224,9 +224,9 @@ function addToTable() {
     if (!contains(currentProduct, currentCart)) {
         currentCart.push([currentProduct, 0]);
         $("#ProductsTable").append(
-            `<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ` +
-                currentProduct +
-            `</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td>
+            `<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ` 
+            + currentProduct +
+            `</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control text-center" value="0" onchange="changeQuantity(this)"></td>
             <td class="text-center">` + currentProductPrice +
             `<td class="text-center">` + currentProductStock +
             `<td class="text-center">   <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>`

@@ -58,20 +58,20 @@ class SalesOrderController extends Controller
        
             
             'customer_id' => 'nullable|numeric',
-            'lName' => 'required|regex:/^[\pL\s\-]+$/u',
-            'fName' => 'required|regex:/^[\pL\s\-]+$/u',
-            'branchName' => 'required|regex:/^[\pL\s\-]+$/u',
+            'lName' => 'required',
+            'fName' => 'required',
+            'branchName' => 'required',
             'contactNum' => 'required|alpha_dash',
-            'custAddress' => 'required|regex:/^[\pL\s\-]+$/u',
+            'custAddress' => 'required',
             'custEmail' => 'required|Email',
-            'companyName' => 'required|regex:/^[\pL\s\-]+$/u',
+            'companyName' => 'required',
 
             'account_no' => 'nullable|alpha_dash',
             'cheque_no' => 'nullable|alpha_dash',
-            'account_name' => 'nullable|regex:/^[\pL\s\-]+$/u',
-            'bank_name' => 'nullable|regex:/^[\pL\s\-]+$/u',
-            'branch_location' => 'nullable|regex:/^[\pL\s\-]+$/u',
-            'account_name' => 'nullable|regex:/^[\pL\s\-]+$/u',
+            'account_name' => 'nullable',
+            'bank_name' => 'nullable',
+            'branch_location' => 'nullable',
+            'account_name' => 'nullable',
         ]);
 
         try{
@@ -94,6 +94,16 @@ class SalesOrderController extends Controller
             // Pops the first empty element in the array
             array_shift($converter);
             $cart = $converter;
+
+            //Checks if sale supply method and stock are greater than requested quantity
+            if($form_data['saleSupplyMethod'] == "Produce"){
+                foreach ($cart as $row){      
+                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                    if( $prod->stock_unit < $row[1]){
+                        return "Stock Insufficient";
+                    }
+                }
+            }
 
             
             $component = $request->input("component");
@@ -215,7 +225,7 @@ class SalesOrderController extends Controller
             //         $mr_status = "Draft";
             //     }
             // }
-            
+
             $new_component = array();
             foreach(json_decode($component, true) as $c){
                 array_push($new_component, $c);
@@ -235,6 +245,16 @@ class SalesOrderController extends Controller
                 $order->product_code = $row[0];
                 $order->quantity_purchased = $row[1];
                 $order->save();
+            }
+
+            //Returns Produced if sale supply method is produce and accepted
+            if($form_data['saleSupplyMethod'] == "Produce"){
+                foreach ($cart as $row){      
+                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                    $prod->stock_unit = $prod->stock_unit - $row[1];
+                    $prod->save();
+                }
+                return "Produced";
             }
 
             foreach($new_component as $c){
@@ -340,17 +360,17 @@ class SalesOrderController extends Controller
         $request->validate([
             'view_totalamount' => 'required|numeric|gt:0',
             'view_paymentType' => 'required|alpha_dash',
-            'view_account_no' => 'required|regex:/^[\pL\s\-]+$/u',
+            'view_account_no' => 'required',
             'view_cheque_no' => 'required|alpha_dash',
-            'view_account_name' => 'nullable|regex:/^[\pL\s\-]+$/u',
-            'view_bank_name' => 'nullable|regex:/^[\pL\s\-]+$/u',
-            'view_branch_location' => 'nullable|regex:/^[\pL\s\-]+$/u',
+            'view_account_name' => 'nullable',
+            'view_bank_name' => 'nullable',
+            'view_branch_location' => 'nullable',
        
             
             'view_totalamount' => 'required|numeric|gt:0',
             'view_salePaymentMethod' => 'required|numeric',
             'view_paymentType' => 'required|alpha',
-            'view_customer_rep' => 'required|regex:/^[\pL\s\-]+$/u',
+            'view_customer_rep' => 'required',
             'view_totalamount' => 'required|numeric|gt:0',
         ]);
 
