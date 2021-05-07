@@ -52,31 +52,39 @@
             @csrf --}}
             <div class="row">
             <div class="col-6">
-                  <div class="form-group">
-                    <label for="Item">Item</label>
+                <div class="form-group">
+                  <label for="Type">Item</label>
+                  <select class="form-control" id="hm_select1" onchange = "showForm1();">
+                     <option value="0"></option>
+                     <option value="1">Item 1</option>
+                  </select>
+                </div>   
+             </div>
 
-                    <input type="text" name="Item" id="Item" class="form-control">
-                  </div>
-                </div>
-                <div class="col-6">
+            <div class="col-6"></div>
 
-                </div>
-                <div class="col-6">
+            <div class="col-6">
+            <div id="item_content" style = "display:none"> 
+                
                   <div class="form-group">
                     <label for="Item_name">Item name</label>
 
                     <input type="text" readonly name="Item_name" id="Item_name" class="form-control">
                   </div>
-                </div>
+                
 
-                <div class="col-6">
+                
                   <div class="form-group">
                     <label for="Item_UOM">Item UOM</label>
                     <input type="text" readonly name="Item_UOM" id="Item_UOM" class="form-control">
                   </div>
+               
+
+                </div>
                 </div>
 
-                <div class="col-6">
+            <div class="col-6"></div>
+             <div class="col-6">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="Is_active">
                         <label class="form-check-label" for="Is_active">
@@ -276,8 +284,4 @@
 </div>
 </form>
 </div>
-<script>
-
-
-</script>
 <script src="{{ asset('js/bominfo.js') }}"></script>

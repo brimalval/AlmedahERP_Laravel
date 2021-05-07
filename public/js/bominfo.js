@@ -1,3 +1,14 @@
+
+function showForm1() {
+    var table1 = document.getElementById("hm_select1").value;
+    if (table1 == 1) {
+       document.getElementById("item_content").style.display = 'block';
+   } 
+   if (table1 == 0){
+       document.getElementById("item_content").style.display = 'none';
+   }
+ }
+
 function addRowoperations(){
     if($('#no-data')[0]){
         deleteItemRow($('#no-data').parents('tr'));

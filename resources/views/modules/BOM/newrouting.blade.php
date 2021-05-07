@@ -54,7 +54,7 @@
                       </div>
                     </td>
 
-                    <td class="text-center">ID</td>
+                    <td class="text-center">Seq. ID</td>
                     <td class="text-center">Operation</td>
                     <td class="text-center">WorkCenter</td>
                     <td class="text-center">Description</td>
@@ -173,7 +173,7 @@
                       </div>
                     </td>
 
-                    <td class="text-center">ID</td>
+                    <td class="text-center">Seq. ID</td>
                     <td class="text-center">Operation</td>
                     <td class="text-center">WorkCenter</td>
                     <td class="text-center">Description</td>
