@@ -207,6 +207,7 @@
         $("#rawMaterials").modal('toggle');
         console.log(item_code);
         var tableBody = $("#rawMatsShow");
+        tableBody.empty();
         item_code.forEach(el => {
             tableBody.append(
             `

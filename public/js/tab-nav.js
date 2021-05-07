@@ -164,6 +164,7 @@ function loadWorkOrderInfo(
     workOrderDetails,
     itemName,
     salesOrderId,
+    productCode,
     quantity,
     dates
 ) {
@@ -182,8 +183,13 @@ function loadWorkOrderInfo(
             $("#componentName").text(itemName);
             $("#componentStatus").text(workOrderDetails.work_order_status);
             $("#componentPurchaseID").text(workOrderDetails.purchase_id);
-            $("#plannedStartDate").attr("value", planned_dates[0]);
-            $("#plannedEndDate").attr("value", planned_dates[1]);
+            if (planned_dates) {
+                $("#plannedStartDate").attr("value", planned_dates[0]);
+                $("#plannedEndDate").attr("value", planned_dates[1]);
+            } else {
+                $("#plannedStartDate").attr("value", "N/A");
+                $("#plannedEndDate").attr("value", "N/A");
+            }
             if (workOrderDetails.real_start_date) {
                 $("#actualStartDate").attr(
                     "value",
@@ -191,19 +197,33 @@ function loadWorkOrderInfo(
                 );
             }
             $.ajax({
-                url: "/getRawMaterialsWork/" + itemName + "/" + salesOrderId,
+                url:
+                    "/getRawMaterialsWork/" +
+                    itemName +
+                    "/" +
+                    salesOrderId +
+                    "/" +
+                    productCode,
                 type: "GET",
                 success: function (datas) {
+                    console.log("below are the datas");
                     console.log(datas);
-                    for (let [index, data] of JSON.parse(
+                    for (let [index, rawMat] of JSON.parse(
                         datas["item_code"]
                     ).entries()) {
                         let sequence = index + 1;
-                        let transferred_qty = materials_qty[index];
+                        let transferred_qty = undefined;
+                        let final_mat_qty;
+                        if (materials_qty) {
+                            transferred_qty = materials_qty[index];
+                            final_mat_qty = materials_qty[index];
+                        } else {
+                            final_mat_qty = "Inventory Quantity Applied";
+                        }
                         let required_qty =
                             datas["component_qty"] *
                             datas["quantity_purchased"] *
-                            parseInt(data["item_qty"]);
+                            parseInt(rawMat["item_qty"]);
                         if (transferred_qty === undefined) {
                             materials_complete.push(true);
                             transferred_qty = "item stock quantity";
@@ -228,7 +248,7 @@ function loadWorkOrderInfo(
                             </div>
                           </td>
                           <td>` +
-                                data["item_code"] +
+                                rawMat["item_code"] +
                                 `</td>
                           <td>Test` +
                                 index +
@@ -237,7 +257,7 @@ function loadWorkOrderInfo(
                                 required_qty +
                                 `</td>
                           <td>` +
-                                (materials_qty[index] ?? transferred_qty) +
+                                (final_mat_qty ?? transferred_qty) +
                                 `</td>
                           <td style="padding: 1%;" class="h-100">
                             <div class="input-group mb-3">

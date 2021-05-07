@@ -437,7 +437,7 @@ Route::get('/openNewWorkorder', function () {
 Route::get('/loadWorkOrderInfo', function () {
     return view('modules.manufacturing.workordersubModules.workorder_info');
 });
-Route::get('/getRawMaterialsWork/{selected}/{sales_id}', [WorkOrderController::class, 'getRawMaterials']);
+Route::get('/getRawMaterialsWork/{selected}/{sales_id}/{product_code}', [WorkOrderController::class, 'getRawMaterials']);
 Route::get('/startWorkOrder/{work_order_no}', [WorkOrderController::class, 'startWorkOrder']);
 
 /**WAREHOUSE ROUTES */

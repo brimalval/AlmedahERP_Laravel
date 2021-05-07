@@ -47,32 +47,32 @@ class SalesOrderController extends Controller
             return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
         }
         #Comment ko muna yung validation, nahihirapan akong mag-enter ng data para sa testing eh hahah
-        $request->validate([
-            'costPrice' => 'required|numeric|gt:0',
-            'saleDate' => 'required|date',
-            'saleSupplyMethod' => 'required|alpha_dash',
-            'salePaymentMethod' => 'required|alpha_dash',
-            'saleDownpaymentCost' => 'nullable|numeric|gt:0',
-            'installmentType' => 'nullable|alpha_dash',
-            'paymentType' => 'nullable|alpha',
+        // $request->validate([
+        //     'costPrice' => 'required|numeric|gt:0',
+        //     'saleDate' => 'required|date',
+        //     'saleSupplyMethod' => 'required|alpha_dash',
+        //     'salePaymentMethod' => 'required|alpha_dash',
+        //     'saleDownpaymentCost' => 'nullable|numeric|gt:0',
+        //     'installmentType' => 'nullable|alpha_dash',
+        //     'paymentType' => 'nullable|alpha',
        
             
-            'customer_id' => 'nullable|numeric',
-            'lName' => 'required|alpha_dash',
-            'fName' => 'required|alpha_dash',
-            'branchName' => 'required|alpha_dash',
-            'contactNum' => 'required|alpha_dash',
-            'custAddress' => 'required|alpha_dash',
-            'custEmail' => 'required|alpha_dash',
-            'companyName' => 'required|alpha_dash',
+        //     'customer_id' => 'nullable|numeric',
+        //     'lName' => 'required|alpha_dash',
+        //     'fName' => 'required|alpha_dash',
+        //     'branchName' => 'required|alpha_dash',
+        //     'contactNum' => 'required|alpha_dash',
+        //     'custAddress' => 'required|alpha_dash',
+        //     'custEmail' => 'required|alpha_dash',
+        //     'companyName' => 'required|alpha_dash',
 
-            'account_no' => 'nullable|alpha_dash',
-            'cheque_no' => 'nullable|alpha_dash',
-            'account_name' => 'nullable|alpha_dash',
-            'bank_name' => 'nullable|alpha_dash',
-            'branch_location' => 'nullable|alpha_dash',
-            'account_name' => 'nullable|alpha',
-        ]);
+        //     'account_no' => 'nullable|alpha_dash',
+        //     'cheque_no' => 'nullable|alpha_dash',
+        //     'account_name' => 'nullable|alpha_dash',
+        //     'bank_name' => 'nullable|alpha_dash',
+        //     'branch_location' => 'nullable|alpha_dash',
+        //     'account_name' => 'nullable|alpha',
+        // ]);
 
         try{
 
@@ -144,7 +144,10 @@ class SalesOrderController extends Controller
                 
                 $data->sales_status = "With Outstanding Balance";
 
-                $data->installment_type = $form_data['installmentType'];
+                if(isset($form_data['installmentType'])) {
+                    $data->installment_type = $form_data['installmentType'];
+                }
+                
                 $payment_logs->amount_paid = $form_data['saleDownpaymentCost'];
 
                 $payment_logs->payment_description = "Downpayment";
@@ -232,6 +235,18 @@ class SalesOrderController extends Controller
                 $order->product_code = $row[0];
                 $order->quantity_purchased = $row[1];
                 $order->save();
+            }
+
+            foreach ($cart as $row){ 
+                $work_order = new WorkOrder();
+                $work_order->mat_ordered_id = null;
+                $work_order->sales_id = $data->id;
+                $work_order->planned_start_date = null;
+                $work_order->planned_end_date = null;
+                $work_order->real_start_date = null;
+                $work_order->real_end_date = null;
+                $work_order->work_order_status = "Not Started";
+                $work_order->save();
             }
 
             foreach($new_component as $c){

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ManufacturingProducts;
+use App\Models\ManufacturingMaterials;
 use App\Models\WorkOrder;
 use App\Models\Component;
 use App\Models\ordered_products;
@@ -49,38 +50,68 @@ class WorkOrderController extends Controller
                 array_push($quantity, $items_qty);
 
             }
-            $ordered_product = ordered_products::where('sales_id', $sales_ids[$p])->first();
-            $product_code = $ordered_product->product_code;
-            array_push($items, $product_code);
-            $product = ManufacturingProducts::where('product_code', $product_code)->first();
-            $prod_components = $product->components;
-            $components_list = json_decode($prod_components, true);
-            foreach($components_list as $i){
-                $component = Component::where('id', $i['component_id'])->first();
-                array_push($components, $component->component_code);
+            $ordered_product = ordered_products::where('sales_id', $sales_ids[$p])->get();
+            $status = $work_order->work_order_status;
+            foreach($ordered_product as $o ){
+                $product_code = $o->product_code;
+                array_push($items, $product_code);
+                $product = ManufacturingProducts::where('product_code', $product_code)->first();
+                $prod_components = $product->components;
+                $components_list = json_decode($prod_components, true);
+                foreach($components_list as $i){
+                    $component = Component::where('id', $i['component_id'])->first();
+                    array_push($components, array('component_code'=>$component->component_code, 'status'=>$status, 'type'=>'item'));
+                    array_push($items, $product_code);
+                }
+                array_push($components, array('component_code'=>$product->product_code, 'status'=>$status, 'type'=>'item'));
             }
         }
         return view('modules.manufacturing.workorder', ['work_orders' => $work_orders, 'components' => $components, 'items' => $items, 'quantity' => $quantity, 'planned_dates' => $planned_dates]);
     }
 
-    function getRawMaterials($selected, $sales_id){
-        $component = Component::where('component_code', $selected)->first();
-        $ordered_product = ordered_products::where('sales_id', $sales_id)->first();
-        $product_code = $ordered_product->product_code;
-        $quantity_purchased = $ordered_product->quantity_purchased;
-        $product = ManufacturingProducts::where('product_code', $product_code)->first();
-        $components = $product->components;
-        $items_list = json_decode($components, true);
-        foreach($items_list as $i){
-            if($i['component_id'] == $component->id){
-                $component_qty = $i['component_qty'];
+    function getRawMaterials($selected, $sales_id, $product_code){
+        $product = ManufacturingProducts::where('product_code', $selected)->first();
+        if($product){
+            $code = array();
+            $ordered_product = ordered_products::where('sales_id', $sales_id)
+                                                ->where('product_code', '=' ,$product_code)->first();
+            $quantity_purchased = $ordered_product->quantity_purchased;
+
+            $raw_materials = $product->materials;
+            $raw_material_list = json_decode($raw_materials, true);
+            foreach($raw_material_list as $i){
+                $raw_mat = ManufacturingMaterials::where('id', $i['material_id'])->first();
+                $component_qty = 1;
+                array_push($code, array("item_code"=>$raw_mat->item_code, "item_qty"=>$i['material_qty']));
             }
-            // $component = Component::where('id', $i['component_id'])->first();
-            // array_push($items, $component->component_code);
+            $components = $product->components;
+            $component_list = json_decode($components, true);
+            foreach($component_list as $c){
+                $component = Component::where('id', $c['component_id'])->first();
+                $component_qty = 1;
+                array_push($code, array("item_code"=>$component->component_code, "item_qty"=>$c['component_qty']));
+            }
+            return response()->json(['item_code' => json_encode($code), 'quantity_purchased' => $quantity_purchased, 
+            'component_qty' => $component_qty]);
+            return response($code);
+        }else{
+            $component = Component::where('component_code', $selected)->first();
+            $code = $component->item_code;
+            $ordered_product = ordered_products::where('sales_id', '=' ,$sales_id)
+                                               ->where('product_code', '=' ,$product_code)->first();
+            $product_code = $ordered_product['product_code'];
+            $quantity_purchased = $ordered_product['quantity_purchased'];
+            $product = ManufacturingProducts::where('product_code', $product_code)->first();
+            $components = $product->components;
+            $items_list = json_decode($components, true);
+            foreach($items_list as $i){
+                if($i['component_id'] == $component->id){
+                    $component_qty = $i['component_qty'];
+                }
+            }
+            return response()->json(['item_code' => $code, 'quantity_purchased' => $quantity_purchased, 
+            'component_qty' => $component_qty]);
         }
-        // return response($component->item_code);
-        return response()->json(['item_code' => $component->item_code, 'quantity_purchased' => $quantity_purchased, 
-        'component_qty' => $component_qty]);
     }
 
     function startWorkOrder($work_order_no){

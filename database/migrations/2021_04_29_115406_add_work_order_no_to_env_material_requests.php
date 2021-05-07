@@ -14,7 +14,7 @@ class AddWorkOrderNoToEnvMaterialRequests extends Migration
     public function up()
     {
         Schema::table('env_material_requests', function (Blueprint $table) {
-            $table->bigInteger('work_order_no')->nullable()->unsigned();
+            $table->bigInteger('work_order_no')->unsigned()->nullable();
             $table->foreign('work_order_no')->references('work_order_no')->on('work_order');
         });
     }
@@ -27,6 +27,7 @@ class AddWorkOrderNoToEnvMaterialRequests extends Migration
     public function down()
     {
         Schema::table('env_material_requests', function (Blueprint $table) {
+            $table->dropForeign(['work_order_no']);
             $table->dropColumn('work_order_no');
         });
     }

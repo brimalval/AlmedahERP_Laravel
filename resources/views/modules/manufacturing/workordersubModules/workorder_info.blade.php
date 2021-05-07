@@ -235,6 +235,25 @@
 		</div>
 	</div>
 	<div id="work-dashboard" class="card collapse show p-3">
+		<h5 class="text-muted">ADDITIONAL DETAILS</h5>
+		<div class="row">
+			<div class="col-6">
+				<label for="" class="text-muted">For Product?</label>
+				<input type="text" class="form-control" disabled="true" id="forProduct">
+			</div>
+			<div class="col-6">
+				<label for="" class="text-muted">Quantity Purchased</label>
+				<input type="text" class="form-control" disabled="true" id="quantityPurchased">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-6">
+				<label for="" class="text-muted">BOM number</label>
+				<input type="text" class="form-control" disabled="true" id="bomNumber">
+			</div>
+		</div>
+	</div>
+	<div id="work-dashboard" class="card collapse show p-3">
 		<h5 class="text-muted">TIME</h5>
 		<div class="row">
 			<div class="col-6">
@@ -325,8 +344,6 @@
             error: function (request, error) {},
         });
 	}
-
-	console.log($("#requiredItems"));
 	// $('#startWorkOrder').on('click', function(){
 	// 	$.ajax({
     //         url: "/startWorkOrder",
