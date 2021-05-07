@@ -81,7 +81,7 @@
                         </div>
                     </td>
                     <td class="text-black-50">{{ $work_order->work_order_no }}</td>
-                    {{-- @if($work_order->mat_ordered_id) --}}<td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $components[$index]["component_code"] }}`, `{{ $work_order->sales_id }}`, `{{ $items[$index] }}`, `{{ json_encode($quantity[$index] ?? null) }}`, `{{ json_encode($planned_dates[$index] ?? null) }}` )'> {{ $components[$index]["component_code"] }} </a></td>
+                    {{-- @if($work_order->mat_ordered_id) --}}<td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $components[$index]["component_code"] }}`, `{{ $work_order->sales_id }}`, `{{ $items[$index] }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $components[$index]["component_code"] }} </a></td>
                     <td class="text-black-50">{{ $items[$index] }}</td>
                     <td>{{ $work_order->work_order_status }}</td>
                     {{-- @else
@@ -109,7 +109,8 @@
 </div>
 
 <script>
-    function workOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity, dates){
-        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity, dates);
+    function workOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity){
+        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity);
     }
+
 </script>

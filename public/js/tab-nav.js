@@ -165,10 +165,9 @@ function loadWorkOrderInfo(
     itemName,
     salesOrderId,
     productCode,
-    quantity,
-    dates
+    quantity
 ) {
-    let planned_dates = JSON.parse(dates);
+    // let planned_dates = JSON.parse(dates);
     console.log(workOrderDetails);
     $("#requiredItems").html("");
     materials_qty = JSON.parse(quantity);
@@ -180,16 +179,31 @@ function loadWorkOrderInfo(
             $("#startWorkOrder").on("click", function () {
                 startWorkOrder(workOrderDetails["work_order_no"]);
             });
+            $("#plannedStartDate").change(function (event) {
+                event.preventDefault();
+                onDateChange(
+                    workOrderDetails["work_order_no"],
+                    "planned_start_date",
+                    this.value
+                );
+            });
+            $("#plannedEndDate").on("change", function () {
+                onDateChange(
+                    workOrderDetails["work_order_no"],
+                    "planned_end_date",
+                    this.value
+                );
+            });
             $("#componentName").text(itemName);
             $("#componentStatus").text(workOrderDetails.work_order_status);
-            $("#componentPurchaseID").text(workOrderDetails.purchase_id);
-            if (planned_dates) {
-                $("#plannedStartDate").attr("value", planned_dates[0]);
-                $("#plannedEndDate").attr("value", planned_dates[1]);
-            } else {
-                $("#plannedStartDate").attr("value", "N/A");
-                $("#plannedEndDate").attr("value", "N/A");
-            }
+            $("#forProduct").attr("value", productCode);
+            // if (planned_dates) {
+            //     $("#plannedStartDate").attr("value", planned_dates[0]);
+            //     $("#plannedEndDate").attr("value", planned_dates[1]);
+            // } else {
+            //     $("#plannedStartDate").attr("value", "N/A");
+            //     $("#plannedEndDate").attr("value", "N/A");
+            // }
             if (workOrderDetails.real_start_date) {
                 $("#actualStartDate").attr(
                     "value",
@@ -206,6 +220,10 @@ function loadWorkOrderInfo(
                     productCode,
                 type: "GET",
                 success: function (datas) {
+                    $("#quantityPurchased").attr(
+                        "value",
+                        datas["quantity_purchased"]
+                    );
                     console.log("below are the datas");
                     console.log(datas);
                     for (let [index, rawMat] of JSON.parse(
@@ -218,7 +236,7 @@ function loadWorkOrderInfo(
                             transferred_qty = materials_qty[index];
                             final_mat_qty = materials_qty[index];
                         } else {
-                            final_mat_qty = "Inventory Quantity Applied";
+                            final_mat_qty = datas["rm_quantity"][index];
                         }
                         let required_qty =
                             datas["component_qty"] *

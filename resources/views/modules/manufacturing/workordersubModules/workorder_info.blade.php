@@ -235,7 +235,6 @@
 		</div>
 	</div>
 	<div id="work-dashboard" class="card collapse show p-3">
-		<h5 class="text-muted">ADDITIONAL DETAILS</h5>
 		<div class="row">
 			<div class="col-6">
 				<label for="" class="text-muted">For Product?</label>
@@ -258,7 +257,7 @@
 		<div class="row">
 			<div class="col-6">
 				<label for="" class="text-muted">Planned Start Date</label>
-				<input type="text" class="form-control" disabled="true" id="plannedStartDate">
+				<input type="date" class="form-control" id="plannedStartDate">
 			</div>
 			<div class="col-6">
 				<label for="" class="text-muted">Actual Start Date</label>
@@ -268,7 +267,7 @@
 		<div class="row">
 			<div class="col-6">
 				<label for="" class="text-muted">Planned End Date</label>
-				<input type="text" class="form-control" disabled="true" id="plannedEndDate">
+				<input type="date" class="form-control" id="plannedEndDate">
 			</div>
 			<div class="col-6">
 				<label for="" class="text-muted">Actual End Date</label>
@@ -340,6 +339,17 @@
             success: function (data) {
                 $("#componentStatus").text(data['work_order_status']);
 				$("#actualStartDate").attr('value', data['real_start_date']);
+            },
+            error: function (request, error) {},
+        });
+	}
+
+	function onDateChange(workOrderId, plannedDate, date){
+		$.ajax({
+            url: "/onDateChange/"+workOrderId+"/"+plannedDate+"/"+date,
+            type: "get",
+            success: function (data) {
+                console.log(data);
             },
             error: function (request, error) {},
         });

@@ -439,6 +439,7 @@ Route::get('/loadWorkOrderInfo', function () {
 });
 Route::get('/getRawMaterialsWork/{selected}/{sales_id}/{product_code}', [WorkOrderController::class, 'getRawMaterials']);
 Route::get('/startWorkOrder/{work_order_no}', [WorkOrderController::class, 'startWorkOrder']);
+Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

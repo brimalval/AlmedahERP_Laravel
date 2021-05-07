@@ -25,17 +25,17 @@ class WorkOrderController extends Controller
         $components = array();
         $items = array();
         $quantity = array(); 
-        $planned_dates = array();
+        // $planned_dates = array();
         $items_qty = array();
         for ($p = 0; $p < count($sales_ids); $p++) {
             $work_order = WorkOrder::where('sales_id', $sales_ids[$p])->first();
-            $work_order_no = $work_order->work_order_no;
-            $material_request = MaterialRequest::where('work_order_no', $work_order_no)->first();
-            if($material_request){
-                $planned_start = $material_request->request_date->toDateString();
-                $planned_end = $material_request->required_date->toDateString();
-                array_push($planned_dates, [$planned_start, $planned_end]);
-            }
+            // $work_order_no = $work_order->work_order_no;
+            // $material_request = MaterialRequest::where('work_order_no', $work_order_no)->first();
+            // if($material_request){
+            //     $planned_start = $material_request->request_date->toDateString();
+            //     $planned_end = $material_request->required_date->toDateString();
+            //     array_push($planned_dates, [$planned_start, $planned_end]);
+            // }
             if($work_order->mat_ordered_id){
                 $mat_ordered_id = $work_order->mat_ordered_id;
                 $material_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
@@ -66,7 +66,7 @@ class WorkOrderController extends Controller
                 array_push($components, array('component_code'=>$product->product_code, 'status'=>$status, 'type'=>'item'));
             }
         }
-        return view('modules.manufacturing.workorder', ['work_orders' => $work_orders, 'components' => $components, 'items' => $items, 'quantity' => $quantity, 'planned_dates' => $planned_dates]);
+        return view('modules.manufacturing.workorder', ['work_orders' => $work_orders, 'components' => $components, 'items' => $items, 'quantity' => $quantity]);
     }
 
     function getRawMaterials($selected, $sales_id, $product_code){
@@ -79,6 +79,7 @@ class WorkOrderController extends Controller
 
             $raw_materials = $product->materials;
             $raw_material_list = json_decode($raw_materials, true);
+            // SAVES RAW MATERIALS OF PRODUCT TO $CODE VARIABLE
             foreach($raw_material_list as $i){
                 $raw_mat = ManufacturingMaterials::where('id', $i['material_id'])->first();
                 $component_qty = 1;
@@ -86,6 +87,7 @@ class WorkOrderController extends Controller
             }
             $components = $product->components;
             $component_list = json_decode($components, true);
+            // SAVES COMPONENT OF PRODUCT TO $CODE VARIABLE
             foreach($component_list as $c){
                 $component = Component::where('id', $c['component_id'])->first();
                 $component_qty = 1;
@@ -93,10 +95,16 @@ class WorkOrderController extends Controller
             }
             return response()->json(['item_code' => json_encode($code), 'quantity_purchased' => $quantity_purchased, 
             'component_qty' => $component_qty]);
-            return response($code);
         }else{
+            $rm_quantity_array = array();
             $component = Component::where('component_code', $selected)->first();
             $code = $component->item_code;
+            $decoded_items = json_decode($code, true);
+            foreach($decoded_items as $d){
+                $raw_mat = ManufacturingMaterials::where('item_code', $d['item_code'])->first();
+                $rm_quantity = $raw_mat->rm_quantity;
+                array_push($rm_quantity_array, $rm_quantity);
+            }
             $ordered_product = ordered_products::where('sales_id', '=' ,$sales_id)
                                                ->where('product_code', '=' ,$product_code)->first();
             $product_code = $ordered_product['product_code'];
@@ -110,8 +118,16 @@ class WorkOrderController extends Controller
                 }
             }
             return response()->json(['item_code' => $code, 'quantity_purchased' => $quantity_purchased, 
-            'component_qty' => $component_qty]);
+            'component_qty' => $component_qty, 'rm_quantity' => $rm_quantity_array]);
         }
+    }
+
+    function onDateChange($work_order_no, $planned_date, $date){
+        $work_order = WorkOrder::where('work_order_no', $work_order_no)->update([
+            $planned_date => $date,
+        ]);
+        $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+        return response($work_order);
     }
 
     function startWorkOrder($work_order_no){
