@@ -51,19 +51,28 @@
           {{-- <form id="contactForm" name="contact" role="form">
             @csrf --}}
             <div class="row">
+            <div class="col-6">
+                  <div class="form-group">
+                    <label for="Item">Item</label>
 
+                    <input type="text" name="Item" id="Item" class="form-control">
+                  </div>
+                </div>
+                <div class="col-6">
+
+                </div>
                 <div class="col-6">
                   <div class="form-group">
                     <label for="Item_name">Item name</label>
 
-                    <input type="text" name="Item_name" id="Item_name" class="form-control">
+                    <input type="text" readonly name="Item_name" id="Item_name" class="form-control">
                   </div>
                 </div>
 
                 <div class="col-6">
                   <div class="form-group">
                     <label for="Item_UOM">Item UOM</label>
-                    <input type="text" name="Item_UOM" id="Item_UOM" class="form-control">
+                    <input type="text" readonly name="Item_UOM" id="Item_UOM" class="form-control">
                   </div>
                 </div>
 
