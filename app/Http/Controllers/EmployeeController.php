@@ -9,7 +9,10 @@ class EmployeeController extends Controller
 {
     public function index(){
         // $position = Employee::whereNotNull('position')->distinct();
-        return view('modules.hr.employee');
+        $employees = Employee::get();
+        return view('modules.hr.employee', [
+            'employees' => $employees,
+        ]);
     }
     public function store(Request $request)
     {
@@ -24,7 +27,15 @@ class EmployeeController extends Controller
 
         try {
             $form_data = $request->input();
-            $data = \App\Models\Employee::create($form_data);
+            $data = new Employee();
+            $data->employee_id = 'EMP'.rand(1,1000);
+            $data->last_name = $form_data['last_name'];
+            $data->first_name = $form_data['first_name'];
+            $data->position = $form_data['position'];
+            $data->gender = $form_data['gender'];
+            $data->email = $form_data['email'];
+            $data->contact_number = $form_data['contact_number'];
+            $data->save();
             return response($data);
         } catch (Exception $e) {
             return $e;

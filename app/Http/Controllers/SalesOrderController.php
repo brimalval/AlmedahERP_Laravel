@@ -144,7 +144,10 @@ class SalesOrderController extends Controller
                 
                 $data->sales_status = "With Outstanding Balance";
 
-                $data->installment_type = $form_data['installmentType'];
+                if(isset($form_data['installmentType'])) {
+                    $data->installment_type = $form_data['installmentType'];
+                }
+                
                 $payment_logs->amount_paid = $form_data['saleDownpaymentCost'];
 
                 $payment_logs->payment_description = "Downpayment";
@@ -213,13 +216,10 @@ class SalesOrderController extends Controller
             //     }
             // }
             
-            // $new_component = array();
-            // $index = 1;
-            // foreach(json_decode($component, true) as $key => $c){
-            //     if($c[$index] == 'Component'){
-            //         array_push($new_component, $c);
-            //     }
-            // }
+            $new_component = array();
+            foreach(json_decode($component, true) as $c){
+                array_push($new_component, $c);
+            }
  
             foreach ($cart as $row){        
                 // $material_purchased = new MaterialPurchased();
@@ -237,20 +237,20 @@ class SalesOrderController extends Controller
                 $order->save();
             }
 
-            // foreach($new_component as $c){
-            //     $work_order = new WorkOrder();
-            //     $work_order->purchase_id = $material_purchased->purchase_id;
-            //     $work_order->sales_id = $data->id;
-            //     $work_order->planned_start_date = null;
-            //     $work_order->planned_end_date = null;
-            //     $work_order->real_start_date = null;
-            //     $work_order->real_end_date = null;
-            //     $work_order->work_order_status = "Not Started";
-            //     $work_order->save();
-            // }
+            foreach($new_component as $c){
+                $work_order = new WorkOrder();
+                $work_order->mat_ordered_id = null;
+                $work_order->sales_id = $data->id;
+                $work_order->planned_start_date = null;
+                $work_order->planned_end_date = null;
+                $work_order->real_start_date = null;
+                $work_order->real_end_date = null;
+                $work_order->work_order_status = "Not Started";
+                $work_order->save();
+            }
 
             //return "Sucess";
-            return response("Sucess");
+            return response($work_order->id);
 
         }catch(Exception $e){
             return $e;

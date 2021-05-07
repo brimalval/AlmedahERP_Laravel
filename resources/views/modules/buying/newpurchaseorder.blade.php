@@ -58,7 +58,7 @@ $i = 1;
                 </button>
             </div>
             <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                <table id="suppQuotationTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Supplier Quotation ID</th>
@@ -73,7 +73,7 @@ $i = 1;
                                 <td class="text-bold">{{ $quotation->supp_quotation_id }}</td>
                                 <td>{{ $quotation->supplier->company_name }}</td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                        data-toggle="modal" data-target="#npo_itemListView">View</button></td>
+                                        data-toggle="modal" data-target="#npo_itemListView" onclick="viewQuotationItems({{$quotation->id}})">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-dismiss="modal"
                                         onclick="loadQuotation({{ $quotation->id }})">Select</button></td>
@@ -88,6 +88,12 @@ $i = 1;
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#suppQuotationTable").DataTable();
+    });
+</script>
 
 <div class="accordion" id="accordion">
     <div class="card">
@@ -306,8 +312,8 @@ $i = 1;
                             <th>Item Code</th>
                             <th>Item Name</th>
                             <th>Quantity Ordered</th>
-                            <th>Quantity Received</th>
-                            <th>Percentage</th>
+                            <th>Rate</th>
+                            <th>Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>

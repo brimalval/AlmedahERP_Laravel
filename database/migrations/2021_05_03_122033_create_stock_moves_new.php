@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStockMovesTable extends Migration
+class CreateStockMovesNew extends Migration
 {
     /**
      * Run the migrations.
@@ -13,6 +13,7 @@ class CreateStockMovesTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('stock_moves');
         Schema::create('stock_moves', function (Blueprint $table) {
             $table->id();
             $table->string('tracking_id')->unique();
@@ -20,7 +21,8 @@ class CreateStockMovesTable extends Migration
             $table->string('mat_ordered_id');
             $table->foreign('mat_ordered_id')->references('mat_ordered_id')->on('materials_ordered');
             $table->date('move_date');
-            $table->foreignId('employee_id')->constrained('env_employees');
+            $table->string('employee_id');
+            $table->foreign('employee_id')->references('employee_id')->on('env_employees');
             $table->timestamps();
         });
     }
@@ -32,6 +34,6 @@ class CreateStockMovesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock_moves');
+        Schema::dropIfExists('stock_moves_new');
     }
 }
