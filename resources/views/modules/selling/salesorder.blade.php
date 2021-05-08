@@ -969,6 +969,7 @@
         minusStocks = [];
         materialsInComponents= [];
         componentsOnly = [];
+        stockMinusQuantity = [];
         console.log(currentCart);
         $('#ProductsTable tr').remove();
         $(".components tr").remove();

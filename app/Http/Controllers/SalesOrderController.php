@@ -50,7 +50,7 @@ class SalesOrderController extends Controller
         $validator = $request->validate([
             'costPrice' => 'required|numeric|gt:0',
             'saleDate' => 'required|date',
-            'saleSupplyMethod' => 'required|alpha_dash',
+            'saleSupplyMethod' => 'required',
             'salePaymentMethod' => 'required|alpha_dash',
             'saleDownpaymentCost' => 'nullable|numeric|gt:0',
             'installmentType' => 'nullable|alpha_dash',
@@ -245,6 +245,10 @@ class SalesOrderController extends Controller
                 $order->product_code = $row[0];
                 $order->quantity_purchased = $row[1];
                 $order->save();
+
+                $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                $prod->stock_unit = $prod->stock_unit - $row[1];
+                $prod->save();
             }
 
             //Returns Produced if sale supply method is produce and accepted
@@ -269,7 +273,11 @@ class SalesOrderController extends Controller
                 $work_order->save();
             }
 
-            //return "Sucess";
+
+            if(count($component) == 0){
+                return "Sucess";
+            }
+
             return response($work_order->id);
 
         }catch(Exception $e){
