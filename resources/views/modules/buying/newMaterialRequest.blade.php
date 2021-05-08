@@ -7,9 +7,6 @@
     <div class="collapse navbar-collapse" id="responsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown li-bom">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Menu
-          </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="#">Option 1</a></li>
             <li><a class="dropdown-item" href="#">Option 2</a></li>
@@ -27,30 +24,13 @@
   </div>
 </nav>
 
-<div class="card">
-  <div class="card-body ml-auto">
-
-
-    <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Get Items from
-    </a>
-
-    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <a class="dropdown-item" href="#">Bill of Materials</a>
-      <a class="dropdown-item" href="#">Sales Order</a>
-      <a class="dropdown-item" href="#">Product Bundle</a>
-    </div>
-
-  </div>
-</div>
-
 <form action="{{ route('materialrequest.store') }}" method="post" id="mat-req" class="create">
 @csrf
 <div id="accordion">
   <div class="card">
     <div class="card-header" id="headingOne">
       <h5 class="mb-0">
-        <button class="btn btn-link" data-toggle="collapse" data-target="#Dashboard" aria-expanded="true" aria-controls="Dashboard">
+        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#Dashboard" aria-expanded="true" aria-controls="Dashboard">
           Dashboard
         </button>
       </h5>
@@ -129,7 +109,7 @@
   <div class="card">
     <div class="card-header" id="headingTwo">
       <h5 class="mb-0">
-        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#Item" aria-expanded="false" aria-controls="Item">
+        <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#Item" aria-expanded="false" aria-controls="Item">
           More Information
         </button>
       </h5>

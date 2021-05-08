@@ -23,7 +23,7 @@
   @if ($materialRequest->mr_status == "Draft")
   <div class="row">
     <div class="col-1">
-      <form id="mr-submit" action="{{ route('materialrequest.submit', ['materialrequest'=>$materialRequest->id]) }}" method="post">
+      <form data-redirect="{{ route('materialrequest.index') }}" id="mr-submit" action="{{ route('materialrequest.submit', ['materialrequest'=>$materialRequest->id]) }}" method="post">
         @csrf
         <button class="btn btn-primary btn-sm ml-4" role="button">
           Submit
@@ -42,7 +42,7 @@
   <div class="card">
     <div class="card-header" id="headingOne">
       <h5 class="mb-0">
-        <button class="btn btn-link" data-toggle="collapse" data-target="#Dashboard" aria-expanded="true" aria-controls="Dashboard">
+        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#Dashboard" aria-expanded="true" aria-controls="Dashboard">
           Dashboard
         </button>
       </h5>
@@ -161,7 +161,7 @@
   <div class="card">
     <div class="card-header" id="headingTwo">
       <h5 class="mb-0">
-        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#Item" aria-expanded="false" aria-controls="Item">
+        <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#Item" aria-expanded="false" aria-controls="Item">
           More Information
         </button>
       </h5>
@@ -269,5 +269,10 @@
 
 </div>
 </form>
+<script>
+  $('.selectpicker').each(function(){
+    $(this).selectpicker();
+  });
+</script>
 @include('modules.buying.materialReqmodules.selectpickers')
 @include('modules.buying.materialReqmodules.edit_item_modal')

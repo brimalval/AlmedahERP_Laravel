@@ -88,7 +88,7 @@ $('body').off().on('click', '.delete-btn', function(e){
     $(this).parents('tr').remove();
 });
 // If the item code field changes in the item edit form
-$('select.edit-item-code').on('change', function(){
+$(document).on('change','select.edit-item-code',function(){
     let newVal = $(this).val();
     let parentPane = $(this).parents('.tab-pane');
     console.log(newVal);
@@ -106,7 +106,7 @@ $('select.edit-item-code').on('change', function(){
     });
 });
 // If the item name field changes in the item edit form
-$('select.edit-item-name').change(function(){
+$(document).on('change','select.edit-item-name',function(){
     let newVal = $(this).val();
     let parentPane = $(this).parents('.tab-pane');
     parentPane.find('select.edit-item-code').val(newVal);
@@ -127,7 +127,7 @@ $('select.edit-item-name').change(function(){
 $('#mat-req button').each(function(index){
     $(this).attr('type', 'button');
 });
-$('.edit-uom').change(function(){
+$(document).on('change','.edit-uom',function(){
     let parentPane = $(this).parents('.tab-pane');
     let quantity = parentPane.find('.edit-quantity').val();
     let uom_cf = parentPane.find('.edit-stock-uom').data('cf');
@@ -137,14 +137,14 @@ $('.edit-uom').change(function(){
     parentPane.find('.edit-stock-quantity').val(quantity * final_cf);
     parentPane.find('.edit-uom-cf').val(selected_cf / uom_cf);
 });
-$('.edit-quantity').focusout(function(){
+$(document).on('focusout', '.edit-quantity',function(){
     let parentPane = $(this).parents('.tab-pane');
     let uom_cf = parentPane.find('.edit-stock-uom').data('cf');
     let selected_cf = parentPane.find('.edit-uom :selected').data('cf');
     let final_cf = (selected_cf / uom_cf).toFixed(2);
     parentPane.find('.edit-stock-quantity').val($(this).val() * final_cf);
 });
-$('#mat-req').off('submit').on('submit', function(){
+$(document).on('submit','#mat-req', function(){
     let formElement = this;
     let parentPane = $(this).parents('.tab-pane');
     $.ajax({
@@ -181,7 +181,8 @@ $('#mat-req').off('submit').on('submit', function(){
     return false;
 });
 $(document).on('submit','#mr-submit',function(){
-    let parentPane = $(this).parents('.tab-pane');
+    let formElement = this;
+    let redirect = $(this).data('redirect');
     $.ajax({
         type: 'POST',
         url: this.action,
@@ -190,14 +191,7 @@ $(document).on('submit','#mr-submit',function(){
         processData: false,
         cache: false,
         success: function(data){
-            let row = parentPane.find(`#mr-row-${data.materialrequest.id}`);
-            row.children('td.mr-rq-status').text(data.materialrequest.mr_status);
-            row.children('td.mr-rq-status').prepend(
-                `<i class="fa fa-circle" aria-hidden="true" style="color:blue"></i> `
-            );
-            row.find('#edit-mr-button').remove();
-            parentPane.find('#editModal').modal('hide');
-            parentPane.find('#mat-req').remove();
+            loadIntoPage(formElement, redirect);
         },
         error: function(data){
             // REMEMBER TO REPLACE THIS WITH BETTER ERROR INDICATION
@@ -207,7 +201,7 @@ $(document).on('submit','#mr-submit',function(){
     return false;
 });
 
-$('.editItemForm').submit(function(){
+$(document).on('submit', '.editItemForm',function(){
     let id = $(this).data('target');
     let parentPane = $(this).parents('.tab-pane');
     let row = parentPane.find(`.items-tbl tr[data-id="${id}"]`);
