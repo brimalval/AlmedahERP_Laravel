@@ -853,7 +853,7 @@
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
-                if (data == "Insufficient Stock"){
+                if (data == "Stock Insufficient"){
                     $('#notif').text('');
                     $('#notif').html(
                         '<li>' + data + '</li>'
@@ -864,7 +864,6 @@
                     document.getElementById('closeSaleOrderModal').click();
                     loadRefresh();
                 }
-
                 else{
                     document.getElementById('closeSaleOrderModal').click();
                     if (mat_insufficient) {
@@ -909,7 +908,12 @@
                         });
                     }
                     //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
-                    minusStocks(componentsOrder, materialsInComponents);
+                    try {
+                      minusStocks(componentsOrder, materialsInComponents);
+                    }
+                    catch(err) {
+                      console.log("Tried minusstock")
+                    }
                     loadRefresh(); 
                 }
             },

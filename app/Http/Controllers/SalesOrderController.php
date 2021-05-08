@@ -247,7 +247,12 @@ class SalesOrderController extends Controller
                 $order->save();
 
                 $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                $prod->stock_unit = $prod->stock_unit - $row[1];
+                if( $prod->stock_unit - $row[1] > 0){
+                    $prod->stock_unit = $prod->stock_unit - $row[1];
+                }else{
+                    $prod->stock_unit = 0;
+                }
+                
                 $prod->save();
             }
 
@@ -274,11 +279,11 @@ class SalesOrderController extends Controller
             }
 
 
-            if(count($component) == 0){
+            try{
+                return response($work_order->id);
+            }catch  (Exception $e){
                 return "Sucess";
             }
-
-            return response($work_order->id);
 
         }catch(Exception $e){
             return $e;
