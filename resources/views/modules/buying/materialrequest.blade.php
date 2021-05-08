@@ -58,6 +58,9 @@
                         elseif ($mat_request->mr_status == "Submitted") {
                             $color = "blue";
                         }
+                        elseif ($mat_request->mr_status == "Archived") {
+                            $color = "gray";
+                        }
                     ?>
                     <td class="mr-rq-status">
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>

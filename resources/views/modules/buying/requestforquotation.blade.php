@@ -69,6 +69,9 @@
                         elseif ($rfquotation->req_status == "Submitted") {
                             $color = "blue";
                         }
+                        elseif ($rfquotation->req_status == "Archived") {
+                            $color = "gray";
+                        }
                     ?>
                     <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
                     {{ $rfquotation->req_status }}
