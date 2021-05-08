@@ -10,10 +10,6 @@
         <div class="navbar-nav ml-auto">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Menu
-                    </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                         <a class="dropdown-item" href="#">Send SMS</a>
                         <a class="dropdown-item" href="#">Print</a>
@@ -50,23 +46,6 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
 <div id="accordion">
 <br>
   <div class="card">
-  <div class="float-right" id="headingOne">
-      <div class="float-right">
-                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Get Items From
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    <a class="dropdown-item" href="#">1</a>
-                                    <a class="dropdown-item" href="#">2</a>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
-    </div>
     <div class="card-header" id="headingOne">
       <h5 class="mb-0">
         <a href="#" class="btn btn-link" data-toggle="collapse" data-target="#supplier" aria-expanded="true" aria-controls="supplier">

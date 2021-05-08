@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h2 class="navbar-brand tab-list-title">
-        <a href='javascript:onclick=loadIntoPage(this, {{ route('requestforquotation.index') }});'
+        <a href='#' onclick="loadIntoPage(this, '{{ route('requestforquotation.index') }}')"
             class="fas fa-arrow-left back-button"><span></span></a>
         <h2 class="navbar-brand" style="font-size: 35px;">{{ $rfquotation->req_quotation_id ?? _('New Request
             Quotation') }}</h2>
