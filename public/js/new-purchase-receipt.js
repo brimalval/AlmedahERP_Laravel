@@ -19,10 +19,10 @@ function saveReceipt() {
 
     for (let i = 1; i <= $("#itemsToReceive tr").length; i++) {
         received_mats[i] = {
-            item_code: $(`#item_code${i}`).val(),
-            qty_received: $(`#qtyAcc${i}`).val(),
-            rate: $(`#rateAcc${i}`).val(),
-            amount: $(`#amtAcc${i}`).val(),
+            item_code: $(`#item_code${i}`).html(),
+            qty_received: $(`#qtyAcc${i}`).html(),
+            rate: $(`#rateAcc${i}`).html(),
+            amount: $(`#amtAcc${i}`).html(),
         };
     }
 
@@ -45,6 +45,39 @@ function saveReceipt() {
         success: function (response) {
             loadPurchaseReceipt();
         },
+    });
+}
+
+function viewOrderItems(id) {
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": CSRF_TOKEN,
+        },
+    });
+    $.ajax({
+        type: "GET",
+        url: `/view-po-items/${id}`,
+        data: id,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            let table = $("#npr_itemList tbody");
+            $("#npr_itemList tbody tr").remove();
+            let po_items = response.items;
+            for(let i=0; i<po_items.length; i++) {
+                table.append(
+                    `
+                        <tr>
+                            <td class="text-bold">${po_items[i].item.item_code}</td>
+                            <td class="text-bold">${po_items[i].item.item_name}</td>
+                            <td>${po_items[i].qty}</td>
+                            <td>${po_items[i].rate}</td>
+                            <td>${po_items[i].subtotal}</td>
+                        </tr>
+                    `
+                );
+            }
+        }
     });
 }
 
@@ -95,14 +128,14 @@ $("#receiveMaterials").click(function () {
     for (let i = 1; i <= $("#itemsToReceive tr").length; i++) {
         if (
             parseInt($(`#qtyRec${i}`).val()) >
-                parseInt($(`#qtyAcc${i}`).val()) ||
+                parseInt($(`#qtyAcc${i}`).html()) ||
             parseInt($(`#qtyRec${i}`).val()) < 0
         ) {
-            alert(`Quantity for ${$(`#item_code${i}`).val()} is invalid.`);
+            alert(`Quantity for ${$(`#item_code${i}`).html()} is invalid.`);
             return;
         }
         received_mats[i] = {
-            item_code: $(`#item_code${i}`).val(),
+            item_code: $(`#item_code${i}`).html(),
             qty_received: $(`#qtyRec${i}`).val(),
         };
     }
@@ -170,29 +203,19 @@ function loadMaterials(id) {
                     `
                     <tr id="row-${i}">
                         <td class="text-black-50">
-                            <input class="form-control" readonly type="text" id="item_code${i}" value=${
-                        data.ordered_mats[i - 1]["item"].item_code
-                    }>
+                            <span id="item_code${i}">${data.ordered_mats[i - 1]["item"].item_code}</span>
                         </td>
                         <td class="text-black-50">
-                            <input class="form-control" readonly type="text" id="prItemName${i}" value=${
-                        data.ordered_mats[i - 1]["item"].item_name
-                    }>
-                        </td>
-                        <td class="text-black-50">
-                            <input class="form-control" readonly id="qtyAcc${i}" type="number" min="0" value=${
-                        data.ordered_mats[i - 1]["qty"]
-                    } onchange="calcPrice(${i})">
+                            <span id="prItemName${i}">${data.ordered_mats[i - 1]["item"].item_name}</span>
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="rateAcc${i}" type="text" min="0" value=${
-                        data.ordered_mats[i - 1]["rate"]
-                    } onchange="calcPrice(${i})">
+                            <span id="qtyAcc${i}">${data.ordered_mats[i - 1]["qty"]}</span>
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="amtAcc${i}" type="text" min="0" value=${
-                        data.ordered_mats[i - 1]["subtotal"]
-                    }>
+                            <span id="rateAcc${i}">${data.ordered_mats[i - 1]["rate"]}</span>
+                        </td> 
+                        <td class="text-black-50">
+                            <span id="amtAcc${i}">${data.ordered_mats[i - 1]["subtotal"]}</span>
                         </td> 
                     </tr>
                     `
