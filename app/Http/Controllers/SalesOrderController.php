@@ -258,11 +258,6 @@ class SalesOrderController extends Controller
 
             //Returns Produced if sale supply method is produce and accepted
             if($form_data['saleSupplyMethod'] == "Produce"){
-                foreach ($cart as $row){      
-                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                    $prod->stock_unit = $prod->stock_unit - $row[1];
-                    $prod->save();
-                }
                 return "Produced";
             }
 
