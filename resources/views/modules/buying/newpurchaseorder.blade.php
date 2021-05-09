@@ -58,11 +58,11 @@ $i = 1;
                 </button>
             </div>
             <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                <table id="suppQuotationTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Supplier Quotation ID</th>
-                            <th>Supplier ID</th>
+                            <th>Supplier</th>
                             <th>Item List</th>
                             <th></th>
                         </tr>
@@ -71,9 +71,9 @@ $i = 1;
                         @foreach ($supplier_quotations as $quotation)
                             <tr>
                                 <td class="text-bold">{{ $quotation->supp_quotation_id }}</td>
-                                <td>{{ $quotation->supplier_id }}</td>
+                                <td>{{ $quotation->supplier->company_name }}</td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                        data-toggle="modal" data-target="#npr_itemListView">View</button></td>
+                                        data-toggle="modal" data-target="#npo_itemListView" onclick="viewQuotationItems({{$quotation->id}})">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-dismiss="modal"
                                         onclick="loadQuotation({{ $quotation->id }})">Select</button></td>
@@ -89,6 +89,12 @@ $i = 1;
     </div>
 </div>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#suppQuotationTable").DataTable();
+        $("#itemTable").DataTable();
+    });
+</script>
 
 <div class="accordion" id="accordion">
     <div class="card">
@@ -180,21 +186,20 @@ $i = 1;
                     <table class="table border-bottom table-hover table-bordered" id="itemTable">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
-                                <td>
-                                    <div class="form-check">
-                                        <input type="checkbox" id="masterChk" class="form-check-input">
-                                    </div>
-                                </td>
-                                <td>Item Code</td>
-                                <td>Item Name</td>
-                                <td>Reqd By Date</td>
-                                <td>Quantity</td>
-                                <td>Rate</td>
-                                <td>Amount</td>
+                                <th>
+                                    <input type="checkbox" id="masterChk">
+                                </th>
+                                <th>Item Code</th>
+                                <th>Item Name</th>
+                                <th>Reqd By Date</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
                             </tr>
                         </thead>
                         <tbody class="" id="itemTable-content">
-                            <tr id="item-1">
+                            <td id="emptyRow" valign="top" colspan="7" class="dataTables_empty">No data available in table</td>
+                            <!--<tr id="item-1">
                                 <td>
                                     <div class="form-check">
                                         <input type="checkbox" name="item-chk" id="chk1" class="form-check-input">
@@ -223,7 +228,7 @@ $i = 1;
                                     <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00"
                                         readonly>
                                 </td>
-                            </tr>
+                            </tr>-->
                         </tbody>
                         <tfoot>
                             <td colspan="7" rowspan="5">
@@ -246,9 +251,9 @@ $i = 1;
 
                         </style>
                     </table>
-                    <hr>
                     <br>
                     <div class="col-6">
+                        <br>
                         <div class="form-group">
                             <label for="totalphp">Total (PHP)</label>
                             <input type="text" class="form-control" id="totalPrice" value="₱ 0.00" readonly>
@@ -285,6 +290,46 @@ $i = 1;
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="npo_itemListView" tabindex="-1" role="dialog" aria-labelledby="npo_itemListView"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="order_itemList" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>Quantity Ordered</th>
+                            <th>Rate</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--
+                        <tr>
+                            <td class="text-bold">4</td>
+                            <td class="text-bold">Sample Item</td>
+                            <td>300</td>
+                            <td>100</td>
+                            <td>33%</td>
+                        </tr>-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

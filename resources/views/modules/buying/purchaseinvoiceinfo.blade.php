@@ -154,24 +154,27 @@ $i = 1; ?>
                                 @foreach ($received_items as $item)
                                     <tr id="row-<?= $i ?>">
                                         <td class="text-black-50">
-                                            <input class="form-control" readonly type="text" id="item_code<?= $i ?>" value={{ $item['item']->item_code }}>
+                                            <span id="item_code<?= $i ?>">{{ $item['item']->item_code }}</span>
                                         </td>
                                         <td class="text-black-50">
-                                            <input class="form-control" readonly type="text" id="item_name<?= $i ?>" value={{ $item['item']->item_name }}>
+                                            <span id="item_name<?= $i ?>">{{ $item['item']->item_name }}</span>
                                         </td>
                                         <td class="text-black-50">
-                                            <input class="form-control" readonly id="qtyAcc<?= $i ?>" type="number" min="0" value={{ $item['qty'] }}>
+                                            <span id="qtyAcc<?= $i ?>">{{ $item['qty'] }}</span>
                                         </td> 
                                         <td class="text-black-50">
-                                            <input class="form-control" readonly id="rateAcc<?= $i ?>" type="text" min="0" value={{ $item['rate'] }}>
+                                            <span id="rateAcc<?= $i ?>">{{ $item['rate'] }}</span>
                                         </td> 
                                         <td class="text-black-50">
-                                            <input class="form-control" readonly id="amtAcc<?= $i ?>" type="text" min="0" value={{ $item['subtotal'] }}>
+                                            <span id="amtAcc<?= $i ?>">{{ $item['subtotal'] }}</span>
                                         </td> 
                                     </tr>
                                 @endforeach
                             </tbody>
-                            
+                            <tfoot>
+                                <td colspan="5" rowspan="2"> 
+                                </td>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -233,6 +236,16 @@ $i = 1; ?>
                                     Cheque Number
                                 </label>
                                 <input type="number" min="0" required class="form-input form-control" placeholder="Enter Cheque Number..." id="chqNo">
+                                <br>
+                                <label class="text-nowrap align-middle">
+                                    Bank Name
+                                </label>
+                                <input type="text" required class="form-input form-control" placeholder="Enter Bank Name..." id="bankName">
+                                <br>
+                                <label class="text-nowrap align-middle">
+                                    Branch of Bank
+                                </label>
+                                <input type="text" required class="form-input form-control" placeholder="Indicate Branch of Bank..." id="bankBranch">
                             </div>
                         </div>
                         <div class="col-6">
@@ -307,7 +320,7 @@ $i = 1; ?>
                         </tr>
                         @empty
                             <td colspan="6">
-                                <center>NO PAYMENT LOGS CREATED</center>
+                                <center>NO PAYMENT LOGS AVAILABLE</center>
                             </td>
                         @endforelse
                         <!--
@@ -381,44 +394,10 @@ $i = 1; ?>
     </div>
 </div>
 
-<!-- Modal itemlist
-<div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Item ID</th>
-                            <th>Quantity Received</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-bold">4</td>
-                            <td>100</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>-->
-
 <!-- Modal chequeInfo-->
 <div class="modal fade" id="npi_chequeInfo" tabindex="-1" role="dialog" aria-labelledby="npi_chequeInfo"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
@@ -432,12 +411,16 @@ $i = 1; ?>
                         <tr>
                             <th>Account No.</th>
                             <th>Cheque No.</th>
+                            <th>Bank</th>
+                            <th>Bank Location</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td id="chq-accNo" class="text-bold"></td>
                             <td id="chq-num"></td>
+                            <td id="chq-bank"></td>
+                            <td id="chq-branch"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -448,4 +431,12 @@ $i = 1; ?>
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    $("#prTable").DataTable();
+    $('#itemsFromReceipt').DataTable({
+        "searching" : false,
+        "paging" : false,
+        "ordering" : false,
+        "info" : false,
+    });
+</script>

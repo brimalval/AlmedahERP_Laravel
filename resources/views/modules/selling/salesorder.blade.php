@@ -23,7 +23,8 @@
                 </li>
                 <li class="nav-item li-bom">
 
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" id="refreshBtn" onclick="loadRefresh()">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" id="refreshBtn"
+                        onclick="loadRefresh()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
@@ -36,171 +37,187 @@
 </nav>
 
 <table id="salestable" class="table table-striped table-bordered hover" style="width:100%">
-        <thead>
+    <thead>
+        <tr>
+            <th>Sales ID</th>
+            <th> Customer Name </th>
+            <th>Payment Mode </th>
+            <th>Sales Status</th>
+            <th>Payment Balance</th>
+            <th>Creation Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id='salesorder_table'>
+        @foreach ($sales as $row)
             <tr>
-                <th>Sales ID</th>
-                <th> Customer Name </th>
-                <th>Payment Mode </th>
-                <th>Sales Status</th>
-                <th>Payment Balance</th>
-                <th>Creation Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id = 'salesorder_table'>
-            @foreach ($sales as $row)
-            <tr>
-                <td class= "text-bold"> {{$row->id}} </td>
-                <td class= "text-bold"> {{$row->customer_lname}} {{$row->customer_fname}} </td>
-                <td class= "text-bold"> {{$row->payment_mode}}</td>
-                @if ($row->sales_status == "Fully Paid")
-                <td class="text-success"> {{$row->sales_status}} </td>
+                <td class="text-bold"> {{ $row->id }} </td>
+                <td class="text-bold"> {{ $row->customer_lname }} {{ $row->customer_fname }} </td>
+                <td class="text-bold"> {{ $row->payment_mode }}</td>
+                @if ($row->sales_status == 'Fully Paid')
+                    <td class="text-success"> {{ $row->sales_status }} </td>
                 @else
-                <td class="text-danger"> {{$row->sales_status}} </td>
+                    <td class="text-danger"> {{ $row->sales_status }} </td>
                 @endif
-                <td class="text-bold">{{$row->payment_balance}}</td>
-                <td class="text-bold">{{$row->transaction_date}}</td>
-                <td><button type="button" class="btn btn-primary btn-sm" onclick="viewOrderedProducts({{$row->id}})" data-toggle="modal" data-target="#viewOrder">View Orders</button>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="viewPayments({{$row->id}})" data-toggle="modal" data-target="#viewPayment">Payments</button>
+                <td class="text-bold">{{ $row->payment_balance }}</td>
+                <td class="text-bold">{{ $row->transaction_date }}</td>
+                <td><button type="button" class="btn btn-primary btn-sm"
+                        onclick="viewOrderedProducts({{ $row->id }})" data-toggle="modal"
+                        data-target="#viewOrder">View Orders</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="viewPayments({{ $row->id }})"
+                        data-toggle="modal" data-target="#viewPayment">Payments</button>
                 </td>
             </tr>
-            @endforeach
-        </tbody>
+        @endforeach
+    </tbody>
 </table>
 
 
 <!-- Modal -->
-<div class="modal fade" id="newSalePrompt" tabindex="-1" role="dialog" aria-labelledby="newSalePromptTitle" aria-hidden="true">
+<div class="modal fade" id="newSalePrompt" tabindex="-1" role="dialog" aria-labelledby="newSalePromptTitle"
+    aria-hidden="true">
     <!--Sales Order Form-->
     <form method="POST" enctype="multipart/form-data" action="#" id="sales_order_form">
-                @csrf
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">New Order</h5>
-                <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder" value="Submit">
-                        Save
-                    </button>
-                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
-                        data-target="#newSalePrompt" id="closeSaleOrderModal">
-                        Close
-                    </button>
+        @csrf
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">New Order</h5>
+                    <div class="d-flex flex-row-reverse">
+                        <button type="submit" class="btn btn-primary m-1" id="saveSaleOrder" value="Submit">
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
+                            data-target="#newSalePrompt" id="closeSaleOrderModal">
+                            Close
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body p-5">
-                <!--
+                <div class="modal-body p-5">
+                    <!--
                     Back-end note: The contents of 'salesorderform.php' were transferred here instead of using 
                     'include' syntax for easier utilization of Blade template features.
-                --> 
-                <div class="accordion" id="accordion">
-                    <div class="card">
-                        <div class="card-header" id="heading1">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link d-flex w-100" type="button" data-toggle="collapse"
-                                    data-target="#salesOrderCard1" aria-expanded="true">
-                                    CUSTOMER INFORMATION
-                                </button>
-                            </h2>
-                        </div>
-                        <div class="collapse show" id="salesOrderCard1">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <br>
-                                        <label class=" text-nowrap align-middle">
-                                            Customer ID
-                                        </label>
+                -->
+                    <div class="accordion" id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="heading1">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link d-flex w-100" type="button" data-toggle="collapse"
+                                        data-target="#salesOrderCard1" aria-expanded="true">
+                                        CUSTOMER INFORMATION
+                                    </button>
+                                </h2>
+                            </div>
+                            <div class="collapse show" id="salesOrderCard1">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Customer ID
+                                            </label>
 
-                                        <input list="customers" class="form-input form-control" name="customer_id" onchange="customeridselector(value);" autocomplete="off">
-                                        <datalist id="customers">
-                                        @foreach ($customers as $row)
-                                          <option value="{{$row->id}}"> {{$row->customer_lname}} {{$row->customer_fname}} </option>
-                                        @endforeach
-                                          <option value=" + Add new"> 
-                                        </datalist> 
-                                        <br>
-                                        <label class=" text-nowrap align-middle">
-                                            First Name
-                                        </label>
-                                        <input type="text" required class="form-input form-control" id="fName" name ="fName">
-                                        <br>
-                                        <label class=" text-nowrap align-middle">
-                                            Last Name
-                                        </label>
-                                        <input type="text" required class="form-input form-control" id="lName" name="lName">
-                                        <br>
-                                        <label class=" text-nowrap align-middle">
-                                            Contact Number
-                                        </label>
-                                        <input type="text" required class="form-input form-control" id="contactNum" name="contactNum">
-                                    </div>
-                                    <div class="col">
-                                        <br>
-                                        <label class=" text-nowrap align-middle">
-                                            Email Address
-                                        </label>
-                                        <input type="text" required class="form-input form-control" id="custEmail" name="custEmail">
-                                        <br>
-                                        <label class=" text-nowrap align-middle">
-                                            Branch Name
-                                        </label>
-                                        <input type="text" required class="form-input form-control" id="branchName" name="branchName">
-                                        <br>
-                                        <label class=" text-nowrap align-middle">
-                                            Company Name
-                                        </label>
-                                        <input type="text" required class="form-input form-control" id="companyName" name="companyName">
-                                        <br>
-                                        <label>Address</label>
-                                        <input class="form-control" required id="custAddress" name="custAddress">
+                                            <input list="customers" class="form-input form-control" name="customer_id"
+                                                onchange="customeridselector(value);" autocomplete="off">
+                                            <datalist id="customers">
+                                                @foreach ($customers as $row)
+                                                    <option value="{{ $row->id }}"> {{ $row->customer_lname }}
+                                                        {{ $row->customer_fname }} </option>
+                                                @endforeach
+                                                <option value=" + Add new">
+                                            </datalist>
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                First Name
+                                            </label>
+                                            <input type="text" required class="form-input form-control" id="fName"
+                                                name="fName">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Last Name
+                                            </label>
+                                            <input type="text" required class="form-input form-control" id="lName"
+                                                name="lName">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Contact Number
+                                            </label>
+                                            <input type="text" required class="form-input form-control" id="contactNum"
+                                                name="contactNum">
+                                        </div>
+                                        <div class="col">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Email Address
+                                            </label>
+                                            <input type="text" required class="form-input form-control" id="custEmail"
+                                                name="custEmail">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Branch Name
+                                            </label>
+                                            <input type="text" required class="form-input form-control" id="branchName"
+                                                name="branchName">
+                                            <br>
+                                            <label class=" text-nowrap align-middle">
+                                                Company Name
+                                            </label>
+                                            <input type="text" required class="form-input form-control" id="companyName"
+                                                name="companyName">
+                                            <br>
+                                            <label>Address</label>
+                                            <input class="form-control" required id="custAddress" name="custAddress">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse" data-target="#salesOrderCard2" aria-expanded="false">
-                                    SALES
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="salesOrderCard2" class="collapse">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <br>
-                                            <label class="text-nowrap align-middle">
-                                                Sales ID
-                                            </label>
-                                            <input type="text" class="form-input form-control" max="20" id="salesId" disabled placeholder="Automatically Generated">
-                                            <br>
-                                            <label class=" text-nowrap align-middle">
-                                                Product Code
-                                            </label>
-                                            <select class="form-control" id="saleProductCode" required name="saleProductCode" onchange="enableAddtoProduct()">
-                                                <option value="none" selected disabled hidden> 
-                                                    Select an Option 
-                                                </option>
-                                                @foreach ($products as $row)
-                                                    <option value="{{$row->product_code}}">{{$row->product_code}}</option>
-                                                @endforeach
-                                            </select>
-                                            <br>
-                                            
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link d-flex w-100 collapsed" type="button"
+                                        data-toggle="collapse" data-target="#salesOrderCard2" aria-expanded="false">
+                                        SALES
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="salesOrderCard2" class="collapse">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <br>
+                                                <label class="text-nowrap align-middle">
+                                                    Sales ID
+                                                </label>
+                                                <input type="text" class="form-input form-control" max="20" id="salesId"
+                                                    disabled placeholder="Automatically Generated">
+                                                <br>
+                                                <label class=" text-nowrap align-middle">
+                                                    Product Code
+                                                </label>
+                                                <select class="form-control" id="saleProductCode" required
+                                                    name="saleProductCode" onchange="enableAddtoProduct()">
+                                                    <option value="none" selected disabled hidden>
+                                                        Select an Option
+                                                    </option>
+                                                    @foreach ($products as $row)
+                                                        <option value="{{ $row->product_code }}">
+                                                            {{ $row->product_code }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <br>
+
+                                            </div>
                                         </div>
-                                    </div>
-                                    <?php $today = date('Y-m-d'); ?>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <br>
-                                            <label class="text-nowrap align-middle">
-                                                Transaction Date
-                                            </label>
-                                            <input class="form-control" type="date" value=<?=$today?> id="saleDate" name="saleDate" required>
+                                        <?php $today = date('Y-m-d'); ?>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <br>
+                                                <label class="text-nowrap align-middle">
+                                                    Transaction Date
+                                                </label>
+                                                <input class="form-control" type="date" value=<?= $today ?> id="saleDate" name="saleDate" required>
                                             <br>
                                             <label class="text-nowrap align-middle">
                                                 Add to list
@@ -418,8 +435,7 @@
                           </div>
                         </div>
                         
-                        {{--
-                        Uneccessaru
+                        {{-- Uneccessaru
                          <div class="row">
                           <div class="col-12 d-flex justify-content-center">
                             <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newSalePrompt" data-name="Work Order" data-parent="manufacturing">
@@ -762,15 +778,15 @@
     function findRow(value){
         @foreach ($customers as $rows)
             test1={
-                "customer_lname": "{{ $rows->customer_lname}}",
-                "customer_fname": "{{ $rows->customer_fname }}",
-                "contact_number": "{{ $rows->contact_number }}",
-                "email_address": "{{ $rows->email_address }}",
-                "branch_name": "{{ $rows->branch_name}}",
-                "company_name": "{{ $rows->company_name }}",
-                "address": "{{ $rows->address}}"};
-            if ({{$rows->id}} == value){
-                return test1;
+            "customer_lname": "{{ $rows->customer_lname }}",
+            "customer_fname": "{{ $rows->customer_fname }}",
+            "contact_number": "{{ $rows->contact_number }}",
+            "email_address": "{{ $rows->email_address }}",
+            "branch_name": "{{ $rows->branch_name }}",
+            "company_name": "{{ $rows->company_name }}",
+            "address": "{{ $rows->address }}"};
+            if ({{ $rows->id }} == value){
+            return test1;
             }
         @endforeach
     }
@@ -813,8 +829,8 @@
         });
         var formData = new FormData(this);
         console.log(currentCart);
-        formData.append("cart",currentCart );
-        //formData.append("component", JSON.stringify(ultimateComponentTable));
+        formData.append("cart", currentCart);
+        formData.append("component", JSON.stringify(componentsOnly));
         $.ajax({
             type: 'POST',
             url: "/createsalesorder",
@@ -823,50 +839,50 @@
             contentType: false,
             processData: false,
             success: function(data) {
-                console.log(data);
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
                 document.getElementById('closeSaleOrderModal').click();
                 if (mat_insufficient) {
-                    // CREATE MATERIAL REQUEST
-                    console.log("DATA FOR REFERENCE");
-                    console.log(createMatRequestItems);
-                var fd = new FormData();
-                createMatRequestItems.forEach(element => {
-                    fd.append('item_code[]', element.item_code);
-                    fd.append('quantity_requested[]', element.quantity_needed_for_request);
-                    fd.append('procurement_method[]', 'buy');
-                });
-                var requiredDate = new Date();
-                requiredDate.setDate(requiredDate.getDate() + 7);
-                var requiredYear = requiredDate.getFullYear();
-                var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
-                var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
-                var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
-                fd.append('required_date', formattedDate);
-                var currProd = $('#saleProductCode').val();
-                fd.append('purpose', 'Replenishing required materials for ' + currProd);
-                fd.append('mr_status', 'Draft');
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type: 'POST',
-                    url: "/materialrequest",
-                    data: fd, 
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(data){
-                        console.log(data);
-                    },
-                    error: function(data){
+                        // CREATE MATERIAL REQUEST
+                        console.log("DATA FOR REFERENCE");
+                        console.log(createMatRequestItems);
+                    var fd = new FormData();
+                    createMatRequestItems.forEach(element => {
+                        fd.append('item_code[]', element.item_code);
+                        fd.append('quantity_requested[]', element.quantity_needed_for_request);
+                        fd.append('procurement_method[]', 'buy');
+                    });
+                    var requiredDate = new Date();
+                    requiredDate.setDate(requiredDate.getDate() + 7);
+                    var requiredYear = requiredDate.getFullYear();
+                    var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
+                    var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
+                    var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
+                    fd.append('required_date', formattedDate);
+                    var currProd = $('#saleProductCode').val();
+                    fd.append('purpose', 'Replenishing required materials for ' + currProd);
+                    fd.append('mr_status', 'Draft');
+                    fd.append('work_order_no', data);
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: "/materialrequest",
+                        data: fd, 
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(data){
+                            console.log(data);
+                        },
+                        error: function(data){
 
-                    }
-                });
+                        }
+                    });
                 }
                 //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
                 minusStocks(componentsOrder, materialsInComponents);
@@ -887,8 +903,8 @@
     });
     function getCalculatedPrice($name){
         @foreach ($products as $row)
-            if ("{{$row->product_code}}" == $name)
-                return {{$row->sales_price_wt}}
+            if ("{{ $row->product_code }}" == $name)
+            return {{ $row->sales_price_wt }}
         @endforeach
     }
     function loadRefresh(){

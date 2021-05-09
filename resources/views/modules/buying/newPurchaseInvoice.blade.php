@@ -283,6 +283,11 @@ $today = date('Y-m-d');
     </div>
 </div>
 
+<script type="text/javascript">
+    $("#prTable").DataTable();
+    $('#itemsFromReceipt').DataTable();
+</script>
+
 <!-- Modal itemlist
 <div class="modal fade" id="npi_itemListView" tabindex="-1" role="dialog" aria-labelledby="npi_itemListView"
     aria-hidden="true">
@@ -317,7 +322,3 @@ $today = date('Y-m-d');
         </div>
     </div>
 </div>-->
-
-<script type="text/javascript">
-    //$('#itemsFromReceipt').DataTable();
-</script>

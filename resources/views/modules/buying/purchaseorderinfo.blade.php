@@ -58,7 +58,7 @@ $i = 1; ?>
                 </button>
             </div>
             <div class="modal-body">
-                <table id="purchaseReceiptTable" class="table table-striped table-bordered hover" style="width:100%">
+                <table id="suppQuotationTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
                             <th>Supplier Quotation ID</th>
@@ -73,7 +73,7 @@ $i = 1; ?>
                                 <td class="text-bold">{{ $quotation->supp_quotation_id }}</td>
                                 <td>{{ $quotation->supplier_id }}</td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                        data-toggle="modal" data-target="#npr_itemListView">View</button></td>
+                                    data-toggle="modal" data-target="#npo_itemListView" onclick="viewQuotationItems({{$quotation->id}})">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-dismiss="modal"
                                         onclick="loadQuotation({{ $quotation->id }})">Select</button></td>
@@ -178,55 +178,51 @@ $i = 1; ?>
                     </div>
                 </div>
                 <div class="row">
-                    <table class="table border-bottom table-hover table-bordered" id="itemTable">
+                    <table class="table border-bottom table-hover table-bordered" id="itemTable" style="width: 100%;">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
-                                <td>
-                                    <div class="form-check">
-                                        <input type="checkbox" id="masterChk" class="form-check-input" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
-                                    </div>
-                                </td>
-                                <td>Item Code</td>
-                                <td>Item Name</td>
-                                <td>Reqd By Date</td>
-                                <td>Quantity</td>
-                                <td>Rate</td>
-                                <td>Amount</td>
+                                <th>
+                                    <input type="checkbox" id="masterChk" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
+                                </th>
+                                <th>Item Code</th>
+                                <th>Item Name</th>
+                                <th>Reqd By Date</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
                             </tr>
                         </thead>
                         <tbody class="" id="itemTable-content">
                             @foreach ($items_purchased as $item)
                                 <tr id="item-<?= $i ?>">
                                     <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" name="item-chk" id="chk<?= $i ?>" class="form-check-input" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
-                                        </div>
+                                        <input type="checkbox" name="item-chk" id="chk<?= $i ?>" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
                                     </td>
                                     <td class="text-black-50">
-                                        <input class="form-control" type="text" name="item<?= $i ?>" id="item<?= $i ?>" value="{{ $item['item']->item_code }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onkeyup="fieldFunction(<?= $i ?>); onChangeFunction();" @endif>
+                                        <span type="text" name="item<?= $i ?>" id="item<?= $i ?>">{{ $item['item']->item_code }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <input class="form-control" type="text" name="itemName<?= $i ?>" id="itemName<?= $i ?>" value="{{ $item['item']->item_name }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onkeyup="fieldFunction(<?= $i ?>); onChangeFunction();" @endif>
+                                        <span name="itemName<?= $i ?>" id="itemName<?= $i ?>">{{ $item['item']->item_name }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <input class="form-control" type="date" name="date<?= $i ?>" id="date<?= $i ?>" value="{{ $item['req_date'] }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
+                                        <input type="date" name="date<?= $i ?>" id="date<?= $i ?>" value="{{ $item['req_date'] }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
                                     </td>
                                     <td class="text-black-50">
-                                        <input class="form-control" type="number" name="qty<?= $i ?>" id="qty<?= $i ?>" value="{{ $item['qty'] }}" min="1" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="calcPrice(1); onChangeFunction();" @endif>
+                                        <span name="qty<?= $i ?>" id="qty<?= $i ?>">{{ $item['qty'] }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <input class="form-control" type="number" name="rate<?= $i ?>" id="rate<?= $i ?>" value="{{ $item['rate'] }}" min="1" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="calcPrice(1); onChangeFunction();" @endif>
+                                        <span name="rate<?= $i ?>" id="rate<?= $i ?>">{{ $item['rate'] }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <input class="form-control" type="text" name="price<?= $i ?>" id="price<?= $i ?>" value="₱ {{ $item['subtotal'] }}" readonly>
+                                        <span name="price<?= $i ?>" id="price<?= $i ?>">₱ {{ $item['subtotal'] }}</span>
                                     </td>
                                 </tr>
                         <?php ++$i; ?>
                         @endforeach
                         </tbody>
-                        @if ($purchase_order->mp_status === 'Draft')
                         <tfoot>
                             <td colspan="7" rowspan="5">
+                                @if ($purchase_order->mp_status === 'Draft')
                                 <button type="button" id="multBtn" style="background-color: #007bff;">Add
                                     Multiple</button>
                                 <button type="button" id="rowBtn" style="background-color: #007bff;">Add
@@ -250,6 +246,7 @@ $i = 1; ?>
                     <hr>
                     <br>
                     <div class="col-6">
+                        <br>
                         <div class="form-group">
                             <label for="totalphp">Total (PHP)</label>
                             <input type="text" class="form-control" id="totalPrice" value="₱ 0.00" readonly>
@@ -286,6 +283,58 @@ $i = 1; ?>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#suppQuotationTable").DataTable();
+        $("#itemTable").DataTable({
+            "searching" : false,
+            "paging" : false,
+            "ordering" : false,
+            "info" : false,
+        });
+    });
+</script>
+
+<div class="modal fade" id="npo_itemListView" tabindex="-1" role="dialog" aria-labelledby="npo_itemListView"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="order_itemList" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>Quantity Ordered</th>
+                            <th>Rate</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--
+                        <tr>
+                            <td class="text-bold">4</td>
+                            <td class="text-bold">Sample Item</td>
+                            <td>300</td>
+                            <td>100</td>
+                            <td>33%</td>
+                        </tr>-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

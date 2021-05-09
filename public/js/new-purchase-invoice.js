@@ -17,6 +17,8 @@ function viewChequeDetails(id) {
         success: function (response) {
             $('#chq-accNo').html(response.acct_no);
             $('#chq-num').html(response.chq_no);
+            $('#chq-bank').html(response.bank_name);
+            $('#chq-branch').html(response.branch);
         }
     });
 }
@@ -37,16 +39,22 @@ $("#payInvoice").click(function () {
 
     if (!$("#chq").prop('hidden')) {
         var msg = '';
-        if (!$('#acctNo').val() || !$('#chqNo').val()) {
+        if (!$('#acctNo').val() || !$('#chqNo').val() || $("#bankName").val() || $("#bankBranch").val()) {
             if (!$('#acctNo').val())
                 msg = 'account number';
             else if (!$('#chqNo').val())
                 msg = 'cheque number';
+            else if (!$('#bankName').val())
+                msg = 'bank';
+            else if (!$('#bankBranch').val())
+                msg = 'bank location';
             alert(`Please provide the check's ${msg}.`);
             return;
         } else {
             formData.append('account_no', $('#acctNo').val());
             formData.append('cheque_no', $('#chqNo').val());
+            formData.append('bank_name', $("#bankName").val());
+            formData.append('bank_location', $("#bankBranch").val());
         }
     }
 
@@ -172,19 +180,19 @@ function loadMaterials(id) {
                     `
                     <tr id="row-${i}">
                         <td class="text-black-50">
-                            <input class="form-control" readonly type="text" id="item_code${i}" value=${items[i - 1].item.item_code}>
+                            <span id="item_code${i}">${items[i - 1].item.item_code}</span>
                         </td>
                         <td class="text-black-50">
-                            <input class="form-control" readonly type="text" id="item_name<?= $i ?>" value="${items[i-1].item.item_name}">
+                            <span id="item_name${i}">${items[i-1].item.item_name}</span>
                         </td>
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="qtyAcc${i}" type="number" min="0" value=${items[i - 1]['qty']} onchange="calcPrice(${i})">
+                            <span id="qtyAcc${i}">${items[i - 1]['qty']}</span>
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="rateAcc${i}" type="text" min="0" value=${items[i - 1]['rate']} onchange="calcPrice(${i})">
+                            <span id="rateAcc${i}">${items[i - 1]['rate']}</span>
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="amtAcc${i}" type="text" min="0" value=${items[i - 1]['subtotal']}>
+                            <span id="amtAcc${i}">${items[i - 1]['subtotal']}</span>
                         </td> 
                     </tr>
                     `

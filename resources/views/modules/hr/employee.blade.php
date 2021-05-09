@@ -19,12 +19,63 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onClick="loadNewEmployee()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-info btn" data-toggle="modal" data-target="#newEmployee-Modal" style="background-color: #007bff;">New</button>
+                    <button type="button" class="btn btn-info btn" style="background-color: #007bff;" onclick="$('#create-employee-modal').modal('toggle')">New</button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<div class="modal fade" id="create-employee-modal" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">Add Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="create-employee-form" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name='last_name' id="last_name" placeholder="Last Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" name='first_name' id="first_name" placeholder="First Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="position" class="form-label">Position</label>
+                        <input type="text" class="form-control" id="position" name='position' required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select name="gender" id="gender" class="form-control">  
+                            <option value="Male">Male</option>  
+                            <option value="Female">Female</option>  
+                        </select> 
+                    </div>
+                    <input type="hidden" name='profile_picture' id="profile_picture" value="default">  
+                    <div class="mb-3">
+                        <label for="contact_number" class="form-label">Contact number</label>
+                        <input type="tel" class="form-control" minlength="11" maxlength="15" id="contact_number" name='contact_number' placeholder="#### - ### - ####" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name='email' placeholder="example@gmail.com" required>
+                    </div>
+                    <input type="hidden" name='active_status' id="active_status" value="1">   
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="create-employee-form-btn" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="card my-2">
@@ -71,9 +122,43 @@
         <hr>
         <div class="conContent">
 
-            <center>
-                <p>No Employee found</p>
-            </center><br>
+            <div class="employeedata">
+                <table id="employeeTable" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <td>Employee ID</td>
+                            <td>Last Name</td>
+                            <td>First Name</td>
+                            <td>Position</td>
+                            <td>Contact Number</td>
+                            <td>Gender</td>
+                            <td>Email</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($employees as $row)
+                            <tr id="<?=$row["id"]?>">
+                                <td class="text-black-50"><?=$row["employee_id"]?></td>
+                                <td class="text-black-50"><?=$row["last_name"]?></td>
+                                <td class="text-black-50"><?=$row["first_name"]?></td>
+                                <td class="text-black-50"><?=$row["position"]?></td>
+                                <td class="text-black-50"><?=$row["contact_number"]?></td>
+                                <td class="text-black-50"><?=$row["gender"]?></td>
+                                <td class="text-black-50"><?=$row["email_address"]?></td>
+                                <td class="">
+                                    <a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @if(empty($employees))
+                <center>
+                    <p>No Employee found</p>
+                </center><br>
+            
 
 
             <div id="contact">
@@ -231,6 +316,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
 
         </div>
@@ -240,6 +326,23 @@
 
 <style>
     .conContent {
-        padding: 200px;
+        padding: 50px;
     }
 </style>
+
+
+<script>
+    $(document).ready(function() {
+        $('#employeeTable').dataTable({
+            columnDefs: [{
+                orderable: false,
+                targets: 0
+            }],
+            order: [
+                [1, 'asc']
+            ]
+        });
+    });
+    var url = "js/employee.js";
+    $.getScript(url);
+</script>

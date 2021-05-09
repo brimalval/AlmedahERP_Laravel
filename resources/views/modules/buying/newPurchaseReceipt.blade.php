@@ -147,15 +147,15 @@ $today = date('Y-m-d');
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <label class=" text-nowrap align-middle">Items to Receive</label>
+                        <label class="text-nowrap align-middle">Items to Receive</label>
                         <table class="table border-bottom table-hover table-bordered" id="itemsFromOrder">
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
-                                    <td>Item Code</td>
-                                    <td>Item Name</td>
-                                    <td>Quantity Ordered</td>
-                                    <td>Rate</td>
-                                    <td>Amount</td>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Quantity Ordered</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
                                 </tr>
                             </thead>
                             <tbody class="" id="itemsToReceive">
@@ -203,8 +203,6 @@ $today = date('Y-m-d');
             </div>
         </div>
     </div>
-    
-
 </div>
 <!-- Modal Purchase Order-->
 <div class="modal fade" id="npr_purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="npr_purchaseOrderModal"
@@ -233,7 +231,7 @@ $today = date('Y-m-d');
                                 <td class="text-bold">{{ $order->purchase_id }}</td>
                                 <td>{{ $order->purchase_date }}</td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                        data-toggle="modal" data-target="#npr_itemListView">View</button></td>
+                                        data-toggle="modal" data-target="#npr_itemListView" onclick="viewOrderItems({{ $order->id }})">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-dismiss="modal" onclick="loadMaterials({{ $order->id }})">Select</button></td>   
                             </tr>
@@ -247,4 +245,47 @@ $today = date('Y-m-d');
         </div>
     </div>
 </div>
+<div class="modal fade" id="npr_itemListView" tabindex="-1" role="dialog" aria-labelledby="npr_itemListView"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Item List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="npr_itemList" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>Quantity Ordered</th>
+                            <th>Rate</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--
+                        <tr>
+                            <td class="text-bold">4</td>
+                            <td class="text-bold">Sample Item</td>
+                            <td>300</td>
+                            <td>100</td>
+                            <td>33%</td>
+                        </tr>-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#purchaseReceiptTable").DataTable();
+    $("#itemsFromOrder").DataTable();
+</script>
 

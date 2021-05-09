@@ -285,6 +285,11 @@ class SupplierQuotationController extends Controller
         return $this->datatable_sections[$section_name];
     }
 
+    public function get_items($id) {
+        $quotation = SuppliersQuotation::find($id);
+        return ['items' => $quotation->items()];
+    }
+
     /**
      * Change the status of a draft supplierquotation to submitted.
      *
