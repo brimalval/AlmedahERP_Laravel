@@ -278,6 +278,7 @@ Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openO
 Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
 Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
 Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
+Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
 

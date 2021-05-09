@@ -46,6 +46,11 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
+    public function view_items($id) {
+        $order = MaterialPurchased::find($id);
+        return ['items' => $order->itemsPurchased()];
+    }
+
     public function store(Request $request)
     {
         try {
