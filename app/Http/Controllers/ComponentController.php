@@ -88,11 +88,12 @@ class ComponentController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => "Successfully created the component $component->component_code ($component->component_name)!",
+                'component' => $component,
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => "There was a problem upon creating a Component",
             ]);
         }
     }

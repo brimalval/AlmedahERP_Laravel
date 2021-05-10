@@ -197,17 +197,25 @@ function loadWorkOrderInfo(
             $("#componentName").text(itemName);
             $("#componentStatus").text(workOrderDetails.work_order_status);
             $("#forProduct").attr("value", productCode);
-            // if (planned_dates) {
-            //     $("#plannedStartDate").attr("value", planned_dates[0]);
-            //     $("#plannedEndDate").attr("value", planned_dates[1]);
-            // } else {
-            //     $("#plannedStartDate").attr("value", "N/A");
-            //     $("#plannedEndDate").attr("value", "N/A");
-            // }
+            if (workOrderDetails.work_order_status == "Pending") {
+                $("#startWorkOrder").prop("disabled", true);
+            }
             if (workOrderDetails.real_start_date) {
                 $("#actualStartDate").attr(
                     "value",
                     workOrderDetails.real_start_date
+                );
+            }
+            if (workOrderDetails.planned_start_date) {
+                $("#plannedStartDate").attr(
+                    "value",
+                    workOrderDetails.planned_start_date
+                );
+            }
+            if (workOrderDetails.planned_end_date) {
+                $("#plannedEndDate").attr(
+                    "value",
+                    workOrderDetails.planned_end_date
                 );
             }
             $.ajax({
@@ -232,19 +240,25 @@ function loadWorkOrderInfo(
                         let sequence = index + 1;
                         let transferred_qty = undefined;
                         let final_mat_qty;
+                        let required_qty =
+                            datas["component_qty"] *
+                            datas["quantity_purchased"] *
+                            parseInt(rawMat["item_qty"]);
                         if (materials_qty) {
                             transferred_qty = materials_qty[index];
                             final_mat_qty = materials_qty[index];
                         } else {
                             final_mat_qty = datas["rm_quantity"][index];
                         }
-                        let required_qty =
-                            datas["component_qty"] *
-                            datas["quantity_purchased"] *
-                            parseInt(rawMat["item_qty"]);
-                        if (transferred_qty === undefined) {
+                        if (
+                            transferred_qty === undefined &&
+                            workOrderDetails.mat_ordered_id == null
+                        ) {
                             materials_complete.push(true);
-                            transferred_qty = "item stock quantity";
+                            transferred_qty = "n/a";
+                        } else if (transferred_qty === undefined) {
+                            materials_complete.push(true);
+                            transferred_qty = "n/a";
                         } else {
                             transferred_qty >= required_qty
                                 ? materials_complete.push(true)
@@ -293,6 +307,23 @@ function loadWorkOrderInfo(
                     console.log("mat_complete" + materials_complete);
                     if (materials_complete.includes(false)) {
                         $("#startWorkOrder").prop("disabled", true);
+                    } else if (
+                        workOrderDetails.work_order_status == "Pending"
+                    ) {
+                        $.ajax({
+                            url:
+                                "/updateStatus/" +
+                                workOrderDetails.work_order_no,
+                            type: "get",
+                            success: function (data) {
+                                console.log(data);
+                                $("#startWorkOrder").prop("disabled", false);
+                                $("#componentStatus").text(
+                                    data.work_order_status
+                                );
+                            },
+                            error: function (request, error) {},
+                        });
                     }
                 },
                 error: function (request, error) {

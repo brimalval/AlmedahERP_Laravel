@@ -237,6 +237,8 @@ class SalesOrderController extends Controller
                 $order->save();
             }
 
+            $work_order_ids = array();
+
             foreach ($cart as $row){ 
                 $work_order = new WorkOrder();
                 $work_order->mat_ordered_id = null;
@@ -245,8 +247,9 @@ class SalesOrderController extends Controller
                 $work_order->planned_end_date = null;
                 $work_order->real_start_date = null;
                 $work_order->real_end_date = null;
-                $work_order->work_order_status = "Not Started";
+                $work_order->work_order_status = "Pending";
                 $work_order->save();
+                array_push($work_order_ids, $work_order->id);
             }
 
             foreach($new_component as $c){
@@ -257,12 +260,14 @@ class SalesOrderController extends Controller
                 $work_order->planned_end_date = null;
                 $work_order->real_start_date = null;
                 $work_order->real_end_date = null;
-                $work_order->work_order_status = "Not Started";
+                $work_order->work_order_status = "Pending";
                 $work_order->save();
+                array_push($work_order_ids, $work_order->id);
             }
 
             //return "Sucess";
             return response($work_order->id);
+            // return response($work_order->id);
 
         }catch(Exception $e){
             return $e;

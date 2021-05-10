@@ -20,6 +20,7 @@ use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
@@ -107,7 +108,9 @@ Route::get('/view-delivery-info', function () {
 Route::get('/hr', function () {
     return view('modules.hr.hr');
 });
+
 Route::get('/employee', [EmployeeController::class, 'index']);
+
 Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
 Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
 Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
@@ -364,9 +367,10 @@ Route::get('/selling', function () {
 });
 
 /**STOCK ROUTES */
-Route::get('/stock', function () {
-    return view('modules.stock.stock');
-});
+// Route::get('/stock', function () {
+//     return view('modules.stock.stock');
+// });
+Route::get('/stock', [StockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
@@ -439,6 +443,7 @@ Route::get('/loadWorkOrderInfo', function () {
 });
 Route::get('/getRawMaterialsWork/{selected}/{sales_id}/{product_code}', [WorkOrderController::class, 'getRawMaterials']);
 Route::get('/startWorkOrder/{work_order_no}', [WorkOrderController::class, 'startWorkOrder']);
+Route::get('/updateStatus/{work_order_no}', [WorkOrderController::class, 'updateStatus']);
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**WAREHOUSE ROUTES */

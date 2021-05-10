@@ -73,16 +73,19 @@ class WorkOrderController extends Controller
         $product = ManufacturingProducts::where('product_code', $selected)->first();
         if($product){
             $code = array();
+            $rm_quantity_array = array();
             $ordered_product = ordered_products::where('sales_id', $sales_id)
                                                 ->where('product_code', '=' ,$product_code)->first();
             $quantity_purchased = $ordered_product->quantity_purchased;
 
             $raw_materials = $product->materials;
             $raw_material_list = json_decode($raw_materials, true);
+            $component_qty = 1;
             // SAVES RAW MATERIALS OF PRODUCT TO $CODE VARIABLE
             foreach($raw_material_list as $i){
                 $raw_mat = ManufacturingMaterials::where('id', $i['material_id'])->first();
-                $component_qty = 1;
+                $rm_quantity = $raw_mat->rm_quantity;
+                array_push($rm_quantity_array, $rm_quantity);
                 array_push($code, array("item_code"=>$raw_mat->item_code, "item_qty"=>$i['material_qty']));
             }
             $components = $product->components;
@@ -90,11 +93,11 @@ class WorkOrderController extends Controller
             // SAVES COMPONENT OF PRODUCT TO $CODE VARIABLE
             foreach($component_list as $c){
                 $component = Component::where('id', $c['component_id'])->first();
-                $component_qty = 1;
+                array_push($rm_quantity_array, null);
                 array_push($code, array("item_code"=>$component->component_code, "item_qty"=>$c['component_qty']));
             }
             return response()->json(['item_code' => json_encode($code), 'quantity_purchased' => $quantity_purchased, 
-            'component_qty' => $component_qty]);
+            'component_qty' => $component_qty, 'rm_quantity' => $rm_quantity_array]);
         }else{
             $rm_quantity_array = array();
             $component = Component::where('component_code', $selected)->first();
@@ -130,10 +133,17 @@ class WorkOrderController extends Controller
         return response($work_order);
     }
 
+    function updateStatus($work_order_no){
+        $work_order = WorkOrder::where('work_order_no', $work_order_no)->update([
+            'work_order_status' => 'Completed',
+        ]);
+        $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+        return response($work_order);
+    }
+
     function startWorkOrder($work_order_no){
         $date_now = date_create()->format('Y-m-d H:i:s');
         $work_order = WorkOrder::where('work_order_no', $work_order_no)->update([
-            'work_order_status' => 'Started',
             'real_start_date' => $date_now,
         ]);
         $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();

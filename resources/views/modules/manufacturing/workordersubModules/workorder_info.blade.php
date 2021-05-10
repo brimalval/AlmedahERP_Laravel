@@ -337,7 +337,6 @@
             url: "/startWorkOrder/"+workOrderId,
             type: "get",
             success: function (data) {
-                $("#componentStatus").text(data['work_order_status']);
 				$("#actualStartDate").attr('value', data['real_start_date']);
             },
             error: function (request, error) {},
