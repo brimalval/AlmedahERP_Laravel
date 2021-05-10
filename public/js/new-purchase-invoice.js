@@ -180,19 +180,19 @@ function loadMaterials(id) {
                     `
                     <tr id="row-${i}">
                         <td class="text-black-50">
-                            <input class="form-control" readonly type="text" id="item_code${i}" value=${items[i - 1].item.item_code}>
+                            <span id="item_code${i}">${items[i - 1].item.item_code}</span>
                         </td>
                         <td class="text-black-50">
-                            <input class="form-control" readonly type="text" id="item_name<?= $i ?>" value="${items[i-1].item.item_name}">
+                            <span id="item_name${i}">${items[i-1].item.item_name}</span>
                         </td>
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="qtyAcc${i}" type="number" min="0" value=${items[i - 1]['qty']} onchange="calcPrice(${i})">
+                            <span id="qtyAcc${i}">${items[i - 1]['qty']}</span>
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="rateAcc${i}" type="text" min="0" value=${items[i - 1]['rate']} onchange="calcPrice(${i})">
+                            <span id="rateAcc${i}">${items[i - 1]['rate']}</span>
                         </td> 
                         <td class="text-black-50">
-                            <input class="form-control" readonly id="amtAcc${i}" type="text" min="0" value=${items[i - 1]['subtotal']}>
+                            <span id="amtAcc${i}">${items[i - 1]['subtotal']}</span>
                         </td> 
                     </tr>
                     `

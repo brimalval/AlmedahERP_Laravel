@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\MaterialsOrdered;
+use App\Models\MaterialRequest;
 use App\Models\MaterialPurchased;
+use App\Models\MaterialQuotation;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
 use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
+use App\Models\RequestQuotationSuppliers;
+use App\Models\WorkOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
@@ -108,6 +112,29 @@ class PurchaseReceiptController extends Controller
             $mat_order->p_receipt_id = $receipt->p_receipt_id;
             $mat_order->items_list_received = json_encode($pending_item_list);
             $mat_order->save();
+
+            /* 
+            Below is the connection established from Materials Purchased going to Work Order
+            in order to assign a materials_ordered_id to the Work Order table. The materials_ordered_id
+            is used for getting the raw material quantity for the Work Order table.
+            */
+            $mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
+            $supp_quotation_id = $mat_purchased->supp_quotation_id;
+
+            $supp_quotation = SuppliersQuotation::where('supp_quotation_id', $supp_quotation_id)->first();
+            $req_quotation_id = $supp_quotation->req_quotation_id;
+
+            $req_quotation = MaterialQuotation::where('req_quotation_id', $req_quotation_id)->first();
+            $request_id = $req_quotation->request_id;
+
+            $mat_request = MaterialRequest::where('request_id', $request_id)->first();
+            $work_order_no = $mat_request->work_order_no;
+
+            $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+            if(empty($work_order->mat_ordered_id)){
+                WorkOrder::where('work_order_no', $work_order_no)->update(['mat_ordered_id' => $mo_id]);
+            }
+            return response($work_order);
         } catch (Exception $e) {
             return $e;
         }

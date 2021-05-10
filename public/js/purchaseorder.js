@@ -25,6 +25,9 @@ $("#rowBtn").on('click', function () {
     let tbl = $("#itemTable-content");
     let nextRow = $("#itemTable tbody tr").length + 1;
     let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
+    if($("#emptyRow").html()) {
+        $("#emptyRow").remove();
+    }
     tbl.append(`
     <tr id="item-${nextRow}">
         <td>
@@ -73,29 +76,7 @@ $("#deleteRow").click(function () {
         $("#itemTable tbody").append(
             `
             <tr id="item-1">
-                <td>
-                    <div class="form-check">
-                        <input type="checkbox" name="item-chk" id="chk1" class="form-check-input">
-                    </div>
-                </td>
-                <td class="text-black-50">
-                    <input class="form-control" type="text" name="item1" id="item1" onkeyup="fieldFunction(1);">
-                </td>
-                <td class="text-black-50">
-                    <input class="form-control" type="text" name="itemName1" id="itemName1" onkeyup="fieldFunction(1);">
-                </td>
-                <td class="text-black-50">
-                    <input class="form-control" type="date" name="date1" id="date1" value=${$("#reqDate").val()}>
-                </td>
-                <td class="text-black-50">
-                    <input class="form-control" type="number" name="qty1" id="qty1" value="0" min="1" onchange="calcPrice(1);">
-                </td>
-                <td class="text-black-50">
-                    <input class="form-control" type="number" name="rate1" id="rate1" value="0" min="1" onchange="calcPrice(1);">
-                </td>
-                <td class="text-black-50">
-                    <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00" readonly>
-                </td>
+                <td id="emptyRow" valign="top" colspan="7" class="dataTables_empty">No data available in table</td>
             </tr> 
             `
         );
@@ -265,7 +246,34 @@ function loadQuotation(id) {
             for (let i = 1; i <= data.items.length; i++) {
                 let subtotal = parseFloat(data.items[i - 1].quantity_requested) * parseFloat(data.items[i - 1].rate);
                 let price_string = numberWithCommas(subtotal.toFixed(2));
-                tbl.append(`
+                tbl.append(
+                    `
+                    <tr id="item-${i}">
+                        <td>
+                            <input type="checkbox" name="item-chk" id="chk${i}" ${chk_status}>
+                        </td>
+                        <td class="text-black-50">
+                            <span name="item${i}" id="item${i}">${data.items[i - 1].item_code}</span>
+                        </td>
+                        <td class="text-black-50">
+                            <span name="itemName${i}" id="itemName${i}">${data.items[i - 1].item.item_name}</span>
+                        </td>
+                        <td class="text-black-50">
+                            <input type="date" name="date${i}" id="date${i}" value=${$("#reqDate").val()}>
+                        </td>
+                        <td class="text-black-50">
+                            <span name="qty${i}" id="qty${i}"> ${data.items[i - 1].quantity_requested} </span>
+                        </td>
+                        <td class="text-black-50">
+                            <span name="rate${i}" id="rate${i}">${data.items[i - 1].rate} </span>
+                        </td>
+                        <td class="text-black-50">
+                            <span name="price${i}" id="price${i}">₱ ${price_string}</span>
+                        </td>
+                    </tr> 
+                    `
+                );
+                /*tbl.append(`
                 <tr id="item-${i}">
                     <td>
                         <div class="form-check">
@@ -291,7 +299,7 @@ function loadQuotation(id) {
                         <input class="form-control" type="text" name="price${i}" id="price${i}" value="₱ ${price_string}" readonly>
                     </td>
                 </tr> 
-                `);
+                `);*/
             }
             let new_array = [];
             for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
@@ -329,20 +337,20 @@ function saveOrder() {
             return;
         }
         if (parseInt($("#qty" + i).val()) == 0) {
-            alert('No quantity for material ' + $("#item" + i).val() + ' specified.');
+            alert('No quantity for material ' + $("#item" + i).html() + ' specified.');
             return;
         }
         if (parseFloat($("#rate" + i).val()) == 0) {
-            alert('No rate for material ' + $("#item" + i).val() + ' specified.');
+            alert('No rate for material ' + $("#item" + i).html() + ' specified.');
             return;
         }
-        let price_string = $("#price" + i).val().replace("₱ ", '');
+        let price_string = $("#price" + i).html().replace("₱ ", '');
         purchased_mats[i] = {
-            "item_code": $("#item" + i).val(),
+            "item_code": $("#item" + i).html(),
             "supplier_id": $("#supplierField").val(),
             "req_date": $("#date" + i).val(),
-            "qty": parseInt($("#qty" + i).val()),
-            "rate": parseFloat($("#rate" + i).val()),
+            "qty": parseInt($("#qty" + i).html()),
+            "rate": parseFloat($("#rate" + i).html()),
             "subtotal": parseFloat(price_string.replaceAll(',', ''))
         }
         //
@@ -415,8 +423,8 @@ $(document).ready(function () {
 function getQtyAndPrice() {
     let price = 0, qty = 0;
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
-        qty += !$("#qty" + i).val() ? 0 : parseInt($("#qty" + i).val());
-        price_string = isNaN($("#price" + i).val()) ? $("#price" + i).val().replace("₱ ", '') : $("#price" + i).val();
+        qty += !$("#qty" + i).html() ? 0 : parseInt($("#qty" + i).html());
+        price_string = isNaN($("#price" + i).html()) ? $("#price" + i).html().replace("₱ ", '') : $("#price" + i).html();
         //console.log(price_string);
         let priceWOComma = price_string.replaceAll(',', '');
         price_num = parseFloat(priceWOComma);
