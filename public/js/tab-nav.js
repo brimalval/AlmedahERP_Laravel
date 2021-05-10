@@ -612,3 +612,146 @@ function loadPurchaseReceipt() {
         $("#contentPurchaseReceipt").load("/purchasereceipt");
     });
 }
+function openNewShippingRule() {
+  $(document).ready(function () {
+    $('#contentShippingRule').load('/shippingruleinfo');
+  });
+}
+function loadShippingInfo() {
+  $(document).ready(function () {
+    $('#contentShippingRule').load('/shippingrule');
+  });
+}
+function loadPurchaseTaxes() {
+  $(document).ready(function () {
+    $('#contentPurchaseTaxes').load('/purchasetaxes');
+  });
+}
+function openNewPurchaseTaxes() {
+  $(document).ready(function () {
+    $('#contentPurchaseTaxes').load('/purchasetaxesinfo');
+  });
+}
+function openNewSalesTaxes() {
+  $(document).ready(function () {
+    $('#contentSalesTaxes').load('/newsalestaxes');
+  });
+}
+function loadSalesTaxes() {
+  $(document).ready(function () {
+    $('#contentSalesTaxes').load('/salestaxes');
+  });
+}
+function newPricingRule() {
+  $(document).ready(function () {
+    $('#contentPricingRule').load('/PricingRuleInfo');
+  });
+}
+function loadPricingRule() {
+  $(document).ready(function () {
+    $('#contentPricingRule').load('/pricingrule');
+  });
+}
+function openSupplierGroup() {
+  $(document).ready(function () {
+    $('#contentSupplierGroup').load('/newsuppliergroup');
+  });
+}
+
+function loadSupplierGroup() {
+  $(document).ready(function () {
+    $('#contentSupplierGroup').load('/suppliergroup');
+  });
+}
+
+function openSupplierGrouptable() {
+  $(document).ready(function () {
+    $('#contentSupplierGroup').load('/newsuppliergrouptable');
+  });
+}
+
+function openNewCoupon() {
+  $(document).ready(function () {
+    $('#contentCouponCode').load('/newCouponCode');
+  });
+}
+
+function loadCouponCode() {
+  $(document).ready(function () {
+    $('#contentCouponCode').load('/couponcode');
+  });
+}
+
+function openCouponInfo() {
+  $(document).ready(function () {
+    $('#contentCouponCode').load('/openCouponInfo');
+  });
+}
+
+function openNewProductBundle() {
+  $(document).ready(function () {
+    $('#contentProductBundle').load('/newproductbundle');
+  });
+}
+
+function loadProductBundle() {
+  $(document).ready(function () {
+    $('#contentProductBundle').load('/productbundle');
+  });
+}
+
+function openProductBundleInfo() {
+  $(document).ready(function () {
+    $('#contentProductBundle').load('/openProductBundleInfo');
+  });
+}
+
+function openAddressInfo() {
+  $(document).ready(function () {
+    $('#contentAddress').load('/openAddressInfo');
+  });
+}
+
+function openNewAddress() {
+  $(document).ready(function () {
+    $('#contentAddress').load('/newAddress');
+  });
+}
+
+function loadAddress() {
+  $(document).ready(function () {
+    $('#contentAddress').load('/address');
+  });
+}
+
+
+function loadBOM() {
+  $(document).ready(function () {
+    $('#contentBom').load('/newbom');
+  });
+}
+function loadBOMtable() {
+  $(document).ready(function () {
+    $('#contentBom').load('/bom');
+  });
+}
+function loadmachineinfo() {
+  $(document).ready(function () {
+    $('#contentMachineManual').load('/machinemanualinfo');
+  });
+}
+function loadmachine() {
+  $(document).ready(function () {
+    $('#contentMachineManual').load('/machinemanual');
+  });
+}
+function loadnewRouting() {
+  $(document).ready(function () {
+    $('#contentNewRouting').load('/newrouting');
+  });
+}
+function loadnewworkcenter() {
+  $(document).ready(function () {
+    $('#contentNewRouting').load('/newworkcenter');
+  });
+}
