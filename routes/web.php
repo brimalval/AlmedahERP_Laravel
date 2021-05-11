@@ -9,6 +9,7 @@ use App\Http\Controllers\BOMController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSchedulingController;
 use App\Http\Controllers\ComponentController;
+use App\Http\Controllers\MachinesManualController;
 use App\Http\Controllers\MaterialQuotationController;
 use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MaterialUOMController;
@@ -241,6 +242,16 @@ Route::get('/jobscheduling', [JobSchedulingController::class, 'index']);
 Route::resource('/jobscheduling/part', PartsController::class);
 // Route for the component being made in a job scheduling entry
 Route::resource('/jobscheduling/component', ComponentController::class);
+
+/**MACHINES MANUAL ROUTES */
+Route::get('/machinemanual', [MachinesManualController::class , 'index']);
+Route::get('/create-new-mm', function() {
+    return view('modules.BOM.newmachinemanual');
+});
+Route::get('/machinemanualinfo/{id}', [MachinesManualController::class, 'view']);
+Route::post('/create-machine', [MachinesManualController::class, 'store']);
+Route::patch('/update-machine/{id}', [MachinesManualController::class, 'update']);
+Route::delete('/delete-machine/{id}', [MachinesManualController::class, 'delete']);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function () {
@@ -557,12 +568,7 @@ Route::get('/newbom', function () {
     return view('modules.BOM.bominfo');
 });
 
-Route::get('/machinemanual', function () {
-    return view('modules.BOM.machinemanual');
-});
-Route::get('/machinemanualinfo', function () {
-    return view('modules.BOM.machineinfo');
-});
+
 Route::get('/newrouting', function () {
     return view('modules.BOM.newrouting');
 });

@@ -735,11 +735,19 @@ function loadBOMtable() {
     $('#contentBom').load('/bom');
   });
 }
+
 function loadmachineinfo() {
   $(document).ready(function () {
     $('#contentMachineManual').load('/machinemanualinfo');
   });
 }
+
+function loadNewMachineManual() {
+    $(document).ready(function () {
+        $('#contentMachineManual').load('/create-new-mm');
+    });
+}
+
 function loadmachine() {
   $(document).ready(function () {
     $('#contentMachineManual').load('/machinemanual');
