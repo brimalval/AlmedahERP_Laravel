@@ -164,10 +164,10 @@ function loadWorkOrderInfo(
     workOrderDetails,
     itemName,
     salesOrderId,
-    quantity,
-    dates
+    productCode,
+    quantity
 ) {
-    let planned_dates = JSON.parse(dates);
+    // let planned_dates = JSON.parse(dates);
     console.log(workOrderDetails);
     $("#requiredItems").html("");
     materials_qty = JSON.parse(quantity);
@@ -179,34 +179,86 @@ function loadWorkOrderInfo(
             $("#startWorkOrder").on("click", function () {
                 startWorkOrder(workOrderDetails["work_order_no"]);
             });
+            $("#plannedStartDate").change(function (event) {
+                event.preventDefault();
+                onDateChange(
+                    workOrderDetails["work_order_no"],
+                    "planned_start_date",
+                    this.value
+                );
+            });
+            $("#plannedEndDate").on("change", function () {
+                onDateChange(
+                    workOrderDetails["work_order_no"],
+                    "planned_end_date",
+                    this.value
+                );
+            });
             $("#componentName").text(itemName);
             $("#componentStatus").text(workOrderDetails.work_order_status);
-            $("#componentPurchaseID").text(workOrderDetails.purchase_id);
-            $("#plannedStartDate").attr("value", planned_dates[0]);
-            $("#plannedEndDate").attr("value", planned_dates[1]);
+            $("#forProduct").attr("value", productCode);
+            if (workOrderDetails.work_order_status == "Pending") {
+                $("#startWorkOrder").prop("disabled", true);
+            }
             if (workOrderDetails.real_start_date) {
                 $("#actualStartDate").attr(
                     "value",
                     workOrderDetails.real_start_date
                 );
             }
+            if (workOrderDetails.planned_start_date) {
+                $("#plannedStartDate").attr(
+                    "value",
+                    workOrderDetails.planned_start_date
+                );
+            }
+            if (workOrderDetails.planned_end_date) {
+                $("#plannedEndDate").attr(
+                    "value",
+                    workOrderDetails.planned_end_date
+                );
+            }
             $.ajax({
-                url: "/getRawMaterialsWork/" + itemName + "/" + salesOrderId,
+                url:
+                    "/getRawMaterialsWork/" +
+                    itemName +
+                    "/" +
+                    salesOrderId +
+                    "/" +
+                    productCode,
                 type: "GET",
                 success: function (datas) {
+                    $("#quantityPurchased").attr(
+                        "value",
+                        datas["quantity_purchased"]
+                    );
+                    console.log("below are the datas");
                     console.log(datas);
-                    for (let [index, data] of JSON.parse(
+                    for (let [index, rawMat] of JSON.parse(
                         datas["item_code"]
                     ).entries()) {
                         let sequence = index + 1;
-                        let transferred_qty = materials_qty[index];
+                        let transferred_qty = undefined;
+                        let final_mat_qty;
                         let required_qty =
                             datas["component_qty"] *
                             datas["quantity_purchased"] *
-                            parseInt(data["item_qty"]);
-                        if (transferred_qty === undefined) {
+                            parseInt(rawMat["item_qty"]);
+                        if (materials_qty) {
+                            transferred_qty = materials_qty[index];
+                            final_mat_qty = materials_qty[index];
+                        } else {
+                            final_mat_qty = datas["rm_quantity"][index];
+                        }
+                        if (
+                            transferred_qty === undefined &&
+                            workOrderDetails.mat_ordered_id == null
+                        ) {
                             materials_complete.push(true);
-                            transferred_qty = "item stock quantity";
+                            transferred_qty = "n/a";
+                        } else if (transferred_qty === undefined) {
+                            materials_complete.push(true);
+                            transferred_qty = "n/a";
                         } else {
                             transferred_qty >= required_qty
                                 ? materials_complete.push(true)
@@ -228,7 +280,7 @@ function loadWorkOrderInfo(
                             </div>
                           </td>
                           <td>` +
-                                data["item_code"] +
+                                rawMat["item_code"] +
                                 `</td>
                           <td>Test` +
                                 index +
@@ -237,7 +289,7 @@ function loadWorkOrderInfo(
                                 required_qty +
                                 `</td>
                           <td>` +
-                                (materials_qty[index] ?? transferred_qty) +
+                                (final_mat_qty ?? transferred_qty) +
                                 `</td>
                           <td style="padding: 1%;" class="h-100">
                             <div class="input-group mb-3">
@@ -255,6 +307,23 @@ function loadWorkOrderInfo(
                     console.log("mat_complete" + materials_complete);
                     if (materials_complete.includes(false)) {
                         $("#startWorkOrder").prop("disabled", true);
+                    } else if (
+                        workOrderDetails.work_order_status == "Pending"
+                    ) {
+                        $.ajax({
+                            url:
+                                "/updateStatus/" +
+                                workOrderDetails.work_order_no,
+                            type: "get",
+                            success: function (data) {
+                                console.log(data);
+                                $("#startWorkOrder").prop("disabled", false);
+                                $("#componentStatus").text(
+                                    data.work_order_status
+                                );
+                            },
+                            error: function (request, error) {},
+                        });
                     }
                 },
                 error: function (request, error) {

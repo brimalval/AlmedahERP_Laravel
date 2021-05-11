@@ -2,7 +2,11 @@
     <div class="row d-flex justify-content-center">
         <div class="col-sm p-4 bg-light">
             <h4 class="font-weight-bold text-black">Components</h4>
-            <div id="alert-message">
+            <div class="alert alert-success alert-dismissible" id="component-success" style="display:none;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            </div>
+            <div class="alert alert-danger alert-dismissible" id="component-danger" style="display:none;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
             </div>
             <div class="row pb-2">
                 <div class="col-12 text-right">
@@ -207,6 +211,7 @@
         $("#rawMaterials").modal('toggle');
         console.log(item_code);
         var tableBody = $("#rawMatsShow");
+        tableBody.empty();
         item_code.forEach(el => {
             tableBody.append(
             `
@@ -248,9 +253,40 @@
             url: "/create-component",
             data: $("#addComponentForm").serialize(),
             success: function (r) {
-                console.log(r.status);
-                $('#newComponentModal').modal('toggle');
-                $('#componentItemCode').val("hidden");
+                if(r.status != 'error'){
+                    $('#newComponentModal').modal('toggle');
+                    $('#componentItemCode').val("hidden");
+                    var id = r.component.id;
+                    const dataTable = $("#componentTable").DataTable();
+                    dataTable.row
+                        .add([
+                            // "<span class='text-black-50'>" + r.component.id + "</span>",
+                            "<span class='text-black-50'>" +
+                                r.component.component_code +
+                                "</span>",
+                            "<span class='text-black-50'>" +
+                                r.component.component_name +
+                                "</span>",
+                            "<span class='text-black-50'><td class='text-black-50'><a class='btn btn-primary btn-sm' href=''>View</a></td></span>",
+                            "<span class='text-black-50'>" +
+                                (r.component.description ?? '') +
+                                "</span>",
+                            "<span class='text-black-50'><td class='text-black-50'><button class='btn btn-primary btn-sm' onclick='showRawMaterials("+r.component.item_code+")'>View</button></td></span>",
+                            '<a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>',
+                        ])
+                        .node().id = id;
+                    dataTable.draw();
+                    $('#component-success').show();
+                    $("#component-success").html(r.message);
+                    $("#component-success").delay(4000).hide(1);
+                }else{
+                    $('#newComponentModal').modal('toggle');
+                    $('#componentItemCode').val("hidden");
+                    $('#component-danger').show();
+                    $("#component-danger").html(r.message);
+                    $("#component-danger").delay(4000).hide(1);
+                }
+                
                 // $('#componentItemCode').val('');
                 raw_materials = [];
             },
