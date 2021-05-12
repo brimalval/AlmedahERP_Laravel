@@ -55,15 +55,6 @@ $("#idBtn").on("click", function () {
 //}
 let mat_insufficient = false;
 
-function selectSalesMethod() {
-    var selected = document.getElementById("saleSupplyMethod").value;
-    if (selected == "Purchase" || selected == "Use Instock and purchase needed") {
-        document.getElementById("cardComponent").style.display = "block";
-        $("#btnSalesCalculate").click();
-    } else {
-        document.getElementById("cardComponent").style.display = "none";
-    }
-}
 
 function selectPaymentMethod() {
     var selectedPayment = document.getElementById("salePaymentMethod").value;
@@ -278,7 +269,7 @@ function rawMaterials() {
     var qty = [];
     let filter = [];
     console.log(document.getElementById("saleSupplyMethod").value);
-    if( document.getElementById("saleSupplyMethod").value == "Use Instock and purchase needed"){
+    if( document.getElementById("saleSupplyMethod").value == "Produce"){
         //Filters cart for 0 values
         for (let index = 0; index < stockMinusQuantity.length; index++) {
             if( stockMinusQuantity[index][1] != 0){

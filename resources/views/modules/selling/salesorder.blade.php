@@ -268,18 +268,17 @@
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod"  onchange="selectSalesMethod();">
+                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod"  >
                                             <option selected disabled>Please Select</option>
                                             <option value="Produce">Instock</option>
                                             <option value="Purchase">Purchase</option>
-                                            <option value="Use Instock and purchase needed">Use Instock and purchase needed</option>
                                         </select>
                                         <br>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card" id="cardComponent" style="display:none;">
+                        <div class="card" id="cardComponent">
                             <div class="card-header">
                                 <h2 class="mb-0">
                                     <button class="btn btn-link d-flex w-100 collapsed" type="button"
@@ -853,69 +852,55 @@
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
-                if (data == "Stock Insufficient"){
-                    $('#notif').text('');
-                    $('#notif').html(
-                        '<li>' + data + '</li>'
-                    );
+                document.getElementById('closeSaleOrderModal').click();
+                if (mat_insufficient) {
+                        // CREATE MATERIAL REQUEST
+                        console.log("DATA FOR REFERENCE");
+                        console.log(createMatRequestItems);
+                    var fd = new FormData();
+                    createMatRequestItems.forEach(element => {
+                        fd.append('item_code[]', element.item_code);
+                        fd.append('quantity_requested[]', element.quantity_needed_for_request);
+                        fd.append('procurement_method[]', 'buy');
+                    });
+                    var requiredDate = new Date();
+                    requiredDate.setDate(requiredDate.getDate() + 7);
+                    var requiredYear = requiredDate.getFullYear();
+                    var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
+                    var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
+                    var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
+                    fd.append('required_date', formattedDate);
+                    var currProd = $('#saleProductCode').val();
+                    fd.append('purpose', 'Replenishing required materials for ' + currProd);
+                    fd.append('mr_status', 'Draft');
+                    fd.append('work_order_no', data);
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: "/materialrequest",
+                        data: fd, 
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(data){
+                            console.log(data);
+                        },
+                        error: function(data){
+                        }
+                    });
                 }
-
-                else if(data == "Produced"){
-                    document.getElementById('closeSaleOrderModal').click();
-                    loadRefresh();
+                //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
+                try {
+                  minusStocks(componentsOrder, materialsInComponents);
                 }
-                else{
-                    document.getElementById('closeSaleOrderModal').click();
-                    if (mat_insufficient) {
-                            // CREATE MATERIAL REQUEST
-                            console.log("DATA FOR REFERENCE");
-                            console.log(createMatRequestItems);
-                        var fd = new FormData();
-                        createMatRequestItems.forEach(element => {
-                            fd.append('item_code[]', element.item_code);
-                            fd.append('quantity_requested[]', element.quantity_needed_for_request);
-                            fd.append('procurement_method[]', 'buy');
-                        });
-                        var requiredDate = new Date();
-                        requiredDate.setDate(requiredDate.getDate() + 7);
-                        var requiredYear = requiredDate.getFullYear();
-                        var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
-                        var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
-                        var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
-                        fd.append('required_date', formattedDate);
-                        var currProd = $('#saleProductCode').val();
-                        fd.append('purpose', 'Replenishing required materials for ' + currProd);
-                        fd.append('mr_status', 'Draft');
-                        fd.append('work_order_no', data);
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                            }
-                        });
-                        $.ajax({
-                            type: 'POST',
-                            url: "/materialrequest",
-                            data: fd, 
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function(data){
-                                console.log(data);
-                            },
-                            error: function(data){
-
-                            }
-                        });
-                    }
-                    //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
-                    try {
-                      minusStocks(componentsOrder, materialsInComponents);
-                    }
-                    catch(err) {
-                      console.log("Tried minusstock")
-                    }
-                    loadRefresh(); 
+                catch(err) {
+                  console.log("Tried minusstock")
                 }
+                loadRefresh(); 
             },
             error: function(data) {
                 console.log("error");
@@ -962,6 +947,7 @@
                    ]).draw(false);
                 });
                 formReset();
+
             }
         });
     }

@@ -57,7 +57,7 @@ class SalesOrderController extends Controller
             'paymentType' => 'nullable|alpha',
        
             
-            'customer_id' => 'nullable|numeric',
+            'customer_id' => 'nullable',
             'lName' => 'required',
             'fName' => 'required',
             'branchName' => 'required',
@@ -94,16 +94,6 @@ class SalesOrderController extends Controller
             // Pops the first empty element in the array
             array_shift($converter);
             $cart = $converter;
-
-            //Checks if sale supply method and stock are greater than requested quantity
-            if($form_data['saleSupplyMethod'] == "Produce"){
-                foreach ($cart as $row){      
-                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                    if( $prod->stock_unit < $row[1]){
-                        return "Stock Insufficient";
-                    }
-                }
-            }
 
             
             $component = $request->input("component");
@@ -255,12 +245,6 @@ class SalesOrderController extends Controller
                 
                 $prod->save();
             }
-
-            //Returns Produced if sale supply method is produce and accepted
-            if($form_data['saleSupplyMethod'] == "Produce"){
-                return "Produced";
-            }
-
             foreach($new_component as $c){
                 $work_order = new WorkOrder();
                 $work_order->mat_ordered_id = null;
