@@ -27,6 +27,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoutingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -284,8 +285,8 @@ Route::get('/openManufacturingItemPriceForm', function () {
 Route::get('/routing', function () {
     return view('modules.manufacturing.routing');
 });
-Route::get('/openManufacturingRoutingForm', function () {
-    return view('modules.manufacturing.routingform');
+Route::get('/newrouting', function () {
+    return view('modules.BOM.newrouting');
 });
 
 /**MATERIAL REQUEST ROUTES */
@@ -468,7 +469,7 @@ Route::get('/selling', function () {
 // Route::get('/stock', function () {
 //     return view('modules.stock.stock');
 // });
-Route::get('/stock', [StockMovesController::class, 'index']);
+//Route::get('/stock', [StockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
@@ -574,10 +575,6 @@ Route::get('/newbom', function () {
     return view('modules.BOM.bominfo');
 });
 
-
-Route::get('/newrouting', function () {
-    return view('modules.BOM.newrouting');
-});
 Route::get('/newworkcenter', function () {
     return view('modules.BOM.newWorkCenter');
 });

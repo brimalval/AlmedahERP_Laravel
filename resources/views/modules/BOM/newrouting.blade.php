@@ -18,7 +18,7 @@
         </li>
         </li>
         <li class="nav-item li-bom">
-          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadnewworkcenter();">Cancel</button>
+          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadManufacturingRouting();">Cancel</button>
         </li>
         <li class="nav-item li-bom">
           <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" onclick="">Save</button>
@@ -66,7 +66,7 @@
                 <tbody class="" id="newrouting-input-rows">
                 <tr data-id="${nextID}">
         <td class="text-center">
-        
+
         <div class="form-check" >
             <input type="checkbox" class="form-check-input">
         </div>
@@ -76,13 +76,13 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#operation_modal">
             New Operation
         </button></td>
-        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter" class="form-control">        
+        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter" class="form-control">
         <button type="button" class="btn btn-primary" type="submit" onclick="loadnewworkcenter();">
             New WorkCenter
         </button></td></td>
         <td class="mr-unit-input"><input type="text" value=""  name="description" id="description" class="form-control"></td>
         <td class="mr-unit-input"><input type="text" value=""  name="operation_time" id="operation_time" class="form-control"></td>
-        <td class="mr-unit-input"><input type="text" value=""  name="operating_cost" id="operating_cost" class="form-control"></td>   
+        <td class="mr-unit-input"><input type="text" value=""  name="operating_cost" id="operating_cost" class="form-control"></td>
         <td>
             <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                 <i class="fa fa-edit" aria-hidden="true"></i>
@@ -100,7 +100,7 @@
         <!--end contents-->
       </div>
     </div>
-            </div>         
+            </div>
           {{-- </form> --}}
 
         </div>
@@ -134,7 +134,7 @@
                   </div>
                 </div>
 
-                
+
                 <div class="form-group col-md-12">
                                 <label for="Description">Description</label>
                                 <textarea id="Description" class="summernote" name="Description"></textarea>
@@ -185,7 +185,7 @@
                 <tbody class="" id="newrouting-input-rows">
                 <tr data-id="${nextID}">
         <td class="text-center">
-        
+
         <div class="form-check" >
             <input type="checkbox" class="form-check-input">
         </div>
@@ -193,18 +193,18 @@
         <td id="mr-code-input" class="mr-code-input"><input type="text" value=""  name="seq_id" id="seq_id" class="form-control"></td>
         <td style="width: 10%;" class="mr-qty-input"><input type="text" value=""  name="operation" id="operation" class="form-control">
 
-        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter" class="form-control">        
-        
+        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter" class="form-control">
+
         <td class="mr-unit-input"><input type="text" value=""  name="description" id="description" class="form-control"></td>
         <td class="mr-unit-input"><input type="text" value=""  name="operation_time" id="operation_time" class="form-control"></td>
-        <td class="mr-unit-input"><input type="text" value=""  name="operating_cost" id="operating_cost" class="form-control"></td>   
-        <td class="mr-unit-input"><input type="text" value=""  name="hour_rate" id="hour_rate" class="form-control"></td>   
+        <td class="mr-unit-input"><input type="text" value=""  name="operating_cost" id="operating_cost" class="form-control"></td>
+        <td class="mr-unit-input"><input type="text" value=""  name="hour_rate" id="hour_rate" class="form-control"></td>
     </tr>
                 </tbody>
               </table>
         </div>
         </div>
-        
+
 
         </div>
       </div>

@@ -18,7 +18,7 @@
         </li>
         </li>
         <li class="nav-item li-bom">
-          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadnewRouting();">Cancel</button>
+          <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="openManufacturingRoutingForm();">Cancel</button>
         </li>
         <li class="nav-item li-bom">
           <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" onclick="">Save</button>
@@ -58,7 +58,7 @@
                      <option value="2">Machine</option>
                      <option value="3">Human & Machine</option>
                   </select>
-                </div>   
+                </div>
           </div>
     <div class="col-8">
           <div id = "f1" style = "display:none">
@@ -100,7 +100,7 @@
                      <option value="">Machine 3</option>
                      <option value="">Machine 4</option>
                   </select>
-                </div>   
+                </div>
           </div>
             <label>Machine</label>
             <table class="table border-bottom table-hover table-bordered" id="operations">
