@@ -50,4 +50,13 @@ class SuppliersQuotation extends Model
     public function getRouteKeyName(){
         return 'supp_quotation_id';
     }
+
+    public function archive(){
+        $rfq = $this->req_quotation;
+        $mr = $rfq->material_request;
+
+        $this->sq_status = "Archived";
+        $rfq->req_status = "Archived";
+        $mr->mr_status = "Archived";
+    }
 }

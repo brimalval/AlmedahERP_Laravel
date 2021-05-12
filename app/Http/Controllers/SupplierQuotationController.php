@@ -125,7 +125,9 @@ class SupplierQuotationController extends Controller
             $id = $supp_quotation->id;
             $supp_quotation->supp_quotation_id = "PUR-SQTN-" . Carbon::now()->year . "-" . str_pad($id, 5, '0', STR_PAD_LEFT);
             $supp_quotation->save();
-            dd($supp_quotation);
+            return response()->json([
+                'redirect' => route('supplierquotation.index')               
+            ]);
         } catch (Exception $e) {
             return redirect()->back()->withErrors([
                 'exception' => $e->getMessage(),

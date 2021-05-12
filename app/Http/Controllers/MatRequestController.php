@@ -99,6 +99,7 @@ class MatRequestController extends Controller
                 'information' => $request->all(),
                 'request' => $matRequest,
                 'raw_mats_with_qty' => $matRequest->rawMats,
+                'redirect' => route('materialrequest.index'),
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -197,6 +198,7 @@ class MatRequestController extends Controller
                 'materialrequest' => $materialrequest,
                 'required_date' => $materialrequest->required_date->format("Y-m-d"),
                 'request' => $request->all(),
+                'redirect' => route('materialrequest.index'),
             ]);
         }catch(Exception $e){
             return response()->json([
