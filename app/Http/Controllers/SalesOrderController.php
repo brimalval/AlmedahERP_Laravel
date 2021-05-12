@@ -47,36 +47,32 @@ class SalesOrderController extends Controller
             return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
         }
         #Comment ko muna yung validation, nahihirapan akong mag-enter ng data para sa testing eh hahah
-        $request->validate([
+        $validator = $request->validate([
             'costPrice' => 'required|numeric|gt:0',
             'saleDate' => 'required|date',
-            'saleSupplyMethod' => 'required|alpha_dash',
+            'saleSupplyMethod' => 'required',
             'salePaymentMethod' => 'required|alpha_dash',
             'saleDownpaymentCost' => 'nullable|numeric|gt:0',
             'installmentType' => 'nullable|alpha_dash',
             'paymentType' => 'nullable|alpha',
        
             
-            'customer_id' => 'nullable|numeric',
-            'lName' => 'required|alpha_dash',
-            'fName' => 'required|alpha_dash',
-            'branchName' => 'required|alpha_dash',
+            'customer_id' => 'nullable',
+            'lName' => 'required',
+            'fName' => 'required',
+            'branchName' => 'required',
             'contactNum' => 'required|alpha_dash',
-            'custAddress' => 'required|alpha_dash',
-            'custEmail' => 'required|alpha_dash',
-            'companyName' => 'required|alpha_dash',
+            'custAddress' => 'required',
+            'custEmail' => 'required|Email',
+            'companyName' => 'required',
 
             'account_no' => 'nullable|alpha_dash',
             'cheque_no' => 'nullable|alpha_dash',
-            'account_name' => 'nullable|alpha_dash',
-            'bank_name' => 'nullable|alpha_dash',
-            'branch_location' => 'nullable|alpha_dash',
-            'account_name' => 'nullable|alpha',
+            'account_name' => 'nullable',
+            'bank_name' => 'nullable',
+            'branch_location' => 'nullable',
+            'account_name' => 'nullable',
         ]);
-
-        if(!$validator->passes()){
-            return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
-        }
 
         try{
 
@@ -219,7 +215,7 @@ class SalesOrderController extends Controller
             //         $mr_status = "Draft";
             //     }
             // }
-            
+
             $new_component = array();
             foreach(json_decode($component, true) as $c){
                 array_push($new_component, $c);
@@ -239,8 +235,16 @@ class SalesOrderController extends Controller
                 $order->product_code = $row[0];
                 $order->quantity_purchased = $row[1];
                 $order->save();
-            }
 
+                $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                if( $prod->stock_unit - $row[1] > 0){
+                    $prod->stock_unit = $prod->stock_unit - $row[1];
+                }else{
+                    $prod->stock_unit = 0;
+                }
+                
+                $prod->save();
+            }
             foreach($new_component as $c){
                 $work_order = new WorkOrder();
                 $work_order->mat_ordered_id = null;
@@ -253,8 +257,12 @@ class SalesOrderController extends Controller
                 $work_order->save();
             }
 
-            //return "Sucess";
-            return response($work_order->id);
+
+            try{
+                return response($work_order->id);
+            }catch  (Exception $e){
+                return "Sucess";
+            }
 
         }catch(Exception $e){
             return $e;
@@ -278,10 +286,18 @@ class SalesOrderController extends Controller
     }
 
     function update(Request $request, $id){
+
+
+        $validator = $request->validate([
+            'costPrice' => 'required|numeric|gt:0',
+        ]);
+
         $data = payment_logs::find($id);
         $sales = salesorder::find($data->sales_id);
 
         $form_data = $request->input();
+
+        
 
         if($form_data['status'] == "Pending"){
             $sales->payment_balance += $data->amount_paid;
@@ -336,17 +352,17 @@ class SalesOrderController extends Controller
         $request->validate([
             'view_totalamount' => 'required|numeric|gt:0',
             'view_paymentType' => 'required|alpha_dash',
-            'view_account_no' => 'required|alpha_dash',
+            'view_account_no' => 'required',
             'view_cheque_no' => 'required|alpha_dash',
-            'view_account_name' => 'nullable|alpha',
-            'view_bank_name' => 'nullable|alpha_dash',
-            'view_branch_location' => 'nullable|alpha_dash',
+            'view_account_name' => 'nullable',
+            'view_bank_name' => 'nullable',
+            'view_branch_location' => 'nullable',
        
             
             'view_totalamount' => 'required|numeric|gt:0',
             'view_salePaymentMethod' => 'required|numeric',
             'view_paymentType' => 'required|alpha',
-            'view_customer_rep' => 'required|alpha_dash',
+            'view_customer_rep' => 'required',
             'view_totalamount' => 'required|numeric|gt:0',
         ]);
 
@@ -493,17 +509,21 @@ class SalesOrderController extends Controller
         $qty = $request->input('qty');
 
         for ($i=0; $i < count($products); $i++) { 
-            # code...
-            $raw_material = ManufacturingMaterials::where('item_code', $products[$i])->first();
-            $raw_mat_qty = $raw_material->rm_quantity;
+            try {
+                # Wrapped in try catch since it also minuses rm material of components which is non existent
+                $raw_material = ManufacturingMaterials::where('item_code', $products[$i])->first();
+                $raw_mat_qty = $raw_material->rm_quantity;
 
-            if($raw_material != null or $raw_material != ""){
-                if($qty[$i] >= $raw_mat_qty){
-                    $raw_material->rm_quantity = 0;
-                }else{
-                    $raw_material->rm_quantity = $raw_material->rm_quantity - $qty[$i];
+                if($raw_material != null or $raw_material != ""){
+                    if($qty[$i] >= $raw_mat_qty){
+                        $raw_material->rm_quantity = 0;
+                    }else{
+                        $raw_material->rm_quantity = $raw_material->rm_quantity - $qty[$i];
+                    }
+                    $raw_material->save();
                 }
-                $raw_material->save();
+            } catch (\Throwable $th) {
+                //Should just end when subtracting from components;
             }
         }
         return "Sucess in MinusStocks";

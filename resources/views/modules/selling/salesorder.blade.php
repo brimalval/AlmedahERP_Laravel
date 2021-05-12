@@ -202,7 +202,7 @@
                                                         Select an Option
                                                     </option>
                                                     @foreach ($products as $row)
-                                                        <option value="{{ $row->product_code }}">
+                                                        <option value="{{ $row->product_code }}" data-price = "{{ $row->sales_price_wt }}" data-stock = "{{ $row->stock_unit }}">
                                                             {{ $row->product_code }}</option>
                                                     @endforeach
                                                 </select>
@@ -233,7 +233,9 @@
                                             <tr class="text-muted">
                                               <td></td>
                                               <td class="font-weight-bold text-center">Product Code</td>
-                                              <td class="font-weight-bold text-center">Quantity Purchased</td>
+                                              <td class="font-weight-bold text-center">Quantity to Purchase</td>
+                                              <td class="font-weight-bold text-center">Stock </td>
+                                              <td class="font-weight-bold text-center">Price </td>
                                               <td class="font-weight-bold text-center">Actions</td>
                                             </tr>
                                           </thead>
@@ -242,7 +244,7 @@
                                           </tbody>
                                           <tfoot>
                                             <tr>
-                                              <td colspan="4">
+                                              <td colspan="6">
                                                 <label class="text-nowrap align-middle">
                                                     Cost Price
                                                 </label>
@@ -266,7 +268,7 @@
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod"  onchange="selectSalesMethod();">
+                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod"  >
                                             <option selected disabled>Please Select</option>
                                             <option value="Produce">Instock</option>
                                             <option value="Purchase">Purchase</option>
@@ -276,7 +278,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card" id="cardComponent" style="display:none;">
+                        <div class="card" id="cardComponent">
                             <div class="card-header">
                                 <h2 class="mb-0">
                                     <button class="btn btn-link d-flex w-100 collapsed" type="button"
@@ -714,6 +716,9 @@
                         </div>
                             <div class="row">
                               <div class="col-12 d-flex justify-content-center">
+                                <span id="view_notif" class="mr-auto text-danger">
+
+                                </span>
                                 <button type="submit" class="btn btn-primary m-1" id="view_savepayment">
                                   <a style="text-decoration: none;color:white" >
                                     Save Payment
@@ -747,7 +752,6 @@
         document.getElementById('currentDate').value = today;
         var componentsOrder;
         var materialsInComponents;
-        
     });
 
     $("#gotoworkorder").click(function(){
@@ -816,6 +820,11 @@
             error: function(data) {
                 console.log("error");
                 console.log(data);
+
+                $('#view_notif').text('');
+                $('#view_notif').html(
+                    '<li>' + data.responseJSON["message"] + '</li>'
+                );
             }
         });
     })
@@ -839,6 +848,7 @@
             contentType: false,
             processData: false,
             success: function(data) {
+                console.log(data);
                 $('#saveSaleOrder1').click(function() {
                     $('#newSalePrompt').modal('hide');
                 });
@@ -880,12 +890,16 @@
                             console.log(data);
                         },
                         error: function(data){
-
                         }
                     });
                 }
                 //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
-                minusStocks(componentsOrder, materialsInComponents);
+                try {
+                  minusStocks(componentsOrder, materialsInComponents);
+                }
+                catch(err) {
+                  console.log("Tried minusstock")
+                }
                 loadRefresh(); 
             },
             error: function(data) {
@@ -894,9 +908,7 @@
 
                 $('#notif').text('');
                 $('#notif').html(
-                     @foreach ($errors->all() as $error)
-                             <li>{{ $error }}</li>
-                     @endforeach
+                    '<li>' + data.responseJSON["message"] + '</li>'
                 );
             }
         });
@@ -935,6 +947,7 @@
                    ]).draw(false);
                 });
                 formReset();
+
             }
         });
     }
@@ -945,8 +958,12 @@
         createMatRequestItems = [];
         minusStocks = [];
         materialsInComponents= [];
+        componentsOnly = [];
+        stockMinusQuantity = [];
         console.log(currentCart);
         $('#ProductsTable tr').remove();
         $(".components tr").remove();
+        $('#notif').text('');
+        $('#view_notif').text('');
     }
 </script>
