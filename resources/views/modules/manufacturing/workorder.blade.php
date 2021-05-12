@@ -65,10 +65,10 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
+                    <td>Work Order No</td>
                     <td>Item to Manufacture</td>
-                    <td>Status</td>
-                    <td>Materials Ordered ID</td>
                     <td>For Product?</td>
+                    <td>Status</td>
                     <td>Sales ID</td>
                 </tr>
             </thead>
@@ -80,16 +80,15 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    @if($work_order->mat_ordered_id)
-                        <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $components[$index] }}`, `{{ $work_order->sales_id }}`, `{{ json_encode($quantity[$index] ?? null) }}`, `{{ json_encode($planned_dates[$index]) }}` )'> {{ $components[$index] }} </a></td>
-                        <td>{{ $work_order->work_order_status }}</td>
-                        <td class="text-black-50">{{ $work_order->mat_ordered_id }}</td>
-                    @else
+                    <td class="text-black-50">{{ $work_order->work_order_no }}</td>
+                    {{-- @if($work_order->mat_ordered_id) --}}<td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $components[$index]["component_code"] }}`, `{{ $work_order->sales_id }}`, `{{ $items[$index] }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $components[$index]["component_code"] }} </a></td>
+                    <td class="text-black-50">{{ $items[$index] }}</td>
+                    <td>{{ $work_order->work_order_status }}</td>
+                    {{-- @else
                         <td> {{ $components[$index] }} </a></td>
                         <td>{{ $work_order->work_order_status }}</td>
                         <td class="text-black-50"> </td>
-                    @endif
-                    <td class="text-black-50">{{ $items[$index] }}</td>
+                    @endif --}}
                     <td><!--<input type="checkbox">-->{{ $work_order->sales_id }}</td>
                 </tr>
             @endforeach
@@ -110,7 +109,8 @@
 </div>
 
 <script>
-    function workOrderInfo(workOrderDetails, itemName, salesOrderId, quantity, dates){
-        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId, quantity, dates);
+    function workOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity){
+        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity);
     }
+
 </script>

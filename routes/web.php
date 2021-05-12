@@ -9,6 +9,7 @@ use App\Http\Controllers\BOMController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobSchedulingController;
 use App\Http\Controllers\ComponentController;
+use App\Http\Controllers\MachinesManualController;
 use App\Http\Controllers\MaterialQuotationController;
 use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MaterialUOMController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
@@ -37,6 +39,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
     return view('home');
 });
@@ -45,8 +48,93 @@ Route::get('/dashboard', function () {
     return view('modules.dashboard');
 });
 
-Route::get('/accounting', function () {
+Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
+});
+
+/*PURCHASE TAXES*/
+Route::get('/purchasetaxes', function() {
+    return view('modules.NewUI.purchasetaxes');
+});
+Route::get('/purchasetaxesinfo', function() {
+    return view('modules.NewUI.purchasetaxesinfo');
+});
+
+/*SHIPPING RULE*/
+Route::get('/shippingrule', function() {
+    return view('modules.NewUI.ShippingRule');
+});
+
+Route::get('/shippingruleinfo', function() {
+    return view('modules.NewUI.ShippingRuleInfo');
+});
+
+/*PRICING RULE*/
+Route::get('/pricingrule', function() {
+    return view('modules.NewUI.PricingRule');
+});
+
+Route::get('/PricingRuleInfo', function() {
+    return view('modules.NewUI.PricingRuleInfo');
+});
+/*SALES TAXES*/
+Route::get('/salestaxes', function() {
+    return view('modules.NewUI.SalesTaxes');
+});
+
+Route::get('/newsalestaxes', function() {
+    return view('modules.NewUI.NewSalesTaxes');
+});
+/*SUPPLIER GROUP*/
+Route::get('/newsuppliergroup', function() {
+    return view('modules.NewUI.NewSupplierGroup');
+});
+Route::get('/suppliergroup', function() {
+    return view('modules.NewUI.SupplierGroup');
+});
+Route::get('/newsuppliergrouptable', function() {
+    return view('modules.NewUI.NewSupplierGrpTable');
+});
+
+Route::get('/newsuppliergrouptable', function() {
+    return view('modules.NewUI.NewSupplierGrpTable');
+});
+
+/*PRODUCT BUNDLE ROUTES */
+Route::get('/productbundle', function() {
+    return view('modules.NewUI.productbundle');
+});
+Route::get('/newproductbundle', function() {
+    return view('modules.NewUI.newproductbundle');
+});
+Route::get('/openProductBundleInfo', function() {
+    return view('modules.NewUI.productBundleInfo');
+});
+
+/*ADDRESS ROUTES */
+
+Route::get('/address', function() {
+    return view('modules.NewUI.address');
+});
+Route::get('/openAddressInfo', function() {
+    return view('modules.NewUI.addressInfo');
+});
+Route::get('/newAddress', function() {
+    return view('modules.NewUI.newAddress');
+});
+Route::get('/address', function() {
+    return view('modules.NewUI.address');
+});
+
+/**COUPON CODE ROUTES */
+Route::get('/couponcode', function() {
+    return view('modules.NewUI.couponcode');
+});
+Route::get('/newCouponCode', function() {
+    return view('modules.NewUI.newCouponCode');
+});
+Route::get('/openCouponInfo', function() {
+    return view('modules.NewUI.couponInfo');
 });
 
 /**BOM ROUTES */
@@ -107,7 +195,9 @@ Route::get('/view-delivery-info', function () {
 Route::get('/hr', function () {
     return view('modules.hr.hr');
 });
+
 Route::get('/employee', [EmployeeController::class, 'index']);
+
 Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
 Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
 Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
@@ -155,6 +245,16 @@ Route::get('/jobscheduling', [JobSchedulingController::class, 'index']);
 Route::resource('/jobscheduling/part', PartsController::class);
 // Route for the component being made in a job scheduling entry
 Route::resource('/jobscheduling/component', ComponentController::class);
+
+/**MACHINES MANUAL ROUTES */
+Route::get('/machinemanual', [MachinesManualController::class , 'index']);
+Route::get('/create-new-mm', function() {
+    return view('modules.BOM.newmachinemanual');
+});
+Route::get('/machinemanualinfo/{id}', [MachinesManualController::class, 'view']);
+Route::post('/create-machine', [MachinesManualController::class, 'store']);
+Route::patch('/update-machine/{id}', [MachinesManualController::class, 'update']);
+Route::delete('/delete-machine/{id}', [MachinesManualController::class, 'delete']);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function () {
@@ -365,9 +465,10 @@ Route::get('/selling', function () {
 });
 
 /**STOCK ROUTES */
-Route::get('/stock', function () {
-    return view('modules.stock.stock');
-});
+// Route::get('/stock', function () {
+//     return view('modules.stock.stock');
+// });
+Route::get('/stock', [StockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
@@ -438,8 +539,10 @@ Route::get('/openNewWorkorder', function () {
 Route::get('/loadWorkOrderInfo', function () {
     return view('modules.manufacturing.workordersubModules.workorder_info');
 });
-Route::get('/getRawMaterialsWork/{selected}/{sales_id}', [WorkOrderController::class, 'getRawMaterials']);
+Route::get('/getRawMaterialsWork/{selected}/{sales_id}/{product_code}', [WorkOrderController::class, 'getRawMaterials']);
 Route::get('/startWorkOrder/{work_order_no}', [WorkOrderController::class, 'startWorkOrder']);
+Route::get('/updateStatus/{work_order_no}', [WorkOrderController::class, 'updateStatus']);
+Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {
@@ -461,3 +564,20 @@ Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
+
+/**BOM */
+Route::get('/bom', function () {
+    return view('modules.BOM.bom');
+});
+
+Route::get('/newbom', function () {
+    return view('modules.BOM.bominfo');
+});
+
+
+Route::get('/newrouting', function () {
+    return view('modules.BOM.newrouting');
+});
+Route::get('/newworkcenter', function () {
+    return view('modules.BOM.newWorkCenter');
+});
