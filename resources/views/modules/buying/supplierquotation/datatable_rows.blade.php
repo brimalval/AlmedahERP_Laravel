@@ -22,7 +22,8 @@
 
 @section('sq_status')
     <?php
-        $color = ($row->sq_status == "Draft") ? "orange" : "blue";
+        $sq_status = $row->sq_status;
+        $color = ($sq_status == "Draft") ? "orange" : ($sq_status == "Archived") ? "gray" : "blue";
     ?>
     <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
     {{ $row->sq_status }}

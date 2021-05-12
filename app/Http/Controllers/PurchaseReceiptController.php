@@ -223,6 +223,9 @@ class PurchaseReceiptController extends Controller
                 $invoice = $receipt->invoice;
                 if($invoice) {
                     $new_status = ($invoice->pi_status === 'Paid') ? 'Completed' : 'To Bill';
+                    if($invoice->pi_status === 'Paid'){
+                        $receipt->order->supplier_quotation->archive();
+                    }
                 } else {
                     $new_status = 'To Bill';
                 }

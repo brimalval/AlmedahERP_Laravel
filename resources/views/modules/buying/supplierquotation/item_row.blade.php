@@ -36,7 +36,7 @@
     <td>
     <select @if(isset($item)) readonly @endif required="true" data-id="uom_id" data-live-search="true" name="uom_id[]" class="form-control selectpicker">
         @foreach ($units as $unit)
-            <option value="{{ $unit->uom_id }}" @if($unit->uom_id == ($item->item->uom_id ?? '')) selected @endif data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</option>
+            <option value="{{ $unit->uom_id }}" @if($unit->uom_id == ($item->uom_id ?? $item->item->uom_id ?? '')) selected @endif data-subtext="{{ $unit->conversion_factor }} nos. ea.">{{ $unit->item_uom }}</option>
         @endforeach
     </select>
     </td>

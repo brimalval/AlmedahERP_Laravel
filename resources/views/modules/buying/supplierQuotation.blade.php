@@ -116,7 +116,11 @@
                     $color = 'orange';
                     } elseif ($sq->sq_status == 'Submitted') {
                     $color = 'blue';
-                    } ?>
+                    }
+                    elseif ($sq->sq_status == "Archived") {
+                        $color = "gray";
+                    }
+                     ?>
                     <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
                     {{ $sq->sq_status }}
                 </td>
