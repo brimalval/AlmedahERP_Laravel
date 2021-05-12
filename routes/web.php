@@ -21,9 +21,12 @@ use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
+use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
+use App\Http\Controllers\NewStockMovesController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -368,6 +371,8 @@ Route::get('/selling', function () {
 Route::get('/stock', function () {
     return view('modules.stock.stock');
 });
+Route::get('/stockmoves', [StockMovesController::class, 'index']);
+Route::get('/newstockmoves', [NewStockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
