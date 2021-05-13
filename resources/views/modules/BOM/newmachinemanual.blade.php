@@ -89,12 +89,6 @@
 </div>
 
 <form action="#" method="post" id="BOM" class="create">
-    <br>
-    
-    <br>
-
-
-
     <script type="text/javascript">
         $(document).ready(function() {
             $('.summernote').summernote({
@@ -106,6 +100,5 @@
                 arrows: false
             });
         });
-
     </script>
 </form>

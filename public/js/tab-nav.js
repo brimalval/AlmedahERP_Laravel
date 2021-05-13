@@ -805,9 +805,9 @@ function loadBOMtable() {
   });
 }
 
-function loadmachineinfo() {
+function loadmachineinfo(id) {
   $(document).ready(function () {
-    $('#contentMachineManual').load('/machinemanualinfo');
+    $('#contentMachineManual').load(`/machinemanualinfo/${id}`);
   });
 }
 

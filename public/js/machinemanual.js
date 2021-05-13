@@ -1,5 +1,12 @@
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
+$(document).ready(function () {
+    $(".mm").change(onChangeFunction);
+});
+
+function onChangeFunction() {
+    $("#saveMMBtn").css('display', 'inline-block');
+}
 
 $("#saveMMBtn").click(function () { 
     $.ajaxSetup({
@@ -8,6 +15,11 @@ $("#saveMMBtn").click(function () {
         }
     });
     var formData = new FormData();
+    let url = '/create-machine';
+    if($("#hiddenMMID").val()) {
+        //formData.append('machine_id', $("#hiddenMMID").val());
+        url = `/update-machine/${$("#hiddenMMID").val()}`;
+    }
     //formData.append($("#Machine_Image").val());
     formData.append('machine_name', $("#Machine_name").val());
     formData.append('machine_process', $("#Machine_Process").val());
@@ -20,8 +32,8 @@ $("#saveMMBtn").click(function () {
     }
 
     $.ajax({
-        type: 'POST',
-        url: '/create-machine',
+        type: 'PATCH',
+        url: url,
         data: formData,
         cache: false,
         contentType: false,
