@@ -15,6 +15,7 @@ class JobSchedController extends Controller
     public function index()
     {
         //
+        return view('modules.manufacturing.jobscheduling');
     }
 
     /**

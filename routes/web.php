@@ -7,7 +7,7 @@ use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
 use App\Http\Controllers\JobController;
-use App\Http\Controllers\JobSchedulingController;
+use App\Http\Controllers\JobSchedController;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\MachinesManualController;
 use App\Http\Controllers\MaterialQuotationController;
@@ -239,7 +239,7 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 Route::get('/loadJobsched', function () {
     return view('modules.manufacturing.jobschedulinginfo');
 });
-Route::get('/jobscheduling', [JobSchedulingController::class, 'index']);
+Route::get('/jobscheduling', [JobSchedController::class, 'index']);
 
 // Route for parts needed in a job scheduling entry
 Route::resource('/jobscheduling/part', PartsController::class);
