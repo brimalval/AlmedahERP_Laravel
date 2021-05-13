@@ -96,6 +96,7 @@ class PurchaseInvoiceController extends Controller
                 $new_pr_status = "To Receive";
             } else {
                 $new_pr_status = "Completed";
+                $receipt->order->supplier_quotation->archive();
             }
             $receipt->pr_status = $new_pr_status;
             $receipt->save();

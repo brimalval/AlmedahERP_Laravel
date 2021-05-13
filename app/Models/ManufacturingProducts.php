@@ -24,6 +24,7 @@ class ManufacturingProducts extends Model
         'picture',
         'materials',
         'components',
+        'stock_unit'
     ];
     protected $casts = [
         'materials' => 'array',

@@ -112,3 +112,26 @@ $(document).off('click', '.sq-delete-rows-btn').on('click', '.sq-delete-rows-btn
     $(this).addClass('d-none');
     tableParent.find('.sq-check-all-box').attr('checked', false);
 });
+
+$('#squotation-form').off('submit').submit(function(){
+    if(!confirm('Please confirm the information you have entered. Would you like to proceed?')){
+        return false;
+    }
+    let formElement = this;
+    $.ajax({
+        type: 'POST',
+        url: this.action,
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function(data){
+            if(!loadIntoPage(formElement, data.redirect))
+                window.close();
+        }, 
+        error: function(data){
+
+        },
+    });
+    return false;
+});

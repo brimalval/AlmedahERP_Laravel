@@ -8,19 +8,16 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Menu
-                    </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="#">Option 1</a></li>
                         <li><a class="dropdown-item" href="#">Option 2</a></li>
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadMaterialRequest();">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadIntoPage(this, '{{ route('materialrequest.index') }}');">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="openNewMaterialRequest();" style="float: left;">New</button>
+                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('materialrequest.create') }}');" style="float: left;">New</button>
                 </li>
             </ul>
         </div>
@@ -61,6 +58,9 @@
                         elseif ($mat_request->mr_status == "Submitted") {
                             $color = "blue";
                         }
+                        elseif ($mat_request->mr_status == "Archived") {
+                            $color = "gray";
+                        }
                     ?>
                     <td class="mr-rq-status">
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{ $color }}"></i>
@@ -70,7 +70,7 @@
                     <td class="text-black-50 mr-purpose">{{ $mat_request->purpose }}</td>
                     <td>
                     @if ($mat_request->mr_status == 'Draft')
-                        <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button>
+                        {{-- <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button> --}}
                         <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
                             @csrf
                             @method('DELETE')
