@@ -21,17 +21,15 @@
 </nav>
 <div class="container">
     <div class="card my-2">
-        <div class="card-header bg-light">
+        {{-- <div class="card-header bg-light">
             <div class="row">
                 <div class="col-3">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Component Code">
                     </div>
                 </div>
-
-
             </div>
-        </div>
+        </div> --}}
         <div class="card-body filter">
             <div class="row">
                 <div class="float-left">
@@ -47,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bom border-bottom">
+        <table class="table table-bom border-bottom" id="jobScheduleTable">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -55,11 +53,11 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td>Component Code</td>
-                    <td>Start Time</td>
-                    <td>End Time</td>
-                    <td>JS Status</td>
-
+                    <td>Job Schedule Code</td>
+                    <td>Product/Component Code</td>
+                    <td>Quantity</td>
+                    <td>Start Date & Time</td>
+                    <td>Status</td>
                 </tr>
             </thead>
             <tbody class="">
@@ -69,11 +67,11 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a href='javascript:onclick=loadJobsched();'>Emulsifier Component 1</a></td>
-                    <td class="text-black-50">2021-03-11</td>
-                    <td class="text-black-50">2021-03-13</td>
-                    <td class="text-black-50">Processing</td>
-
+                    <td><a href='javascript:onclick=loadJobsched();'>jobsched001</a></td>
+                    <td class="text-black-50">workorder001</td>
+                    <td class="text-black-50">2</td>
+                    <td class="text-black-50">04/04/21 23:11</td>
+                    <td class="text-black-50">In Draft</td>
                 </tr>
                 <tr>
                     <td>
@@ -81,11 +79,11 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a href='javascript:onclick=loadJobsched();'>Emulsifier Component 2</a></td>
-                    <td class="text-black-50">2021-03-13</td>
-                    <td class="text-black-50">2021-03-15</td>
-                    <td class="text-black-50">Processing</td>
-
+                    <td><a href='javascript:onclick=loadJobsched();'>jobsched002</a></td>
+                    <td class="text-black-50">EM_CRS</td>
+                    <td class="text-black-50">3</td>
+                    <td class="text-black-50">04/29/21 08:31</td>
+                    <td class="text-black-50">In Draft</td>
                 </tr>
             </tbody>
         </table>
@@ -102,3 +100,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    $('#jobScheduleTable').DataTable( {
+    responsive: true
+} );
+</script>
