@@ -4,7 +4,6 @@
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">{{ $manual->machine_code }} - {{ $manual->machine_name }}
         </h2>
-        <input type="text" value={{ $manual->id }} id="hiddenMMID" style="display: none;">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#responsive">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,15 +28,19 @@
                     <button class="btn btn-info btn" style="display: none;" onclick="" id="saveMMBtn">Save</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button style="background-color: #ff0000d7;" class="btn btn-danger btn" style="float: left;"
-                        onclick="" id="mmDelete">Delete</button>
+                    <form action="/delete-machine/{{ $manual->id }}" id="deleteMM" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button style="background-color: #ff0000d7;" class="btn btn-danger btn" style="float: left;"
+                            onclick="" id="mmDelete">Delete</button>
+                    </form>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<form action="" id="mmForm" method="POST">
+<form action="/update-machine/{{ $manual->id }}" id="mmForm" method="POST">
     @csrf
     @method('PATCH')
     <div class="container">
