@@ -111,6 +111,9 @@
                         <div class="form-group">
                             <label for="Available_Machine">Available Machine</label>
                             <select class="form-control" id="Available_Machine">
+                                <option value="n/a">
+                                    <li>No Option</li>
+                                </option>
                                     @foreach ($machines_manuals as $machine)
                                         <option value="{{ $machine->machine_code }}">
                                             {{ $machine->machine_name }}
