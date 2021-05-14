@@ -1,22 +1,32 @@
+$(document).ready(function() {
+    $('#table_operations').DataTable();
+    $('#table_materials').DataTable();
+    $('#table_costing').DataTable();
+} );
+
+/**Experimental function from back-end*/
+function showRoutingsForm() {
+
+}
 
 function showForm1() {
     var table1 = document.getElementById("hm_select1").value;
     if (table1 == 1) {
-       document.getElementById("item_content").style.display = 'block';
-   } 
-   if (table1 == 0){
-       document.getElementById("item_content").style.display = 'none';
-   }
- }
+        document.getElementById("item_content").style.display = 'block';
+    }
+    if (table1 == 0) {
+        document.getElementById("item_content").style.display = 'none';
+    }
+}
 
-function addRowoperations(){
-    if($('#no-data')[0]){
+function addRowoperations() {
+    if ($('#no-data')[0]) {
         deleteItemRow($('#no-data').parents('tr'));
     }
     let lastRow = $('#operations-input-rows tr:last');
     let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
     $('#operations-input-rows').append(
-    `<tr data-id="${nextID}">
+        `<tr data-id="${nextID}">
         <td class="text-center">
         
         <div class="form-check" >
@@ -43,14 +53,14 @@ function addRowoperations(){
     $('#selects select[data-id="uom_id"]').clone().appendTo(`#items-tbl tr:last .mr-unit-input`).selectpicker();
     $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
-function addRowmaterials(){
-    if($('#no-data')[0]){
+function addRowmaterials() {
+    if ($('#no-data')[0]) {
         deleteItemRow($('#no-data').parents('tr'));
     }
     let lastRow = $('#materials-input-rows tr:last');
     let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
     $('#materials-input-rows').append(
-    `                <tr data-id="${nextID}">
+        `                <tr data-id="${nextID}">
     <td class="text-center">
     
     <div class="form-check" >
@@ -77,12 +87,4 @@ function addRowmaterials(){
     $('#selects select[data-id="uom_id"]').clone().appendTo(`#items-tbl tr:last .mr-unit-input`).selectpicker();
     $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
-$(document).ready(function() {
-    $('#table_operations').DataTable();
-} );
-$(document).ready(function() {
-    $('#table_materials').DataTable();
-} );
-$(document).ready(function() {
-    $('#table_costing').DataTable();
-} );
+
