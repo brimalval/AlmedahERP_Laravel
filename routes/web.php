@@ -254,6 +254,7 @@ Route::get('/create-new-mm', function() {
 });
 Route::get('/machinemanualinfo/{id}', [MachinesManualController::class, 'view']);
 Route::post('/create-machine', [MachinesManualController::class, 'store']);
+Route::get('/find-machine/{id}', [MachinesManualController::class, 'getMachine']);
 Route::patch('/update-machine/{id}', [MachinesManualController::class, 'update']);
 Route::delete('/delete-machine/{id}', [MachinesManualController::class, 'delete']);
 
