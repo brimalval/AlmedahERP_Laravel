@@ -826,7 +826,7 @@ function loadmachine() {
 
 function loadnewworkcenter() {
   $(document).ready(function () {
-    $('#contentNewRouting').load('/newworkcenter');
-    $("#contentRouting").load("/newworkcenter");
+    $('#contentNewRouting').load('/workcenter');
+    $("#contentRouting").load("/workcenter");
   });
 }

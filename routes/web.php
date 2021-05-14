@@ -28,6 +28,7 @@ use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
+use App\Http\Controllers\WorkCenterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -578,3 +579,5 @@ Route::get('/newbom', function () {
 Route::get('/newworkcenter', function () {
     return view('modules.BOM.newWorkCenter');
 });
+
+Route::resource('/workcenter', WorkCenterController::class);
