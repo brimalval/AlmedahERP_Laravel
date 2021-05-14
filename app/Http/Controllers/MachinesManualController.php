@@ -20,9 +20,9 @@ class MachinesManualController extends Controller
         return view('modules.BOM.machineinfo', ['manual' => $machine_manual]);
     }
 
-    public function getMachine($id) 
+    public function getMachine($machine_code) 
     {
-        $machine = MachinesManual::find($id);
+        $machine = MachinesManual::where('machine_code', $machine_code)->first();
         return ["machine" => $machine];
     }
 
