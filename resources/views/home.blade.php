@@ -795,7 +795,7 @@
         </div>
         <!-- sidebar-container END -->
         <!-- MAIN -->
-        <div class="col p-3 div-tab" id="divMain">
+        <div class="col p-3 div-tab" id="divMain" style="overflow: auto">
         </div>
         <!-- Main Col END -->
     </div>
