@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobSched;
+use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 
 class JobSchedController extends Controller
@@ -14,8 +15,10 @@ class JobSchedController extends Controller
      */
     public function index()
     {
-        //
-        return view('modules.manufacturing.jobscheduling');
+        $workorders = WorkOrder::get();
+        return view('modules.manufacturing.jobscheduling', [
+            'workorders' => $workorders,
+        ]);
     }
 
     /**
@@ -42,10 +45,10 @@ class JobSchedController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\JobSched  $jobSched
+     * @param  \App\Models\JobSched  $jobscheduling
      * @return \Illuminate\Http\Response
      */
-    public function show(JobSched $jobSched)
+    public function show(JobSched $jobscheduling)
     {
         //
     }
@@ -53,22 +56,22 @@ class JobSchedController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\JobSched  $jobSched
+     * @param  \App\Models\JobSched  $jobscheduling
      * @return \Illuminate\Http\Response
      */
-    public function edit(JobSched $jobSched)
+    public function edit(JobSched $jobsched)
     {
-        //
+        return view('modules.manufacturing.jobschedulinginfo');
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\JobSched  $jobSched
+     * @param  \App\Models\JobSched  $jobscheduling
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JobSched $jobSched)
+    public function update(Request $request, JobSched $jobscheduling)
     {
         //
     }
@@ -76,10 +79,10 @@ class JobSchedController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\JobSched  $jobSched
+     * @param  \App\Models\JobSched  $jobscheduling
      * @return \Illuminate\Http\Response
      */
-    public function destroy(JobSched $jobSched)
+    public function destroy(JobSched $jobscheduling)
     {
         //
     }

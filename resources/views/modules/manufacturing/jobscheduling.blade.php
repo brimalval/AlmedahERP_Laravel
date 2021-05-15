@@ -67,7 +67,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a href='javascript:onclick=loadJobsched();'>jobsched001</a></td>
+                    <td><a href='#' onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>1]) }}');">jobsched001</a></td>
                     <td class="text-black-50">workorder001</td>
                     <td class="text-black-50">2</td>
                     <td class="text-black-50">04/04/21 23:11</td>
