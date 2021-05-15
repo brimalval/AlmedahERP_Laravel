@@ -267,12 +267,25 @@ Route::get('/openManufacturingItemPriceForm', function () {
 
 /**MANUFACTURING ROUTING ROUTES */
 Route::get('/routing', function () {
-    return view('modules.manufacturing.routing');
+    return view('modules.bom.routing');
+});
+Route::get('/editrouting', function () {
+    return view('modules.bom.editrouting');
 });
 Route::get('/openManufacturingRoutingForm', function () {
     return view('modules.manufacturing.routingform');
 });
-
+/**OPERATIONS ROUTE */
+Route::get('/newoperation', function () {
+    return view('modules.bom.newoperation');
+});
+Route::get('/editoperation', function () {
+    return view('modules.bom.editoperation');
+});
+/** OPERATIONS ROUTING */
+Route::get('/operations', function () {
+    return view('modules.bom.operation');
+});
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
 Route::post('/materialrequest/{materialrequest}/submit', [MatRequestController::class, 'submit'])->name('materialrequest.submit');
@@ -535,3 +548,4 @@ Route::get('/newrouting', function () {
 Route::get('/newworkcenter', function () {
     return view('modules.BOM.newWorkCenter');
 });
+

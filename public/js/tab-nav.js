@@ -585,11 +585,36 @@ function loadmachine() {
 }
 function loadnewRouting() {
   $(document).ready(function () {
-    $('#contentNewRouting').load('/newrouting');
+    $('#contentRouting').load('/newrouting');
+  });
+}
+function EditRouting() {
+  $(document).ready(function () {
+    $('#contentRouting').load('/editrouting');
+  });
+}
+function RoutingTable() {
+  $(document).ready(function () {
+    $('#contentRouting').load('/routing');
   });
 }
 function loadnewworkcenter() {
   $(document).ready(function () {
-    $('#contentNewRouting').load('/newworkcenter');
+    $('#contentRouting').load('/newworkcenter');
+  });
+}
+function newoperation() {
+  $(document).ready(function () {
+    $('#contentOperations').load('/newoperation');
+  });
+}
+function operationtable() {
+  $(document).ready(function () {
+    $('#contentOperations').load('/operations');
+  });
+}
+function editoperation() {
+  $(document).ready(function () {
+    $('#contentOperations').load('/editoperation');
   });
 }

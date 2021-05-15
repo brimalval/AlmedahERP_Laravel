@@ -1,7 +1,7 @@
 <script src="{{ asset('js/address.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
   <div class="container-fluid">
-    <h2 class="navbar-brand" style="font-size: 35px;">New Routing</h2>
+    <h2 class="navbar-brand" style="font-size: 35px;">Edit Routing</h2>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#responsive">
       <span class="navbar-toggler-icon"></span>
     </button>
