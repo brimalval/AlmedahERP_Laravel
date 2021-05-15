@@ -33,6 +33,11 @@ class SalesOrderController extends Controller
         return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
     }
 
+    function loadProducts(){
+        $products = ManufacturingProducts::get();
+        return $products;
+    }
+
     function get($sales_order_id) {
         $sales_order = SalesOrder::find($sales_order_id);
         $product = ManufacturingProducts::where('product_code', $sales_order->product_code)->first();
