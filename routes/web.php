@@ -156,6 +156,19 @@ Route::post('/suggest_product', [BOMController::class, 'search']);
 Route::get('/search-product/{product_code}', [BOMController::class, 'search_product']);
 Route::get('/viewbom/{id}', [BOMController::class, 'get']);
 
+/**BOM ROUTES PROVIDED BY FRONTEND*/
+Route::get('/bom', function () {
+    return view('modules.BOM.bom');
+});
+
+Route::get('/newbom', function () {
+    return view('modules.BOM.bominfo');
+});
+
+Route::get('/newworkcenter', function () {
+    return view('modules.BOM.newWorkCenter');
+});
+
 /**BUYING ROUTES */
 Route::get('/buying', function () {
     return view('modules.buying.Buying');
@@ -534,6 +547,9 @@ Route::get('/openUOMEdit', function () {
     return view('modules.stock.UOMEDIT');
 });
 
+/**WORK CENTER ROUTES **/
+Route::resource('/workcenter', WorkCenterController::class);
+
 /**WORK ORDER ROUTES*/
 Route::get('/workorder', [WorkOrderController::class, 'index']);
 Route::get('/openNewWorkorder', function () {
@@ -568,17 +584,6 @@ Route::post('/create-station', [StationController::class, 'store']);
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
 
-/**BOM */
-Route::get('/bom', function () {
-    return view('modules.BOM.bom');
-});
 
-Route::get('/newbom', function () {
-    return view('modules.BOM.bominfo');
-});
 
-Route::get('/newworkcenter', function () {
-    return view('modules.BOM.newWorkCenter');
-});
-
-Route::resource('/workcenter', WorkCenterController::class);
+         
