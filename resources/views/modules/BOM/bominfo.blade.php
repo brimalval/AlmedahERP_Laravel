@@ -129,9 +129,9 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="routing">Routing</label>
-                            <select class="form-control" name="routing">
+                            <select class="form-control" name="routing" id="routingSelect">
                                 <option value=""></option>
-                                <option value="Type1">Create New Routing</option>
+                                <option value="newRouting">Create New Routing</option>
 
                             </select>
                         </div>

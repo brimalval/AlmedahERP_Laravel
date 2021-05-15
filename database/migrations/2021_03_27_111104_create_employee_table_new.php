@@ -37,6 +37,26 @@ class CreateEmployeeTableNew extends Migration
      */
     public function down()
     {
+        if(Schema::hasTable('stock_moves')) {
+            Schema::table('stock_moves', function (Blueprint $table){
+                $table->dropForeign(['employee_id']);
+            });
+        }
+        if(Schema::hasTable('purchase_invoice_logs')) {
+            Schema::table('purchase_invoice_logs', function (Blueprint $table){
+                $table->dropForeign(['employee_id']);
+            });
+        }
+        if(Schema::hasTable('jobs_scheduling')) {
+            Schema::table('jobs_scheduling', function (Blueprint $table){
+                $table->dropForeign(['employee_id']);
+            });
+        }
+        if(Schema::hasTable('work_center')) {
+            Schema::table('work_center', function (Blueprint $table){
+                $table->dropForeign(['employee_id']);
+            });
+        }
         Schema::dropIfExists('env_employees');
     }
 }

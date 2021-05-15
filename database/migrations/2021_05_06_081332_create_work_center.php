@@ -37,6 +37,9 @@ class CreateWorkCenter extends Migration
      */
     public function down()
     {
+        Schema::table('operations', function (Blueprint $table) {
+            $table->dropForeign(['wc_code']);
+        });
         Schema::dropIfExists('work_center');
     }
 }
