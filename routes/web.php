@@ -27,6 +27,8 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoutingsController;
+use App\Http\Controllers\WorkCenterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -154,6 +156,19 @@ Route::post('/suggest_product', [BOMController::class, 'search']);
 Route::get('/search-product/{product_code}', [BOMController::class, 'search_product']);
 Route::get('/viewbom/{id}', [BOMController::class, 'get']);
 
+/**BOM ROUTES PROVIDED BY FRONTEND*/
+Route::get('/bom', function () {
+    return view('modules.BOM.bom');
+});
+
+Route::get('/newbom', function () {
+    return view('modules.BOM.bominfo');
+});
+
+Route::get('/newworkcenter', function () {
+    return view('modules.BOM.newWorkCenter');
+});
+
 /**BUYING ROUTES */
 Route::get('/buying', function () {
     return view('modules.buying.Buying');
@@ -253,6 +268,7 @@ Route::get('/create-new-mm', function() {
 });
 Route::get('/machinemanualinfo/{id}', [MachinesManualController::class, 'view']);
 Route::post('/create-machine', [MachinesManualController::class, 'store']);
+Route::get('/find-machine/{machine_code}', [MachinesManualController::class, 'getMachine']);
 Route::patch('/update-machine/{id}', [MachinesManualController::class, 'update']);
 Route::delete('/delete-machine/{id}', [MachinesManualController::class, 'delete']);
 
@@ -284,8 +300,8 @@ Route::get('/openManufacturingItemPriceForm', function () {
 Route::get('/routing', function () {
     return view('modules.manufacturing.routing');
 });
-Route::get('/openManufacturingRoutingForm', function () {
-    return view('modules.manufacturing.routingform');
+Route::get('/newrouting', function () {
+    return view('modules.BOM.newrouting');
 });
 
 /**MATERIAL REQUEST ROUTES */
@@ -451,6 +467,7 @@ Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getCompon
 Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
 Route::get('/getRawMaterialQuantity/{selected}', [SalesOrderController::class, 'getRawMaterialQuantity']);
 Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
+Route::get('/loadProducts', [SalesOrderController::class, 'loadProducts']);
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');
@@ -468,7 +485,7 @@ Route::get('/selling', function () {
 // Route::get('/stock', function () {
 //     return view('modules.stock.stock');
 // });
-Route::get('/stock', [StockMovesController::class, 'index']);
+//Route::get('/stock', [StockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
@@ -531,6 +548,9 @@ Route::get('/openUOMEdit', function () {
     return view('modules.stock.UOMEDIT');
 });
 
+/**WORK CENTER ROUTES **/
+Route::resource('/workcenter', WorkCenterController::class);
+
 /**WORK ORDER ROUTES*/
 Route::get('/workorder', [WorkOrderController::class, 'index']);
 Route::get('/openNewWorkorder', function () {
@@ -565,19 +585,6 @@ Route::post('/create-station', [StationController::class, 'store']);
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
 
-/**BOM */
-Route::get('/bom', function () {
-    return view('modules.BOM.bom');
-});
-
-Route::get('/newbom', function () {
-    return view('modules.BOM.bominfo');
-});
 
 
-Route::get('/newrouting', function () {
-    return view('modules.BOM.newrouting');
-});
-Route::get('/newworkcenter', function () {
-    return view('modules.BOM.newWorkCenter');
-});
+         

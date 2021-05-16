@@ -384,7 +384,8 @@ function loadManufacturingRouting() {
 }
 function openManufacturingRoutingForm() {
     $(document).ready(function () {
-        $("#contentRouting").load("/openManufacturingRoutingForm");
+        $("#contentRouting").load("/newrouting");
+        $('#contentNewRouting').load('/newrouting');
     });
 }
 
@@ -805,9 +806,9 @@ function loadBOMtable() {
   });
 }
 
-function loadmachineinfo() {
+function loadmachineinfo(id) {
   $(document).ready(function () {
-    $('#contentMachineManual').load('/machinemanualinfo');
+    $('#contentMachineManual').load(`/machinemanualinfo/${id}`);
   });
 }
 
@@ -822,13 +823,10 @@ function loadmachine() {
     $('#contentMachineManual').load('/machinemanual');
   });
 }
-function loadnewRouting() {
-  $(document).ready(function () {
-    $('#contentNewRouting').load('/newrouting');
-  });
-}
+
 function loadnewworkcenter() {
   $(document).ready(function () {
-    $('#contentNewRouting').load('/newworkcenter');
+    $('#contentNewRouting').load('/workcenter');
+    $("#contentRouting").load("/workcenter");
   });
 }

@@ -39,6 +39,9 @@ class CreateMachinesManual extends Migration
      */
     public function down()
     {
+        Schema::table('work_center', function (Blueprint $table) {
+            $table->dropForeign(['machine_code']);
+        });
         Schema::dropIfExists('machines_manual');
     }
 }

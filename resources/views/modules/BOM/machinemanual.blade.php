@@ -39,7 +39,7 @@
         <thead>
             <tr>
                 <th>Machine Code</th>
-                <th>Machine Name</th>
+                <th>Machine Name</th> 
                 <th>Setup Time</th>
                 <th>Running Time</th>
 
@@ -48,8 +48,8 @@
         <tbody>
             @foreach ($machines_manuals as $machines_manual) 
             <tr>
-                <td><!--<a href="javascript:onclick=loadmachineinfo();">-->{{ $machines_manual->machine_code }}</a></td>
-                <td>{{ $machines_manual->name }}</td>
+                <td><a href="javascript:onclick=loadmachineinfo({{ $machines_manual->id }});">{{ $machines_manual->machine_code }}</a></td>
+                <td>{{ $machines_manual->machine_name }}</td>
                 <td>{{ $machines_manual->setup_time }}</td>
                 <td>{{ $machines_manual->running_time }}</td>
             </tr>
