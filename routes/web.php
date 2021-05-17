@@ -255,6 +255,8 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 //     return view('modules.manufacturing.jobschedulinginfo');
 // });
 Route::resource('/jobscheduling', JobSchedController::class);
+Route::get('/jobscheduling/{work_order}/get-operations', [JobSchedController::class, 'get_operations'])
+       ->name('jobscheduling.getoperations');
 
 // Route for parts needed in a job scheduling entry
 Route::resource('/jobscheduling/part', PartsController::class);
