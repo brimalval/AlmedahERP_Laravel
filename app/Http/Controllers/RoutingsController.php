@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Operation;
 use App\Models\Routings;
+use App\Models\WorkCenter;
 use Illuminate\Http\Request;
 
 class RoutingsController extends Controller
@@ -37,6 +39,16 @@ class RoutingsController extends Controller
     public function store(Request $request)
     {
         //
+        $routing = new Routings();
+        $last_routing = Routings::latest()->first();
+        $form_data = $request->input();
+        $next_id = $last_routing ? $last_routing->id + 1 : 1;
+        $routing_id = "RT" . str_pad($next_id, 5, '0', STR_PAD_LEFT);
+        $routing->routing_id = $routing_id;
+        $routing->routing_name = $form_data['routing_name'];
+        $routing->save();
+        $routing = Routings::where('routing_id', $routing_id)->first();
+        return ['routing_id' => $routing->routing_id];
     }
 
     /**
@@ -82,5 +94,12 @@ class RoutingsController extends Controller
     public function destroy(Routings $routings)
     {
         //
+    }
+ 
+    public function openRoutingForm() 
+    {
+        $operations = Operation::all();
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.newrouting', ['operations' => $operations, 'work_centers' => $work_centers]);
     }
 }
