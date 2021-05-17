@@ -260,7 +260,7 @@ class SalesOrderController extends Controller
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
                 $work_order->save();
-                array_push($work_order_ids, $work_order->id);
+                //array_push($work_order_ids, $work_order->id);
             }
 
 
