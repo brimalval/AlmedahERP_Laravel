@@ -6,7 +6,6 @@ use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
-use App\Http\Controllers\JobController;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\JobSchedController;
 use App\Http\Controllers\MachinesManualController;
@@ -14,12 +13,14 @@ use App\Http\Controllers\MaterialQuotationController;
 use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
+use App\Http\Controllers\OperationsController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
+use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SalesOrderController;
@@ -297,12 +298,8 @@ Route::get('/openManufacturingItemPriceForm', function () {
 });
 
 /**MANUFACTURING ROUTING ROUTES */
-Route::get('/routing', function () {
-    return view('modules.manufacturing.routing');
-});
-Route::get('/newrouting', function () {
-    return view('modules.BOM.newrouting');
-});
+Route::resource('/routing', RoutingsController::class);
+Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
@@ -321,6 +318,10 @@ Route::get('/important', function () {
 Route::get('/archived', function () {
     return view('modules.messaging.archived');
 });
+
+/**OPERATIONS ROUTES */
+Route::resource('/operations', OperationsController::class);
+Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {
@@ -445,6 +446,9 @@ Route::get('/retail', function () {
     return view('modules.retail.retail');
 });
 
+/**ROUTING OPERATION ROUTES */
+Route::resource('/routingoperation', RoutingOperationController::class);
+
 /**SALES ORDER ROUTES */
 Route::get('/view-sales-order/{id}', [SalesOrderController::class, 'get']);
 Route::get('/salesorder', [SalesOrderController::class, 'index']);
@@ -527,8 +531,7 @@ Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuota
 Route::get('/openNewTask', function () {
     return view('modules.projects.taskitem');
 });
-Route::get('/task', [JobController::class, 'index']);
-Route::get('/create-task', [JobController::class, 'store']);
+
 
 /**TIMESHEETS ROUTES */
 Route::get('/loadProjectsTimesheet', function () {
