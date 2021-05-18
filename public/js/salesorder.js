@@ -1,8 +1,6 @@
 // // Functions here will not work on the full page tab of a new sale as there are duplicates
 
-$(document).ready(function () {
-    $("#notif").hide();
-});
+
 $("#idBtn").on("click", function () {
     var id = $("#custId").val();
     $.ajax({
@@ -57,25 +55,6 @@ $("#idBtn").on("click", function () {
 //}
 let mat_insufficient = false;
 
-$("#saveSaleOrder").click(function () {
-    //continueToWorkOrder("#saveSaleOrder");
-    $("#notif").hide();
-});
-
-//Might be unnecessary will check @TODO
-//from old version of front-end js file
-$("#saveSaleOrder1").click(function () {
-    continueToWorkOrder("#saveSaleOrder1");
-});
-
-function selectSalesMethod() {
-    var selected = document.getElementById("saleSupplyMethod").value;
-    if (selected == "Purchase") {
-        document.getElementById("cardComponent").style.display = "block";
-    } else {
-        document.getElementById("cardComponent").style.display = "none";
-    }
-}
 
 function selectPaymentMethod() {
     var selectedPayment = document.getElementById("salePaymentMethod").value;
@@ -210,6 +189,8 @@ var createMatRequestItems = [];
 //Array for storing stocks to be minus from components needed
 var componentsOrder;
 var materialsInComponents;
+var componentsOnly = [];
+var stockMinusQuantity = [];
 
 function contains(names, arr) {
     namelist = [];
@@ -228,21 +209,35 @@ function contains(names, arr) {
 //Adds product to array
 function addToTable() {
     currentProduct = document.getElementById("saleProductCode").value;
+    currentProductPrice = document.getElementById("saleProductCode");
+    currentProductPrice = $('option:selected', currentProductPrice).attr('data-price');
+    currentProductStock = document.getElementById("saleProductCode");
+    currentProductStock = $('option:selected', currentProductStock).attr('data-stock');
+
     if (!contains(currentProduct, currentCart)) {
         currentCart.push([currentProduct, 0]);
+        stockMinusQuantity.push([currentCart, 0]);
         $("#ProductsTable").append(
-            '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ' +
-                currentProduct +
-                '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value="0" onchange="changeQuantity(this)"></td><td class="text-center">  <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>'
+            `<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ` 
+            + currentProduct +
+            `</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control text-center" data-stock="`+currentProductStock+ `"value="0" onchange="changeQuantity(this)"></td>
+            <td class="text-center">` + currentProductStock +
+            `<td class="text-center">` + currentProductPrice +
+            `<td class="text-center">   <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>`
         );
     }
 }
 
 //Quantity inside the products table
 function changeQuantity(r) {
+    stock = r.value - r.getAttribute("data-stock");
+    if(stock <= 0 ){
+        stock = 0;
+    }
     index = r.parentNode.parentNode.rowIndex - 1;
     productName = currentCart[index][0];
     currentCart[index] = [productName, r.value];
+    stockMinusQuantity[index] = [productName, stock];
     $("#btnSalesCalculate").click();
 }
 
@@ -272,25 +267,46 @@ function rawMaterials() {
     var data = {};
     var products = [];
     var qty = [];
-    for (let index = 0; index < currentCart.length; index++) {
-        products[index] = currentCart[index][0];
-        qty[index] = currentCart[index][1];
+    let filter = [];
+    console.log(document.getElementById("saleSupplyMethod").value);
+    if( document.getElementById("saleSupplyMethod").value == "Produce"){
+        //Filters cart for 0 values
+        for (let index = 0; index < stockMinusQuantity.length; index++) {
+            if( stockMinusQuantity[index][1] != 0){
+                filter.push(stockMinusQuantity[index]);
+            }
+        }
+        for (let index = 0; index < filter.length; index++) {
+            products[index] = filter[index][0];
+            qty[index] = filter[index][1];
+        }
+        data["products"] = products;
+        data["qty"] = qty;
+    }else{
+        for (let index = 0; index < currentCart.length; index++) {
+            products[index] = currentCart[index][0];
+            qty[index] = currentCart[index][1];
+        }
+        data["products"] = products;
+        data["qty"] = qty;
     }
-    data["products"] = products;
-    data["qty"] = qty;
 
-    $.ajax({
-        url: "/getCompo",
-        type: "GET",
-        data: data,
-        success: function (response) {
-            finalizer(response);
-        },
-        error: function (response, error) {
-            // alert("Request: " + JSON.stringify(request));
-        },
-    });
-    //Function here
+    if(products.length == 0 || qty.length == 0){
+        $(".components tr").remove();
+    }else{
+        $.ajax({
+            url: "/getCompo",
+            type: "GET",
+            data: data,
+            success: function (response) {
+                console.log(response);
+                finalizer(response);
+            },
+            error: function (response, error) {
+                // alert("Request: " + JSON.stringify(request));
+            },
+        });
+    }
 }
 
 function finalizer(arr_components) {

@@ -15,23 +15,23 @@ class BillOfMaterials extends Model
     protected $table = "bom_bill_of_materials";
     public $timestamps = true;
     protected $fillable = [
-        'customer_id',
         'product_code',
-        'bom_quantity',
-        'unit',
-        'rate_per_quantity',
-        'bom_status',
-        'currency',
+        'component_code',
+        'routing_id',
+        'purchase_id',
+        'bom_name',
+        'raw_material_cost', 
+        'total_cost', 
         'is_active',
-        'is_default',
-        'total_cost',
-        'allow_alternative_item',
-        'set_rate_assembly_item',
-        'total_cost'
+        'is_default'
     ]; 
 
     //public function getRates($id) {
     //    return BillOfMaterials::whereIn('id', json_decode($id));
     //} 
+
+    public function routing(){
+        return $this->hasOne(Routings::class, 'routings_id', 'routing_id');
+    }
 
 }

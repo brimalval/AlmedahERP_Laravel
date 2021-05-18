@@ -130,10 +130,12 @@ class PurchaseReceiptController extends Controller
             $mat_request = MaterialRequest::where('request_id', $request_id)->first();
             $work_order_no = $mat_request->work_order_no;
 
-            $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+            // foreach($work_order_no as $w){
+            $work_order = WorkOrder::where('work_order_no', $w)->first();
             if(empty($work_order->mat_ordered_id)){
-                WorkOrder::where('work_order_no', $work_order_no)->update(['mat_ordered_id' => $mo_id]);
+                WorkOrder::where('work_order_no', $w)->update(['mat_ordered_id' => $mo_id]);
             }
+            // }
             return response($work_order);
         } catch (Exception $e) {
             return $e;

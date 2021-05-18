@@ -23,7 +23,7 @@
                     <li class=" nav-item">
                         <a class="nav-link" href="#top">Menu3</a>
                 </li>
-                <!-- This menu is hidden in bigger devices with d-sm-none. 
+                <!-- This menu is hidden in bigger devices with d-sm-none.
                     The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  -->
                 <li class="nav-item dropdown d-sm-block d-md-none">
                     <a class="nav-link dropdown-toggle" href="#" id="smallerscreenmenu" data-toggle="dropdown"
@@ -116,11 +116,23 @@
                 <!-- End of Menu Item Manufacturing -->
                 <!-- Submenu Manufacturing content -->
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                    <a href="#" id="inbox-toggle" data-parent="BOM"
                         class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">BOM</span>
+                        <span class="menu-collapsed align-middle">Bom</span>
                     </a>
                 </div>
+                <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="BOM"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Operations</span>
+                    </a>
+                </div>
+                <!--<div id='submenuManufacturing' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="BOM"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Machine Manual</span>
+                    </a>
+                </div>-->
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
@@ -737,13 +749,57 @@
                         <span class="submenu-icon ml-auto"></span>
                     </div>
                 </a>
+
                 <!-- End of Menu Item Administration -->
+                <a href="#submenunewUI" data-toggle="collapse" aria-expanded="false"
+                    class="bg-dark bevel list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-start align-items-center">
+                        <span class="menu-collapsed align-middle smaller">NEW USER INTERFACE</span>
+                        <span class="submenu-icon ml-auto"></span>
+                    </div>
+                </a>
+                <!-- End of Menu Item Messages -->
+                <!-- Submenu Messages content -->
+                <div id='submenunewUI' class="collapse sidebar-submenu">
+                    <a href="#" id="address-toggle" data-parent="NewUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Address</span>
+                    </a>
+                    <a href="#" id="Coupon-toggle" data-parent="newUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Coupon Code</span>
+                    </a>
+                    <a href="#" id="Pricing_Rule" data-parent="NewUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Pricing Rule</span>
+                    </a>
+                    <a href="#" id="PricingB-toggle" data-parent="newUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Product Bundle</span>
+                    </a>
+                    <a href="#" id="Shipping_Rule" data-parent="NewUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Shipping Rule</span>
+                    </a>
+                    <a href="#" id="Purchase-toggle" data-parent="newUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Purchase Taxes</span>
+                    </a>
+                    <a href="#" id="Salestaxes-toggle" data-parent="newUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Sales Taxes</span>
+                    </a>
+                    <a href="#" id="suppliergroup-toggle" data-parent="newUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Supplier Group</span>
+                    </a>
+                </div>
             </ul>
             <!-- List Group END-->
         </div>
         <!-- sidebar-container END -->
         <!-- MAIN -->
-        <div class="col p-3 div-tab" id="divMain">
+        <div class="col p-3 div-tab" id="divMain" style="overflow: auto">
         </div>
         <!-- Main Col END -->
     </div>
