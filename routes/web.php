@@ -22,7 +22,6 @@ use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
-use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SupplierController;
