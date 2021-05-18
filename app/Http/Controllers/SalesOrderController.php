@@ -256,8 +256,6 @@ class SalesOrderController extends Controller
             foreach ($cart as $row){ 
 
                 $work_order = new WorkOrder();
-                $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
-                $work_order->work_order_no = $won;
                 $work_order->product_code = $row[0];
                 $work_order->mat_ordered_id = null;
                 $work_order->sales_id = $data->id;
@@ -266,6 +264,10 @@ class SalesOrderController extends Controller
                 $work_order->real_start_date = null;
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
+                $work_order->work_order_no = "WOK";
+                $work_order->save();
+                $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+                $work_order->work_order_no = $won;
                 $work_order->save();
                 //array_push($work_order_ids, $work_order->id);
             }
@@ -275,8 +277,6 @@ class SalesOrderController extends Controller
                 $component = Component::where('component_name', "=", $component_name)->first();
                 $component_code = $component->component_code;
                 $work_order = new WorkOrder();
-                $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
-                $work_order->work_order_no = $won;
                 $work_order->component_code = $component_code;
                 $work_order->mat_ordered_id = null;
                 $work_order->sales_id = $data->id;
@@ -285,12 +285,16 @@ class SalesOrderController extends Controller
                 $work_order->real_start_date = null;
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
+                $work_order->work_order_no = "WOK";
+                $work_order->save();
+                $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+                $work_order->work_order_no = $won;
                 $work_order->save();
                 array_push($work_order_ids, $work_order->id);
             }
 
             //return "Sucess";
-            return response($work_order->id);
+            return response(json_encode($work_order_ids));
             // return response($work_order->id);
 
         }catch(Exception $e){

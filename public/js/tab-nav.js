@@ -172,7 +172,6 @@ function loadWorkOrderInfo(
     $("#requiredItems").html("");
     materials_qty = JSON.parse(quantity);
     console.log(materials_qty);
-    alert(materials_qty);
     materials_complete = [];
     // $("#startWorkOrder").click(startWorkOrder());
     $(document).ready(function () {
