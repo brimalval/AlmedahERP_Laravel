@@ -219,6 +219,13 @@ Route::get('/openManufacturingItemPriceForm', function () {
 Route::resource('/routing', RoutingsController::class);
 Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
 
+Route::get('/routing', function () {
+    return view('modules.bom.routing');
+});
+Route::get('/editrouting', function () {
+    return view('modules.bom.editrouting');
+});
+
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
 Route::post('/materialrequest/{materialrequest}/submit', [MatRequestController::class, 'submit'])->name('materialrequest.submit');
@@ -240,6 +247,12 @@ Route::get('/archived', function () {
 /**OPERATIONS ROUTES */
 Route::resource('/operations', OperationsController::class);
 Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
+Route::get('/newoperation', function () {
+    return view('modules.bom.newoperation');
+});
+Route::get('/editoperation', function () {
+    return view('modules.bom.editoperation');
+});
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {
@@ -571,7 +584,3 @@ Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
-
-
-
-         
