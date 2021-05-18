@@ -36,4 +36,15 @@ class Routings extends Model
         }
         return $operations;
     }
+
+    public function operationsThrough(){
+        return $this->hasManyThrough(
+            Operation::class, 
+            RoutingOperation::class,
+            'routing_id',
+            'operation_id',
+            'routing_id',
+            'operation_id',
+        );
+    }
 }

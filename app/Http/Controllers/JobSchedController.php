@@ -15,6 +15,7 @@ class JobSchedController extends Controller
      */
     public function index()
     {
+        dd(JobSched::get()->first());
         return view('modules.manufacturing.jobscheduling', [
         ]);
     }
@@ -92,7 +93,7 @@ class JobSchedController extends Controller
         // For now, this will only return up to the BOM of the item
         // Change it once the routing/operations models are updated
         return response()->json([
-            'operations' => $work_order->item->bom->routing->operations,
+            'operations' => $work_order->item->bom->routing->operationsThrough,
         ]);
     }
 }
