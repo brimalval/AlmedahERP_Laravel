@@ -269,7 +269,7 @@ class SalesOrderController extends Controller
                 $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
                 $work_order->save();
-                array_push($work_order_ids, $work_order->id);
+                //array_push($work_order_ids, $work_order->id);
             }
 
             foreach($new_component as $c){

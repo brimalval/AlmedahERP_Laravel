@@ -343,8 +343,7 @@ Route::get('/createnewsupplier', function() {
 Route::get('/openNewTask', function() {
     return view('modules.projects.taskitem');
 });
-Route::get('/task', [JobController::class, 'index']);
-Route::get('/create-task', [JobController::class, 'store']);
+
 
 /**TIMESHEETS ROUTES */
 Route::get('/loadProjectsTimesheet', function() {

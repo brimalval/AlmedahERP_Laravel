@@ -252,7 +252,7 @@
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                 </td>
-                            </tr>`
+                            </tr>
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">

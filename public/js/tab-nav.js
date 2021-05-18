@@ -836,3 +836,39 @@ function loadnewworkcenter() {
         $("#contentRouting").load("/workcenter");
     });
 }
+
+function loadnewRouting() {
+  $(document).ready(function () {
+    $('#contentRouting').load('/newrouting');
+  });
+}
+
+function EditRouting(id) {
+  $(document).ready(function () {
+    $('#contentRouting').load(`/editrouting/${id}`);
+  });
+}
+
+function RoutingTable() {
+  $(document).ready(function () {
+    $('#contentRouting').load('/routing');
+  });
+}
+
+function newoperation() {
+  $(document).ready(function () {
+    $('#contentOperations').load('/newoperation');
+  });
+}
+
+function operationtable() {
+  $(document).ready(function () {
+    $('#contentOperations').load('/operations');
+  });
+}
+
+function editoperation(id) {
+  $(document).ready(function () {
+    $('#contentOperations').load(`/operations/${id}/edit`);
+  });
+}
