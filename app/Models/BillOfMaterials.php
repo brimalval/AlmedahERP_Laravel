@@ -20,6 +20,7 @@ class BillOfMaterials extends Model
         'bom_quantity',
         'unit',
         'rate_per_quantity',
+        'routing_id',
         'bom_status',
         'currency',
         'is_active',
@@ -33,5 +34,9 @@ class BillOfMaterials extends Model
     //public function getRates($id) {
     //    return BillOfMaterials::whereIn('id', json_decode($id));
     //} 
+
+    public function routing(){
+        return $this->hasOne(Routings::class, 'routings_id', 'routing_id');
+    }
 
 }

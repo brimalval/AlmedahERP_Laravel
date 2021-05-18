@@ -15,9 +15,7 @@ class JobSchedController extends Controller
      */
     public function index()
     {
-        $workorders = WorkOrder::get();
         return view('modules.manufacturing.jobscheduling', [
-            'workorders' => $workorders,
         ]);
     }
 
@@ -61,7 +59,10 @@ class JobSchedController extends Controller
      */
     public function edit(JobSched $jobsched)
     {
-        return view('modules.manufacturing.jobschedulinginfo');
+        $work_orders = WorkOrder::get();
+        return view('modules.manufacturing.jobschedulinginfo', [
+            'work_orders' => $work_orders,
+        ]);
     }
 
     /**
@@ -85,5 +86,13 @@ class JobSchedController extends Controller
     public function destroy(JobSched $jobscheduling)
     {
         //
+    }
+
+    public function get_operations(WorkOrder $work_order){
+        // For now, this will only return up to the BOM of the item
+        // Change it once the routing/operations models are updated
+        return response()->json([
+            'operations' => $work_order->item->bom->routing->operations,
+        ]);
     }
 }

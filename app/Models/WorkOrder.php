@@ -10,6 +10,7 @@ class WorkOrder extends Model
     use HasFactory;
     protected $table = 'work_order';
     public $timestamps = true;
+    protected $primaryKey = "work_order_no";
     protected $fillable = [
         'sales_id',
         'mat_ordered_id',

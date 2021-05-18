@@ -46,10 +46,19 @@
 						<div class="col-4">
 							<label for="workOrderJobSched">Work Order</label>
 							<div class="input-group">
-								<input type="text" name="workOrderJobSched" class="form-control" value="workorder001">
-								<div class="input-group-btn">
+								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }}>
+									<option value="none" selected disabled>
+										Select a work order
+									</option>
+									@foreach ($work_orders as $work_order)
+										<option value="{{ $work_order->work_order_no }}" data-subtext="Sales: {{ $work_order->sales_id }} For: {{ $work_order->product_code ?? $work_order->component_code }}">
+											{{ $work_order->work_order_no }}
+										</option>	
+									@endforeach
+								</select>
+								{{-- <div class="input-group-btn">
 									<button class="btn btn-primary"><i class="fa fa-search"></i></button>
-								</div>
+								</div> --}}
 							</div>
 
 							{{-- <div class="input-group">
@@ -109,13 +118,13 @@
 							<hr><br>
 						</div>
 
-						<div class="col-12">
+						{{-- <div class="col-12">
 							<div class="col-3">
 								<button class="btn btn-primary text-nowrap btn-md" id="preFillBtn">
 									Pre-fill Operation
 								</button>
 							</div>
-						</div>
+						</div> --}}
 
 						<div class="col-12">
 							<br>
@@ -372,7 +381,27 @@
 			$("#finBtn").css("display","none");
 		}
 	}
-	$("#preFillBtn").click(function(){
-		console.log("Pre fill inputs");	
+	// $("#preFillBtn").click(function(){
+	// 	console.log("Pre fill inputs");	
+	// });
+	$('#js-work-order-select').off('change').change(function(){
+		let route = "{{ route('jobscheduling.getoperations', ['work_order'=>0]) }}".replace("/0/", "/" + $(this).val() + "/");
+		$('#operationsTable').html('');
+		console.log(route);
+		$.ajax({
+			type: 'GET',
+			url: route,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				console.log(data);
+			},
+			error: function(data){
+				console.log("error");
+			}
+		});
 	});
 </script>
+
+<script src="{{ asset('js/jobscheduling.js') }}"></script>
