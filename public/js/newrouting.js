@@ -23,14 +23,14 @@ function addRowbomOperation(){
             <input type="checkbox" class="form-check-input">
         </div>
         </td>
-        <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}"  name="seq_id" id="seq_id" class="form-control" readonly></td>
+        <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}"  name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
         <td style="width: 10%;" class="mr-qty-input">
-            <input type="text" value=""  name="operation" id="operation" class="form-control" list="operations_list">
+            <input type="text" value=""  name="operation" id="operation${nextID}" class="form-control" list="operations_list" onchange="operationSearch(${nextID});">
         </td>
-        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter" class="form-control"></td>
-        <td class="mr-unit-input"><input type="text" value=""  name="description" id="description" class="form-control"></td>
-        <td class="mr-unit-input"><input type="number" value=""  name="hour_rate" id="hour_rate" class="form-control"></td>
-        <td class="mr-unit-input"><input type="number" value=""  name="operation_time" id="operation_time" class="form-control"></td>   
+        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control"></td>
+        <td class="mr-unit-input"><input type="text" value=""  name="description" id="description${nextID}" class="form-control"></td>
+        <td class="mr-unit-input"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control"></td>
+        <td class="mr-unit-input"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>   
         <td>
             <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                 <i class="fa fa-edit" aria-hidden="true"></i>
@@ -64,7 +64,7 @@ $("#saveRouting").click(function () {
     $.ajax({
         type: "POST",
         url: '/routing',
-        async: false,
+        async: false, //needed for retrieving routing_id from url
         data: routingData,
         cache: false,
         contentType: false,
@@ -76,15 +76,14 @@ $("#saveRouting").click(function () {
     //routingId = tempId;
     // ..then input the routing operations
     var operationsData;
-    operations = $("#newrouting-input-rows");
+    operations = $("#newrouting-input-rows tr");
     for(let i=1; i<=operations.length; i++) {
-        var operationRow = $(`tr[data-id=${i}]`);
         operationsData = new FormData();
-        operationsData.append('seq_id', operationRow.find("#seq_id").val());
-        operationsData.append('operation', operationRow.find("#operation").val());
+        operationsData.append('seq_id', $(`#seq_id${i}`).val());
+        operationsData.append('operation', $(`#operation${i}`).val());
         operationsData.append('routing_id', routingId);
-        operationsData.append('hour_rate', operationRow.find("#hour_rate").val());
-        operationsData.append('operation_time', operationRow.find("#operation_time").val());
+        operationsData.append('hour_rate', $(`#hour_rate${i}`).val());
+        operationsData.append('operation_time', $(`#operation_time${i}`).val());
         $.ajax({
             type: "POST",
             url: '/routingoperation',
@@ -129,27 +128,22 @@ $("#operationForm").submit(function () {
 });
 
 
-function operationSearch() {
-    $(".operation").each(function () {
-        // element == this
-        $(this).change(function () { 
-            $.ajax({
-                type: "GET",
-                url: `/get-operation/${$(this).val()}`,
-                data: $(this).val(),
-                success: function (response) {
-                    let operation = response.operation;
-                    $("#workcenter").val(operation.wc_code);
-                    $("#description").val(operation.description);
-                }
-            });
-        });
+function operationSearch(id) {
+    var field = $(`#operation${id}`);
+    $.ajax({
+        type: "GET",
+        url: `/get-operation/${field.val()}`,
+        data: field.val(),
+        success: function (response) {
+            let operation = response.operation;
+            $(`#workcenter${id}`).val(operation.wc_code);
+            $(`#description${id}`).val(operation.description);
+        }
     });
 }
 
 
 $(document).ready(function() {
-    operationSearch();
     $('.summernote').summernote({
         height: 200
     });

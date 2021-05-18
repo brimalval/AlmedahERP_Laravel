@@ -69,25 +69,25 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td id="mr-code-input" class="mr-code-input"><input type="number" value="1" name="seq_id" id="seq_id"
+                    <td id="mr-code-input" class="mr-code-input"><input type="number" value="1" name="seq_id" id="seq_id1"
                             class="form-control" readonly></td>
                     <td class="mr-qty-input"><input type="text" value="" name="operation"
-                            id="operation" class="form-control operation" list="operations_list">
+                            id="operation1" class="form-control operation" list="operations_list" onchange="operationSearch(1);">
                             <datalist id="operations_list">
                                 @foreach ($operations as $operation)
                                     <option value="{{ $operation->operation_id }}">{{ $operation->operation_name }}</option>
                                 @endforeach
                             </datalist>
                     </td>
-                    <td class="mr-unit-input"><input type="text" value="" name="workcenter" id="workcenter"
+                    <td class="mr-unit-input"><input type="text" value="" name="workcenter" id="workcenter1"
                             class="form-control">
                     </td>
                     </td>
-                    <td class="mr-unit-input"><input type="text" value="" name="description" id="description"
+                    <td class="mr-unit-input"><input type="text" value="" name="description" id="description1"
                             class="form-control"></td>
-                    <td class="mr-unit-input"><input type="number" value="" name="hour_rate" id="hour_rate"
+                    <td class="mr-unit-input"><input type="number" value="" name="hour_rate" id="hour_rate1"
                             class="form-control"></td>
-                    <td class="mr-unit-input"><input type="number" value="" name="operation_time" id="operation_time"
+                    <td class="mr-unit-input"><input type="number" value="" name="operation_time" id="operation_time1"
                             class="form-control"></td>
                     <td>
                         <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">

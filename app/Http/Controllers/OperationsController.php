@@ -51,7 +51,8 @@ class OperationsController extends Controller
 
     public function getOperation($operation_id)
     {
-        $operation = Operation::where('operation_id', $operation_id)->first();
+        $data = Operation::where('operation_id', $operation_id)->first();
+        $operation = Operation::find($data->id);
         return ['operation' => $operation];
     }
 
