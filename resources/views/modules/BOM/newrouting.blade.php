@@ -76,11 +76,11 @@
                             </datalist>
                     </td>
                     <td class="mr-unit-input"><input type="text" value="" name="workcenter" id="workcenter1"
-                            class="form-control">
+                            class="form-control" disabled>
                     </td>
                     </td>
                     <td class="mr-unit-input"><input type="text" value="" name="description" id="description1"
-                            class="form-control"></td>
+                            class="form-control" disabled></td>
                     <td class="mr-unit-input"><input type="number" value="" name="hour_rate" id="hour_rate1"
                             class="form-control"></td>
                     <td class="mr-unit-input"><input type="number" value="" name="operation_time" id="operation_time1"
