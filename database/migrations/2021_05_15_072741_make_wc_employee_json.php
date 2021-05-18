@@ -27,5 +27,8 @@ class MakeWcEmployeeJson extends Migration
     public function down()
     {
         //
+        Schema::table('work_center', function (Blueprint $table) {
+            $table->dropColumn('employee_id_set');
+        });
     }
 }

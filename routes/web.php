@@ -70,10 +70,7 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::get('/bom', function () {
-    return view('modules.BOM.bom');
-});
-
+Route::get('/bom', [BOMController::class, 'index']);
 Route::get('/newbom', function () {
     return view('modules.BOM.bominfo');
 });
