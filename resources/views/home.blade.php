@@ -333,6 +333,10 @@
                     <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Pick List</span>
                     </a>
+                    <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Stock Moves</span>
+                    </a>
+                    
 
                 </div>
                 <!-- End of Submenu Item Stock -->

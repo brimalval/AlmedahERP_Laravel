@@ -22,11 +22,14 @@ use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
-use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SalesOrderController;
+use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
+use App\Http\Controllers\NewStockMovesController;
+use App\Http\Controllers\StockMovesReturnController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -449,6 +452,10 @@ Route::get('/selling', function () {
 Route::get('/shippingrule', function() {
     return view('modules.NewUI.ShippingRule');
 });
+Route::get('/stockmoves', [StockMovesController::class, 'index']);
+Route::get('/newstockmoves', [NewStockMovesController::class, 'index']);
+Route::get('/showItems/{selected}', [NewStockMovesController::class, 'showItems']);
+Route::get('/stockmovesreturn', [StockMovesReturnController::class, 'index']);
 
 Route::get('/shippingruleinfo', function() {
     return view('modules.NewUI.ShippingRuleInfo');
