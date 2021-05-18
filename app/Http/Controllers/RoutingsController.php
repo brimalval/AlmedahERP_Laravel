@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Operation;
+use App\Models\RoutingOperation;
 use App\Models\Routings;
 use App\Models\WorkCenter;
 use Exception;
@@ -19,6 +20,16 @@ class RoutingsController extends Controller
     {
         $routings = Routings::all();
         return view('modules.BOM.routing', ['routings' => $routings]);
+    }
+
+    public function view($id)
+    {
+        $routing = Routings::find($id);
+        $operations = Operation::find($id);
+        $routing_operation = RoutingOperation::find($id);
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.editrouting', ['route' => $routing, 'operations' => $operations,
+                                                'routing_operations' => $routing_operation, 'work_centers' => $work_centers]);
     }
 
     /**
@@ -100,8 +111,14 @@ class RoutingsController extends Controller
     {
         //
     }
- 
-    public function openRoutingForm() 
+
+    public function delete($id)
+    {
+        $routing = Routings::find($id);
+        $routing->delete();
+    }
+
+    public function openRoutingForm()
     {
         $operations = Operation::all();
         $work_centers = WorkCenter::all();

@@ -221,9 +221,12 @@ Route::get('/openManufacturingItemPriceForm', function () {
 /**MANUFACTURING ROUTING ROUTES */
 Route::resource('/routing', RoutingsController::class);
 Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
-Route::get('/editrouting', function () {
+
+/**Route::get('/editrouting', function () {
     return view('modules.bom.editrouting');
-});
+});*/
+Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
+Route::delete('/delete-routing/{id}', [RoutingsController::class, 'delete']);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);

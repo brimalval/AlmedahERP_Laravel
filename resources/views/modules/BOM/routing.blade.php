@@ -28,7 +28,7 @@
 </nav>
 <br>
 <div class="container">
-    
+
         <hr>
         <br>
         <table id="table_routing" class="display">
@@ -40,19 +40,11 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td width="90%">Row 1 Data 1</td>
-            <td>
-        <a id="" class="btn"  href="javascript:onclick=EditRouting();" role="button">
-            <i class="fa fa-edit" aria-hidden="true"></i>
-        </a>
-        <a id="" class="btn delete-btn" href="#" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-        </a>
-    </td>
-
-        </tr>
-       
+        @foreach ($routings as $routings_table)
+            <tr>
+                <td><a href="javascript:onclick=EditRouting({{ $routings_table->id }});">{{ $routings_table->routing_name }}</a></td>
+            </tr>
+        @endforeach
     </tbody>
 </table>
     </div>

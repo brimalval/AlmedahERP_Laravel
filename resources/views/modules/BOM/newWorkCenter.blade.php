@@ -57,13 +57,13 @@
             <div class="col-6">
                 <div class="form-group">
                   <label for="Type">Type</label>
-                  <select class="form-control" id="hm_select" onchange = "showForm()">
-                     <option value="0"></option>
-                     <option value="1">Human</option>
-                     <option value="2">Machine</option>
-                     <option value="3">Human & Machine</option>
+                  <select class="form-control" id="wc_select" onchange = "showForm()">
+                     <option value="N/A"></option>
+                     <option value="Human">Human</option>
+                     <option value="Machine">Machine</option>
+                     <option value="Human and Machine">Human & Machine</option>
                   </select>
-                </div>   
+                </div>
           </div>
     <div class="col-8">
           <div id = "f1" style = "display:none">

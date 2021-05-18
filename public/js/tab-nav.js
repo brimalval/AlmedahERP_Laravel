@@ -844,9 +844,9 @@ function loadnewRouting() {
   });
 }
 
-function EditRouting() {
+function EditRouting(id) {
   $(document).ready(function () {
-    $('#contentRouting').load('/editrouting');
+    $('#contentRouting').load(`/editrouting/${id}`);
   });
 }
 
