@@ -19,4 +19,8 @@ class JobSched extends Model
         'work_order_no',
         'operations'
     ];
+
+    public function work_order(){
+        return $this->hasOne(WorkOrder::class, 'work_order_no', 'work_order_no');
+    }
 }

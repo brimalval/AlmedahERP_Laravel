@@ -16,7 +16,7 @@ class Routings extends Model
         'routing_name',
     ];
 
-    private function routingOperations() {
+    public function routingOperations() {
         return $this->hasMany(RoutingOperation::class, 'routing_id', 'routing_id');    
     }
 
@@ -35,5 +35,16 @@ class Routings extends Model
             );
         }
         return $operations;
+    }
+
+    public function operationsThrough(){
+        return $this->hasManyThrough(
+            Operation::class, 
+            RoutingOperation::class,
+            'routing_id',
+            'operation_id',
+            'routing_id',
+            'operation_id',
+        );
     }
 }

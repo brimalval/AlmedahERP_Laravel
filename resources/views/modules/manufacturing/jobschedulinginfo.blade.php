@@ -384,9 +384,14 @@
 	// $("#preFillBtn").click(function(){
 	// 	console.log("Pre fill inputs");	
 	// });
+
+	// When the value for the work order selectpicker changes,
+	// get the operations associated with the workorder's products' BOM
+	// and add them as rows
 	$('#js-work-order-select').off('change').change(function(){
 		let route = "{{ route('jobscheduling.getoperations', ['work_order'=>0]) }}".replace("/0/", "/" + $(this).val() + "/");
-		$('#operationsTable').html('');
+		let tableBody = $('#operationsTable').children('tbody');
+		tableBody.html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
 		console.log(route);
 		$.ajax({
 			type: 'GET',
@@ -395,7 +400,86 @@
 			processData: false,
 			cache: false,
 			success: function(data){
-				console.log(data);
+				tableBody.html('');
+				data.operations.forEach((operation, index) => {
+					tableBody.append(`
+						<tr>
+							<td>
+								{{-- Sequence Name Value --}}
+								Sequence ${data.routingOperations[index].sequence_id}
+							</td>
+							<td>
+								{{-- Operation Name Value --}}
+								${operation.operation_name}
+							</td>
+							<td>
+								{{-- Operation Time Value --}}
+								${data.routingOperations[index].operation_time}
+							</td>
+							<td>
+								{{-- Predecessor Value --}}
+								${(index > 0) ? data.operations[index - 1].operation_name : "N/A"}
+							</td>
+							<td>
+								{{-- Machine Code Value --}}
+								
+							</td>
+							<td>
+								{{-- WC_Type value --}}
+								${operation.wc_code}
+							</td>
+							<td class="d-flex align-items-center justify-content-center">
+								{{-- Outsourced Value --}}
+
+								<div class="form-check ">
+									<input type="checkbox" class="form-check-input">
+								</div>
+
+
+							</td>
+							<td class="p-3">
+								{{-- Planned Start Value --}}
+								<input class="form-control form-control-sm" type="text">
+							</td>
+							<td class="p-3">
+								{{-- Planned End Value --}}
+								<input class="form-control form-control-sm" type="text">
+							</td>
+							<td class="p-3">
+								{{-- Real Start Value --}}
+								<input class="form-control form-control-sm" type="text">
+							</td>
+							<td class="p-3">
+								{{-- Real End Value --}}
+								<input class="form-control form-control-sm" type="text">
+							</td>
+							<td>
+								{{-- Status Value --}}
+
+							</td>
+							<td>
+								{{-- Quantity Finished --}}
+
+							</td>
+							{{-- Action Buttons --}}
+							<td>
+								<a href="javascript:void(0)">
+									<i class="fas fa-play"></i>
+								</a>
+							</td>
+							<td>
+								<a href="javascript:void(0)">
+									<i class="fas fa-pause"></i>
+								</a>
+							</td>
+							<td>
+								<a href="javascript:void(0)">
+									<i class="fas fa-power-off"></i>
+								</a>
+							</td>
+						</tr>
+					`);
+				});
 			},
 			error: function(data){
 				console.log("error");

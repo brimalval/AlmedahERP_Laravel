@@ -81,7 +81,8 @@
                         </div>
                     </td>
                     <td class="text-black-50">{{ $work_order->work_order_no }}</td>
-                    {{-- @if($work_order->mat_ordered_id) --}}<td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $components[$index]["component_code"] }}`, `{{ $work_order->sales_id }}`, `{{ $items[$index] }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $components[$index]["component_code"] }} </a></td>
+                    
+                    <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id }}`, `{{ $items[$index] }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
                     <td class="text-black-50">{{ $items[$index] }}</td>
                     <td>{{ $work_order->work_order_status }}</td>
                     {{-- @else

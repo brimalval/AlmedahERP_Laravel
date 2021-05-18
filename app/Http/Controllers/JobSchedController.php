@@ -91,8 +91,10 @@ class JobSchedController extends Controller
     public function get_operations(WorkOrder $work_order){
         // For now, this will only return up to the BOM of the item
         // Change it once the routing/operations models are updated
+        $routing = $work_order->item->bom()->routing;
         return response()->json([
-            'operations' => $work_order->item->bom->routing->operations,
+            'operations' => $routing->operationsThrough,
+            'routingOperations' => $routing->routingOperations,
         ]);
     }
 }

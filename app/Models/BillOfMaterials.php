@@ -31,7 +31,18 @@ class BillOfMaterials extends Model
     //} 
 
     public function routing(){
-        return $this->hasOne(Routings::class, 'routings_id', 'routing_id');
+        return $this->hasOne(Routings::class, 'routing_id', 'routing_id');
     }
 
+    public function product(){
+        return ($this->product_code == null) ? 
+                null :
+                $this->belongsTo(ManufacturingProducts::class, 'product_code', 'product_code');
+    }
+
+    public function component(){
+        return ($this->component_code == null) ?
+                null :
+                $this->belongsTo(Component::class, 'component_code', 'component_code');
+    }
 }
