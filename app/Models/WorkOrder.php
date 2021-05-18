@@ -11,6 +11,7 @@ class WorkOrder extends Model
     protected $table = 'work_order';
     public $timestamps = true;
     protected $fillable = [
+        'work_order_no',
         'sales_id',
         'mat_ordered_id',
         'work_order_status',

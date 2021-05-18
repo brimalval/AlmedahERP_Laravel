@@ -14,8 +14,8 @@ use App\Models\MaterialPurchased;
 use App\Models\payment_logs;
 use App\Models\MaterialRequest;
 use App\Models\ordered_products;
+use Illuminate\Support\Carbon;
 use DB;
-use Carbon;
 use Exception;
 class SalesOrderController extends Controller
 {
@@ -241,20 +241,24 @@ class SalesOrderController extends Controller
                 $order->quantity_purchased = $row[1];
                 $order->save();
 
-                $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                if( $prod->stock_unit - $row[1] > 0){
-                    $prod->stock_unit = $prod->stock_unit - $row[1];
-                }else{
-                    $prod->stock_unit = 0;
-                }
+                // $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                // if( $prod->stock_unit - $row[1] > 0){
+                //     $prod->stock_unit = $prod->stock_unit - $row[1];
+                // }else{
+                //     $prod->stock_unit = 0;
+                // }
                 
-                $prod->save();
+                // $prod->save();
             }
 
             $work_order_ids = array();
 
             foreach ($cart as $row){ 
+
                 $work_order = new WorkOrder();
+                $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+                $work_order->work_order_no = $won;
+                $work_order->product_code = $row[0];
                 $work_order->mat_ordered_id = null;
                 $work_order->sales_id = $data->id;
                 $work_order->planned_start_date = null;
@@ -267,7 +271,13 @@ class SalesOrderController extends Controller
             }
 
             foreach($new_component as $c){
+                $component_name = $c['component_name'];
+                $component = Component::where('component_name', "=", $component_name)->first();
+                $component_code = $component->component_code;
                 $work_order = new WorkOrder();
+                $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+                $work_order->work_order_no = $won;
+                $work_order->component_code = $component_code;
                 $work_order->mat_ordered_id = null;
                 $work_order->sales_id = $data->id;
                 $work_order->planned_start_date = null;
@@ -280,7 +290,7 @@ class SalesOrderController extends Controller
             }
 
             //return "Sucess";
-            return response($new_component);
+            return response($work_order->id);
             // return response($work_order->id);
 
         }catch(Exception $e){
