@@ -26,6 +26,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
+use App\Http\Controllers\StockMovesReturnController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -373,6 +374,8 @@ Route::get('/stock', function () {
 });
 Route::get('/stockmoves', [StockMovesController::class, 'index']);
 Route::get('/newstockmoves', [NewStockMovesController::class, 'index']);
+Route::get('/showItems/{selected}', [NewStockMovesController::class, 'showItems']);
+Route::get('/stockmovesreturn', [StockMovesReturnController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
