@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JobSched;
-use App\Models\WorkOrder;
+use App\Models\RoutingOperation;
+use Exception;
 use Illuminate\Http\Request;
 
-class JobSchedController extends Controller
+class RoutingOperationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,7 @@ class JobSchedController extends Controller
      */
     public function index()
     {
-        return view('modules.manufacturing.jobscheduling', [
-        ]);
+        //
     }
 
     /**
@@ -38,15 +37,28 @@ class JobSchedController extends Controller
     public function store(Request $request)
     {
         //
+        try {
+            $form_data = $request->input();
+            $r_operation = new RoutingOperation();
+            $r_operation->sequence_id = $form_data['seq_id'];
+            $r_operation->operation_id = $form_data['operation'];
+            $r_operation->routing_id = $form_data['routing_id'];
+            $r_operation->hour_rate = $form_data['hour_rate'];
+            $r_operation->operation_time = $form_data['operation_time'];
+            $r_operation->operating_cost = floatval($form_data['hour_rate']) * floatval($form_data['operation_time']);
+            $r_operation->save();
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\JobSched  $jobscheduling
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(JobSched $jobscheduling)
+    public function show($id)
     {
         //
     }
@@ -54,25 +66,22 @@ class JobSchedController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\JobSched  $jobscheduling
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(JobSched $jobsched)
+    public function edit($id)
     {
-        $work_orders = WorkOrder::get();
-        return view('modules.manufacturing.jobschedulinginfo', [
-            'work_orders' => $work_orders,
-        ]);
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\JobSched  $jobscheduling
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JobSched $jobscheduling)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -80,21 +89,11 @@ class JobSchedController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\JobSched  $jobscheduling
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(JobSched $jobscheduling)
+    public function destroy($id)
     {
         //
-    }
-
-    public function get_operations(WorkOrder $work_order){
-        // For now, this will only return up to the BOM of the item
-        // Change it once the routing/operations models are updated
-        $routing = $work_order->item->bom()->routing;
-        return response()->json([
-            'operations' => $routing->operationsThrough,
-            'routingOperations' => $routing->routingOperations,
-        ]);
     }
 }

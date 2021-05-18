@@ -172,6 +172,7 @@ function loadWorkOrderInfo(
     $("#requiredItems").html("");
     materials_qty = JSON.parse(quantity);
     console.log(materials_qty);
+    alert(materials_qty);
     materials_complete = [];
     // $("#startWorkOrder").click(startWorkOrder());
     $(document).ready(function () {
@@ -239,30 +240,37 @@ function loadWorkOrderInfo(
                     ).entries()) {
                         let sequence = index + 1;
                         let transferred_qty = undefined;
-                        let final_mat_qty;
+                        let qty_from_stock;
                         let required_qty =
-                            datas["component_qty"] *
+                            parseInt(datas["component_qty"]) *
                             datas["quantity_purchased"] *
                             parseInt(rawMat["item_qty"]);
                         if (materials_qty) {
                             transferred_qty = materials_qty[index];
-                            final_mat_qty = materials_qty[index];
                         } else {
-                            final_mat_qty = datas["rm_quantity"][index];
+                            qty_from_stock = datas["rm_quantity"][index];
                         }
                         if (
                             transferred_qty === undefined &&
-                            workOrderDetails.mat_ordered_id == null
+                            qty_from_stock === null &&
+                            workOrderDetails.product_code !== null
+                        ) {
+                            transferred_qty = "n/a";
+                            materials_complete.push(true);
+                        } else if (
+                            transferred_qty === undefined &&
+                            qty_from_stock >= required_qty
                         ) {
                             materials_complete.push(true);
-                            transferred_qty = "n/a";
-                        } else if (transferred_qty === undefined) {
+                        } else if (
+                            transferred_qty === undefined &&
+                            qty_from_stock < required_qty
+                        ) {
+                            materials_complete.push(false);
+                        } else if (transferred_qty >= required_qty) {
                             materials_complete.push(true);
-                            transferred_qty = "n/a";
-                        } else {
-                            transferred_qty >= required_qty
-                                ? materials_complete.push(true)
-                                : materials_complete.push(false);
+                        } else if (transferred_qty < required_qty) {
+                            materials_complete.push(false);
                         }
                         $("#requiredItems").append(
                             `
@@ -289,7 +297,7 @@ function loadWorkOrderInfo(
                                 required_qty +
                                 `</td>
                           <td>` +
-                                (final_mat_qty ?? transferred_qty) +
+                                (qty_from_stock ?? transferred_qty) +
                                 `</td>
                           <td style="padding: 1%;" class="h-100">
                             <div class="input-group mb-3">
@@ -384,7 +392,8 @@ function loadManufacturingRouting() {
 }
 function openManufacturingRoutingForm() {
     $(document).ready(function () {
-        $("#contentRouting").load("/openManufacturingRoutingForm");
+        $("#contentRouting").load("/newrouting");
+        $("#contentNewRouting").load("/newrouting");
     });
 }
 
@@ -682,153 +691,149 @@ function loadPurchaseReceipt() {
     });
 }
 function openNewShippingRule() {
-  $(document).ready(function () {
-    $('#contentShippingRule').load('/shippingruleinfo');
-  });
+    $(document).ready(function () {
+        $("#contentShippingRule").load("/shippingruleinfo");
+    });
 }
 function loadShippingInfo() {
-  $(document).ready(function () {
-    $('#contentShippingRule').load('/shippingrule');
-  });
+    $(document).ready(function () {
+        $("#contentShippingRule").load("/shippingrule");
+    });
 }
 function loadPurchaseTaxes() {
-  $(document).ready(function () {
-    $('#contentPurchaseTaxes').load('/purchasetaxes');
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseTaxes").load("/purchasetaxes");
+    });
 }
 function openNewPurchaseTaxes() {
-  $(document).ready(function () {
-    $('#contentPurchaseTaxes').load('/purchasetaxesinfo');
-  });
+    $(document).ready(function () {
+        $("#contentPurchaseTaxes").load("/purchasetaxesinfo");
+    });
 }
 function openNewSalesTaxes() {
-  $(document).ready(function () {
-    $('#contentSalesTaxes').load('/newsalestaxes');
-  });
+    $(document).ready(function () {
+        $("#contentSalesTaxes").load("/newsalestaxes");
+    });
 }
 function loadSalesTaxes() {
-  $(document).ready(function () {
-    $('#contentSalesTaxes').load('/salestaxes');
-  });
+    $(document).ready(function () {
+        $("#contentSalesTaxes").load("/salestaxes");
+    });
 }
 function newPricingRule() {
-  $(document).ready(function () {
-    $('#contentPricingRule').load('/PricingRuleInfo');
-  });
+    $(document).ready(function () {
+        $("#contentPricingRule").load("/PricingRuleInfo");
+    });
 }
 function loadPricingRule() {
-  $(document).ready(function () {
-    $('#contentPricingRule').load('/pricingrule');
-  });
+    $(document).ready(function () {
+        $("#contentPricingRule").load("/pricingrule");
+    });
 }
 function openSupplierGroup() {
-  $(document).ready(function () {
-    $('#contentSupplierGroup').load('/newsuppliergroup');
-  });
+    $(document).ready(function () {
+        $("#contentSupplierGroup").load("/newsuppliergroup");
+    });
 }
 
 function loadSupplierGroup() {
-  $(document).ready(function () {
-    $('#contentSupplierGroup').load('/suppliergroup');
-  });
+    $(document).ready(function () {
+        $("#contentSupplierGroup").load("/suppliergroup");
+    });
 }
 
 function openSupplierGrouptable() {
-  $(document).ready(function () {
-    $('#contentSupplierGroup').load('/newsuppliergrouptable');
-  });
+    $(document).ready(function () {
+        $("#contentSupplierGroup").load("/newsuppliergrouptable");
+    });
 }
 
 function openNewCoupon() {
-  $(document).ready(function () {
-    $('#contentCouponCode').load('/newCouponCode');
-  });
+    $(document).ready(function () {
+        $("#contentCouponCode").load("/newCouponCode");
+    });
 }
 
 function loadCouponCode() {
-  $(document).ready(function () {
-    $('#contentCouponCode').load('/couponcode');
-  });
+    $(document).ready(function () {
+        $("#contentCouponCode").load("/couponcode");
+    });
 }
 
 function openCouponInfo() {
-  $(document).ready(function () {
-    $('#contentCouponCode').load('/openCouponInfo');
-  });
+    $(document).ready(function () {
+        $("#contentCouponCode").load("/openCouponInfo");
+    });
 }
 
 function openNewProductBundle() {
-  $(document).ready(function () {
-    $('#contentProductBundle').load('/newproductbundle');
-  });
+    $(document).ready(function () {
+        $("#contentProductBundle").load("/newproductbundle");
+    });
 }
 
 function loadProductBundle() {
-  $(document).ready(function () {
-    $('#contentProductBundle').load('/productbundle');
-  });
+    $(document).ready(function () {
+        $("#contentProductBundle").load("/productbundle");
+    });
 }
 
 function openProductBundleInfo() {
-  $(document).ready(function () {
-    $('#contentProductBundle').load('/openProductBundleInfo');
-  });
+    $(document).ready(function () {
+        $("#contentProductBundle").load("/openProductBundleInfo");
+    });
 }
 
 function openAddressInfo() {
-  $(document).ready(function () {
-    $('#contentAddress').load('/openAddressInfo');
-  });
+    $(document).ready(function () {
+        $("#contentAddress").load("/openAddressInfo");
+    });
 }
 
 function openNewAddress() {
-  $(document).ready(function () {
-    $('#contentAddress').load('/newAddress');
-  });
+    $(document).ready(function () {
+        $("#contentAddress").load("/newAddress");
+    });
 }
 
 function loadAddress() {
-  $(document).ready(function () {
-    $('#contentAddress').load('/address');
-  });
+    $(document).ready(function () {
+        $("#contentAddress").load("/address");
+    });
 }
-
 
 function loadBOM() {
-  $(document).ready(function () {
-    $('#contentBom').load('/newbom');
-  });
+    $(document).ready(function () {
+        $("#contentBom").load("/newbom");
+    });
 }
 function loadBOMtable() {
-  $(document).ready(function () {
-    $('#contentBom').load('/bom');
-  });
+    $(document).ready(function () {
+        $("#contentBom").load("/bom");
+    });
 }
 
-function loadmachineinfo() {
-  $(document).ready(function () {
-    $('#contentMachineManual').load('/machinemanualinfo');
-  });
+function loadmachineinfo(id) {
+    $(document).ready(function () {
+        $("#contentMachineManual").load(`/machinemanualinfo/${id}`);
+    });
 }
 
 function loadNewMachineManual() {
     $(document).ready(function () {
-        $('#contentMachineManual').load('/create-new-mm');
+        $("#contentMachineManual").load("/create-new-mm");
     });
 }
 
 function loadmachine() {
-  $(document).ready(function () {
-    $('#contentMachineManual').load('/machinemanual');
-  });
+    $(document).ready(function () {
+        $("#contentMachineManual").load("/machinemanual");
+    });
 }
-function loadnewRouting() {
-  $(document).ready(function () {
-    $('#contentNewRouting').load('/newrouting');
-  });
-}
+
 function loadnewworkcenter() {
-  $(document).ready(function () {
-    $('#contentNewRouting').load('/newworkcenter');
-  });
+    $(document).ready(function () {
+        $("#contentNewRouting").load("/workcenter");
+        $("#contentRouting").load("/workcenter");
+    });
 }

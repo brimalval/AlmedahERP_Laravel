@@ -39,6 +39,9 @@ class CreateRoutings extends Migration
      */
     public function down()
     {
+        Schema::table('bom_bill_of_materials', function (Blueprint $table) {
+            $table->dropForeign(['routing_id']);
+        });
         Schema::dropIfExists('routings');
     }
 }

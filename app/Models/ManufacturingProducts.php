@@ -61,4 +61,23 @@ class ManufacturingProducts extends Model
         }
         return $components_with_qty;
     }
+    
+    /**
+     * Returns the latest default BOM of the product. If none exist, returns
+     * the latest non-default BOM of the product.
+     *
+     * @return BillOfMaterials
+     */
+    public function bom(){
+        $product_boms = BillOfMaterials::
+            where('product_code','=', $this->product_code)
+            ->where('is_default', '=', true)
+            ->orderBy('created_at', 'DESC');
+        if($product_boms->get()->count() == 0){
+            $product_boms = BillOfMaterials::where(
+                'product_code', '=', $this->product_code,
+            )->orderBy('created_at', 'DESC');
+        }
+        return $product_boms->first();
+    }
 }

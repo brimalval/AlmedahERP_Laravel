@@ -27,7 +27,7 @@
                         onclick="loadRefresh()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt" onclick="loadProducts()">
                         New
                     </button>
                 </li>
@@ -890,6 +890,7 @@
                             console.log(data);
                         },
                         error: function(data){
+                            console.log(data.message)
                         }
                     });
                 }
@@ -965,5 +966,29 @@
         $(".components tr").remove();
         $('#notif').text('');
         $('#view_notif').text('');
+    }
+
+    function loadProducts(){
+        $.ajax({
+            type: "GET",
+            url: "/loadProducts",
+            success: function (response) {
+                $('#saleProductCode').empty();
+                $('#saleProductCode').append(`<option value="none" selected disabled hidden>
+                                                        Select an Option
+                                                    </option>`);
+                response.forEach(row =>{
+                    $('#saleProductCode').append(
+                        `<option value="` + row['product_code'] + `" data-price = "` + row['sales_price_wt'] + `" data-stock = "` + row['stock_unit'] +`">
+                                                            ` + row['product_code']  +`</option>`
+                    );
+                })
+                
+
+            },
+            error: function (response, error) {
+                // alert("Request: " + JSON.stringify(request));
+            },
+        });
     }
 </script>

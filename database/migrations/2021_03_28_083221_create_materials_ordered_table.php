@@ -31,6 +31,16 @@ class CreateMaterialsOrderedTable extends Migration
      */
     public function down()
     {
+        if(Schema::hasTable('work_order')) {
+            Schema::table('work_order', function(Blueprint $table) {
+                $table->dropForeign(['mat_ordered_id']);
+            });
+        }
+        if(Schema::hasTable('stock_moves')) {
+            Schema::table('stock_moves', function (Blueprint $table) {
+                $table->dropForeign(['mat_ordered_id']);
+            });
+        }
         Schema::dropIfExists('materials_ordered');
     }
 }

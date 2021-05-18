@@ -1,24 +1,24 @@
 function showForm() {
-    var table = document.getElementById("hm_select").value;
-    if (table == 1) {
+    var table = document.getElementById("wc_select").value;
+    if (table == "Human") {
        document.getElementById("f1").style.display = 'block';
        document.getElementById("f2").style.display = 'none';
-       
-   } 
-    if(table == 2){
+
+   }
+    else if(table == "Machine"){
        document.getElementById("f1").style.display = 'none';
        document.getElementById("f2").style.display = 'block';
-       
+
     }
-    if(table == 3){
+    else if(table == "Human and Machine"){
        document.getElementById("f1").style.display = 'block';
        document.getElementById("f2").style.display = 'block';
-       
+
     }
-    if(table == 0){
+    else if(table == "N/A"){
        document.getElementById("f1").style.display = 'none';
        document.getElementById("f2").style.display = 'none';
-       
+
     }
  }
  function addRownewEmployee(){

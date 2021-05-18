@@ -1,27 +1,50 @@
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
+$(document).ready(function () {
+    $(".mm").keyup(onChangeFunction);
+});
 
-$("#saveMMBtn").click(function () { 
+function onChangeFunction() {
+    $("#saveMMBtn").css('display', 'inline-block');
+}
+
+$("#mmDelete").click(function () { 
+    $("#deleteMM").submit();
+});
+
+$("#deleteMM").submit(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
+    }); 
+    $.ajax({
+        type: "DELETE",
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            loadmachine();
+        }
     });
-    var formData = new FormData();
-    //formData.append($("#Machine_Image").val());
-    formData.append('machine_name', $("#Machine_name").val());
-    formData.append('machine_process', $("#Machine_Process").val());
-    formData.append('setup_time', $("#Setup_time").val());
-    formData.append('running_time', $("#Running_time").val());
-    formData.append('machine_desc', $("#Machine_Description").val());
+    return false;
+});
 
+$("#saveMMBtn").click(function () { 
+    $("#mmForm").submit();
+});
+
+$("#mmForm").submit(function () { 
+    var formData = new FormData(this);
+    //formData.append($("#Machine_Image").val());
     for (var key of formData.entries()) {
         console.log(key[0] + ', ' + key[1]);
     }
 
     $.ajax({
-        type: 'POST',
-        url: '/create-machine',
+        type: "POST",
+        url: $(this).attr('action'),
         data: formData,
         cache: false,
         contentType: false,
@@ -30,4 +53,9 @@ $("#saveMMBtn").click(function () {
             loadmachine();
         }
     });
+
+    return false;
 });
+
+
+

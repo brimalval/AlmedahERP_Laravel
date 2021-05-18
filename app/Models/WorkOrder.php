@@ -11,6 +11,7 @@ class WorkOrder extends Model
     protected $table = 'work_order';
     public $timestamps = true;
     protected $fillable = [
+        'work_order_no',
         'sales_id',
         'mat_ordered_id',
         'work_order_status',
@@ -21,6 +22,16 @@ class WorkOrder extends Model
         'product_code',
         'component_code',
     ];
+
+    /**
+     * Use the work_order_no as the route binding key instead
+     *
+     * @return string
+     */
+
+    public function getRouteKeyName(){
+        return 'work_order_no';
+    }
 
     public function item(){
         // Returns the product relationship if the work order has a product code

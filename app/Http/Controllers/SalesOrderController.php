@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
@@ -14,8 +14,8 @@ use App\Models\MaterialPurchased;
 use App\Models\payment_logs;
 use App\Models\MaterialRequest;
 use App\Models\ordered_products;
+use Illuminate\Support\Carbon;
 use DB;
-use Carbon;
 use Exception;
 class SalesOrderController extends Controller
 {
@@ -33,6 +33,11 @@ class SalesOrderController extends Controller
         return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
     }
 
+    function loadProducts(){
+        $products = ManufacturingProducts::get();
+        return $products;
+    }
+
     function get($sales_order_id) {
         $sales_order = SalesOrder::find($sales_order_id);
         $product = ManufacturingProducts::where('product_code', $sales_order->product_code)->first();
@@ -47,32 +52,32 @@ class SalesOrderController extends Controller
             return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
         }
         #Comment ko muna yung validation, nahihirapan akong mag-enter ng data para sa testing eh hahah
-        $validator = $request->validate([
-            'costPrice' => 'required|numeric|gt:0',
-            'saleDate' => 'required|date',
-            'saleSupplyMethod' => 'required',
-            'salePaymentMethod' => 'required|alpha_dash',
-            'saleDownpaymentCost' => 'nullable|numeric|gt:0',
-            'installmentType' => 'nullable|alpha_dash',
-            'paymentType' => 'nullable|alpha',
+        // $request->validate([
+        //     'costPrice' => 'required|numeric|gt:0',
+        //     'saleDate' => 'required|date',
+        //     'saleSupplyMethod' => 'required|alpha_dash',
+        //     'salePaymentMethod' => 'required|alpha_dash',
+        //     'saleDownpaymentCost' => 'nullable|numeric|gt:0',
+        //     'installmentType' => 'nullable|alpha_dash',
+        //     'paymentType' => 'nullable|alpha',
        
             
-            'customer_id' => 'nullable',
-            'lName' => 'required',
-            'fName' => 'required',
-            'branchName' => 'required',
-            'contactNum' => 'required|alpha_dash',
-            'custAddress' => 'required',
-            'custEmail' => 'required|Email',
-            'companyName' => 'required',
+        //     'customer_id' => 'nullable|numeric',
+        //     'lName' => 'required|alpha_dash',
+        //     'fName' => 'required|alpha_dash',
+        //     'branchName' => 'required|alpha_dash',
+        //     'contactNum' => 'required|alpha_dash',
+        //     'custAddress' => 'required|alpha_dash',
+        //     'custEmail' => 'required|alpha_dash',
+        //     'companyName' => 'required|alpha_dash',
 
-            'account_no' => 'nullable|alpha_dash',
-            'cheque_no' => 'nullable|alpha_dash',
-            'account_name' => 'nullable',
-            'bank_name' => 'nullable',
-            'branch_location' => 'nullable',
-            'account_name' => 'nullable',
-        ]);
+        //     'account_no' => 'nullable|alpha_dash',
+        //     'cheque_no' => 'nullable|alpha_dash',
+        //     'account_name' => 'nullable|alpha_dash',
+        //     'bank_name' => 'nullable|alpha_dash',
+        //     'branch_location' => 'nullable|alpha_dash',
+        //     'account_name' => 'nullable|alpha',
+        // ]);
 
         try{
 
@@ -215,7 +220,7 @@ class SalesOrderController extends Controller
             //         $mr_status = "Draft";
             //     }
             // }
-
+            
             $new_component = array();
             foreach(json_decode($component, true) as $c){
                 array_push($new_component, $c);
@@ -236,17 +241,43 @@ class SalesOrderController extends Controller
                 $order->quantity_purchased = $row[1];
                 $order->save();
 
-                $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                if( $prod->stock_unit - $row[1] > 0){
-                    $prod->stock_unit = $prod->stock_unit - $row[1];
-                }else{
-                    $prod->stock_unit = 0;
-                }
+                // $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                // if( $prod->stock_unit - $row[1] > 0){
+                //     $prod->stock_unit = $prod->stock_unit - $row[1];
+                // }else{
+                //     $prod->stock_unit = 0;
+                // }
                 
-                $prod->save();
+                // $prod->save();
             }
-            foreach($new_component as $c){
+
+            $work_order_ids = array();
+
+            foreach ($cart as $row){ 
+
                 $work_order = new WorkOrder();
+                $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+                $work_order->work_order_no = $won;
+                $work_order->product_code = $row[0];
+                $work_order->mat_ordered_id = null;
+                $work_order->sales_id = $data->id;
+                $work_order->planned_start_date = null;
+                $work_order->planned_end_date = null;
+                $work_order->real_start_date = null;
+                $work_order->real_end_date = null;
+                $work_order->work_order_status = "Pending";
+                $work_order->save();
+                //array_push($work_order_ids, $work_order->id);
+            }
+
+            foreach($new_component as $c){
+                $component_name = $c['component_name'];
+                $component = Component::where('component_name', "=", $component_name)->first();
+                $component_code = $component->component_code;
+                $work_order = new WorkOrder();
+                $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+                $work_order->work_order_no = $won;
+                $work_order->component_code = $component_code;
                 $work_order->mat_ordered_id = null;
                 $work_order->sales_id = $data->id;
                 $work_order->planned_start_date = null;
@@ -258,12 +289,9 @@ class SalesOrderController extends Controller
                 array_push($work_order_ids, $work_order->id);
             }
 
-
-            try{
-                return response($work_order->id);
-            }catch  (Exception $e){
-                return "Sucess";
-            }
+            //return "Sucess";
+            return response($work_order->id);
+            // return response($work_order->id);
 
         }catch(Exception $e){
             return $e;
@@ -287,18 +315,13 @@ class SalesOrderController extends Controller
     }
 
     function update(Request $request, $id){
-
-
         $validator = $request->validate([
             'costPrice' => 'required|numeric|gt:0',
         ]);
-
         $data = payment_logs::find($id);
         $sales = salesorder::find($data->sales_id);
 
         $form_data = $request->input();
-
-        
 
         if($form_data['status'] == "Pending"){
             $sales->payment_balance += $data->amount_paid;
@@ -511,7 +534,6 @@ class SalesOrderController extends Controller
 
         for ($i=0; $i < count($products); $i++) { 
             try {
-                # Wrapped in try catch since it also minuses rm material of components which is non existent
                 $raw_material = ManufacturingMaterials::where('item_code', $products[$i])->first();
                 $raw_mat_qty = $raw_material->rm_quantity;
 

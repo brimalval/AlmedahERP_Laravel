@@ -6,7 +6,6 @@ use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BOMController;
-use App\Http\Controllers\JobController;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\JobSchedController;
 use App\Http\Controllers\MachinesManualController;
@@ -14,12 +13,14 @@ use App\Http\Controllers\MaterialQuotationController;
 use App\Http\Controllers\MaterialsPurchasedController;
 use App\Http\Controllers\MaterialUOMController;
 use App\Http\Controllers\MatRequestController;
+use App\Http\Controllers\OperationsController;
 use App\Http\Controllers\PartsController;
 use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
+use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SalesOrderController;
@@ -27,6 +28,8 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoutingsController;
+use App\Http\Controllers\WorkCenterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,67 +55,7 @@ Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 
-/*PURCHASE TAXES*/
-Route::get('/purchasetaxes', function() {
-    return view('modules.NewUI.purchasetaxes');
-});
-Route::get('/purchasetaxesinfo', function() {
-    return view('modules.NewUI.purchasetaxesinfo');
-});
-
-/*SHIPPING RULE*/
-Route::get('/shippingrule', function() {
-    return view('modules.NewUI.ShippingRule');
-});
-
-Route::get('/shippingruleinfo', function() {
-    return view('modules.NewUI.ShippingRuleInfo');
-});
-
-/*PRICING RULE*/
-Route::get('/pricingrule', function() {
-    return view('modules.NewUI.PricingRule');
-});
-
-Route::get('/PricingRuleInfo', function() {
-    return view('modules.NewUI.PricingRuleInfo');
-});
-/*SALES TAXES*/
-Route::get('/salestaxes', function() {
-    return view('modules.NewUI.SalesTaxes');
-});
-
-Route::get('/newsalestaxes', function() {
-    return view('modules.NewUI.NewSalesTaxes');
-});
-/*SUPPLIER GROUP*/
-Route::get('/newsuppliergroup', function() {
-    return view('modules.NewUI.NewSupplierGroup');
-});
-Route::get('/suppliergroup', function() {
-    return view('modules.NewUI.SupplierGroup');
-});
-Route::get('/newsuppliergrouptable', function() {
-    return view('modules.NewUI.NewSupplierGrpTable');
-});
-
-Route::get('/newsuppliergrouptable', function() {
-    return view('modules.NewUI.NewSupplierGrpTable');
-});
-
-/*PRODUCT BUNDLE ROUTES */
-Route::get('/productbundle', function() {
-    return view('modules.NewUI.productbundle');
-});
-Route::get('/newproductbundle', function() {
-    return view('modules.NewUI.newproductbundle');
-});
-Route::get('/openProductBundleInfo', function() {
-    return view('modules.NewUI.productBundleInfo');
-});
-
 /*ADDRESS ROUTES */
-
 Route::get('/address', function() {
     return view('modules.NewUI.address');
 });
@@ -126,6 +69,22 @@ Route::get('/address', function() {
     return view('modules.NewUI.address');
 });
 
+/**BOM ROUTES*/
+Route::get('/bom', [BOMController::class, 'index']);
+Route::get('/newbom', function () {
+    return view('modules.BOM.bominfo');
+});
+
+/**BUYING ROUTES */
+Route::get('/buying', function () {
+    return view('modules.buying.Buying');
+});
+
+/**COMPONENTS ROUTES */
+Route::get('/component', [ComponentController::class, 'index']);
+Route::post('/create-component', [ComponentController::class, 'store']);
+Route::get('/get-item/{item_code}', [ComponentController::class, 'getItem']);
+
 /**COUPON CODE ROUTES */
 Route::get('/couponcode', function() {
     return view('modules.NewUI.couponcode');
@@ -137,32 +96,6 @@ Route::get('/openCouponInfo', function() {
     return view('modules.NewUI.couponInfo');
 });
 
-/**BOM ROUTES */
-Route::get('/bom', [BOMController::class, 'index']);
-Route::get('/newBOM', function () {
-    return view('modules.manufacturing.bomsubModules.newbom');
-});
-Route::get('/subNewBOM', function () {
-    return view('modules.newbom');
-});
-Route::post('/createBOM', [BOMController::class, 'store']);
-Route::post('/update_status/{bom_id}', [BOMController::class, 'updateStatus']);
-Route::get('/checkBOM/{bom_id}', [BOMController::class, 'checkIfBOMExists']);
-Route::get('/getBomMaterials/{bom_id}', [BOMController::class, 'getMaterials']);
-Route::post('/deleteBOM/{bom_id}', [BOMController::class, 'delete']);
-Route::post('/suggest_product', [BOMController::class, 'search']);
-Route::get('/search-product/{product_code}', [BOMController::class, 'search_product']);
-Route::get('/viewbom/{id}', [BOMController::class, 'get']);
-
-/**BUYING ROUTES */
-Route::get('/buying', function () {
-    return view('modules.buying.Buying');
-});
-
-/**COMPONENTS ROUTES */
-Route::get('/component', [ComponentController::class, 'index']);
-Route::post('/create-component', [ComponentController::class, 'store']);
-Route::get('/get-item/{item_code}', [ComponentController::class, 'getItem']);
 /**CRM ROUTES */
 Route::get('/contacts', function () {
     return view('modules.crm.contacts');
@@ -225,7 +158,6 @@ Route::post('/create-item-group', [ProductsController::class, 'add_item_group'])
 Route::post('/create-product-unit', [ProductsController::class, 'add_product_unit']);
 Route::get('/get-attribute/{id}', [ProductsController::class, 'get_attribute']);
 
-
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function () {
     return view('modules.stock.itemvariantsettings');
@@ -240,6 +172,8 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 //     return view('modules.manufacturing.jobschedulinginfo');
 // });
 Route::resource('/jobscheduling', JobSchedController::class);
+Route::get('/jobscheduling/{work_order}/get-operations', [JobSchedController::class, 'get_operations'])
+       ->name('jobscheduling.getoperations');
 
 // Route for parts needed in a job scheduling entry
 Route::resource('/jobscheduling/part', PartsController::class);
@@ -253,6 +187,7 @@ Route::get('/create-new-mm', function() {
 });
 Route::get('/machinemanualinfo/{id}', [MachinesManualController::class, 'view']);
 Route::post('/create-machine', [MachinesManualController::class, 'store']);
+Route::get('/find-machine/{machine_code}', [MachinesManualController::class, 'getMachine']);
 Route::patch('/update-machine/{id}', [MachinesManualController::class, 'update']);
 Route::delete('/delete-machine/{id}', [MachinesManualController::class, 'delete']);
 
@@ -281,12 +216,8 @@ Route::get('/openManufacturingItemPriceForm', function () {
 });
 
 /**MANUFACTURING ROUTING ROUTES */
-Route::get('/routing', function () {
-    return view('modules.manufacturing.routing');
-});
-Route::get('/openManufacturingRoutingForm', function () {
-    return view('modules.manufacturing.routingform');
-});
+Route::resource('/routing', RoutingsController::class);
+Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
@@ -305,6 +236,10 @@ Route::get('/important', function () {
 Route::get('/archived', function () {
     return view('modules.messaging.archived');
 });
+
+/**OPERATIONS ROUTES */
+Route::resource('/operations', OperationsController::class);
+Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {
@@ -326,6 +261,15 @@ Route::get('/loadPriceList', function () {
     return view('modules.selling.pricelist');
 });
 
+/*PRICING RULE*/
+Route::get('/pricingrule', function() {
+    return view('modules.NewUI.PricingRule');
+});
+
+Route::get('/PricingRuleInfo', function() {
+    return view('modules.NewUI.PricingRuleInfo');
+});
+
 /**PRODUCTION ROUTES */
 Route::get('/production', function () {
     return view('modules.manufacturing.production');
@@ -335,6 +279,17 @@ Route::get('/production', function () {
 // Route::get('/productmonitoring', [ProductMonitoringController::class, 'index']);
 // Route::post('/create-monitor-entry', [ProductMonitoringController::class, 'store']);
 Route::resource('/productmonitoring', ProductMonitoringController::class);
+
+/*PRODUCT BUNDLE ROUTES */
+Route::get('/productbundle', function() {
+    return view('modules.NewUI.productbundle');
+});
+Route::get('/newproductbundle', function() {
+    return view('modules.NewUI.newproductbundle');
+});
+Route::get('/openProductBundleInfo', function() {
+    return view('modules.NewUI.productBundleInfo');
+});
 
 /**PRODUCTION PLAN ROUTES */
 Route::get('/productionplan', function () {
@@ -394,6 +349,14 @@ Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class,
 Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
 Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
 
+/*PURCHASE TAXES*/
+Route::get('/purchasetaxes', function() {
+    return view('modules.NewUI.purchasetaxes');
+});
+Route::get('/purchasetaxesinfo', function() {
+    return view('modules.NewUI.purchasetaxesinfo');
+});
+
 /**QUALITY ROUTES */
 Route::get('/quality', function () {
     return view('modules.quality.quality');
@@ -429,6 +392,9 @@ Route::get('/retail', function () {
     return view('modules.retail.retail');
 });
 
+/**ROUTING OPERATION ROUTES */
+Route::resource('/routingoperation', RoutingOperationController::class);
+
 /**SALES ORDER ROUTES */
 Route::get('/view-sales-order/{id}', [SalesOrderController::class, 'get']);
 Route::get('/salesorder', [SalesOrderController::class, 'index']);
@@ -451,6 +417,8 @@ Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getCompon
 Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
 Route::get('/getRawMaterialQuantity/{selected}', [SalesOrderController::class, 'getRawMaterialQuantity']);
 Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
+Route::get('/loadProducts', [SalesOrderController::class, 'loadProducts']);
+
 /**SALES INVOICE ROUTES */
 Route::get('/salesinvoice', function () {
     return view('modules.selling.salesinvoice');
@@ -459,16 +427,38 @@ Route::get('/sales-invoice-item', function () {
     return view('modules.selling.salesinvoiceitem');
 });
 
+/*SALES TAXES*/
+Route::get('/salestaxes', function() {
+    return view('modules.NewUI.SalesTaxes');
+});
+
+Route::get('/newsalestaxes', function() {
+    return view('modules.NewUI.NewSalesTaxes');
+});
+
 /**SELLING ROUTES */
 Route::get('/selling', function () {
     return view('modules.selling.selling');
+});
+
+/*SHIPPING RULE*/
+Route::get('/shippingrule', function() {
+    return view('modules.NewUI.ShippingRule');
+});
+
+Route::get('/shippingruleinfo', function() {
+    return view('modules.NewUI.ShippingRuleInfo');
+});
+
+Route::get('/newsuppliergrouptable', function() {
+    return view('modules.NewUI.NewSupplierGrpTable');
 });
 
 /**STOCK ROUTES */
 // Route::get('/stock', function () {
 //     return view('modules.stock.stock');
 // });
-Route::get('/stock', [StockMovesController::class, 'index']);
+//Route::get('/stock', [StockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
@@ -486,6 +476,17 @@ Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
 Route::get('/search/{supplier_id}', [SupplierController::class, 'getBySuppID']);
 Route::get('/createnewsupplier', function () {
     return view('modules.buying.createnewsupplier');
+});
+
+/*SUPPLIER GROUP*/
+Route::get('/newsuppliergroup', function() {
+    return view('modules.NewUI.NewSupplierGroup');
+});
+Route::get('/suppliergroup', function() {
+    return view('modules.NewUI.SupplierGroup');
+});
+Route::get('/newsuppliergrouptable', function() {
+    return view('modules.NewUI.NewSupplierGrpTable');
 });
 
 /**SUPPLIER QUOTATION ROUTES */
@@ -510,8 +511,7 @@ Route::get('/get-quotation/{id}', [SupplierQuotationController::class, 'getQuota
 Route::get('/openNewTask', function () {
     return view('modules.projects.taskitem');
 });
-Route::get('/task', [JobController::class, 'index']);
-Route::get('/create-task', [JobController::class, 'store']);
+
 
 /**TIMESHEETS ROUTES */
 Route::get('/loadProjectsTimesheet', function () {
@@ -530,6 +530,13 @@ Route::get('/openUOMNew', function () {
 Route::get('/openUOMEdit', function () {
     return view('modules.stock.UOMEDIT');
 });
+
+/**WORK CENTER ROUTES **/
+Route::resource('/workcenter', WorkCenterController::class);
+Route::get('/newworkcenter', function () {
+    return view('modules.BOM.newWorkCenter');
+});
+
 
 /**WORK ORDER ROUTES*/
 Route::get('/workorder', [WorkOrderController::class, 'index']);
@@ -565,19 +572,6 @@ Route::post('/create-station', [StationController::class, 'store']);
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
 
-/**BOM */
-Route::get('/bom', function () {
-    return view('modules.BOM.bom');
-});
-
-Route::get('/newbom', function () {
-    return view('modules.BOM.bominfo');
-});
 
 
-Route::get('/newrouting', function () {
-    return view('modules.BOM.newrouting');
-});
-Route::get('/newworkcenter', function () {
-    return view('modules.BOM.newWorkCenter');
-});
+         
