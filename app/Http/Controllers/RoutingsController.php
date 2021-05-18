@@ -18,7 +18,7 @@ class RoutingsController extends Controller
     public function index()
     {
         $routings = Routings::all();
-        return view('modules.manufacturing.routing', ['routings' => $routings]);
+        return view('modules.BOM.routing', ['routings' => $routings]);
     }
 
     /**

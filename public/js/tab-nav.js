@@ -861,8 +861,8 @@ function operationtable() {
   });
 }
 
-function editoperation() {
+function editoperation(id) {
   $(document).ready(function () {
-    $('#contentOperations').load('/editoperation');
+    $('#contentOperations').load(`/operations/${id}/edit`);
   });
 }

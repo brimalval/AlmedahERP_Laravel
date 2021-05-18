@@ -218,10 +218,6 @@ Route::get('/openManufacturingItemPriceForm', function () {
 /**MANUFACTURING ROUTING ROUTES */
 Route::resource('/routing', RoutingsController::class);
 Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
-
-Route::get('/routing', function () {
-    return view('modules.bom.routing');
-});
 Route::get('/editrouting', function () {
     return view('modules.bom.editrouting');
 });
@@ -245,14 +241,9 @@ Route::get('/archived', function () {
 });
 
 /**OPERATIONS ROUTES */
-Route::resource('/operations', OperationsController::class);
+Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
-Route::get('/newoperation', function () {
-    return view('modules.bom.newoperation');
-});
-Route::get('/editoperation', function () {
-    return view('modules.bom.editoperation');
-});
+Route::get('/newoperation', [OperationsController::class, 'openOperationForm']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {

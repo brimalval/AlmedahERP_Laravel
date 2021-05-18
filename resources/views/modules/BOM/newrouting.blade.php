@@ -108,7 +108,7 @@
                     </td>
                     <td class="mr-unit-input">
                         <button type="button" class="btn btn-primary" type="submit" onclick="loadnewworkcenter();">
-                            New WorkCenter
+                            New Work Center
                         </button>
                     </td>
                     </td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Operation;
+use App\Models\WorkCenter;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,8 @@ class OperationsController extends Controller
     public function index()
     {
         //
-        return view('modules.bom.operation');
+        $operations = Operation::all();
+        return view('modules.BOM.operation', ['operations' => $operations]);
     }
 
     /**
@@ -72,6 +74,12 @@ class OperationsController extends Controller
         //
     }
 
+    public function openOperationForm() 
+    {
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.newoperation', ['work_centers' => $work_centers]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -81,6 +89,9 @@ class OperationsController extends Controller
     public function edit($id)
     {
         //
+        $operation = Operation::find($id);
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.editoperation', ['work_centers' => $work_centers, 'operation' => $operation]);
     }
 
     /**
@@ -93,6 +104,17 @@ class OperationsController extends Controller
     public function update(Request $request, $id)
     {
         //
+        try {
+            $form_data = $request->input();
+            $operation = Operation::find($id);
+            $operation->operation_name = $form_data['Operation_Name'];
+            $operation->wc_code = $form_data['Default_WorkCenter'];
+            $operation->description = $form_data['Description'];
+            $operation->save();
+            return ['operations' => Operation::all()];
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     /**
@@ -104,5 +126,12 @@ class OperationsController extends Controller
     public function destroy($id)
     {
         //
+        try {
+            $operation = Operation::find($id);
+            $operation->delete();
+            return ['operations' => Operation::all()];
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 }
