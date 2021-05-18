@@ -92,7 +92,7 @@ class JobSchedController extends Controller
         // For now, this will only return up to the BOM of the item
         // Change it once the routing/operations models are updated
         return response()->json([
-            'operations' => $work_order->item->bom
+            'operations' => $work_order->item->bom->routing->operations,
         ]);
     }
 }
