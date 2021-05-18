@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Operation;
+use Exception;
 use Illuminate\Http\Request;
 
 class OperationsController extends Controller
@@ -36,17 +37,21 @@ class OperationsController extends Controller
     public function store(Request $request)
     {
         //
-        $last_operation = Operation::latest()->first();
-        $next_id = $last_operation ? $last_operation->id + 1 : 1;
-        $operation_id = "OP-" . str_pad($next_id, 5, "0", STR_PAD_LEFT);
-        $form_data = $request->input();
-        $operation = new Operation();
-        $operation->operation_id = $operation_id;
-        $operation->operation_name = $form_data['Operation_Name'];
-        $operation->wc_code = $form_data['Default_WorkCenter'];
-        $operation->description = $form_data['Description'];
-        $operation->save();
-        return ['operations' => Operation::all()];
+        try {
+            $last_operation = Operation::latest()->first();
+            $next_id = $last_operation ? $last_operation->id + 1 : 1;
+            $operation_id = "OP-" . str_pad($next_id, 5, "0", STR_PAD_LEFT);
+            $form_data = $request->input();
+            $operation = new Operation();
+            $operation->operation_id = $operation_id;
+            $operation->operation_name = $form_data['Operation_Name'];
+            $operation->wc_code = $form_data['Default_WorkCenter'];
+            $operation->description = $form_data['Description'];
+            $operation->save();
+            return ['operations' => Operation::all()];
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     public function getOperation($operation_id)
