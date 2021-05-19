@@ -226,6 +226,7 @@ Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
     return view('modules.bom.editrouting');
 });*/
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
+Route::patch('/update-routing/{id}', [RoutingsController::class, 'update']);
 Route::delete('/delete-routing/{id}', [RoutingsController::class, 'delete']);
 
 /**MATERIAL REQUEST ROUTES */

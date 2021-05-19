@@ -88,33 +88,34 @@
                     </td>
                     <td id="mr-code-input" class="mr-code-input"><input type="text" value="{{ $route->id }}" disabled
                             name="seq_id" id="seq_id" class="form-control"></td>
-                    <td style="width: 10%;" class="mr-qty-input"><input type="text" placeholder="{{ $operations->operation_id }}"  name="operation" id="operation" class="form-control"><br>
-                    {{--<td class="mr-qty-input"><input type="text" placeholder="" name="operation" id="operation1"
-                            class="form-control operation" list="operations_list" >
+                    <td class="mr-qty-input"><input type="text" placeholder="{{ $operationdata->operation_id }}" value="" name="operation" id="operation1"
+                            class="form-control operation" list="operations_list" onchange="operationSearch(1);">
                         <datalist id="operations_list">
                             @foreach ($operations as $operation)
                                 <option value="{{ $operation->operation_id }}">{{ $operation->operation_name }}
                                 </option>
                             @endforeach
-                        </datalist>--}}
+                        </datalist>
+                        <br>
                         <button type="button" class="btn btn-primary" data-toggle="modal"
                             data-target="#operation_modal">
                             New Operation
                         </button>
                     </td>
-                    <td class="mr-unit-input"><input type="text" placeholder="{{ $operations->wc_code }}" name="workcenter" id="workcenter1"
-                            class="form-control" disabled><br>
+                    <td class="mr-unit-input"><input type="text" placeholder="{{ $operationdata->wc_code }}"
+                            name="workcenter" id="workcenter1" class="form-control" disabled><br>
                         <button type="button" class="btn btn-primary" type="submit" onclick="loadnewworkcenter();">
                             New WorkCenter
                         </button>
                     </td>
                     </td>
-                    <td class="mr-unit-input"><input type="text" placeholder="{{ $operations->description }}" value="" name="description" id="description1"
-                            class="form-control" disabled></td>
-                    <td class="mr-unit-input"><input type="number" placeholder="{{ $routing_operations->hour_rate }}" value="" name="hour_rate" id="hour_rate1"
-                            class="form-control"></td>
-                    <td class="mr-unit-input"><input type="text" placeholder="{{ $routing_operations->operation_time }}" value="" name="operation_time" id="operation_time1"
-                            class="form-control"></td>
+                    <td class="mr-unit-input"><input type="text" placeholder="{{ $operationdata->description }}"
+                            value="" name="description" id="description1" class="form-control" disabled></td>
+                    <td class="mr-unit-input"><input type="number" placeholder="{{ $routing_operations->hour_rate }}"
+                            value="" name="hour_rate" id="hour_rate1" class="form-control"></td>
+                    <td class="mr-unit-input"><input type="text"
+                            placeholder="{{ $routing_operations->operation_time }}" value="" name="operation_time"
+                            id="operation_time1" class="form-control"></td>
                     <td>
                         <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                             <i class="fa fa-edit" aria-hidden="true"></i>
@@ -154,37 +155,37 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="Operation_Name">Operation Name</label>
-                                <input type="text" name="Operation_Name" id="Operation_Name" class="form-control">
+                        <form action="{{ route('operations.store') }}" method="POST" id="operationForm">
+                            @csrf
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="Operation_Name">Operation Name</label>
+                                    <input type="text" name="Operation_Name" id="Operation_Name" class="form-control">
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="Default_WorkCenter">Default WorkCenter</label>
-                                <input type="text" name="Default_WorkCenter" id="Default_WorkCenter"
-                                    class="form-control" list="work_center_list">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="Default_WorkCenter">Default WorkCenter</label>
+                                    <input type="text" name="Default_WorkCenter" id="Default_WorkCenter"
+                                        class="form-control" list="work_center_list">
                                     <datalist id="work_center_list">
                                         @foreach ($work_centers as $wc)
                                             <option value="{{ $wc->wc_code }}">{{ $wc->wc_label }}</option>
                                         @endforeach
                                     </datalist>
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div class="form-group col-md-12">
-                            <label for="Description">Description</label>
-                            <textarea id="Description" class="summernote" name="Description"></textarea>
-                        </div>
-
+                            <div class="form-group col-md-12">
+                                <label for="Description">Description</label>
+                                <textarea id="Description" class="summernote" name="Description"></textarea>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" id="saveOperation" data-dismiss="modal">Save
+                        changes</button>
                 </div>
             </div>
         </div>
@@ -257,8 +258,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="closeOpModal" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveOperation" data-dismiss="modal">Save changes</button>
+                    <button type="button" class="btn btn-secondary" id="closeOpModal"
+                        data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveOperation" data-dismiss="modal">Save
+                        changes</button>
                 </div>
             </div>
         </div>
