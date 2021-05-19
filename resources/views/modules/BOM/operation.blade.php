@@ -55,7 +55,7 @@
                     <a id="" class="btn" href="javascript:onclick=editoperation({{ $operation->id }});" role="button">
                         <i class="fa fa-edit" aria-hidden="true"></i>
                     </a>
-                    <form action="{{ route('operations.destroy', ['id' => $operation->id]) }}" id="deleteOp{{ $operation->id }}">
+                    <form action="{{ route('operations.destroy', ['id' => $operation->id]) }}" id="deleteOp{{ $operation->id }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <a id="" class="btn delete-btn" href="javascript:onclick=deleteOperation({{ $operation->id }});" role="button">
@@ -77,10 +77,3 @@
     }
 
 </style>
-
-<script>
-    $(document).ready(function() {
-        $('#table_operations').DataTable();
-    });
-
-</script>

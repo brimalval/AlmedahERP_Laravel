@@ -22,7 +22,7 @@
           <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="RoutingTable();">Cancel</button>
         </li>
         <li class="nav-item li-bom">
-          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" onclick="">Save</button>
+          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" id="saveRouting" onclick="">Save</button>
         </li>
       </ul>
     </div>

@@ -10,6 +10,7 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
 
 $(document).ready(function () {
+    $("#table_operations").DataTable();
     $('.summernote').summernote({
         height: 200
     });
@@ -53,8 +54,7 @@ function deleteOperation(id) {
     }); 
     $.ajax({
         type: "DELETE",
-        url: $(`#deleteOp${id}`).attr('action'),
-        data: id,
+        url: $(`${id}`).find('form').attr('action'),
         cache: false,
         contentType: false,
         processData: false,
