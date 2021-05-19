@@ -27,6 +27,7 @@ class Routings extends Model
             array_push($operations,
                 array(
                     'operation' => Operation::where('operation_id', $ro->operation_id)->first(),
+                    'operation_id' => $ro->operation_id,
                     'sequence_id' => $ro->sequence_id,
                     'hour_rate' => $ro->hour_rate,
                     'operation_time' => $ro->operation_time,
@@ -37,6 +38,7 @@ class Routings extends Model
         return $operations;
     }
 
+    # use this instead
     public function operationsThrough(){
         return $this->hasManyThrough(
             Operation::class, 

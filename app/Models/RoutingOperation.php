@@ -18,4 +18,8 @@ class RoutingOperation extends Model
         'operation_time',
         'operating_cost'
     ];
+
+    public function operation() {
+        return $this->hasOne(Operation::class, 'operation_id', 'operation_id');
+    }
 }

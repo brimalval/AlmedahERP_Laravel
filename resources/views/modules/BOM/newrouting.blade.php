@@ -28,7 +28,7 @@
     </div>
 </nav>
 
-<form method="POST" id="routingsForm" class="create">
+<form action="{{ route('routing.store') }}" method="POST" id="routingsForm" class="create">
     @csrf
     <br>
     <div class="container">
