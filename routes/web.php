@@ -180,6 +180,11 @@ Route::resource('/jobscheduling/part', PartsController::class);
 // Route for the component being made in a job scheduling entry
 Route::resource('/jobscheduling/component', ComponentController::class);
 
+//Routes for pause play finish of operations
+Route::post('/startOperation' , JobSchedController::class, 'startOperation');
+Route::post('/pauseOperation' , JobSchedController::class, 'pauseOperation');
+Route::post('/finishOperation' , JobSchedController::class, 'finishOperation');
+
 /**MACHINES MANUAL ROUTES */
 Route::get('/machinemanual', [MachinesManualController::class , 'index']);
 Route::get('/create-new-mm', function() {
