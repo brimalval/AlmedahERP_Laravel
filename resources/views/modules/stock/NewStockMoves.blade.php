@@ -42,7 +42,7 @@
               </div>
               <div class="col">
                 <label for="">Move Date</label>
-                <input type="text" class="form-control" placeholder="Move Date" value="">
+                <input type="date" class="form-control" placeholder="Move Date" value="">
               </div>
               </div>
               <div class="row">
@@ -54,20 +54,34 @@
               <div class="row">
                   <div class="col-6">
                     <label for="">Materials Ordered ID</label>
-                    <input type="text" class="form-control" placeholder="Materials Ordered ID" value="">
+                    <input list="materials_ordered" class="form-control" placeholder="Materials Ordered ID" value="" onchange="showItems(this.value)">
+                      <datalist id="materials_ordered">
+                                                @foreach ($materials_ordered as $row)
+                                                    <option value="{{ $row->mat_ordered_id }}"> {{ $row->mat_ordered_id}}
+                                                      </option>
+                                                @endforeach
+                                                <option value=" + Add new">
+                                            </datalist>
                   </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                       <label for="">Employee ID</label>
-                      <input type="text" class="form-control" placeholder="Employee ID" value="">
+                      <input list="employees" class="form-control" placeholder="Employee ID" value="">
+                      <datalist id="employees">
+                                                @foreach ($employees as $row)
+                                                    <option value="{{ $row->employee_id }}"> {{ $row->last_name }}
+                                                        {{ $row->first_name }} </option>
+                                                @endforeach
+                                                <option value=" + Add new">
+                                            </datalist>
                     </div>
                   </div>
             </div>
         <hr>
         <div class="card-body filter">
           <h5>Items</h5>
-          <table class="table table-bom border-bottom">
+          <table class="table table-bom border-bottom" id="items">
               <thead class="border-top border-bottom bg-light">
                   <tr class="text-muted">
                       <td>
@@ -121,3 +135,53 @@
     </div>
 
     </div>
+<script>
+  function showItems(matOrderedId){
+    $("#items").empty();
+    let itemsTable = $("#items");
+    alert(matOrderedId);
+    $.ajax({
+            type:'GET',
+            url:"/showItems/"+matOrderedId,
+            success: function(data) {
+                console.log(data['mat_ordered']);
+                itemsTable.append(
+                    `<thead class="border-top border-bottom bg-light">
+                  <tr class="text-muted">
+                      <td>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input">
+                          </div>
+                      </td>
+                      <td>Item Code</td>
+                      <td>Quantity Transfered</td>
+                      <td>Consumable</td>
+                      <td>Source Station</td>
+                      <td>Target Station</td>
+                      <td >Item Condition</td>
+                  </tr>
+                </thead>`
+                  );
+                JSON.parse(data['mat_ordered'].items_list_received).forEach((item) => {
+                  itemsTable.append(
+                    `<tr><td>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input">
+                          </div>
+                      </td>
+                      <td>` +item.item_code +`</td>
+                    <td>` +item.qty_received +`</td>
+                    <td>Consumable</td>
+                    <td>Source_Station</td>
+                    <td>`+data['station_name']+`</td>
+                    <td>Item_Condition</td></tr>`
+                  );
+                });
+            },
+            error: function(data) {
+                console.log("error");
+                console.log(data);
+            }
+        });
+  }
+</script>

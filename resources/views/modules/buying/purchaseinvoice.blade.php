@@ -36,7 +36,7 @@
     </div>
 </nav>
 
-<table id="salestable" class="table table-striped table-bordered hover" style="width:100%">
+<table id="invoice_table" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
         <tr>
             <th>Purchase Invoice ID</th>
@@ -85,7 +85,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        x = $('#salestable').DataTable();
+        x = $('#invoice_table').DataTable();
 
         $(".pi_price").each(function () {
             // element == this

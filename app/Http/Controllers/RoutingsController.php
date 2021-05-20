@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Operation;
+use App\Models\RoutingOperation;
 use App\Models\Routings;
 use App\Models\WorkCenter;
 use Exception;
@@ -18,7 +19,17 @@ class RoutingsController extends Controller
     public function index()
     {
         $routings = Routings::all();
-        return view('modules.manufacturing.routing', ['routings' => $routings]);
+        return view('modules.BOM.routing', ['routings' => $routings]);
+    }
+
+    public function view($id)
+    {
+        $routing = Routings::find($id);
+        $operations = Operation::all();
+        $routing_operation = $routing->operations();
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.editrouting', ['route' => $routing, 'operations' => $operations,
+                                                'routing_operations' => $routing_operation, 'work_centers' => $work_centers]);
     }
 
     /**
@@ -47,7 +58,7 @@ class RoutingsController extends Controller
             $next_id = $last_routing ? $last_routing->id + 1 : 1;
             $routing_id = "RT" . str_pad($next_id, 5, '0', STR_PAD_LEFT);
             $routing->routing_id = $routing_id;
-            $routing->routing_name = $form_data['routing_name'];
+            $routing->routing_name = $form_data['Routing_Name'];
             $routing->save();
             $routing = Routings::where('routing_id', $routing_id)->first();
             return ['routing_id' => $routing->routing_id];
@@ -88,6 +99,15 @@ class RoutingsController extends Controller
     public function update(Request $request, Routings $routings)
     {
         //
+        try {
+            $form_data = $request->input();
+            $routing = Routings::find($routings->id);
+            echo $routings->id;
+            $routing->routing_name = $form_data['Routing_Name'];
+            $routing->save();
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     /**
@@ -100,8 +120,14 @@ class RoutingsController extends Controller
     {
         //
     }
- 
-    public function openRoutingForm() 
+
+    public function delete($id)
+    {
+        $routing = Routings::find($id);
+        $routing->delete();
+    }
+
+    public function openRoutingForm()
     {
         $operations = Operation::all();
         $work_centers = WorkCenter::all();

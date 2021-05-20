@@ -177,7 +177,9 @@
     </div>
 </div>
 <!-- Edit Material Modal-->
-<div class="modal fade" id="update-material-form-modal" tabindex="-1" aria-labelledby="updateModalForm"
+<div class="modal fade" id="
+
+ial-form-modal" tabindex="-1" aria-labelledby="updateModalForm"
     aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">

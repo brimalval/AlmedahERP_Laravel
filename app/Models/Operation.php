@@ -17,7 +17,9 @@ class Operation extends Model
         'wc_code'
     ];
 
-    public function routing() {
+    public function routing()
+    {
         return $this->hasOneThrough(Routing::class, RoutingOperation::class);
     }
+
 }

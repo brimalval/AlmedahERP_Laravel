@@ -22,13 +22,13 @@
           <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="RoutingTable();">Cancel</button>
         </li>
         <li class="nav-item li-bom">
-          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" onclick="">Save</button>
+          <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" id="saveRouting" onclick="">Save</button>
         </li>
       </ul>
     </div>
 </nav>
 
-<form method="POST" id="routingsForm" class="create">
+<form action="{{ route('routing.store') }}" method="POST" id="routingsForm" class="create">
     @csrf
     <br>
     <div class="container">
@@ -76,11 +76,11 @@
                             </datalist>
                     </td>
                     <td class="mr-unit-input"><input type="text" value="" name="workcenter" id="workcenter1"
-                            class="form-control">
+                            class="form-control" disabled>
                     </td>
                     </td>
                     <td class="mr-unit-input"><input type="text" value="" name="description" id="description1"
-                            class="form-control"></td>
+                            class="form-control" disabled></td>
                     <td class="mr-unit-input"><input type="number" value="" name="hour_rate" id="hour_rate1"
                             class="form-control"></td>
                     <td class="mr-unit-input"><input type="number" value="" name="operation_time" id="operation_time1"
@@ -108,7 +108,7 @@
                     </td>
                     <td class="mr-unit-input">
                         <button type="button" class="btn btn-primary" type="submit" onclick="loadnewworkcenter();">
-                            New WorkCenter
+                            New Work Center
                         </button>
                     </td>
                     </td>

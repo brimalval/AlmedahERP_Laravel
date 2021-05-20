@@ -22,11 +22,14 @@ use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\RequestQuotationController;
 use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
-use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SalesOrderController;
+use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
+use App\Http\Controllers\NewStockMovesController;
+use App\Http\Controllers\StockMovesReturnController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -83,7 +86,10 @@ Route::get('/buying', function () {
 /**COMPONENTS ROUTES */
 Route::get('/component', [ComponentController::class, 'index']);
 Route::post('/create-component', [ComponentController::class, 'store']);
+Route::post('/delete-component/{id}', [ComponentController::class, 'delete']);
 Route::get('/get-item/{item_code}', [ComponentController::class, 'getItem']);
+Route::get('/get-component/{id}', [ComponentController::class, 'getComponent']);
+Route::patch('/update-component/{id}', [ComponentController::class, 'update']);
 
 /**COUPON CODE ROUTES */
 Route::get('/couponcode', function() {
@@ -218,12 +224,11 @@ Route::get('/openManufacturingItemPriceForm', function () {
 Route::resource('/routing', RoutingsController::class);
 Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
 
-Route::get('/routing', function () {
-    return view('modules.bom.routing');
-});
-Route::get('/editrouting', function () {
+/**Route::get('/editrouting', function () {
     return view('modules.bom.editrouting');
-});
+});*/
+Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
+Route::delete('/delete-routing/{id}', [RoutingsController::class, 'delete']);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
@@ -244,14 +249,9 @@ Route::get('/archived', function () {
 });
 
 /**OPERATIONS ROUTES */
-Route::resource('/operations', OperationsController::class);
+Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
-Route::get('/newoperation', function () {
-    return view('modules.bom.newoperation');
-});
-Route::get('/editoperation', function () {
-    return view('modules.bom.editoperation');
-});
+Route::get('/newoperation', [OperationsController::class, 'openOperationForm']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {
@@ -457,6 +457,10 @@ Route::get('/selling', function () {
 Route::get('/shippingrule', function() {
     return view('modules.NewUI.ShippingRule');
 });
+Route::get('/stockmoves', [StockMovesController::class, 'index']);
+Route::get('/newstockmoves', [NewStockMovesController::class, 'index']);
+Route::get('/showItems/{selected}', [NewStockMovesController::class, 'showItems']);
+Route::get('/stockmovesreturn', [StockMovesReturnController::class, 'index']);
 
 Route::get('/shippingruleinfo', function() {
     return view('modules.NewUI.ShippingRuleInfo');

@@ -57,9 +57,40 @@ class PurchaseInvoiceController extends Controller
         //try to find the last log corresponding to the invoice and then 
         //create a description
         $last_data = PaymentInvoiceLog::where('p_invoice_id', $form_data['invoice_id'])->orderby('id', 'desc')->first();
-        if($invoice->payment_mode === 'Cheque') {
+        if($invoice->payment_mode === 'Installment') {
             if(is_null($last_data)) {
                 $description = "Downpayment";
+            } else {
+                if(
+                    in_array($last_data->payment_description, array('3rd Installment', '4th Installment', '5th Installment')) &&
+                    $invoice->installment_type === '6 Months'
+                ) {
+                    switch($last_data->payment_description) {
+                        case '3rd Installment':
+                            $description = "4th ";
+                            break;
+                        case '4th Installment':
+                            $description = "5th ";
+                            break;
+                        case '5th Installment':
+                            $description = "6th ";
+                            break;
+                    }
+                }
+                else {
+                    switch($last_data->payment_description) {
+                        case 'Downpayment':
+                            $description = "1st ";
+                            break;
+                        case '1st Installment':
+                            $description = "2nd ";
+                            break;
+                        case '2nd Installment':
+                            $description = "3rd ";
+                            break;
+                    }
+                }
+                $description .= "Installment";
             }
         } else {
             $description = "Fully Paid";
@@ -89,6 +120,10 @@ class PurchaseInvoiceController extends Controller
         $new_balance = $invoice->payment_balance - $form_data['amount_paid'];
         $invoice->total_amount_paid = $new_price;
         $invoice->payment_balance = $new_balance;
+        if($description === 'Downpayment') {
+            $invoice->grand_total = $new_balance;
+            $invoice->total_amount_paid = 0;
+        }
         if ($new_price == $invoice->grand_total) {
             $new_status = "Paid";
             $receipt = $invoice->receipt;

@@ -38,7 +38,7 @@
                                 <td class="text-black-50"><?=$row["branch_name"]?></td>
                                 <td class="text-black-50"><?=$row["contact_number"]?></td>
                                 <td class="text-black-50"><?=$row["address"]?></td>
-                                <td><img src="<?=$row['profile_picture']?>" class="customer-modal-image" height="30" onError="this.onerror=null;this.src='images/defaultuser.png';"></td>
+                                <td><img src="images/img.png" class="customer-modal-image" height="37" onError="this.onerror=null;this.src='images/defaultuser.png';"></td>
                                 <td class="text-black-50"><?=$row["email_address"]?></td>
                                 <td class="text-black-50"><?=$row["company_name"]?></td>
                                 <td class="">
