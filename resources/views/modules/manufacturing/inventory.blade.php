@@ -392,7 +392,7 @@
 
                         <div class="form-group col-6">
                           <label for="">Stock Quantity</label>
-                          <input type="text" value="0" readonly id="stock_quantity" class="form-control" placeholder="" aria-describedby="helpId">
+                          <input type="text" value="0" readonly id="stock_quantity" class="form-control" placeholder="" aria-describedby="helpId" name="stock_quantity">
                         </div>
                     </div>
 

@@ -411,10 +411,12 @@
 							<td>
 								{{-- Operation Name Value --}}
 								${operation.operation_name}
+								<input type="hidden" name="operation_id[]" value="${operation.operation_id}"> 
 							</td>
 							<td>
 								{{-- Operation Time Value --}}
 								${data.routingOperations[index].operation_time}
+								<input type="hidden" name="operation_time[]" value="${data.routingOperations[index].operation_time}">
 							</td>
 							<td>
 								{{-- Predecessor Value --}}
@@ -439,19 +441,19 @@
 							</td>
 							<td class="p-3">
 								{{-- Planned Start Value --}}
-								<input class="form-control form-control-sm" type="text">
+								<input class="form-control form-control-sm" type="text" name="planned_start_[]">
 							</td>
 							<td class="p-3">
 								{{-- Planned End Value --}}
-								<input class="form-control form-control-sm" type="text">
+								<input class="form-control form-control-sm" type="text" name="planned_end[]">
 							</td>
 							<td class="p-3">
 								{{-- Real Start Value --}}
-								<input class="form-control form-control-sm" type="text">
+								<input class="form-control form-control-sm" type="text" name="real_start[]">
 							</td>
 							<td class="p-3">
 								{{-- Real End Value --}}
-								<input class="form-control form-control-sm" type="text">
+								<input class="form-control form-control-sm" type="text" name="real_end[]">
 							</td>
 							<td>
 								{{-- Status Value --}}

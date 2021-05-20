@@ -30,7 +30,7 @@
                   </button>
                 @endif
                 </div>
-                <button type="button" class="btn btn-primary ml-1" href="#" onclick="$('#squotation-form').submit()">Save</button>
+                <button type="button" class="btn btn-primary ml-1" href="#" onclick="$('#squotation-form').submit()" id="sqSaveBtn">Save</button>
             </div>
         </div>
     </div>

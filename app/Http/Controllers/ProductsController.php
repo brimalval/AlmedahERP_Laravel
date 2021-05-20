@@ -49,8 +49,8 @@ class ProductsController extends Controller
             'internal_description' => 'required|max:255',
             'bar_code' => 'required|alpha_num' ,
             // Required to have at least 1 material OR at least 1 component 
-            'materials' => 'required_if:components, {}', 
-            'components' => 'required_if:materials, {}',
+            'materials' => 'required_if:components,{}', 
+            'components' => 'required_if:materials,{}',
         ];
         if(request('product_status') != 'Variant'){
             $rules['picture'] = 'required';
@@ -85,7 +85,7 @@ class ProductsController extends Controller
                 $imagePath = request('template_img');
             }
 
-            $form_data = $request->input();
+            $form_data = $request->all();
             $data = new ManufacturingProducts();
 
             $data->bar_code = $form_data['bar_code'];
@@ -149,7 +149,7 @@ class ProductsController extends Controller
         } catch (Throwable $e) {
             return response()->json([
                 'status' => 'error',
-                'error' => $e->getCode(),
+                'error' => $e->getMessage(),
             ]);
         }
 

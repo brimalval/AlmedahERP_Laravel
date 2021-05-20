@@ -98,6 +98,7 @@ class MaterialQuotationController extends Controller
             for ($i = 0, $len = sizeof(request('item_code')); $i < $len; $i++) {
                 array_push($items, [
                     'item_code' => $item_codes[$i],
+                    'item_name' => ManufacturingMaterials::where('item_code', $item_codes[$i])->first()->item_name,
                     'quantity_requested' => $quantities[$i],
                     'station_id' => $station_ids[$i],
                     'uom_id' => $uom_id[$i],
@@ -212,6 +213,7 @@ class MaterialQuotationController extends Controller
             for ($i = 0, $len = sizeof(request('item_code')); $i < $len; $i++) {
                 array_push($items, [
                     'item_code' => $item_codes[$i],
+                    'item_name' => ManufacturingMaterials::where('item_code', $item_codes[$i])->first()->item_name,
                     'quantity_requested' => $quantities[$i],
                     'station_id' => $station_ids[$i],
                     'uom_id' => $uom_id[$i],
