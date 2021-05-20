@@ -162,14 +162,13 @@ Route::patch('/update-product/{id}', [ProductsController::class, 'update']);
 Route::post('/delete-product/{id}', [ProductsController::class, 'delete']);
 Route::post('/create-item-group', [ProductsController::class, 'add_item_group']);
 Route::post('/create-product-unit', [ProductsController::class, 'add_product_unit']);
-Route::get('/get-attribute/{id}', [ProductsController::class, 'get_attribute']);
 
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function () {
     return view('modules.stock.itemvariantsettings');
 });
 Route::post('/create-attribute', [ProductsController::class, 'add_attribute']);
-Route::get('/get-attribute/{id}', [ProductsController::class, ' get_attribute']);
+Route::get('/get-attribute/{id}', [ProductsController::class, 'get_attribute']);
 Route::patch('/update-attribute/{id}', [ProductsController::class, 'update_attribute']);
 Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attribute']);
 

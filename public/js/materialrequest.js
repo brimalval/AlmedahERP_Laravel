@@ -155,7 +155,6 @@ $(document).on('submit','#mat-req', function(){
         processData: false,
         cache: false,
         success: function(data){
-            loadIntoPage(formElement, data.redirect);
             if(data.status == 'success'){ 
                 // If the form's objective is to update, update the row
                 // if(data.update){
@@ -169,6 +168,7 @@ $(document).on('submit','#mat-req', function(){
                 // else{
                 //     loadIntoPage(formElement, data.redirect);
                 // }
+                loadIntoPage(formElement, data.redirect);
             } else{
                 alert('Error! Please ensure that all fields are filled in and valid!');
             }
