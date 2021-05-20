@@ -92,7 +92,7 @@
                         <td class="text-black-50"> </td>
                     @endif --}}
                     <td><!--<input type="checkbox">-->{{ $work_order->sales_id }}</td>
-                    <td><!--<input type="checkbox">-->{{ $work_order->created_at->format('d/m/Y') }}</td>
+                    <td><small><!--<input type="checkbox">-->{{ Carbon\Carbon::parse($work_order->created_at)->diffForHumans(null, false, true) }}</small></td>
                 </tr>
             @endforeach
             </tbody>
