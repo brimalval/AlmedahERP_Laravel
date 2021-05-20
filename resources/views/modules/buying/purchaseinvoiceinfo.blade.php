@@ -224,7 +224,7 @@ $i = 1; ?>
                             </div>
                             <br>
                             @endif
-                            @if ($invoice->pi_status !== 'Draft')
+                            @if ($invoice->pi_status !== 'Draft' && $invoice->pi_status !== 'Paid')
                             <label class=" text-nowrap align-middle">
                                 Method of Payment
                             </label>
@@ -252,7 +252,7 @@ $i = 1; ?>
                                 <input type="text" required class="form-input form-control" placeholder="Enter Bank Name..." id="bankName">
                                 <br>
                                 <label class="text-nowrap align-middle">
-                                    Branch of Bank
+                                    Bank Location
                                 </label>
                                 <input type="text" required class="form-input form-control" placeholder="Indicate Branch of Bank..." id="bankBranch">
                             </div>
@@ -264,7 +264,7 @@ $i = 1; ?>
                                 </label>
                                 <input type="number" readonly required class="form-input form-control" value={{ $invoice->grand_total }} id="priceToPay">
                                 <br>
-                                @if ($invoice->pi_status !== 'Draft')
+                                @if ($invoice->pi_status !== 'Draft' && $invoice->pi_status !== 'Paid')
                                     <label class=" text-nowrap align-middle">
                                         Amount to Pay
                                     </label>
@@ -423,6 +423,12 @@ $i = 1; ?>
 <script type="text/javascript">
     $("#prTable").DataTable();
     $('#itemsFromReceipt').DataTable({
+        "searching" : false,
+        "paging" : false,
+        "ordering" : false,
+        "info" : false,
+    });
+    $('#paymentLogs').DataTable({
         "searching" : false,
         "paging" : false,
         "ordering" : false,
