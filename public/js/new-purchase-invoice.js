@@ -2,6 +2,16 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
 $("#saveInvoice").on('click', createInvoice);
 
+$(document).ready(function () {
+    var amount = 0;
+    if($("#emptyPILog").length) {
+        amount = parseFloat($("#priceToPay").val()) / 4;        
+    } else {
+        amount = parseFloat($("#priceToPay").val()) / parseFloat($("#installmentType").val());     
+    }
+    $("#payAmount").val(amount.toFixed(2));
+});
+
 function viewChequeDetails(id) {
     $.ajaxSetup({
         headers: {
@@ -37,9 +47,14 @@ $("#payInvoice").click(function () {
         return;
     }
 
+    if($("#paymentMethod").val() === 'non') {
+        alert('Cannot create payment record without payment method!');
+        return;
+    }
+
     if (!$("#chq").prop('hidden')) {
         var msg = '';
-        if (!$('#acctNo').val() || !$('#chqNo').val() || $("#bankName").val() || $("#bankBranch").val()) {
+        if (!$('#acctNo').val() || !$('#chqNo').val() || !$("#bankName").val() || !$("#bankBranch").val()) {
             if (!$('#acctNo').val())
                 msg = 'account number';
             else if (!$('#chqNo').val())
