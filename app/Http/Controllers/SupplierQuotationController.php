@@ -110,6 +110,7 @@ class SupplierQuotationController extends Controller
             for ($i = 0, $len = count($item_codes); $i < $len; $i++) {
                 $item = [
                     'item_code' => $item_codes[$i],
+                    'item_name' => ManufacturingMaterials::where('item_code', $item_codes[$i])->first()->item_name,
                     'quantity_requested' => $quantities[$i],
                     'rate' => $rates[$i] ?? 0,
                     'uom_id' => $units[$i],
@@ -197,6 +198,7 @@ class SupplierQuotationController extends Controller
             for ($i = 0, $len = count($item_codes); $i < $len; $i++) {
                 $item = [
                     'item_code' => $item_codes[$i],
+                    'item_name' => ManufacturingMaterials::where('item_code', $item_codes[$i])->first()->item_name,
                     'quantity_requested' => $quantities[$i],
                     'rate' => $rates[$i] ?? 0,
                     'uom_id' => $units[$i],
