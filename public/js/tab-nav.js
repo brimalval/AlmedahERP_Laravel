@@ -171,6 +171,7 @@ function loadWorkOrderInfo(
     console.log(workOrderDetails);
     $("#requiredItems").html("");
     materials_qty = JSON.parse(quantity);
+    console.log("mat_qty");
     console.log(materials_qty);
     materials_complete = [];
     // $("#startWorkOrder").click(startWorkOrder());
@@ -197,6 +198,7 @@ function loadWorkOrderInfo(
             $("#componentName").text(itemName);
             $("#componentStatus").text(workOrderDetails.work_order_status);
             $("#forProduct").attr("value", productCode);
+
             if (workOrderDetails.work_order_status == "Pending") {
                 $("#startWorkOrder").prop("disabled", true);
             }
@@ -269,7 +271,12 @@ function loadWorkOrderInfo(
                         } else if (transferred_qty >= required_qty) {
                             materials_complete.push(true);
                         } else if (transferred_qty < required_qty) {
-                            materials_complete.push(false);
+                            qty_from_stock = datas["rm_quantity"][index];
+                            if (qty_from_stock >= required_qty) {
+                                materials_complete.push(true);
+                            } else {
+                                materials_complete.push(false);
+                            }
                         }
                         $("#requiredItems").append(
                             `
@@ -838,37 +845,37 @@ function loadnewworkcenter() {
 }
 
 function loadnewRouting() {
-  $(document).ready(function () {
-    $('#contentRouting').load('/newrouting');
-  });
+    $(document).ready(function () {
+        $("#contentRouting").load("/newrouting");
+    });
 }
 
 function EditRouting(id) {
-  $(document).ready(function () {
-    $('#contentRouting').load(`/editrouting/${id}`);
-  });
+    $(document).ready(function () {
+        $("#contentRouting").load(`/editrouting/${id}`);
+    });
 }
 
 function RoutingTable() {
-  $(document).ready(function () {
-    $('#contentRouting').load('/routing');
-  });
+    $(document).ready(function () {
+        $("#contentRouting").load("/routing");
+    });
 }
 
 function newoperation() {
-  $(document).ready(function () {
-    $('#contentOperations').load('/newoperation');
-  });
+    $(document).ready(function () {
+        $("#contentOperations").load("/newoperation");
+    });
 }
 
 function operationtable() {
-  $(document).ready(function () {
-    $('#contentOperations').load('/operations');
-  });
+    $(document).ready(function () {
+        $("#contentOperations").load("/operations");
+    });
 }
 
 function editoperation(id) {
-  $(document).ready(function () {
-    $('#contentOperations').load(`/operations/${id}/edit`);
-  });
+    $(document).ready(function () {
+        $("#contentOperations").load(`/operations/${id}/edit`);
+    });
 }

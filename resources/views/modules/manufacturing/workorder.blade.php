@@ -70,6 +70,7 @@
                     <td>For Product?</td>
                     <td>Status</td>
                     <td>Sales ID</td>
+                    <td>Date Created</td>
                 </tr>
             </thead>
             <tbody class="">
@@ -91,6 +92,7 @@
                         <td class="text-black-50"> </td>
                     @endif --}}
                     <td><!--<input type="checkbox">-->{{ $work_order->sales_id }}</td>
+                    <td><!--<input type="checkbox">-->{{ $work_order->created_at->format('d/m/Y') }}</td>
                 </tr>
             @endforeach
             </tbody>

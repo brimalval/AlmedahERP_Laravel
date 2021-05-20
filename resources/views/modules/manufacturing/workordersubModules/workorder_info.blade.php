@@ -288,7 +288,7 @@
 			</div>
 		</div> -->
 </div>
-<br>
+{{-- <br>
 <div class="card">
 	<div class="card-header">
 		<div class="row">
@@ -329,7 +329,7 @@
 			</ul>
 		</div>
 	</div>
-</div>
+</div> --}}
 
 <script>
 	function startWorkOrder(workOrderId){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Component;
 use App\Models\ManufacturingMaterials;
+use App\Models\ManufacturingProducts;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -98,6 +99,57 @@ class ComponentController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $rules = [
+            'component_code' => 'string',
+            'component_name' => 'required|string',
+            'component_image' => 'nullable|image',
+            'component_description' => 'nullable|string',
+            'item_code' => 'required|string',
+        ];
+
+        try {
+            /* Update Product Record from env_raw_materials table */
+            $data = Component::find($id);
+            // if (request('material_image')) {
+            //     $imagePath = request('material_image')->store('uploads', 'public');
+            //     $data->item_image = $imagePath;
+            // }
+            // $image_bool = false;
+            // if($request->hasfile('component_image')){
+            //     $imagePath = array();
+            //     foreach($request->file('component_image') as $file)
+            //     {
+            //         $name = $file->store('uploads', 'public');
+            //         array_push($imagePath, $name);
+            //     }
+
+            //     $data->component_image = json_encode($imagePath);
+            //     $image_bool = true;
+            // }
+
+            $form_data = $request->input();
+            $data->component_code = $form_data['component_code'];
+            $data->component_name = $form_data['component_name'];
+            $data->component_description = $form_data['component_description'];
+            $data->item_code = $form_data['item_code'];
+            $data->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Successfully updated the component $data->component_code ($data->component_name)!",
+                'component' => $data,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => "There was a problem upon updating a Component",
+                'component' => $data,
+            ]);
+        }
+    }
+
     public function getItem(Request $request, $item_code)
     {
         $raw_material = ManufacturingMaterials::where('item_code', $item_code)->first();
@@ -135,45 +187,6 @@ class ComponentController extends Controller
      * @param  \App\Models\Component  $component
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Component $component)
-    {
-        $rules = [
-            'component_code' => 'nullable|string',
-            'component_name' => 'nullable|string',
-            'component_image' => 'nullable|image',
-            'component_description' => 'nullable|string',
-            'item_code' => 'nullable|exists:env_raw_materials',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors(),
-                'message' => 'Please make sure that all the information entered is valid.',
-            ]);
-        }
-
-        try {
-            $component->update(array_filter($request->all()));
-
-            if ($request->hasfile('component_image')) {
-                $component->component_image = $request->file('component_image')->store('uploads/jobscheduling/components', 'public');
-                $component->save();
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => "Successfully updated $component->component_code ($component->component_name)!",
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ]);
-        }
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -195,6 +208,40 @@ class ComponentController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            /* Delete Product Record from env_raw_materials table */
+            $data = Component::find($id);
+            if(ManufacturingProducts::where('components', 'LIKE', '%component_id\\\\":\\\\"'.$id.'\\\\"%')->count()>0){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'There are products that depend on this component!',
+                ]);
+            }
+            $data->delete();
+            return response()->json([
+                'status' => 'success'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'failed ' . $e
+            ]);
+        }
+    }
+
+    public function getComponent($id)
+    {
+        try {
+            $data = Component::find($id);
+            return $data;
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'failed ' . $e
             ]);
         }
     }

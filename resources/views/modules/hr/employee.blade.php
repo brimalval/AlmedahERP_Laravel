@@ -77,6 +77,57 @@
     </div>
 </div>
 
+<div class="modal fade" id="update-employee-modal" tabindex="-1">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-employee-form" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name='last_name' id="last_name_update" placeholder="Last Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" name='first_name' id="first_name_update" placeholder="First Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="position" class="form-label">Position</label>
+                        <input type="text" class="form-control" id="position_update" name='position' required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select name="gender" id="gender_update" class="form-control">  
+                            <option value="Male">Male</option>  
+                            <option value="Female">Female</option>  
+                        </select> 
+                    </div>
+                    <input type="hidden" name='profile_picture' id="profile_picture" value="default">  
+                    <div class="mb-3">
+                        <label for="contact_number" class="form-label">Contact number</label>
+                        <input type="tel" class="form-control" minlength="11" maxlength="15" id="contact_number_update" name='contact_number' placeholder="#### - ### - ####" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email_update" name='email' placeholder="example@gmail.com" required>
+                    </div>
+                    {{-- <input type="hidden" name='active_status' id="active_status" value="1">    --}}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="create-employee-form-btn" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <div class="card my-2">
         <div class="card-header bg-light">
@@ -121,7 +172,7 @@
         </div>
         <hr>
         <div class="conContent">
-            @if(count($employees) > 1)
+            @if(count($employees) >= 1)
             <div class="employeedata">
                 <table id="employeeTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
@@ -147,7 +198,21 @@
                                 <td class="text-black-50"><?=$row["gender"]?></td>
                                 <td class="text-black-50"><?=$row["email_address"]?></td>
                                 <td class="">
-                                    <a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+                                            Actions
+                                        </button>
+                                        <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
+                                            <li><button id="{{$row->employee_id}}" class="employee-edit-btn btn btn-warning btn-sm rounded-0" type="button">
+                                                <i class="fa fa-edit"></i> Edit</button>
+                                            </li>
+                                            {{-- <li>
+                                                <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </button>
+                                            </li> --}}
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
