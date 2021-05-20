@@ -268,6 +268,7 @@
                             <td>Status</td>
                             <td>Type</td>
                             <td>Unit</td>
+                            <td>Stock Quantity </td>
                             <td>View</td>
                             <td>Action</td>
                         </tr>
@@ -301,6 +302,9 @@
                             </td>
                             <td class="text-black-50">
                                 {{ $product->unit }}
+                            </td>
+                            <td class="text-black-50">
+                                {{ $product->stock_unit }}
                             </td>
 
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
@@ -541,6 +545,11 @@
                         <div class="form-group">
                             <label for="">Sales Price W.T.</label>
                             <input class="form-control" type="number" id="sales_price_wt" name="sales_price_wt" required placeholder="Ex. 1000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Stock Quantity</label>
+                            <input class="form-control" type="number" id="stock_unit" name="stock_unit" required placeholder="Ex. 1000">
                         </div>
 
                         <div class="form-group">
@@ -1168,6 +1177,9 @@
                             </span>`,
                             `<span class="text-black-50">
                                 ${data.product.unit}
+                            </span>`,
+                            `<span class="text-black-50">
+                                ${data.product.stock_unit}
                             </span>`,
                             `<div class="text-black-50 text-center"><a href='#' onclick='clickView(${JSON.stringify(data.product.picture)})' data-toggle="modal" data-target="#exampleImage">View</a></div>`,
                             `<span class="align-middle">

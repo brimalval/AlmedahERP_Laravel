@@ -27,7 +27,7 @@ class CreateProductsTable extends Migration
             $table->json('picture')->nullable();
             $table->json('materials')->nullable();
             $table->json('components')->nullable();
-            $table->integer('stock_unit')->nullable();
+            $table->integer('stock_unit');
             $table->timestamps();
         });
     }
