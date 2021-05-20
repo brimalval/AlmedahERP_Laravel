@@ -55,12 +55,12 @@
                     <a id="" class="btn" href="javascript:onclick=editoperation({{ $operation->id }});" role="button">
                         <i class="fa fa-edit" aria-hidden="true"></i>
                     </a>
-                    <form action="{{ route('operations.destroy', ['id' => $operation->id]) }}" id="deleteOp{{ $operation->id }}" method="POST">
+                    <form action="{{ route('operations.destroy', ['id' => $operation->id]) }}" name="deleteOperation" id="deleteOp{{ $operation->id }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <a id="" class="btn delete-btn" href="javascript:onclick=deleteOperation({{ $operation->id }});" role="button">
+                        <button class="btn delete-btn mr-delete-form" id="deleteOp" onclick="$('#deleteOp{{ $operation->id }}').submit(); $('#op{{ $operation->id }}').remove();" type="button" role="button">
                             <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
+                        </button>
                     </form>
                 </td>
             </tr>

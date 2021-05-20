@@ -102,6 +102,7 @@ class RoutingsController extends Controller
         try {
             $form_data = $request->input();
             $routing = Routings::find($routings->id);
+            echo $routings->id;
             $routing->routing_name = $form_data['Routing_Name'];
             $routing->save();
         } catch (Exception $e) {

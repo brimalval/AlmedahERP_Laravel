@@ -25,6 +25,33 @@ $("#operationModuleSave").click(function () {
     $("#operationModuleForm").submit();
 });
 
+$("form[name='deleteOperation']").submit(function () { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    }); 
+    $.ajax({
+        type: "DELETE",
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log("success");
+        }
+    });
+    return false;
+});
+
+$(".mr-delete-form").each(function () {
+    // element == this
+   $(this).click(function () { 
+        var form = $(this).parent().find("form[name='deleteOperation']");
+        form.submit();
+   });
+});
+
 $("#operationModuleForm").submit(function () {
     var formData = new FormData(this);
     var url = $(this).attr('action');
@@ -45,23 +72,3 @@ $("#operationModuleForm").submit(function () {
     });
     return false;
 });
-
-function deleteOperation(id) {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': CSRF_TOKEN,
-        }
-    }); 
-    $.ajax({
-        type: "DELETE",
-        url: $(`${id}`).find('form').attr('action'),
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-            console.log("success");
-            $(`#op${id}`).remove();
-        }
-    });
-    return false;
-}
