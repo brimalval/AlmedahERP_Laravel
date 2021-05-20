@@ -30,7 +30,7 @@
                         <tr id="<?=$row["id"]?>">
                             <td class="text-black-50"><?=$row["component_code"]?></td>
                             <td class="text-black-50"><?=$row["component_name"]?></td>
-                            <td class="text-black-50"><a class="btn btn-primary btn-sm" href="">View</a></td>
+                            <td class="text-black-50"><button class="btn btn-primary btn-sm" onclick="$('#component-image-modal').modal('toggle')">View</button></td>
                             <td class="text-black-50"><?=$row["component_description"]?></td>
                             <td class="text-black-50"><button class="btn btn-primary btn-sm" onclick='showRawMaterials(<?=$row["item_code"]?>)'>View</button></td>
                             <td class="">
@@ -54,6 +54,16 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+{{-- IMAGE MODAL --}}
+<div class="modal fade" id="component-image-modal" tabindex="-1" role="dialog" aria-labelledby="exampleImageLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content m-0 p-0">
+            <div class="modal-body">
+                <center><img id="component-image-view" src="images/toupdate.jpg" style="height:100%; width:100%;"></center>
+            </div>
         </div>
     </div>
 </div>
