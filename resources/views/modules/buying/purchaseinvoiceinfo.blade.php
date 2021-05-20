@@ -198,7 +198,7 @@ $i = 1; ?>
                             </label>
                             <select id="paymentMode" disabled class="form-control">
                                 <option value="" selected hidden readonly>{{ $invoice->payment_mode }}</option>
-                                <option value="Cash">Cash</option>
+                                <option value="Cash">Full Payment (Cash)</option>
                                 <option value="Installment">Installment</option>
                             </select>
                             <br>
@@ -207,10 +207,19 @@ $i = 1; ?>
                                 <label class=" text-nowrap align-middle">
                                     Installment Duration
                                 </label>
-                                <select disabled id="installmentType" class="form-control">
-                                    <option value="" selected>{{ $invoice->installment_type }}</option>
+                                <select readonly id="installmentType" class="form-control">
+                                    <option hidden 
+                                        @if ($invoice->installment_type === '3 Months')
+                                            value="3"
+                                        @else
+                                            value="6"
+                                        @endif 
+                                        selected
+                                    >{{ $invoice->installment_type }}</option>
+                                    @if($invoice->pi_status === 'Draft')
                                     <option value="3 Months">3 Months</option>
                                     <option value="6 Months">6 Months</option>
+                                    @endif
                                 </select>
                             </div>
                             <br>
@@ -220,7 +229,7 @@ $i = 1; ?>
                                 Method of Payment
                             </label>
                             <select id="paymentMethod" class="form-control">
-                                <option value="" selected hidden readonly>Select Method of Payment...</option>
+                                <option value="non" selected hidden readonly>Select Method of Payment...</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Cheque">Cheque</option>
                             </select>
@@ -272,7 +281,7 @@ $i = 1; ?>
                                 <label class=" text-nowrap align-middle">
                                     Date of Transaction
                                 </label>
-                                <input type="date" readonly required class="form-input form-control" value=<?=$today?> id="transDate">
+                                <input type="date" readonly required class="form-input form-control" value="{{ $invoice->date_created }}" id="transDate">
                             </div>
                         </div>
                     </div>
@@ -319,30 +328,10 @@ $i = 1; ?>
                             </td>
                         </tr>
                         @empty
-                            <td colspan="6">
+                            <td id="emptyPILog" colspan="6">
                                 <center>NO PAYMENT LOGS AVAILABLE</center>
                             </td>
                         @endforelse
-                        <!--
-                        <tr>
-                            <td class= "text-bold">PI-LOG-002</td>
-                            <td>April/28/2021</td>
-                            <td class="text-danger">Installment</td>
-                            <td class="text-bold">Cash</td>
-                            <td class="text-bold">1st Installment</td>
-                            <td>1000</td>
-                            <td>emp002</td>
-                        </tr>
-                        <tr>
-                            <td class= "text-bold">PI-LOG-003</td>
-                            <td>May/28/2021</td>
-                            <td class="text-danger">Installment</td>
-                            <td class="text-bold"><a href="#" data-toggle="modal" data-target="#npi_chequeInfo">Cheque</a></td>
-                            <td class="text-bold">2nd Installment</td>
-                            <td>1000</td>
-                            <td>emp001</td>
-                        </tr>
-                    -->
                     </tbody>
                     <tfoot>
                         <tr>
