@@ -91,13 +91,24 @@ class EmployeeController extends Controller
         }
     }
     // this updates the active status in the employees dataTable
-    public function toggle(Request $request, $id, $stat)
+    // public function toggle(Request $request, $id, $stat)
+    // {
+    //     try {
+    //         $employee = Employee::where('id', $id)->first();
+    //         $employee->active_status = $stat;
+    //         $employee->save();
+    //         return response('Account has been activated!');
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'status' => 'failed'
+    //         ]);
+    //     }
+    // }
+    public function getEmployee($id)
     {
         try {
-            $employee = Employee::where('id', $id)->first();
-            $employee->active_status = $stat;
-            $employee->save();
-            return response('Account has been activated!');
+            $employee = Employee::where('employee_id', $id)->first();
+            return response($employee);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'failed'

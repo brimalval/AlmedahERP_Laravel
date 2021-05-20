@@ -86,7 +86,10 @@ Route::get('/buying', function () {
 /**COMPONENTS ROUTES */
 Route::get('/component', [ComponentController::class, 'index']);
 Route::post('/create-component', [ComponentController::class, 'store']);
+Route::post('/delete-component/{id}', [ComponentController::class, 'delete']);
 Route::get('/get-item/{item_code}', [ComponentController::class, 'getItem']);
+Route::get('/get-component/{id}', [ComponentController::class, 'getComponent']);
+Route::patch('/update-component/{id}', [ComponentController::class, 'update']);
 
 /**COUPON CODE ROUTES */
 Route::get('/couponcode', function() {
