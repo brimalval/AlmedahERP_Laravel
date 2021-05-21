@@ -28,8 +28,8 @@ class RoutingsController extends Controller
         $operations = Operation::all();
         $routing_operation = $routing->operations();
         $work_centers = WorkCenter::all();
-        return view('modules.BOM.editrouting', ['route' => $routing, 'operationdata' => $operationdata,
-                                                'routing_operations' => $routing_operation, 'work_centers' => $work_centers, 'operations' => $operations]);
+        return view('modules.BOM.editrouting', ['route' => $routing,'routing_operations' => $routing_operation,
+                                                'work_centers' => $work_centers, 'operations' => $operations]);
     }
 
     /**
@@ -116,12 +116,7 @@ class RoutingsController extends Controller
      * @param  \App\Models\Routings  $routings
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Routings $routings)
-    {
-        //
-    }
-
-    public function delete($id)
+    public function destroy($id)
     {
         $routing = Routings::find($id);
         $routing->delete();

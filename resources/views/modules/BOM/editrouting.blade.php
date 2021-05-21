@@ -33,7 +33,7 @@
                 @csrf
                 @method('DELETE')
                 <button style="background-color: #ff0000d7;" class="btn btn-danger btn" style="float: left;"
-                    onclick="" id="mmDelete">Delete</button>
+                    onclick="" id="routeDelete">Delete</button>
             </form>
         </li>
       </ul>

@@ -15,10 +15,10 @@ function addRowbomOperation(){
     let lastRow = $('#newrouting-input-rows tr:last');
     let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
     $('#newrouting-input-rows').append(
-    `                
+    `
     <tr data-id="${nextID}">
         <td class="text-center">
-        
+
         <div class="form-check" >
             <input type="checkbox" class="form-check-input">
         </div>
@@ -30,7 +30,7 @@ function addRowbomOperation(){
         <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control"></td>
         <td class="mr-unit-input"><input type="text" value=""  name="description" id="description${nextID}" class="form-control"></td>
         <td class="mr-unit-input"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control"></td>
-        <td class="mr-unit-input"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>   
+        <td class="mr-unit-input"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>
         <td>
             <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                 <i class="fa fa-edit" aria-hidden="true"></i>
@@ -51,7 +51,7 @@ function clearOperationFields() {
     $("#Description").html(null);
 }
 
-$("#routingsForm").submit(function () { 
+$("#routingsForm").submit(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
@@ -61,7 +61,7 @@ $("#routingsForm").submit(function () {
     var routingData = new FormData(this);
     var routingId = "";
     for (var pair of routingData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
+        console.log(pair[0]+ ', ' + pair[1]);
     }
     $.ajax({
         type: "POST",
@@ -95,14 +95,38 @@ $("#routingsForm").submit(function () {
             processData: false,
             success: function (response) {
                 console.log("success");
+                RoutingTable();
             }
         });
     }
     return false;
-    
+
 });
 
-$("#saveRouting").click(function () { 
+$("#routeDelete").click(function () {
+    $("#deleteRouting").submit();
+});
+
+$("#deleteRouting").submit(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    $.ajax({
+        type: "DELETE",
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            RoutingTable();
+        }
+    });
+    return false;
+});
+
+$("#saveRouting").click(function () {
     $("#routingsForm").submit();
 });
 
@@ -110,7 +134,7 @@ $("#saveOperation").click(function() {
     $("#operationForm").submit();
 });
 
-$("#operationForm").submit(function () { 
+$("#operationForm").submit(function () {
     var formData = new FormData(this);
     $.ajax({
         type: $(this).attr('method'),
@@ -131,7 +155,7 @@ $("#operationForm").submit(function () {
             }
         }
     });
-    return false;  
+    return false;
 });
 
 
