@@ -141,7 +141,7 @@ function createInvoice() {
     formData.append('payment_mode', $("#paymentMode").val());
     formData.append('amount', $("#priceToPay").val());
 
-    if ($("#installmentType").length) {
+    if ($("#installmentType").prop('hidden') === true) {
         formData.append('installment_type', $("#installmentType").val());
     }
 

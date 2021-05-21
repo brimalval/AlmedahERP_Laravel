@@ -228,6 +228,7 @@ $i = 1; ?>
                                         selected
                                     >{{ $invoice->installment_type }}</option>
                                     @else
+                                    <option value="{{ $invoice->installment_type }}" selected hidden>{{ $invoice->installment_type }}</option>
                                     <option value="3 Months">3 Months</option>
                                     <option value="6 Months">6 Months</option>
                                     @endif
