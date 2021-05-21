@@ -196,18 +196,29 @@ $i = 1; ?>
                             <label class=" text-nowrap align-middle">
                                 Mode of Payment
                             </label>
-                            <select id="paymentMode" disabled class="form-control">
-                                <option value="" selected hidden readonly>{{ $invoice->payment_mode }}</option>
+                            <select id="paymentMode" class="form-control" 
+                                @if($invoice->pi_status !== 'Draft')
+                                    disabled
+                                @else
+                                    onchange="onChangePIFunction();"
+                                @endif
+                            >
+                                <option value="{{ $invoice->payment_mode }}" selected hidden readonly>{{ $invoice->payment_mode }}</option>
                                 <option value="Cash">Full Payment (Cash)</option>
                                 <option value="Installment">Installment</option>
                             </select>
                             <br>
-                            @if ($invoice->payment_mode === 'Installment') 
                             <div id="installmentGrp">
                                 <label class=" text-nowrap align-middle">
                                     Installment Duration
                                 </label>
-                                <select readonly id="installmentType" class="form-control">
+                                <select readonly 
+                                id="installmentType"
+                                @if($invoice->pi_status === 'Draft')
+                                onchange="onChangePIFunction();"
+                                @endif 
+                                class="form-control">
+                                    @if($invoice->pi_status !== 'Draft')
                                     <option hidden 
                                         @if ($invoice->installment_type === '3 Months')
                                             value="3"
@@ -216,14 +227,13 @@ $i = 1; ?>
                                         @endif 
                                         selected
                                     >{{ $invoice->installment_type }}</option>
-                                    @if($invoice->pi_status === 'Draft')
+                                    @else
                                     <option value="3 Months">3 Months</option>
                                     <option value="6 Months">6 Months</option>
                                     @endif
                                 </select>
                             </div>
                             <br>
-                            @endif
                             @if ($invoice->pi_status !== 'Draft' && $invoice->pi_status !== 'Paid')
                             <label class=" text-nowrap align-middle">
                                 Method of Payment

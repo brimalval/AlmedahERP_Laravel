@@ -336,6 +336,7 @@ Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']
 Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
 Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
 Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
+Route::post('/update-invoice-record/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoice']);
 Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
 Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 

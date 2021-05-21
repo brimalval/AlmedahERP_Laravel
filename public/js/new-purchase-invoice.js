@@ -3,6 +3,11 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 $("#saveInvoice").on('click', createInvoice);
 
 $(document).ready(function () {
+    if ($("#paymentMode").val() === 'Installment') {
+        $("#installmentGrp").attr('hidden', false);
+    } else {
+        $("#installmentGrp").attr('hidden', true);
+    }
     var amount = 0;
     if($("#emptyPILog").length) {
         amount = parseFloat($("#priceToPay").val()) / 4;        
@@ -31,6 +36,12 @@ function viewChequeDetails(id) {
             $('#chq-branch').html(response.branch);
         }
     });
+}
+
+function onChangePIFunction() {
+    $("#submitInvoice").html("Save");
+    $("#submitInvoice").attr('onclick', 'createInvoice()');
+    $("#submitInvoice").prop('id', 'saveInvoice');
 }
 
 $("#payInvoice").click(function () {
@@ -89,6 +100,12 @@ $("#payInvoice").click(function () {
         processData: false,
         success: function (response) {
             loadPurchaseInvoice();
+            if($("#contentPurchaseOrder").length) {
+                loadPurchaseOrder();
+            }
+            if($("#contentPurchaseReceipt").length) {
+                loadPurchaseReceipt();
+            }
         }
     });
 });
@@ -106,6 +123,18 @@ function createInvoice() {
         alert("Load a purchase receipt first.");
         return;
     }
+    
+    if($("#paymentMode").val() === 'non') {
+        alert('Cannot create payment invoice without specifying payment mode!');
+        return;
+    }
+
+    let url = "/create-invoice";
+
+    if($("#invoiceId").length) {
+        formData.append("invoice_id", $("#invoiceId").val());
+        url = `/update-invoice-record/${$("#invoiceId").val()}`
+    }
 
     formData.append('receipt_id', $("#receiptId").val());
     formData.append('date_created', $("#npi_date").val());
@@ -118,7 +147,7 @@ function createInvoice() {
 
     $.ajax({
         type: "POST",
-        url: "/create-invoice",
+        url: url,
         data: formData,
         contentType: false,
         processData: false,

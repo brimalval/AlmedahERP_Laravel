@@ -185,7 +185,24 @@ class PurchaseInvoiceController extends Controller
         return ['acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no, 'bank_name' => $log->bank_name, 'branch' => $log->bank_location];
     }
 
-    public function updateInvoice()
-    {
+    public function updateInvoice(Request $request) {
+        try {
+
+            $form_data = $request->input();
+
+            $data = PurchaseInvoice::where('p_invoice_id', $form_data['invoice_id'])->first();
+
+            $data->p_invoice_id = $form_data['invoice_id'];
+            $data->date_created = $form_data['date_created'];
+            $data->payment_mode = $form_data['payment_mode'];
+
+            if (isset($form_data['installment_type'])) {
+                $data->installment_type = $form_data['installment_type'];
+            }
+
+            $data->save();
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 }

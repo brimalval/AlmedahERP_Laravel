@@ -171,7 +171,7 @@ $today = date('Y-m-d');
                                 Mode of Payment
                             </label>
                             <select id="paymentMode" class="form-control">
-                                <option value="" selected hidden disabled>Select Mode of Payment...</option>
+                                <option value="non" selected hidden>Select Mode of Payment...</option>
                                 <option value="Cash">Full Payment(Cash)</option>
                                 <option value="Installment">Installment</option>
                             </select>
