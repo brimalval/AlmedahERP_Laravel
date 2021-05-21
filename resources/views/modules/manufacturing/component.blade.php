@@ -191,8 +191,6 @@
                             <div class="alert alert-danger alert-dismissible mt-2" id="update-danger" style="display:none;">
                                 <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
                             </div>
-                            {{-- <input type="text" class="form-input form-control sellable" id="componentItemCode"
-                                name="item_code"> --}}
                             <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addRowNewComponent('rawMatsUpdate', 'true')">Add Item</button>
                         </div>
                         <div class="col">
@@ -296,7 +294,7 @@
                         <tr class="center">
                             <td><input type="checkbox" id="check${data.id}"></td>
                             <td><p name="rawMat${i}">`+item_name+`</p></td>
-                            <td><input type="number" id="${item_name}" name="qty${i}" value="1" min="1"></td>
+                            <td><input type="number" id="${item_name}" name="qty${i}" min="1"></td>
                             <td><input type="button" value="Delete" class="btn btn-danger" onclick="removeRow('${item_name}')"/></td>
                         </tr>
                     `
@@ -409,11 +407,11 @@
                                     Actions
                                 </button>
                                 <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-                                    <li><button data-id="{{ $row->id }}" class="edit-btn btn btn-warning btn-sm rounded-0" type="button">
+                                    <li><button data-id="`+r.component.id+`" class="edit-btn btn btn-warning btn-sm rounded-0" type="button">
                                         <i class="fa fa-edit"></i> Edit</button>
                                     </li>
                                     <li>
-                                        <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
+                                        <button data-id="`+r.component.id+`" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
                                             <i class="fa fa-trash"></i> Delete
                                         </button>
                                     </li>
@@ -466,7 +464,7 @@
                 url: "/update-component/"+id,
                 data: $("#updateComponentForm").serialize(),
                 success: function (r) {
-                    var tableBody = $("#rawMats");
+                    var tableBody = $("#rawMatsShow");
                     console.log(r.component);
                     if(r.status != 'error'){
                         $('#newComponentModal').modal('toggle');
@@ -498,6 +496,7 @@
                         tableBody.empty();
                         raw_materials = [];
                     }else{
+                        console.log(r.component);
                         $('#updateComponentModal').modal('toggle');
                         $('#componentItemCode').val("hidden");
                         $('#component-danger').show();
@@ -511,8 +510,9 @@
                     // $('#componentItemCode').val('');
                     raw_materials = [];
                 },
-                error: function () {
+                error: function (data) {
                     console.log('error');
+                    console.log(data.errors);
                 },
             });
         }
@@ -536,6 +536,7 @@
                     processData: false,
                     success: function(data) {
                         console.log(data);
+                        $('#componentItemCodeUpdate').val(data.item_code);
                         $('#componentCodeUpdate').val(data.component_code);
                         $('#componentNameUpdate').val(data.component_name);
                         $('#componentDescriptionUpdate').val(data.component_description);
