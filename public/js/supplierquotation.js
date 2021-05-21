@@ -126,8 +126,13 @@ $('#squotation-form').off('submit').submit(function(){
         processData: false,
         cache: false,
         success: function(data){
-            if(!loadIntoPage(formElement, data.redirect))
-                window.close();
+            if(!loadIntoPage(formElement, data.redirect)){
+                swal({
+                    title: "Thank you for working with Almedah Food Machineries!",
+                    icon: "success",
+                });
+                $('#sqSaveBtn').remove();
+            }
         }, 
         error: function(data){
 

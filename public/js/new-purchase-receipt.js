@@ -153,6 +153,12 @@ $("#receiveMaterials").click(function () {
         success: function (response) {
             console.log(response);
             loadPurchaseReceipt();
+            if($("#contentPurchaseOrder").length) {
+                loadPurchaseOrder();
+            }
+            if($("#contentPendingOrders").length) {
+                loadPendingOrders();
+            }
         },
     });
 });
