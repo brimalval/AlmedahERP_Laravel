@@ -981,7 +981,7 @@
                         $('#attribute').prepend('<option value="' + attribute_name + '">' + attribute_name + '</option>');
                         $('.selectpicker2').selectpicker('refresh');
                         $('.selectpicker2').selectpicker('val', attribute_name);
-                        $('#attribute_name').val('');
+                        $('#attribute').selectpicker('refresh');
 
                         $('#create-product-form').modal('show');
                         $('#create-product-form').on('shown.bs.modal', function() {
@@ -1222,6 +1222,7 @@
                         $('#create-product-form').modal('hide');
                         flashMessage('success');
                         $('#template_img').remove();
+                        $('#attribute').selectpicker('refresh');
                     } else {
                         flashMessage('error', data.message);
                     }
