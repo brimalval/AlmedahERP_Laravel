@@ -345,10 +345,12 @@ class ProductsController extends Controller
     {
         try {
             /* Delete Product Record from man_products table */
-            $data = ProductVariantWithValue::find($id);
+            // $data = ProductVariantWithValue::find($id);
+            $data = ProductVariantWithValue::where('attribute', $id)->first();
             $data->delete();
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
+                'data' => $data
             ]);
         } catch (Exception $e) {
             return response()->json([

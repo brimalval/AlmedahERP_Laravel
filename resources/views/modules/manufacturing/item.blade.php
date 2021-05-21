@@ -11,19 +11,22 @@
     // Function for adding attributes
     // Invoked by selecting a material in the selectpicker or when
     // inheriting attributes from a template
-    function addAttribute(name, value=null){
+    function addAttribute(name, value=null, update=null){
         console.log(name);
         if (attributeList.indexOf(name) !== -1) {
             alert("Value exists!");
         } else {
             if(value == null && $('#product_status').val() != "Variant"){
-                $('#attributes_div').append('<span class="badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + name + '">');
+                $('#attributes_div').append('<span class="badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i><input type="hidden" name="attribute_array[]" value="' + name + '"></span>');
                 $('.attb-badge-'+name+' .far').click(function(){
                     $('.attb-badge-'+name).remove();
                     let index = attributeList.indexOf(name);
                     attributeList.splice(index, 1);
                     console.log(attributeList);
-                    // deleteAttribute(name);
+                    if(update){
+                        deleteAttribute(name);
+                    }
+                    
                 });
                 // $('.attb-badge').click(function(){
                 // });
@@ -50,11 +53,13 @@
     // Invoked by selecting a material in the selectpicker or when
     // inheriting materials from a template
     function addMaterial(id, qty=""){
+        console.log($('#raw_' + id).val() + ">" + Number(qty));
+        console.log("MATERIADFSLAKL : " + (Number($('#raw_' + id).val()) > Number(qty)));
         console.log(id);
          if (materialList.indexOf(id) !== -1) {
             alert("Value exists!");
         } else {
-            if ($('#raw_' + id).val() > 0 && !qty) {
+            if ($('#raw_' + id).val() > 0 && $('#raw_' + id).val() > Number(qty)) {
                 $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label class="text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-'+id+'">' + $('#mat-option-'+id).text() + '</span> (<span id="material-badge-qty-'+ id + '">' + $('#raw_' + id).val() + '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value='+qty+'></div>');
             } else {
                 $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label style="cursor: pointer;" onclick="$(`#create-product-form`).hide(); $(`body`).removeClass(`modal-open`); $(`.modal-backdrop`).remove(); $(`#divMain`).load(`/inventory`);" class="text-truncate badge badge-danger m-1 p-2">' + $('#mat-option-'+id).html() + ' (' + $('#raw_' + id).val() + ' Stocks Left)</label></div>');
@@ -106,6 +111,8 @@
         $('.material-badge').each(function(){
             this.remove();
         });
+        $('#components_div').html('');
+        $('#components').selectpicker('refresh');
     }
     // Function is called whenever a material is updated
     // Dynamically changes the qty/name on the badge
@@ -172,6 +179,7 @@
             $('#product-form .modal-body').append(
                 "<input type='hidden' value='"+product['picture']+"' name='template_img' id='template_img'>"
             );
+            $('#productFormLabel').html('Adding Variant');
         }
     }
     function deleteAttribute(id) {
@@ -192,6 +200,7 @@
                     $(document).ready(function() {
                         // sessionStorage.setItem("status", "success");
                         // $('#divMain').load('/item');
+                        console.log(data);
                         alert('you have deleted an attribute, replace this with toast component');
                     });
                 } else {
@@ -722,10 +731,11 @@
                     data.status.forEach(function(arrayItem) {
                         console.log(arrayItem);
                         addAttribute(item.attribute, item.value);
+                        alert('variant');
                     });
                 }else{
                     data.status.forEach(function(item){
-                        addAttribute(item.attribute);
+                        addAttribute(item.attribute, null, true);
                         console.log(item.attribute);
                         // $(".attb-badge").attr('class', 'badge badge-success m-1 p-1 attb-badge'+item.attribute);
                         // $('.attb-badge'+item.attribute+' .far').click(function(){
@@ -1069,6 +1079,7 @@
                         var attribute_name = $('#edit-attribute-name').val();
                         attributeList = [];
                         get_attribute(data.product_id);
+                        $('#attribute_name').attr('value', 'none');
                     } else {
                         $(document).ready(function() {
                             alert("Error code:"+data.message);
@@ -1146,7 +1157,7 @@
                 }
             }
             formData.set('materials', JSON.stringify(materials));
-            console.log('materials'+materials);
+            console.log('materials'+JSON.stringify(materials));
             components_qty = document.getElementsByName('components_qty[]');
             var components = {};
             for(var i=0; i<componentList.length; i++){
@@ -1179,7 +1190,7 @@
                             `,
                             `<span class="font-weight-bold">${data.product.product_code}</span>`,
                             `<span class="font-weight-bold">${data.product.product_name}</span>`,
-                            `<span class="dot-${(data.product.product_status == "Template") ? 'orange' : (data.product_status == "Variant") ? 'green' : blue}"></span>
+                            `<span class="dot-${(data.product.product_status == "Template") ? 'orange' : (data.product_status == "Variant") ? 'green' : 'blue'}"></span>
                             ${data.product.product_status}`,
                             `<span class="text-black-50">
                                 ${data.product.product_type}
