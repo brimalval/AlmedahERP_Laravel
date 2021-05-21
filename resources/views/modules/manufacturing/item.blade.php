@@ -160,6 +160,7 @@
         $('#picture').attr('required', false);
         $('#product_code').val(product['product_code']);
         $('#product_name').val(product['product_name']);
+        $('#stock_unit').val(product['stock_unit']);
         $('.selectpicker').selectpicker('val', product['product_type']);
         $('#sales_price_wt').val(product['sales_price_wt']);
         $('.selectpicker1').selectpicker('val', product['unit']);
