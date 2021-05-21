@@ -53,7 +53,7 @@ $("#idBtn").on("click", function () {
 //    this.remove();
 //  });
 //}
-let mat_insufficient = false;
+var mat_insufficient = false;
 
 
 function selectPaymentMethod() {
@@ -263,12 +263,17 @@ $("#btnSalesCalculate").click(function () {
     rawMaterials();
 });
 
+function changeSaleSupplyMethod(){
+    rawMaterials();
+}
+
 function rawMaterials() {
     var data = {};
     var products = [];
     var qty = [];
     let filter = [];
-    console.log(document.getElementById("saleSupplyMethod").value);
+    console.log("This is stockMinusQuantity");
+    console.log(stockMinusQuantity);
     if( document.getElementById("saleSupplyMethod").value == "Produce"){
         //Filters cart for 0 values
         for (let index = 0; index < stockMinusQuantity.length; index++) {
