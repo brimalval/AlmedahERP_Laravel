@@ -240,15 +240,16 @@ class SalesOrderController extends Controller
                 $order->product_code = $row[0];
                 $order->quantity_purchased = $row[1];
                 $order->save();
-
-                // $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                // if( $prod->stock_unit - $row[1] > 0){
-                //     $prod->stock_unit = $prod->stock_unit - $row[1];
-                // }else{
-                //     $prod->stock_unit = 0;
-                // }
                 
-                // $prod->save();
+                if($form_data['saleSupplyMethod'] == "Produce"){
+                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                    if( $prod->stock_unit - $row[1] > 0){
+                        $prod->stock_unit = $prod->stock_unit - $row[1];
+                    }else{
+                        $prod->stock_unit = 0;
+                    }
+                    $prod->save();
+                }
             }
 
             $work_order_ids = array();
@@ -287,7 +288,7 @@ class SalesOrderController extends Controller
                 $work_order->work_order_status = "Pending";
                 $work_order->work_order_no = "WOK";
                 $work_order->save();
-                $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+                $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
                 $work_order->save();
                 array_push($work_order_ids, $work_order->id);

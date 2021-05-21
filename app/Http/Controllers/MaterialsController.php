@@ -26,7 +26,7 @@ class MaterialsController extends Controller
 
     function get($code)
     {
-        $material = ManufacturingMaterials::with(['uom','category'])->where('item_code', '=', $code)->first();
+        $material = ManufacturingMaterials::with(['uom','category'])->find($code);
         return response()->json([
             'material' => $material,
         ]);
@@ -118,8 +118,8 @@ class MaterialsController extends Controller
             'material_code' => 'required|string',
             'material_name' => 'required|string',
             'material_category' => 'required|string',
-            'unit_price' => 'required|integer|numeric|min:0',
-            'total_amount' => 'required|integer|numeric|min:1',
+            'uom_id'=> 'required|exists:materials_uom',
+            'rm_quantity' => 'required|integer|numeric|min:1',
             'rm_status' => 'required',
         ]);
 
@@ -149,10 +149,15 @@ class MaterialsController extends Controller
             $data->category->quantity -= $data->total_amount;
             $data->category->save();
             $data->category_id  = $form_data['material_category'];
-            $data->unit_price = $form_data['unit_price'];
-            $data->total_amount = $form_data['total_amount'];
-            $data->category->quantity += $data->total_amount;
+            $data->uom_id = $form_data['uom_id'];
+            $data->rm_quantity = $form_data['rm_quantity'];
+            $data->stock_quantity = $data->rm_quantity * $data->uom->conversion_factor;
+            $data->category->quantity += $data->stock_quantity;
             $data->category->save();
+            // MAKE THESE FIELDS NOT-STATIC
+            $data->reorder_level = 30;
+            $data->reorder_qty = 50;
+            ///////////
             $data->rm_status = $form_data['rm_status'];
             $data->save();
 
@@ -218,20 +223,21 @@ class MaterialsController extends Controller
     // Function called when adding stock. Throws an error if the material doesn't exist
     public function addStock($id){
         try{
-            $material = ManufacturingMaterials::findOrFail($id);
-            $material->total_amount += request('add_stock_qty');
+            $material = ManufacturingMaterials::with(['category', 'uom'])->findOrFail($id);
+            $material->rm_quantity += request('add_stock_qty');
+            $material->stock_quantity += request('add_stock_qty') * $material->uom->conversion_factor;
             $material->category->quantity += request('add_stock_qty');
             $material->category->save();
             $material->save();
             return response()->json([
                 'status'=>'success',
                 'id' => $id,
-                'new_amount' => $material->total_amount,
+                'new_amount' => $material->stock_quantity,
             ]);
         } catch(Exception $e){
             return response()->json([
                 'status' => 'failure',
-                'message' => $e->getCode(),
+                'message' => $e->getMessage(),
             ]);
         }
     }

@@ -190,7 +190,7 @@
                 <form id="update-material-form" action="#" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="">Material Code</label>
@@ -279,6 +279,118 @@
                         <button type="button" class="btn btn-secondary"
                             onclick="$('#update-material-form-modal').modal('hide')">Close</button>
                         <button id="update-material-form-modal-btn" type="submit" class="btn btn-primary">Save</button>
+                    </div> --}}
+                    <!-- DIVIDER---->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Material Code</label>
+                                <input class="form-control" id="material_code" type="text" name="material_code" placeholder="Ex. MT181204"
+                                    required>
+                                <span id="update-code-error" class="input-error text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Material Name</label>
+                                <input class="form-control" id="material_name" type="text" name="material_name" required>
+                                <span id="update-name-error" class="input-error text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Material Categories</label>
+                                <select class="form-control" id="material_category" name="material_category" onchange="openCategory(value)"
+                                    required>
+                                    <option value="" selected disabled hidden>
+                                        Select an Option
+                                    </option>
+                                    @foreach ($categories as $row)
+                                        <option value="{{ $row['id'] }}" name="category">
+                                            {{ $row['category_title'] }}</option>
+                                    @endforeach
+                                    <option id="newCategoryButton">
+                                       + Add new Category
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- <div class="form-group p-2">
+                        <label for="">Image</label>
+                        <img id="img_tmp" src="../images/thumbnail.png" style="width:100%;">
+                        <input class="form-control" type="file" name="material_image" onchange="readURL3(this);"
+                            required>
+                    </div> --}}
+
+                    <div class="form-group pb-2 m-0">
+                        <label for="">Image</label>
+                        <img id="img_tmp_edit" src="../images/thumbnail.png" style="width:100%;">
+                        <input class="form-control" type="file" name="material_image[]" onchange="readURL2(this);" multiple>
+                    </div>
+
+                    <script>
+                        function readURL2(input) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+
+                                reader.onload = function(e) {
+                                    $('#img_tmp_edit')
+                                        .attr('src', e.target.result)
+                                };
+
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+
+                    </script>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label for="">Quantity</label>
+                            <input class="form-control" type="number" id="total_amount" name="rm_quantity" required placeholder="Ex. 500">
+                            <span id="create-qty-error" class="input-error text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-6">
+                        <label for="">Unit of Measurement</label>
+                        <select class="form-control selectpicker" data-live-search="true" name="uom_id" id="edit_uom_id">
+                            @foreach ($units as $unit)
+                                <option value="{{ $unit->uom_id }}" data-subtext="({{ $unit->conversion_factor }} nos.)" data-cf="{{ $unit->conversion_factor }}">{{ $unit->item_uom }}</option>   
+                            @endforeach
+                        </select>
+                        </div>
+
+                        <div class="form-group col-6">
+                          <label for="">Conversion Factor</label>
+                          <input type="text" value="0" readonly id="edit_conversion_factor" class="form-control" placeholder="" aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group col-6">
+                          <label for="">Stock Quantity</label>
+                          <input type="text" value="0" readonly id="edit_stock_quantity" class="form-control" placeholder="" aria-describedby="helpId" name="stock_quantity">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">RM Status</label>
+                        <select class="form-control" id="rm_status" name="rm_status" required>
+                            <option value="" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="To Purchase">To Purchase</option>
+                            <option value="Available">Available</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="$('#update-material-form-modal').modal('hide')">Close</button>
+                        <button id="material-form-btn" type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
@@ -392,7 +504,7 @@
 
                         <div class="form-group col-6">
                           <label for="">Stock Quantity</label>
-                          <input type="text" value="0" readonly id="stock_quantity" class="form-control" placeholder="" aria-describedby="helpId">
+                          <input type="text" value="0" readonly id="stock_quantity" class="form-control" placeholder="" aria-describedby="helpId" name="stock_quantity">
                         </div>
                     </div>
 
@@ -480,9 +592,14 @@
                         </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="form-group row">
                       <label for="add-stock-qty"></label>
-                      <input type="number" min="0" name="add_stock_qty" id="add_stock_qty" class="form-control" placeholder="">
+                        <div class="col-6">
+                            <input type="number" min="0" name="add_stock_qty" id="add_stock_qty" class="form-control" placeholder="">
+                        </div>
+                        <div class="col-6">
+                            <input type="select" readonly value="" id="stock_uom_display" class="form-control">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -518,6 +635,7 @@
 
         //When clicking edit button
         $('body').on('click', '.edit-btn', function(e) {
+            console.log('{{storage_path("fladksfd")}}')
             e.preventDefault();
             var element = this;
             var id = element.dataset.id;
@@ -526,21 +644,25 @@
             var form = $('#update-material-form');
             var modal = $('#update-material-form-modal');
             form.attr('action', '/update-material/' + id);
+            modal.modal('show');
 
             // Finding the element being edited and returning the details
             $.get('/inventory/' + sessionStorage.getItem('material-edit-id'), function(data, status) {
+                console.log(data);
+                data = data.material;
                 let images = JSON.parse(data.item_image);
-                $('#material_name').val(data.item_name);
-                $('#material_code').val(data.item_code);
-                $('#material_category').val(data.category_id);
-                $('#img_tmp_edit').attr('src', 'storage/' + images[0]);
+                $(form).find('#material_name').val(data.item_name);
+                $(form).find('#material_code').val(data.item_code);
+                $(form).find('#material_category').val(data.category_id);
+                $(form).find('#img_tmp_edit').attr('src', 'storage/' + images[0]);
                 sessionStorage.setItem('old_image', 'storage/' + images[0]);
-                $('#rm_status').val(data.rm_status);
-                $('#unit_price').val(data.unit_price);
-                $('#total_amount').val(data.total_amount);
+                $(form).find('#rm_status').val(data.rm_status);
+                $(form).find('#total_amount').val(data.rm_quantity);
+                $(form).find('#total_amount').focusout();
+                $(form).find('#edit_uom_id').val(data.uom_id);
+                $(form).find('#edit_uom_id').change();
             });
 
-            modal.modal('show');
         });
         // When clicking delete button
         $('body').on('click', '.delete-btn', function(e) {
@@ -592,7 +714,10 @@
             e.preventDefault();
             let id = this.dataset.id;
             $('#add-stock-modal').modal('show');
-            $('#add-stock-form').attr('action', `/add-stock/${id}`);
+            $('#add-stock-form').attr('action', `/inventory/${id}/add-stock`);
+            $.get('/inventory/' + sessionStorage.getItem('material-edit-id'), function(data, status) {
+                $('#stock_uom_display').val(data.material.uom.item_uom + ` (${data.material.uom.conversion_factor} pc. each)`);
+            });
         });
 
         // Add stock form function
@@ -666,7 +791,7 @@
                                     formData.get('material_name'),
                                     data.category_title,
                                     '<span class="text-black-50">' + formData
-                                    .get('total_amount') + '</span>',
+                                    .get('stock_quantity') + '</span>',
                                     '<span class="text-black-50">' + formData
                                     .get('rm_status') + '</span>',
                                     `<span class='text-black-50 text-center w-100' style='display: inline-block'> 

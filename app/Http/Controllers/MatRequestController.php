@@ -88,8 +88,7 @@ class MatRequestController extends Controller
                 $requestItem->quantity_requested = request('quantity_requested')[$i];
                 $requestItem->procurement_method = request('procurement_method')[$i];
                 $requestItem->uom_id = request('uom_id')[$i] ?? 'nos';
-                $defaultStationID = Station::first()->station_id;
-                $requestItem->station_id = request('station_id')[$i] ?? $defaultStationID;
+                $requestItem->station_id = request('station_id')[$i] ?? null;
                 $requestItem->save();
             }
 

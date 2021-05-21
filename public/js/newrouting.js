@@ -51,19 +51,21 @@ function clearOperationFields() {
     $("#Description").html(null);
 }
 
-$("#saveRouting").click(function () { 
+$("#routingsForm").submit(function () { 
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
     });
     // create a routing first....
-    var routingData = new FormData();
+    var routingData = new FormData(this);
     var routingId = "";
-    routingData.append('routing_name', $("#Routing_Name").val());
+    for (var pair of routingData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
     $.ajax({
         type: "POST",
-        url: '/routing',
+        url: $("#routingsForm").attr('action'),
         async: false, //needed for retrieving routing_id from url
         data: routingData,
         cache: false,
@@ -97,6 +99,11 @@ $("#saveRouting").click(function () {
         });
     }
     return false;
+    
+});
+
+$("#saveRouting").click(function () { 
+    $("#routingsForm").submit();
 });
 
 $("#saveOperation").click(function() {

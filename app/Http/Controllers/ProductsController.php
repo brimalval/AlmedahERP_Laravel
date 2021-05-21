@@ -48,6 +48,7 @@ class ProductsController extends Controller
             'unit' => 'required|alpha',
             'internal_description' => 'required|max:255',
             'bar_code' => 'required|alpha_num' ,
+            'stock_unit' => 'required|integer|numeric|min:0',
             // Required to have at least 1 material OR at least 1 component 
             'materials' => 'required_if:components, {}', 
             'components' => 'required_if:materials, {}',
@@ -99,6 +100,7 @@ class ProductsController extends Controller
             $data->product_type = $form_data['product_type'];
             $data->sales_price_wt = $form_data['sales_price_wt'];
             $data->unit = $form_data['unit'];
+            $data->stock_unit = $form_data['stock_unit'];
 
             if ($form_data['product_status'] == "Template") {
                 $concat = substr($form_data['product_name'], 0, 3) . "-" . substr($form_data['product_type'], 0, 3);
@@ -343,10 +345,12 @@ class ProductsController extends Controller
     {
         try {
             /* Delete Product Record from man_products table */
-            $data = ProductVariantWithValue::find($id);
+            // $data = ProductVariantWithValue::find($id);
+            $data = ProductVariantWithValue::where('attribute', $id)->first();
             $data->delete();
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
+                'data' => $data
             ]);
         } catch (Exception $e) {
             return response()->json([

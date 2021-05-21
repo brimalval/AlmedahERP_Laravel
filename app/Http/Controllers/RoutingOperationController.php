@@ -83,18 +83,16 @@ class RoutingOperationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $form_data = $request->input();
-            $r_operation = RoutingOperation::find($id);
-            $r_operation->operation_id = $form_data['operation'];
-            $r_operation->routing_id = $form_data['routing_id'];
-            $r_operation->hour_rate = $form_data['hour_rate'];
-            $r_operation->operation_time = $form_data['operation_time'];
-            $r_operation->operating_cost = floatval($form_data['hour_rate']) * floatval($form_data['operation_time']);
-            $r_operation->save();
-        } catch (Exception $e) {
-            return $e;
-        }//
+        //
+        #$form_data = $request->input();
+        #$r_operation = RoutingOperation::find($id);
+        #$r_operation->sequence_id = $form_data['seq_id'];
+        #$r_operation->operation_id = $form_data['operation'];
+        #$r_operation->routing_id = $form_data['routing_id'];
+        #$r_operation->hour_rate = $form_data['hour_rate'];
+        #$r_operation->operation_time = $form_data['operation_time'];
+        #$r_operation->operating_cost = floatval($form_data['hour_rate']) * floatval($form_data['operation_time']);
+        #$r_operation->save();
     }
 
     /**

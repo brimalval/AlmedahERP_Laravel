@@ -2,6 +2,21 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
 $("#saveInvoice").on('click', createInvoice);
 
+$(document).ready(function () {
+    if ($("#paymentMode").val() === 'Installment') {
+        $("#installmentGrp").attr('hidden', false);
+    } else {
+        $("#installmentGrp").attr('hidden', true);
+    }
+    var amount = 0;
+    if($("#emptyPILog").length) {
+        amount = parseFloat($("#priceToPay").val()) / 4;        
+    } else {
+        amount = parseFloat($("#priceToPay").val()) / parseFloat($("#installmentType").val());     
+    }
+    $("#payAmount").val(amount.toFixed(2));
+});
+
 function viewChequeDetails(id) {
     $.ajaxSetup({
         headers: {
@@ -23,6 +38,12 @@ function viewChequeDetails(id) {
     });
 }
 
+function onChangePIFunction() {
+    $("#submitInvoice").html("Save");
+    $("#submitInvoice").attr('onclick', 'createInvoice()');
+    $("#submitInvoice").prop('id', 'saveInvoice');
+}
+
 $("#payInvoice").click(function () {
     $.ajaxSetup({
         headers: {
@@ -37,9 +58,14 @@ $("#payInvoice").click(function () {
         return;
     }
 
+    if($("#paymentMethod").val() === 'non') {
+        alert('Cannot create payment record without payment method!');
+        return;
+    }
+
     if (!$("#chq").prop('hidden')) {
         var msg = '';
-        if (!$('#acctNo').val() || !$('#chqNo').val() || $("#bankName").val() || $("#bankBranch").val()) {
+        if (!$('#acctNo').val() || !$('#chqNo').val() || !$("#bankName").val() || !$("#bankBranch").val()) {
             if (!$('#acctNo').val())
                 msg = 'account number';
             else if (!$('#chqNo').val())
@@ -74,6 +100,12 @@ $("#payInvoice").click(function () {
         processData: false,
         success: function (response) {
             loadPurchaseInvoice();
+            if($("#contentPurchaseOrder").length) {
+                loadPurchaseOrder();
+            }
+            if($("#contentPurchaseReceipt").length) {
+                loadPurchaseReceipt();
+            }
         }
     });
 });
@@ -91,19 +123,31 @@ function createInvoice() {
         alert("Load a purchase receipt first.");
         return;
     }
+    
+    if($("#paymentMode").val() === 'non') {
+        alert('Cannot create payment invoice without specifying payment mode!');
+        return;
+    }
+
+    let url = "/create-invoice";
+
+    if($("#invoiceId").length) {
+        formData.append("invoice_id", $("#invoiceId").val());
+        url = `/update-invoice-record/${$("#invoiceId").val()}`
+    }
 
     formData.append('receipt_id', $("#receiptId").val());
     formData.append('date_created', $("#npi_date").val());
     formData.append('payment_mode', $("#paymentMode").val());
     formData.append('amount', $("#priceToPay").val());
 
-    if ($("#installmentType").length) {
+    if ($("#installmentType").prop('hidden') === true) {
         formData.append('installment_type', $("#installmentType").val());
     }
 
     $.ajax({
         type: "POST",
-        url: "/create-invoice",
+        url: url,
         data: formData,
         contentType: false,
         processData: false,

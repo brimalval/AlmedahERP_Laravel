@@ -11,13 +11,23 @@
     // Function for adding attributes
     // Invoked by selecting a material in the selectpicker or when
     // inheriting attributes from a template
-    function addAttribute(name, value=null){
+    function addAttribute(name, value=null, update=null){
         console.log(name);
         if (attributeList.indexOf(name) !== -1) {
             alert("Value exists!");
         } else {
             if(value == null && $('#product_status').val() != "Variant"){
-                $('#attributes_div').append('<span class="attb-badge badge badge-success m-1 p-1">' + name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + name + '">');
+                $('#attributes_div').append('<span class="badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i><input type="hidden" name="attribute_array[]" value="' + name + '"></span>');
+                $('.attb-badge-'+name+' .far').click(function(){
+                    $('.attb-badge-'+name).remove();
+                    let index = attributeList.indexOf(name);
+                    attributeList.splice(index, 1);
+                    console.log(attributeList);
+                    if(update){
+                        deleteAttribute(name);
+                    }
+                    
+                });
                 // $('.attb-badge').click(function(){
                 // });
                 // $('.attb-badge').click(function(){
@@ -36,17 +46,20 @@
                 `);
             }
             attributeList.push(name);
+            console.log(attributeList);
         }
     }
     // Function for adding materials
     // Invoked by selecting a material in the selectpicker or when
     // inheriting materials from a template
     function addMaterial(id, qty=""){
+        console.log($('#raw_' + id).val() + ">" + Number(qty));
+        console.log("MATERIADFSLAKL : " + (Number($('#raw_' + id).val()) > Number(qty)));
         console.log(id);
          if (materialList.indexOf(id) !== -1) {
             alert("Value exists!");
         } else {
-            if ($('#raw_' + id).val() > 0 && !qty) {
+            if ($('#raw_' + id).val() > 0 && $('#raw_' + id).val() > Number(qty)) {
                 $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label class="text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-'+id+'">' + $('#mat-option-'+id).text() + '</span> (<span id="material-badge-qty-'+ id + '">' + $('#raw_' + id).val() + '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value='+qty+'></div>');
             } else {
                 $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label style="cursor: pointer;" onclick="$(`#create-product-form`).hide(); $(`body`).removeClass(`modal-open`); $(`.modal-backdrop`).remove(); $(`#divMain`).load(`/inventory`);" class="text-truncate badge badge-danger m-1 p-2">' + $('#mat-option-'+id).html() + ' (' + $('#raw_' + id).val() + ' Stocks Left)</label></div>');
@@ -98,6 +111,8 @@
         $('.material-badge').each(function(){
             this.remove();
         });
+        $('#components_div').html('');
+        $('#components').selectpicker('refresh');
     }
     // Function is called whenever a material is updated
     // Dynamically changes the qty/name on the badge
@@ -148,6 +163,7 @@
         $('#picture').attr('required', false);
         $('#product_code').val(product['product_code']);
         $('#product_name').val(product['product_name']);
+        $('#stock_unit').val(product['stock_unit']);
         $('.selectpicker').selectpicker('val', product['product_type']);
         $('#sales_price_wt').val(product['sales_price_wt']);
         $('.selectpicker1').selectpicker('val', product['unit']);
@@ -164,6 +180,7 @@
             $('#product-form .modal-body').append(
                 "<input type='hidden' value='"+product['picture']+"' name='template_img' id='template_img'>"
             );
+            $('#productFormLabel').html('Adding Variant');
         }
     }
     function deleteAttribute(id) {
@@ -184,6 +201,7 @@
                     $(document).ready(function() {
                         // sessionStorage.setItem("status", "success");
                         // $('#divMain').load('/item');
+                        console.log(data);
                         alert('you have deleted an attribute, replace this with toast component');
                     });
                 } else {
@@ -268,6 +286,7 @@
                             <td>Status</td>
                             <td>Type</td>
                             <td>Unit</td>
+                            <td>Stock Quantity </td>
                             <td>View</td>
                             <td>Action</td>
                         </tr>
@@ -301,6 +320,9 @@
                             </td>
                             <td class="text-black-50">
                                 {{ $product->unit }}
+                            </td>
+                            <td class="text-black-50">
+                                {{ $product->stock_unit }}
                             </td>
 
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
@@ -544,6 +566,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="">Stock Quantity</label>
+                            <input class="form-control" type="number" id="stock_unit" name="stock_unit" required placeholder="Ex. 1000">
+                        </div>
+
+                        <div class="form-group">
                             <label>Unit of Measurement</label>
                             <select id="unit" class="selectpicker1 form-control" name="unit" data-container="body" data-live-search="true" title="Select an Option" data-hide-disabled="true" required>
                                 <option value="none" selected disabled hidden>
@@ -581,7 +608,7 @@
                                     Select an Option
                                 </option>
                                 @foreach ($product_variants as $variant)
-                                    <option value="{{ $variant->attribute }}">{{ $variant->attribute }}</option>
+                                    <option id="attb_option" value="{{ $variant->attribute }}">{{ $variant->attribute }}</option>
                                 @endforeach
                                 <option value="New">
                                     &#43; Create a new Attribute
@@ -705,21 +732,23 @@
                     data.status.forEach(function(arrayItem) {
                         console.log(arrayItem);
                         addAttribute(item.attribute, item.value);
+                        alert('variant');
                     });
                 }else{
                     data.status.forEach(function(item){
-                        addAttribute(item.attribute);
-                        $(".attb-badge").attr('class', 'badge badge-success m-1 p-1 attb-badge'+item.attribute);
-                        $('.attb-badge'+item.attribute+' .far').click(function(){
-                            $('.attb-badge'+item.attribute).remove();
-                            deleteAttribute(item.id);
-                        });
-                        $('.attb-badge'+item.attribute).click(function(){
-                            $('#edit-attribute-modal').modal('show');
-                            $('#edit-attribute-id').val(item.id);
-                            $('#edit-attribute-name').val(item.attribute);
-                            return false;
-                        });
+                        addAttribute(item.attribute, null, true);
+                        console.log(item.attribute);
+                        // $(".attb-badge").attr('class', 'badge badge-success m-1 p-1 attb-badge'+item.attribute);
+                        // $('.attb-badge'+item.attribute+' .far').click(function(){
+                        //     $('.attb-badge'+item.attribute).remove();
+                        //     deleteAttribute(item.id);
+                        // });
+                        // $('.attb-badge'+item.attribute).click(function(){
+                        //     $('#edit-attribute-modal').modal('show');
+                        //     $('#edit-attribute-id').val(item.id);
+                        //     $('#edit-attribute-name').val(item.attribute);
+                        //     return false;
+                        // });
                     });
                 }
 
@@ -953,7 +982,7 @@
                         $('#attribute').prepend('<option value="' + attribute_name + '">' + attribute_name + '</option>');
                         $('.selectpicker2').selectpicker('refresh');
                         $('.selectpicker2').selectpicker('val', attribute_name);
-                        $('#attribute_name').val('');
+                        $('#attribute').selectpicker('refresh');
 
                         $('#create-product-form').modal('show');
                         $('#create-product-form').on('shown.bs.modal', function() {
@@ -966,7 +995,7 @@
                             alert("Value exists!");
                         } else {
                             attributeList.push(attribute_name);
-                            $('#attributes_div').append('<span class="attb-badge'+attribute_name+' badge badge-success m-1 p-1">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
+                            $('#attributes_div').append('<span class="attb-badge-'+attribute_name+' badge badge-success m-1 p-1">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
                             $('.modal').css('overflow-y', 'auto');
                         }
 
@@ -1051,6 +1080,7 @@
                         var attribute_name = $('#edit-attribute-name').val();
                         attributeList = [];
                         get_attribute(data.product_id);
+                        $('#attribute_name').attr('value', 'none');
                     } else {
                         $(document).ready(function() {
                             alert("Error code:"+data.message);
@@ -1128,7 +1158,7 @@
                 }
             }
             formData.set('materials', JSON.stringify(materials));
-            console.log('materials'+materials);
+            console.log('materials'+JSON.stringify(materials));
             components_qty = document.getElementsByName('components_qty[]');
             var components = {};
             for(var i=0; i<componentList.length; i++){
@@ -1161,13 +1191,16 @@
                             `,
                             `<span class="font-weight-bold">${data.product.product_code}</span>`,
                             `<span class="font-weight-bold">${data.product.product_name}</span>`,
-                            `<span class="dot-${(data.product.product_status == "Template") ? 'orange' : (data.product_status == "Variant") ? 'green' : blue}"></span>
+                            `<span class="dot-${(data.product.product_status == "Template") ? 'orange' : (data.product_status == "Variant") ? 'green' : 'blue'}"></span>
                             ${data.product.product_status}`,
                             `<span class="text-black-50">
                                 ${data.product.product_type}
                             </span>`,
                             `<span class="text-black-50">
                                 ${data.product.unit}
+                            </span>`,
+                            `<span class="text-black-50">
+                                ${data.product.stock_unit}
                             </span>`,
                             `<div class="text-black-50 text-center"><a href='#' onclick='clickView(${JSON.stringify(data.product.picture)})' data-toggle="modal" data-target="#exampleImage">View</a></div>`,
                             `<span class="align-middle">
@@ -1190,6 +1223,7 @@
                         $('#create-product-form').modal('hide');
                         flashMessage('success');
                         $('#template_img').remove();
+                        $('#attribute').selectpicker('refresh');
                     } else {
                         flashMessage('error', data.message);
                     }

@@ -11,8 +11,8 @@
         @if (isset($item))
             <select readonly name="item_code[]" id="" 
             class="form-control selectpicker" data-live-search="true">
-                <option value="{{ $item->item_code ?? '' }}">
-                    {{ $item->item_code }}
+                <option value="{{ $item->item_code ?? '' }}" data-subtext="{{ $item->item_code ?? '' }}">
+                    {{ $item->item_name }}
                 </option>
             </select>
         @else

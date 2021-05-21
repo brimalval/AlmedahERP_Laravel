@@ -86,7 +86,10 @@ Route::get('/buying', function () {
 /**COMPONENTS ROUTES */
 Route::get('/component', [ComponentController::class, 'index']);
 Route::post('/create-component', [ComponentController::class, 'store']);
+Route::post('/delete-component/{id}', [ComponentController::class, 'delete']);
 Route::get('/get-item/{item_code}', [ComponentController::class, 'getItem']);
+Route::get('/get-component/{id}', [ComponentController::class, 'getComponent']);
+Route::patch('/update-component/{id}', [ComponentController::class, 'update']);
 
 /**COUPON CODE ROUTES */
 Route::get('/couponcode', function() {
@@ -149,7 +152,7 @@ Route::post('/create-material', [MaterialsController::class, 'store']);
 Route::patch('/update-material/{id}', [MaterialsController::class, 'update'])->name('material.update');
 Route::post('/delete-material/{id}', [MaterialsController::class, 'delete']);
 Route::post('/create-categories', [MaterialsController::class, 'storeCategory']);
-Route::post('/add-stock/{id}', [MaterialsController::class, 'addStock'])->name('material.add-stock');
+Route::post('/inventory/{id}/add-stock', [MaterialsController::class, 'addStock'])->name('material.add-stock');
 Route::post('/search-item', [MaterialsController::class, 'searchMaterial']);
 
 /**ITEM ROUTES */
@@ -159,14 +162,13 @@ Route::patch('/update-product/{id}', [ProductsController::class, 'update']);
 Route::post('/delete-product/{id}', [ProductsController::class, 'delete']);
 Route::post('/create-item-group', [ProductsController::class, 'add_item_group']);
 Route::post('/create-product-unit', [ProductsController::class, 'add_product_unit']);
-Route::get('/get-attribute/{id}', [ProductsController::class, 'get_attribute']);
 
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function () {
     return view('modules.stock.itemvariantsettings');
 });
 Route::post('/create-attribute', [ProductsController::class, 'add_attribute']);
-Route::get('/get-attribute/{id}', [ProductsController::class, ' get_attribute']);
+Route::get('/get-attribute/{id}', [ProductsController::class, 'get_attribute']);
 Route::patch('/update-attribute/{id}', [ProductsController::class, 'update_attribute']);
 Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attribute']);
 
@@ -335,6 +337,7 @@ Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']
 Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
 Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
 Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
+Route::post('/update-invoice-record/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoice']);
 Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
 Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 

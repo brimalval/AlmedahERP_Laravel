@@ -268,7 +268,7 @@
                                         <label class=" text-nowrap align-middle">
                                             Sales Supply Method
                                         </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod"  >
+                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
                                             <option selected disabled>Please Select</option>
                                             <option value="Produce">Instock</option>
                                             <option value="Purchase">Purchase</option>
@@ -752,6 +752,7 @@
         document.getElementById('currentDate').value = today;
         var componentsOrder;
         var materialsInComponents;
+        var mat_insufficient = false;
     });
 
     $("#gotoworkorder").click(function(){
