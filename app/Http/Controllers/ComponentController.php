@@ -140,26 +140,27 @@ class ComponentController extends Controller
             // }
 
             $form_data = $request->input();
-            Component::where('id', $id)->update(['component_code' => $form_data['component_code'], 
-                           'component_name' => $form_data['component_name'],
-                           'component_description' => $form_data['component_description'],
-                           'item_code' => $form_data['item_code']]);
+            // Component::where('id', $id)->update(['component_code' => $form_data['component_code'], 
+            //                'component_name' => $form_data['component_name'],
+            //                'component_description' => $form_data['component_description'],
+            //                'item_code' => $form_data['item_code']]);
 
             $comp = Component::where('id', $id)->first();
-            // $data->component_code = $form_data['component_code'];
-            // $data->component_name = $form_data['component_name'];
-            // $data->component_description = $form_data['component_description'];
-            // $data->item_code = $form_data['item_code'];
+            $comp->component_code = $form_data['component_code'];
+            $comp->component_name = $form_data['component_name'];
+            $comp->component_description = $form_data['component_description'] ?? '';
+            $comp->item_code = $form_data['item_code'];
+            $comp->save();
             return response()->json([
                 'status' => 'success',
-                'message' => "Successfully updated the component $data->component_code ($data->component_name)!",
+                'message' => "Successfully updated the component $comp->component_code ($comp->component_name)!",
                 'component' => $comp,
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => "There was a problem upon updating a Component",
-                'component' => gettype($form_data['item_code']),
+                'component' => $e->getMessage(),
             ]);
         }
     }
