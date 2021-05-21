@@ -152,7 +152,7 @@ Route::post('/create-material', [MaterialsController::class, 'store']);
 Route::patch('/update-material/{id}', [MaterialsController::class, 'update'])->name('material.update');
 Route::post('/delete-material/{id}', [MaterialsController::class, 'delete']);
 Route::post('/create-categories', [MaterialsController::class, 'storeCategory']);
-Route::post('/add-stock/{id}', [MaterialsController::class, 'addStock'])->name('material.add-stock');
+Route::post('/inventory/{id}/add-stock', [MaterialsController::class, 'addStock'])->name('material.add-stock');
 Route::post('/search-item', [MaterialsController::class, 'searchMaterial']);
 
 /**ITEM ROUTES */
