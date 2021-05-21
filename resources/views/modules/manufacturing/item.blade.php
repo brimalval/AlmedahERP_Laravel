@@ -17,7 +17,14 @@
             alert("Value exists!");
         } else {
             if(value == null && $('#product_status').val() != "Variant"){
-                $('#attributes_div').append('<span class="attb-badge badge badge-success m-1 p-1">' + name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + name + '">');
+                $('#attributes_div').append('<span class="badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + name + '">');
+                $('.attb-badge-'+name+' .far').click(function(){
+                    $('.attb-badge-'+name).remove();
+                    let index = attributeList.indexOf(name);
+                    attributeList.splice(index, 1);
+                    console.log(attributeList);
+                    // deleteAttribute(name);
+                });
                 // $('.attb-badge').click(function(){
                 // });
                 // $('.attb-badge').click(function(){
@@ -36,6 +43,7 @@
                 `);
             }
             attributeList.push(name);
+            console.log(attributeList);
         }
     }
     // Function for adding materials
@@ -590,7 +598,7 @@
                                     Select an Option
                                 </option>
                                 @foreach ($product_variants as $variant)
-                                    <option value="{{ $variant->attribute }}">{{ $variant->attribute }}</option>
+                                    <option id="attb_option" value="{{ $variant->attribute }}">{{ $variant->attribute }}</option>
                                 @endforeach
                                 <option value="New">
                                     &#43; Create a new Attribute
@@ -718,17 +726,18 @@
                 }else{
                     data.status.forEach(function(item){
                         addAttribute(item.attribute);
-                        $(".attb-badge").attr('class', 'badge badge-success m-1 p-1 attb-badge'+item.attribute);
-                        $('.attb-badge'+item.attribute+' .far').click(function(){
-                            $('.attb-badge'+item.attribute).remove();
-                            deleteAttribute(item.id);
-                        });
-                        $('.attb-badge'+item.attribute).click(function(){
-                            $('#edit-attribute-modal').modal('show');
-                            $('#edit-attribute-id').val(item.id);
-                            $('#edit-attribute-name').val(item.attribute);
-                            return false;
-                        });
+                        console.log(item.attribute);
+                        // $(".attb-badge").attr('class', 'badge badge-success m-1 p-1 attb-badge'+item.attribute);
+                        // $('.attb-badge'+item.attribute+' .far').click(function(){
+                        //     $('.attb-badge'+item.attribute).remove();
+                        //     deleteAttribute(item.id);
+                        // });
+                        // $('.attb-badge'+item.attribute).click(function(){
+                        //     $('#edit-attribute-modal').modal('show');
+                        //     $('#edit-attribute-id').val(item.id);
+                        //     $('#edit-attribute-name').val(item.attribute);
+                        //     return false;
+                        // });
                     });
                 }
 
@@ -975,7 +984,7 @@
                             alert("Value exists!");
                         } else {
                             attributeList.push(attribute_name);
-                            $('#attributes_div').append('<span class="attb-badge'+attribute_name+' badge badge-success m-1 p-1">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
+                            $('#attributes_div').append('<span class="attb-badge-'+attribute_name+' badge badge-success m-1 p-1">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
                             $('.modal').css('overflow-y', 'auto');
                         }
 
