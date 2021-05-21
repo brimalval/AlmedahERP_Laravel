@@ -240,15 +240,16 @@ class SalesOrderController extends Controller
                 $order->product_code = $row[0];
                 $order->quantity_purchased = $row[1];
                 $order->save();
-
-                // $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                // if( $prod->stock_unit - $row[1] > 0){
-                //     $prod->stock_unit = $prod->stock_unit - $row[1];
-                // }else{
-                //     $prod->stock_unit = 0;
-                // }
                 
-                // $prod->save();
+                if($form_data['saleSupplyMethod'] == "Produce"){
+                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                    if( $prod->stock_unit - $row[1] > 0){
+                        $prod->stock_unit = $prod->stock_unit - $row[1];
+                    }else{
+                        $prod->stock_unit = 0;
+                    }
+                    $prod->save();
+                }
             }
 
             $work_order_ids = array();
