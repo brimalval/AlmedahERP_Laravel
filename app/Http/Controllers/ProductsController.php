@@ -50,8 +50,8 @@ class ProductsController extends Controller
             'bar_code' => 'required|alpha_num' ,
             'stock_unit' => 'required|integer|numeric|min:0',
             // Required to have at least 1 material OR at least 1 component 
-            'materials' => 'required_if:components,{}', 
-            'components' => 'required_if:materials,{}',
+            'materials' => 'required_if:components, {}', 
+            'components' => 'required_if:materials, {}',
         ];
         if(request('product_status') != 'Variant'){
             $rules['picture'] = 'required';
@@ -86,7 +86,7 @@ class ProductsController extends Controller
                 $imagePath = request('template_img');
             }
 
-            $form_data = $request->all();
+            $form_data = $request->input();
             $data = new ManufacturingProducts();
 
             $data->bar_code = $form_data['bar_code'];
@@ -151,7 +151,7 @@ class ProductsController extends Controller
         } catch (Throwable $e) {
             return response()->json([
                 'status' => 'error',
-                'error' => $e->getMessage(),
+                'error' => $e->getCode(),
             ]);
         }
 
@@ -345,10 +345,12 @@ class ProductsController extends Controller
     {
         try {
             /* Delete Product Record from man_products table */
-            $data = ProductVariantWithValue::find($id);
+            // $data = ProductVariantWithValue::find($id);
+            $data = ProductVariantWithValue::where('attribute', $id)->first();
             $data->delete();
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
+                'data' => $data
             ]);
         } catch (Exception $e) {
             return response()->json([

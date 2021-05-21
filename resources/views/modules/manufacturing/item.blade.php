@@ -11,19 +11,22 @@
     // Function for adding attributes
     // Invoked by selecting a material in the selectpicker or when
     // inheriting attributes from a template
-    function addAttribute(name, value=null){
+    function addAttribute(name, value=null, update=null){
         console.log(name);
         if (attributeList.indexOf(name) !== -1) {
             alert("Value exists!");
         } else {
             if(value == null && $('#product_status').val() != "Variant"){
-                $('#attributes_div').append('<span class="badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + name + '">');
+                $('#attributes_div').append('<span class="badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i><input type="hidden" name="attribute_array[]" value="' + name + '"></span>');
                 $('.attb-badge-'+name+' .far').click(function(){
                     $('.attb-badge-'+name).remove();
                     let index = attributeList.indexOf(name);
                     attributeList.splice(index, 1);
                     console.log(attributeList);
-                    // deleteAttribute(name);
+                    if(update){
+                        deleteAttribute(name);
+                    }
+                    
                 });
                 // $('.attb-badge').click(function(){
                 // });
@@ -198,6 +201,7 @@
                     $(document).ready(function() {
                         // sessionStorage.setItem("status", "success");
                         // $('#divMain').load('/item');
+                        console.log(data);
                         alert('you have deleted an attribute, replace this with toast component');
                     });
                 } else {
@@ -728,10 +732,11 @@
                     data.status.forEach(function(arrayItem) {
                         console.log(arrayItem);
                         addAttribute(item.attribute, item.value);
+                        alert('variant');
                     });
                 }else{
                     data.status.forEach(function(item){
-                        addAttribute(item.attribute);
+                        addAttribute(item.attribute, null, true);
                         console.log(item.attribute);
                         // $(".attb-badge").attr('class', 'badge badge-success m-1 p-1 attb-badge'+item.attribute);
                         // $('.attb-badge'+item.attribute+' .far').click(function(){
@@ -1075,6 +1080,7 @@
                         var attribute_name = $('#edit-attribute-name').val();
                         attributeList = [];
                         get_attribute(data.product_id);
+                        $('#attribute_name').attr('value', 'none');
                     } else {
                         $(document).ready(function() {
                             alert("Error code:"+data.message);
