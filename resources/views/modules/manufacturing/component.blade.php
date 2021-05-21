@@ -9,7 +9,8 @@
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
             </div>
             <div class="row pb-2">
-                <div class="col-12 text-right">
+                <div class="col-12 text-right d-flex justify-content-end">
+                    {{-- <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onClick="loadComponent()">Refresh</button> --}}
                     <p><button type="button" class="btn btn-outline-primary btn-sm" onclick="$('#newComponentModal').modal('toggle')"><i class="fas fa-plus" aria-hidden="true"></i> Add
                             New</button></p>
                 </div>
@@ -167,7 +168,7 @@
                                 Component Code
                             </label>
                             <input type="text" class="form-input form-control sellable" id="componentCodeUpdate"
-                                name="component_code" disabled>
+                                name="component_code" readonly>
                         </div>
                         <div class="col">
                             <label class="text-nowrap align-middle">
@@ -191,8 +192,6 @@
                             <div class="alert alert-danger alert-dismissible mt-2" id="update-danger" style="display:none;">
                                 <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
                             </div>
-                            {{-- <input type="text" class="form-input form-control sellable" id="componentItemCode"
-                                name="item_code"> --}}
                             <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addRowNewComponent('rawMatsUpdate', 'true')">Add Item</button>
                         </div>
                         <div class="col">
@@ -296,7 +295,7 @@
                         <tr class="center">
                             <td><input type="checkbox" id="check${data.id}"></td>
                             <td><p name="rawMat${i}">`+item_name+`</p></td>
-                            <td><input type="number" id="${item_name}" name="qty${i}" value="1" min="1"></td>
+                            <td><input type="number" id="${item_name}" name="qty${i}" min="1"></td>
                             <td><input type="button" value="Delete" class="btn btn-danger" onclick="removeRow('${item_name}')"/></td>
                         </tr>
                     `
@@ -409,11 +408,11 @@
                                     Actions
                                 </button>
                                 <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-                                    <li><button data-id="{{ $row->id }}" class="edit-btn btn btn-warning btn-sm rounded-0" type="button">
+                                    <li><button data-id="`+r.component.id+`" class="edit-btn btn btn-warning btn-sm rounded-0" type="button">
                                         <i class="fa fa-edit"></i> Edit</button>
                                     </li>
                                     <li>
-                                        <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
+                                        <button data-id="`+r.component.id+`" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
                                             <i class="fa fa-trash"></i> Delete
                                         </button>
                                     </li>
@@ -466,38 +465,57 @@
                 url: "/update-component/"+id,
                 data: $("#updateComponentForm").serialize(),
                 success: function (r) {
-                    var tableBody = $("#rawMats");
+                    var tableBody = $("#rawMatsShow");
                     console.log(r.component);
                     if(r.status != 'error'){
-                        $('#newComponentModal').modal('toggle');
+                        $('#updateComponentModal').modal('toggle');
                         $('#componentItemCode').val("hidden");
                         var id = r.component.id;
                         const dataTable = $("#componentTable").DataTable();
-                        // dataTable.row
-                        //     .add([
-                        //         // "<span class='text-black-50'>" + r.component.id + "</span>",
-                        //         "<span class='text-black-50'>" +
-                        //             r.component.component_code +
-                        //             "</span>",
-                        //         "<span class='text-black-50'>" +
-                        //             r.component.component_name +
-                        //             "</span>",
-                        //         "<span class='text-black-50'><td class='text-black-50'><a class='btn btn-primary btn-sm' href=''>View</a></td></span>",
-                        //         "<span class='text-black-50'>" +
-                        //             (r.component.description ?? '') +
-                        //             "</span>",
-                        //         "<span class='text-black-50'><td class='text-black-50'><button class='btn btn-primary btn-sm' onclick='showRawMaterials("+r.component.item_code+")'>View</button></td></span>",
-                        //         '<a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>',
-                        //     ])
-                        //     .node().id = id;
-                        // dataTable.draw();
+                        dataTable
+                        .row($("#" + id))
+                        .remove()
+                        .draw();
+                        dataTable.row
+                            .add([
+                                // "<span class='text-black-50'>" + r.component.id + "</span>",
+                                "<span class='text-black-50'>" +
+                                    r.component.component_code +
+                                    "</span>",
+                                "<span class='text-black-50'>" +
+                                    r.component.component_name +
+                                    "</span>",
+                                "<span class='text-black-50'><td class='text-black-50'><a class='btn btn-primary btn-sm' href=''>View</a></td></span>",
+                                "<span class='text-black-50'>" +
+                                    (r.component.description ?? '') +
+                                    "</span>",
+                                "<span class='text-black-50'><td class='text-black-50'><button class='btn btn-primary btn-sm' onclick='showRawMaterials("+r.component.item_code+")'>View</button></td></span>",
+                                `<div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
+                                        <li><button data-id="`+r.component.id+`" class="edit-btn btn btn-warning btn-sm rounded-0" type="button">
+                                            <i class="fa fa-edit"></i> Edit</button>
+                                        </li>
+                                        <li>
+                                            <button data-id="`+r.component.id+`" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>`
+                            ])
+                            .node().id = id;
+                        dataTable.draw();
                         $('#component-success').show();
                         $("#component-success").html(r.message);
                         $("#component-success").delay(4000).hide(1);
-                        $("#addComponentForm")[0].reset();
+                        $("#updateComponentForm")[0].reset();
                         tableBody.empty();
                         raw_materials = [];
                     }else{
+                        console.log(r.component);
                         $('#updateComponentModal').modal('toggle');
                         $('#componentItemCode').val("hidden");
                         $('#component-danger').show();
@@ -511,8 +529,9 @@
                     // $('#componentItemCode').val('');
                     raw_materials = [];
                 },
-                error: function () {
+                error: function (data) {
                     console.log('error');
+                    console.log(data.errors);
                 },
             });
         }
@@ -540,6 +559,7 @@
                         $('#componentNameUpdate').val(data.component_name);
                         $('#componentDescriptionUpdate').val(data.component_description);
                         let tableBody = $("#rawMatsUpdate");
+                        tableBody.empty();
                         let rawMatsInComponent = JSON.parse(data.item_code);
                         console.log(rawMatsInComponent);
                         rawMatsInComponent.forEach((rawMat)=>{
@@ -547,28 +567,19 @@
                                 <tr class="center">
                                     <td><input type="checkbox" id="check${rawMat.id}"></td>
                                     <td><p>`+rawMat.item_name+`</p></td>
-                                    <td><input type="number" min="1" value="${rawMat.item_qty}"></td>
+                                    <td><input type="number" id="${rawMat.item_name}" min="1" value="${rawMat.item_qty}"></td>
                                     <td><input type="button" value="Delete" class="btn btn-danger" onclick="removeRow('${rawMat.item_name}')"/></td>
                                 </tr>
                             `);
                             raw_materials.push({"item_name":rawMat.item_name, "item_qty": rawMat.item_qty, "item_code": rawMat.item_code});
+                            $("#"+rawMat.item_name).change(function(){
+                                let material = raw_materials.find(material=>material.item_name==rawMat.item_name);
+                                console.log(material);
+                                material.item_qty = $("#"+rawMat.item_name).val();
+                                console.log("rawmats"+JSON.stringify(material));
+                            });
                         });
-                        console.log('this is the raw mats');
-                        console.log(raw_materials);
-                        // if (data.status == "success") {
-                        //     $(document).ready(function() {
-                        //         sessionStorage.setItem("status", "success");
-                        //         // Removing a row from the data table
-                        //         var table = $('#componentTable');
-                        //         table.DataTable()
-                        //             .row(row)
-                        //             .remove()
-                        //             .draw();
-                        //     });
-                        // } else {
-                        //     alert(data.message);
-                        // }
-
+                        
                     },
                     error: function(data) {
                         console.log("error");

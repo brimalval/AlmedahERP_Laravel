@@ -109,11 +109,21 @@ class ComponentController extends Controller
             'item_code' => 'required|string',
         ];
 
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails())
+        {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->getMessageBag()->toArray()
+
+            ]); 
+        }
+
         try {
             /* Update Product Record from env_raw_materials table */
-            $data = Component::find($id);
-            // if (request('material_image')) {
-            //     $imagePath = request('material_image')->store('uploads', 'public');
+            // if (request('component_image')) {
+            //     $imagePath = request('component_image')->store('uploads', 'public');
             //     $data->item_image = $imagePath;
             // }
             // $image_bool = false;
@@ -130,22 +140,27 @@ class ComponentController extends Controller
             // }
 
             $form_data = $request->input();
-            $data->component_code = $form_data['component_code'];
-            $data->component_name = $form_data['component_name'];
-            $data->component_description = $form_data['component_description'];
-            $data->item_code = $form_data['item_code'];
-            $data->save();
+            // Component::where('id', $id)->update(['component_code' => $form_data['component_code'], 
+            //                'component_name' => $form_data['component_name'],
+            //                'component_description' => $form_data['component_description'],
+            //                'item_code' => $form_data['item_code']]);
 
+            $comp = Component::where('id', $id)->first();
+            $comp->component_code = $form_data['component_code'];
+            $comp->component_name = $form_data['component_name'];
+            $comp->component_description = $form_data['component_description'] ?? '';
+            $comp->item_code = $form_data['item_code'];
+            $comp->save();
             return response()->json([
                 'status' => 'success',
-                'message' => "Successfully updated the component $data->component_code ($data->component_name)!",
-                'component' => $data,
+                'message' => "Successfully updated the component $comp->component_code ($comp->component_name)!",
+                'component' => $comp,
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => "There was a problem upon updating a Component",
-                'component' => $data,
+                'component' => $e->getMessage(),
             ]);
         }
     }
