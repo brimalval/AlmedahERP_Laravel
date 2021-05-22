@@ -73,10 +73,12 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
+                    <td>Supplier ID</td>
                     <td>Supplier Name</td>
-                    <td>Status</td>
+                    <td>Contact Name</td>
+                    <td>Phone Number</td>
+                    <td>Supploer Address</td>
                     <td>Supplier Group</td>
-                    <td></td>
                 </tr>
             </thead>
             <tbody class="">
@@ -142,14 +144,24 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <label for="snewname">Supplier Name</label>
-                <input type="text" id="snewname" class="form-control font-weight-bold" value="">
-                <label for="snewgroup">Supplier Group</label>
-                <input type="text" id="snewgroup" class="form-control font-weight-bold" value="">
-                <label for="snewtpye">Supplier Type</label>
+                <label for="snewid">Supplier ID</label>
+                <input type="text" id="snewid" class="form-control font-weight-bold" value="Auto Generated" disabled>
+                <label for="snewcompanyname">Company Name</label>
+                <input type="text" id="snewcompanyname" class="form-control" value="">
+                <label for="snewcontactname">Contact Name</label>
+                <input type="text" id="snewcontactname" class="form-control" value="">
+                <label for="snewphonenumber">Phone Number</label>
+                <input type="number" id="snewphonenumber" class="form-control" value="">
+                <label for="snewemail">Suppier E-mail</label>
+                <input type="email" id="snewemail" class="form-control" value="">
+                <label for="snewaddress">Suppier Address</label>
+                <!-- <input type="textarea" id="snewaddress" class="form-control font-weight-bold" value=""> -->
+                <textarea id="snewaddress" id="" cols="30" rows="5" class="form-control"></textarea>
+                <label for="snewtpye">Supplier Group</label>
                 <select name="" id="snewtype" class="form-control font-weight-bold">
-                    <option value="Company" selected>Company</option>
-                    <option value="Individual">Individual</option>
+                    <option value="Raw Material" selected>Raw Material</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Hardware">Hard ware</option>
                 </select>
                 <div class="d-flex">
                     <div class="form-check">
