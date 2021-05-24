@@ -464,6 +464,12 @@ function openSupplierInfo(id) {
     });
 }
 
+function openSupplierForm() {
+    $(document).ready(function () {
+        $("#contentSupplier").load(`/create-new-supplier`);
+    });
+}
+
 function openSaleInfo(id) {
     $(document).ready(function () {
         $("#contentSalesOrder").load(`/view-sales-order/${id}`);

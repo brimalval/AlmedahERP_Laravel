@@ -492,7 +492,7 @@ Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
 Route::post('/create-supplier', [SupplierController::class, 'store']);
 Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
 Route::get('/search/{supplier_id}', [SupplierController::class, 'getBySuppID']);
-Route::get('/createnewsupplier', function () {
+Route::get('/create-new-supplier', function () {
     return view('modules.buying.createnewsupplier');
 });
 

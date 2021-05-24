@@ -19,11 +19,11 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="loadBOM()">Refresh</button>
+                        onclick="loadSupplier()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop">New</button>
+                    <button type="button" class="btn btn-primary" {{--data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop"--}} onclick="openSupplierForm()">New</button>
                 </li>
             </ul>
         </div>
@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bom border-bottom">
+        <table id="supplierTbl" class="table table-bom border-bottom">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -77,7 +77,7 @@
                     <td>Supplier Name</td>
                     <td>Contact Name</td>
                     <td>Phone Number</td>
-                    <td>Supploer Address</td>
+                    <td>Supplier Address</td>
                     <td>Supplier Group</td>
                 </tr>
             </thead>
@@ -89,14 +89,16 @@
                                 <input type="checkbox" class="form-check-input">
                             </div>
                         </td>
-                        <td><a href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a></td>
-                        <td>
-                            <ul>
-                                <li>Enabled</li>
-                            </ul>
+                        <td><a
+                                href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->supplier_id }}</a>
                         </td>
+                        <td>
+                            {{ $supplier->company_name }}
+                        </td>
+                        <td class="text-black-50">{{ $supplier->contact_name }}</td>
+                        <td class="text-black-50">{{ $supplier->phone_number }}</td>
+                        <td class="text-black-50">{{ $supplier->supplier_address }}</td>
                         <td class="text-black-50">{{ $supplier->supplier_group }}</td>
-                        <td class="text-black-50">2 M</td>
                     </tr>
                 @endforeach
                 <!--
@@ -178,3 +180,15 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#supplierTbl").DataTable({
+            "searching": false,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+        });
+    });
+
+</script>
