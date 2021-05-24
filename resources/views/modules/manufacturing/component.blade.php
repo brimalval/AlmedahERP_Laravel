@@ -289,23 +289,23 @@
                 type: "GET",
                 data: { 'item_code': item_code },
                 success: function (data) {
-                    let item_name = data.item_name;
+                    // let item_code = data.item_code;
                     tableBody.append(
                     `
                         <tr class="center">
                             <td><input type="checkbox" id="check${data.id}"></td>
-                            <td><p name="rawMat${i}">`+item_name+`</p></td>
-                            <td><input type="number" id="${item_name}" name="qty${i}" min="1"></td>
-                            <td><input type="button" value="Delete" class="btn btn-danger" onclick="removeRow('${item_name}')"/></td>
+                            <td><p name="rawMat${i}">`+data.item_name+`</p></td>
+                            <td><input type="number" id="${item_code}" name="qty${i}" min="1"></td>
+                            <td><input type="button" value="Delete" class="btn btn-danger" onclick="removeRow('${data.item_name}')"/></td>
                         </tr>
                     `
                     );
-                    raw_materials.push({"item_name":item_name, "item_qty": "", "item_code": item_code});
+                    raw_materials.push({"item_name":data.item_name, "item_qty": "", "item_code": item_code});
                     ifEmpty();
-                    $("#"+item_name).change(function(){
-                        let material = raw_materials.find(material=>material.item_name==item_name);
+                    $("#"+item_code).change(function(){
+                        let material = raw_materials.find(material=>material.item_code==item_code);
                         console.log(material);
-                        material.item_qty = $("#"+item_name).val();
+                        material.item_qty = $("#"+item_code).val();
                         console.log("rawmats"+JSON.stringify(material));
                     });
                     // console.log(raw_materials);
