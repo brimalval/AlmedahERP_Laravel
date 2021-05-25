@@ -59,9 +59,11 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="Type">Item</label>
-                    <select class="form-control" id="hm_select1" onchange="showForm1();">
-                        <option value="0"></option>
-                        <option value="1">Item 1</option>
+                    <select class="form-control" id="manprod">
+                        @foreach ($man_prods as $mp)
+                            <option value="0"></option>
+                            <option value="1">{{ $mp->product_code }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
