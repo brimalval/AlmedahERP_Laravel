@@ -73,10 +73,11 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::get('/bom', [BOMController::class, 'index']);
-Route::get('/newbom', function () {
-    return view('modules.BOM.bominfo');
+Route::get('/bom', function () {
+    return view('modules.BOM.bom');
 });
+Route::get('/newbom', [BOMController::class, 'BOMForm']);
+Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -224,9 +225,7 @@ Route::get('/openManufacturingItemPriceForm', function () {
 Route::resource('/routing', RoutingsController::class);
 Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
 
-/**Route::get('/editrouting', function () {
-    return view('modules.bom.editrouting');
-});*/
+
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
 Route::patch('/update-routing/{id}', [RoutingsController::class, 'update']);
 Route::delete('/delete-routing/{id}', [RoutingsController::class, 'delete']);

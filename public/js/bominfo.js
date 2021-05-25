@@ -4,11 +4,11 @@ $(document).ready(function () {
     $('#table_costing').DataTable();
 });
 
-$("#routingSelect").change(function () { 
+$("#routingSelect").change(function () {
     if($(this).val() === 'newRouting') {
         showRoutingsForm();
         $(this).val(null);
-    }   
+    }
 });
 
 /**Experimental function from back-end*/
@@ -63,14 +63,36 @@ function showRoutingsForm() {
 }
 
 function showForm1() {
-    var table1 = document.getElementById("hm_select1").value;
+    var table1 = document.getElementById("manprod").value;
     if (table1 == 1) {
         document.getElementById("item_content").style.display = 'block';
     }
-    if (table1 == 0) {
+    else if (table1 == 0) {
         document.getElementById("item_content").style.display = 'none';
     }
 }
+
+$(`#manprod`).change(function () {
+    let showForm = $(this).val();
+    if (showForm == 1) {
+        $("#item_content").css("display", "block");
+    }
+    else if (showForm == 0) {
+        $("#item_content").css("display", "none");
+    }
+    let prod_code = $(this).text().trim();
+    $.ajax({
+        type: "GET",
+        url: `/get-product/${prod_code}`,
+        data: prod_code,
+        success: function (response) {
+            console.log(response);
+            let product = response.product;
+            $(`#Item_name`).val(product.product_name);
+            $(`#Item_UOM`).val(product.product_uom);
+        }
+    });
+});
 
 function addRowoperations() {
     if ($('#no-data')[0]) {
@@ -81,7 +103,7 @@ function addRowoperations() {
     $('#operations-input-rows').append(
         `<tr data-id="${nextID}">
         <td class="text-center">
-        
+
         <div class="form-check" >
             <input type="checkbox" class="form-check-input">
         </div>
@@ -115,7 +137,7 @@ function addRowmaterials() {
     $('#materials-input-rows').append(
         `                <tr data-id="${nextID}">
     <td class="text-center">
-    
+
     <div class="form-check" >
         <input type="checkbox" class="form-check-input">
     </div>
@@ -125,7 +147,7 @@ function addRowmaterials() {
     <td class="mr-unit-input"><input type="text" value="" readonly name="Quantity" id="Quantity" class="form-control"></td>
     <td class="mr-unit-input"><input type="text" value="" readonly name="UOM" id="UOM" class="form-control"></td>
     <td class="mr-unit-input"><input type="text" value="" readonly name="Rate" id="Rate" class="form-control"></td>
-    <td class="mr-unit-input"><input type="text" value="" readonly name="Amount" id="Amount" class="form-control"></td>   
+    <td class="mr-unit-input"><input type="text" value="" readonly name="Amount" id="Amount" class="form-control"></td>
     <td>
         <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#" role="button">
             <i class="fa fa-edit" aria-hidden="true"></i>
