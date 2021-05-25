@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BillsOfMaterials;
 use App\Models\ManufacturingProducts;
 use Illuminate\Http\Request;
+use Exception;
 
 class BOMController extends Controller
 {
@@ -93,8 +94,16 @@ class BOMController extends Controller
 
     public function getProduct($product_code)
     {
+        try{
         $product = ManufacturingProducts::where('product_code', $product_code)->first();
-        echo $product;
-        return ['product' => $product];
+        return response() -> json([
+            "product" => $product
+        ]);
+        }
+        catch(Exception $e){
+            return response() -> json([
+                "error" => $e -> getMessage()
+            ]);
+        }
     }
 }

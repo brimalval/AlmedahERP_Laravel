@@ -89,7 +89,9 @@ $(`#manprod`).change(function () {
             console.log(response);
             let product = response.product;
             $(`#Item_name`).val(product.product_name);
-            $(`#Item_UOM`).val(product.product_uom);
+            $(`#Item_UOM`).val(product.unit);
+        }, error: function (response){
+            console.log(response);
         }
     });
 });
