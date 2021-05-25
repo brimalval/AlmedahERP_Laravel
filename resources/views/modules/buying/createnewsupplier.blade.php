@@ -1,3 +1,4 @@
+<script src="{{ asset('js/supplier.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">New Supplier 1</h2><span>• Not Saved</span>
@@ -8,6 +9,10 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                        onclick="loadSupplier();">Cancel</button>
+                </li>
+                <li class="nav-item li-bom">
                     <button class="btn btn-primary" type="button" id="saveBtn">Save</button>
                 </li>
             </ul>
@@ -15,13 +20,13 @@
     </div>
 </nav>
 <div class="accordion" id="accordion">
-    <form action="" method="POST">
+    <form action="{{ route('supplier.store') }}" id="supplierForm" method="POST">
         <div class="card">
             <div class="card-header" id="heading2">
                 <h2 class="mb-0">
                     <button class="btn btn-link d-flex w-100 " type="button" data-toggle="collapse"
                         data-target="#description" aria-expanded="true">
-                        NAME AND TYPE
+                        ENTER SUPPLIER INFO
                     </button>
                 </h2>
             </div>
@@ -31,6 +36,8 @@
                 </div>
             </div>
         </div>
+    </form>
+        {{--
         <div class="card">
             <div class="card-header" id="heading3">
                 <h2 class="mb-0">
@@ -91,39 +98,6 @@
                 </div>
             </div>
         </div>
-    </form>
+        --}}
 </div>
 <br>
-
-<script type="text/javascript">
-    $("#saveBtn").click(function() {
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        var formData = new FormData();
-        formData.append('company_name', $('#sname').val());
-        formData.append('supplier_group', $('#sgroup').val());
-        formData.append('phone_number', $('#snewcontact').val());
-        formData.append('supplier_email', $('#snewemail').val());
-        formData.append('supplier_address', $('#snewaddress').val());
-
-        $.ajax({
-            url: '/create-supplier',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(data) {
-                for (var pair of formData.entries()) {
-                    console.log(pair[0] + ', ' + pair[1]);
-                }
-                loadSupplier();
-            }
-        });
-    });
-
-</script>

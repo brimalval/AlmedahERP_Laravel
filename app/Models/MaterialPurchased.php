@@ -33,7 +33,9 @@ class MaterialPurchased extends Model
         foreach($items_purchased as $item) {
             array_push($items_purchased_array,
                 array(
-                    'item' => ManufacturingMaterials::where('item_code', $item->item_code)->first(),
+                    'purchase_id' => $this->purchase_id,
+                    'supplier' => $item->supplier_id,
+                    'item' =>    ManufacturingMaterials::where('item_code', $item->item_code)->first(),
                     'req_date' => $item->req_date,
                     'qty' => $item->qty,
                     'rate' => $item->rate,

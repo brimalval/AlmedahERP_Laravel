@@ -46,6 +46,15 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
+    public function sampleFunction() {
+        return view('modules.buying.potest');
+    }
+
+    public function getAll() {
+        $data = MaterialPurchased::all();
+        return ['items' => $data];
+    }
+
     public function view_items($id) {
         $order = MaterialPurchased::find($id);
         return ['items' => $order->itemsPurchased()];

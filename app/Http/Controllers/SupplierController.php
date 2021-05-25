@@ -9,15 +9,37 @@ use DB;
 
 class SupplierController extends Controller
 {
-    //
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
+        //
         $suppliers = Supplier::all();
         return view('modules.buying.supplier', ['suppliers' => $suppliers]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
+        //
         try {
             $data = new Supplier();
 
@@ -42,39 +64,48 @@ class SupplierController extends Controller
         }
     }
 
-    public function get($id)
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Supplier  $supplier
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Supplier $supplier)
     {
-        $supplier = Supplier::find($id);
-        return view('modules.buying.supplierInfo', ['supplier' => $supplier]);
+        //
     }
 
-    public function getBySuppID($supplier_id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Supplier  $supplier
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Supplier $supplier)
     {
-        $supplier = Supplier::where('supplier_id', $supplier_id)->get();
-        return ['supplier' => $supplier];
+        //
     }
 
-    public function searchSupplier(Request $request)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Supplier  $supplier
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Supplier $supplier)
     {
-        try {
-            $search = $request->search;
-            if ($search == '')
-                $suppliers = Supplier::orderby('created_at', 'desc')->limit(5)->get();
-            else
-                $suppliers = Supplier::where('company_name', 'like', '%'.$search.'%')->orderby('created_at', 'desc')->limit(5)->get();
-            $supplier_data = array();
-            foreach($suppliers as $supplier) {
-                $supplier_data[] = array(
-                                    "supplier_id" => $supplier->supplier_id,
-                                    "address" => $supplier->supplier_address,
-                                    "company_name" => $supplier->company_name,
-                                    "phone_number" => $supplier->phone_number,
-                                    "email" => $supplier->supplier_email
-                                );
-            }
-            return response()->json($supplier_data);
-        } catch (Exception $e) {
-            return $e;
-        }
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Supplier  $supplier
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Supplier $supplier)
+    {
+        //
     }
 }

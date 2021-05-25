@@ -1,3 +1,4 @@
+<script src="{{ asset('js/supplier.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Supplier</h2>
@@ -136,6 +137,7 @@
 
 
 <!-- Modal to generate new supplier -->
+{{--
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -159,11 +161,11 @@
                 <label for="snewaddress">Suppier Address</label>
                 <!-- <input type="textarea" id="snewaddress" class="form-control font-weight-bold" value=""> -->
                 <textarea id="snewaddress" id="" cols="30" rows="5" class="form-control"></textarea>
-                <label for="snewtpye">Supplier Group</label>
+                <label for="snewtype">Supplier Group</label>
                 <select name="" id="snewtype" class="form-control font-weight-bold">
                     <option value="Raw Material" selected>Raw Material</option>
                     <option value="Electrical">Electrical</option>
-                    <option value="Hardware">Hard ware</option>
+                    <option value="Hardware">Hardware</option>
                 </select>
                 <div class="d-flex">
                     <div class="form-check">
@@ -180,15 +182,4 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#supplierTbl").DataTable({
-            "searching": false,
-            "paging": false,
-            "ordering": false,
-            "info": false,
-        });
-    });
-
-</script>
+--}}
