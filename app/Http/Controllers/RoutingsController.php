@@ -96,13 +96,12 @@ class RoutingsController extends Controller
      * @param  \App\Models\Routings  $routings
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Routings $id)
+    public function update(Request $request, Routings $routings)
     {
         //
         try {
             $form_data = $request->input();
             $routing = Routings::find($routings->id);
-            echo $routings->id;
             $routing->routing_name = $form_data['Routing_Name'];
             $routing->save();
         } catch (Exception $e) {
@@ -128,4 +127,11 @@ class RoutingsController extends Controller
         $work_centers = WorkCenter::all();
         return view('modules.BOM.newrouting', ['operations' => $operations, 'work_centers' => $work_centers]);
     }
+
+    public function getOperations($routing_id) {
+        $routing = Routings::where('routing_id', $routing_id)->first();
+        $operations = $routing->operations();
+        return ['operations' => $operations];
+    }
+
 }

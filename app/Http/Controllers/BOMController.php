@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BillsOfMaterials;
+use App\Models\BillOfMaterials;
 use App\Models\ManufacturingProducts;
+use App\Models\Routings;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -47,7 +48,7 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function show(BillsOfMaterials $billsOfMaterials)
+    public function show(BillOfMaterials $billsOfMaterials)
     {
         //
     }
@@ -58,7 +59,7 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function edit(BillsOfMaterials $billsOfMaterials)
+    public function edit(BillOfMaterials $billsOfMaterials)
     {
         //
     }
@@ -70,7 +71,7 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BillsOfMaterials $billsOfMaterials)
+    public function update(Request $request, BillOfMaterials $billsOfMaterials)
     {
         //
     }
@@ -81,7 +82,7 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BillsOfMaterials $billsOfMaterials)
+    public function destroy(BillOfMaterials $billsOfMaterials)
     {
         //
     }
@@ -89,20 +90,20 @@ class BOMController extends Controller
     public function BOMForm()
     {
         $man_prod = ManufacturingProducts::all();
-        return view('modules.BOM.bominfo', ['man_prods' => $man_prod]);
+        $routings = Routings::all();
+        return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'routings' => $routings]);
     }
 
     public function getProduct($product_code)
     {
-        try{
-        $product = ManufacturingProducts::where('product_code', $product_code)->first();
-        return response() -> json([
-            "product" => $product
-        ]);
-        }
-        catch(Exception $e){
-            return response() -> json([
-                "error" => $e -> getMessage()
+        try {
+            $product = ManufacturingProducts::where('product_code', $product_code)->first();
+            return response()->json([
+                "product" => $product
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "error" => $e->getMessage()
             ]);
         }
     }

@@ -61,6 +61,9 @@
                     <label for="Type">Item</label>
                     <select class="form-control" id="manprod">
                         <option value="0">-No Product Selected-</option>
+                        @foreach ($man_prods as $mp)
+                            <option value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -129,14 +132,16 @@
                         <div class="form-group">
                             <label for="routing">Routing</label>
                             <select class="form-control" name="routing" id="routingSelect">
-                                <option value=""></option>
+                                <option value="0">-No Routing Selected-</option>
+                                @foreach ($routings as $routing) 
+                                    <option value="{{ $routing->routing_id }}">{{ $routing->routing_name }}</option>
+                                @endforeach
                                 <option value="newRouting">Create New Routing</option>
-
                             </select>
                         </div>
                     </div>
                     <label>Operations</label>
-                    <table class="table border-bottom table-hover table-bordered" id="bom-operations-tbl">
+                    <table class="table border-bottom table-hover table-bordered" id="bom-operations">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
                                 <td class="text-center">
@@ -153,9 +158,11 @@
                                 <td></td>
                             </tr>
                         </thead>
-                        <tbody class="" id="">
+                        <tbody class="" id="operations-input-rows">
+                            {{--
                             <tr data-id="${nextID}">
                                 <td class="text-center">
+
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                     </div>
@@ -180,7 +187,7 @@
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                 </td>
-                            </tr>
+                            </tr>--}}
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
@@ -276,22 +283,22 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Operationg_Cost">Operationg Cost</label>
-                                <input type="text" readonly name="Operationg_Cost Cost" id="Operationg_Cost"
+                                <label for="Operationg_Cost">Operation Cost</label>
+                                <input type="number" value="0" readonly name="totalOpCost" id="totalOpCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="Material_Cost">Raw Material Cost</label>
-                                <input type="text" readonly name="Material_Cost Cost" id="Material_Cost"
+                                <input type="text" value="0" readonly name="totalMatCost" id="totalMatCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="total_Cost">Total Cost</label>
-                                <input type="text" readonly name="total_Cost Cost" id="total_Cost" class="form-control">
+                                <input type="text" value="0" readonly name="totalBOMCost" id="totalBOMCost" class="form-control">
                             </div>
                         </div>
                     </div>

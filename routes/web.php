@@ -224,7 +224,7 @@ Route::get('/openManufacturingItemPriceForm', function () {
 /**MANUFACTURING ROUTING ROUTES */
 Route::resource('/routing', RoutingsController::class);
 Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
-
+Route::get('/get-routing-ops/{routing_id}', [RoutingsController::class, 'getOperations']);
 
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
 Route::patch('/update-routing/{id}', [RoutingsController::class, 'update']);

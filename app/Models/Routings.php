@@ -31,7 +31,7 @@ class Routings extends Model
                     'sequence_id' => $ro->sequence_id,
                     'hour_rate' => $ro->hour_rate,
                     'operation_time' => $ro->operation_time,
-                    'operating_cost' => $ro->operation_cost
+                    'operating_cost' => $ro->operating_cost
                 )
             );
         }

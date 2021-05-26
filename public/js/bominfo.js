@@ -7,9 +7,73 @@ $(document).ready(function () {
 $("#routingSelect").change(function () {
     if($(this).val() === 'newRouting') {
         showRoutingsForm();
-        $(this).val(null);
+        $(this).val(0);
+    } else {
+        var routing_code = $(this).val();
+        $("#bom-operations tbody tr").remove();
+        var table = $('#bom-operations tbody');
+        $.ajax({
+            type: "GET",
+            url: `/get-routing-ops/${routing_code}`,
+            data: routing_code,
+            success: function (response) {
+                let operations = response.operations;
+                console.log(operations);
+                for(let i = 0; i < operations.length; i++) {
+                    table.append(
+                        `
+                        <tr id="bomOperation-${i}">
+                                <td class="text-center">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input">
+                                    </div>
+                                </td>
+                                <td id="mr-code-input" class="mr-code-input"><input type="text" value="${operations[i].operation.operation_name}" readonly
+                                        name="Operation_name" id="Operation_name" class="form-control"></td>
+                                <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${operations[i].operation.wc_code}" readonly
+                                        name="D_workcenter" id="D_workcenter" class="form-control"></td>
+                                <td class="mr-unit-input"><input type="text" value="${operations[i].operation.description}" readonly name="Desc" id="Desc"
+                                        class="form-control"></td>
+                                <td class="mr-unit-input"><input type="text" value="${operations[i].operation_time}" readonly name="Operation_Time"
+                                        id="Operation_Time" class="form-control"></td>
+                                <td class="mr-unit-input"><input type="text" value="${operations[i].operating_cost}" readonly name="Operation_cost"
+                                        id="Operation_cost" class="form-control"></td>
+
+                                <td>
+                                    <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#"
+                                        role="button">
+                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                    </a>
+                                    <a id="" class="btn delete-btn" href="#" role="button">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `
+                    );
+                }
+                computeCosts();
+            }
+        });
     }
 });
+
+function computeCosts() {
+    var materialCost = 0;
+    var opCost = 0;
+    var operations = $("#bom-operations tbody tr");
+    for (let i = 0; i < operations.length; i++) {
+        let operation = $(`#bomOperation-${i}`);
+        let cost = operation.find("#Operation_cost").val();
+        opCost += parseFloat(cost);
+    }
+    var totalCost = opCost + materialCost;
+    $("#totalOpCost").val(opCost);
+    $("#totalMatCost").val(materialCost);
+    $("#totalBOMCost").val(totalCost);
+    // Code for computing material costs will be made later when connection between BOM and purchase order has been established.
+    // Code for material costs go here.
+}
 
 /**Experimental function from back-end*/
 function showRoutingsForm() {
@@ -62,6 +126,7 @@ function showRoutingsForm() {
     $(`#tab${menu}`).tab("show");
 }
 
+/** 
 function showForm1() {
     var table1 = document.getElementById("manprod").value;
     if (table1 == 1) {
@@ -71,16 +136,19 @@ function showForm1() {
         document.getElementById("item_content").style.display = 'none';
     }
 }
+*/
 
 $(`#manprod`).change(function () {
     let showForm = $(this).val();
-    if (showForm == 1) {
+    if (showForm == 0) {
+        $("#item_content").css("display", "none");
+        $(`#Item_name`).val(null);
+        $(`#Item_UOM`).val(null);
+    }
+    else {
         $("#item_content").css("display", "block");
     }
-    else if (showForm == 0) {
-        $("#item_content").css("display", "none");
-    }
-    let prod_code = $(this).text().trim();
+    let prod_code = $(this).val().trim();
     $.ajax({
         type: "GET",
         url: `/get-product/${prod_code}`,

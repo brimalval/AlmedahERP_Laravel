@@ -52,9 +52,10 @@ class SupplierController extends Controller
 
             $data->supplier_id = "SUP" . $nextId;
 
-            $data->company_name = $form_data['company_name'];
+            $data->company_name = $form_data['supplier_name'];
             $data->supplier_group = $form_data['supplier_group'];
-            $data->phone_number = $form_data['phone_number'];
+            $data->contact_name = $form_data['supplier_contact'];
+            $data->phone_number = $form_data['supplier_phone'];
             $data->supplier_email = $form_data['supplier_email'];
             $data->supplier_address = $form_data['supplier_address'];
 
