@@ -53,8 +53,6 @@
 <form action="#" method="post" id="BOM" class="create">
     <br>
     <div class="container">
-        {{-- <form id="contactForm" name="contact" role="form">
-            @csrf --}}
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -67,29 +65,20 @@
                     </select>
                 </div>
             </div>
-
             <div class="col-6"></div>
-
             <div class="col-6">
                 <div id="item_content" style="display:none">
-
                     <div class="form-group">
-                        <label for="Item_name">Item name</label>
+                        <label for="Item_name">Item Name</label>
 
                         <input type="text" readonly name="Item_name" id="Item_name" class="form-control">
                     </div>
-
-
-
                     <div class="form-group">
                         <label for="Item_UOM">Item UOM</label>
                         <input type="text" readonly name="Item_UOM" id="Item_UOM" class="form-control">
                     </div>
-
-
                 </div>
             </div>
-
             <div class="col-6"></div>
             <div class="col-6">
                 <div class="form-check">
@@ -105,16 +94,9 @@
                     </label>
                 </div>
             </div>
-
         </div>
-
-
-
-        {{-- </form> --}}
-
     </div>
     <br>
-    @csrf
     <div id="accordion">
         <div class="card">
             <div class="card-header" id="headingOne">
@@ -210,7 +192,7 @@
             <div id="materials" class="collapse" aria-labelledby="headingOne">
                 <div class="card-body">
                     <!--Materials contents-->
-                    <table class="table border-bottom table-hover table-bordered" id="operations">
+                    <table class="table border-bottom table-hover table-bordered" id="bom-materials">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
                                 <td class="text-center">

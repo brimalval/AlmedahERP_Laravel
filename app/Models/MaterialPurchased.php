@@ -33,9 +33,10 @@ class MaterialPurchased extends Model
         foreach($items_purchased as $item) {
             array_push($items_purchased_array,
                 array(
-                    'purchase_id' => $this->purchase_id,
-                    'supplier' => $item->supplier_id,
-                    'item' =>    ManufacturingMaterials::where('item_code', $item->item_code)->first(),
+                    //'purchase_id' => $this->purchase_id,
+                    //'supplier' => $item->supplier_id,
+                    'item_code' => $item->item_code,
+                    'item' => ManufacturingMaterials::where('item_code', $item->item_code)->first(),
                     'req_date' => $item->req_date,
                     'qty' => $item->qty,
                     'rate' => $item->rate,
@@ -44,6 +45,20 @@ class MaterialPurchased extends Model
             );
         }
         return $items_purchased_array;
+    }
+
+    public function productsAndRates($item_code) {
+        $materials = $this->itemsPurchased();
+        foreach ($materials as $material) {
+            unset($material['req_date']);
+            unset($material['qty']);
+            unset($material['subtotal']);
+        }
+        foreach ($materials as $material) {
+            if(in_array($item_code, $material)) {
+                return $material;
+            }
+        }
     }
 
     public function supplier_quotation() {

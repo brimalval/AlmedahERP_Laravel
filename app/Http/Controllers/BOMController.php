@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\BillOfMaterials;
 use App\Models\ManufacturingProducts;
+use App\Models\MaterialPurchased;
 use App\Models\Routings;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class BOMController extends Controller
 {
@@ -98,9 +100,20 @@ class BOMController extends Controller
     {
         try {
             $product = ManufacturingProducts::where('product_code', $product_code)->first();
-            return response()->json([
-                "product" => $product
-            ]);
+            $product_mats = $product->materials();
+            $products_and_rates = array();
+            foreach($product_mats as $material) {
+                $p_order = MaterialPurchased::where('purchase_id', 'like', '%PUR-ORD-2021-00001%')->orderby('id', 'desc')->first();
+                $po_items = $p_order->itemsPurchased();
+                array_push(
+                    $products_and_rates,
+                    array(
+                        'product_rates' => $p_order->productsAndRates($material['material']->item_code),
+                        'qty' => $material['qty']
+                    )
+                );
+            }
+            return ["product" => $product, 'materials_info' => $products_and_rates];
         } catch (Exception $e) {
             return response()->json([
                 "error" => $e->getMessage()
