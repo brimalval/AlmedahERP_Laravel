@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillOfMaterials;
+use App\Models\ManufacturingMaterials;
 use App\Models\ManufacturingProducts;
 use App\Models\MaterialPurchased;
 use App\Models\Routings;
@@ -99,16 +100,19 @@ class BOMController extends Controller
     public function getProduct($product_code)
     {
         try {
+            DB::enableQueryLog();
             $product = ManufacturingProducts::where('product_code', $product_code)->first();
             $product_mats = $product->materials();
             $products_and_rates = array();
             foreach($product_mats as $material) {
-                $p_order = MaterialPurchased::where('purchase_id', 'like', '%PUR-ORD-2021-00001%')->orderby('id', 'desc')->first();
-                $po_items = $p_order->itemsPurchased();
+                $item_code = $material['material']->item_code;
+                $p_order = MaterialPurchased::where('items_list_purchased', 'LIKE', "%{$item_code}%")->first();
+                //dd(DB::getQueryLog());
+                $po_items = $p_order->productsAndRates($item_code);
                 array_push(
                     $products_and_rates,
                     array(
-                        'product_rates' => $p_order->productsAndRates($material['material']->item_code),
+                        'product_rates' => $po_items,
                         'qty' => $material['qty']
                     )
                 );

@@ -141,7 +141,6 @@
                             </tr>
                         </thead>
                         <tbody class="" id="operations-input-rows">
-                            {{--
                             <tr data-id="${nextID}">
                                 <td class="text-center">
 
@@ -169,7 +168,7 @@
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                 </td>
-                            </tr>--}}
+                            </tr>
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">

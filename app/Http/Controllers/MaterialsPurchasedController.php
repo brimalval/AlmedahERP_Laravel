@@ -78,7 +78,7 @@ class MaterialsPurchasedController extends Controller
             $data->purchase_id = $purchase_id;
 
             $data->supp_quotation_id = $form_data['sq_id'];
-            $data->items_list_purchased = json_encode($form_data['materials_purchased']);
+            $data->items_list_purchased = $form_data['materials_purchased'];
             $data->purchase_date = $form_data['purchase_date'];
             $data->total_cost = $form_data['total_price'];
 

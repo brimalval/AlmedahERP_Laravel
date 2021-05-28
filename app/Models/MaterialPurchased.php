@@ -19,9 +19,9 @@ class MaterialPurchased extends Model
         'total_cost'
     ];
 
-    protected $casts = [
-        'items_list_purchased' => 'array'
-    ];
+    //protected $casts = [
+    //    'items_list_purchased' => 'array'
+    //];
 
     public function itemsPurchased() {
         $items_purchased = json_decode($this->items_list_purchased);
@@ -50,13 +50,8 @@ class MaterialPurchased extends Model
     public function productsAndRates($item_code) {
         $materials = $this->itemsPurchased();
         foreach ($materials as $material) {
-            unset($material['req_date']);
-            unset($material['qty']);
-            unset($material['subtotal']);
-        }
-        foreach ($materials as $material) {
             if(in_array($item_code, $material)) {
-                return $material;
+                return $material; 
             }
         }
     }

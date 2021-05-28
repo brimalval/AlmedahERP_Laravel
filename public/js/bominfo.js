@@ -63,15 +63,19 @@ function computeCosts() {
     var operations = $("#bom-operations tbody tr");
     for (let i = 0; i < operations.length; i++) {
         let operation = $(`#bomOperation-${i}`);
-        let cost = operation.find("#Operation_cost").val();
-        opCost += parseFloat(cost);
+        let op_indiv_cost = operation.find("#Operation_cost").val();
+        opCost += parseFloat(op_indiv_cost);
+    }
+    var materials = $("#bom-materials tbody tr");
+    for(let i = 0; i < materials.length; i++) {
+        let material = $(`#bomMaterial-${i}`);
+        let mat_indiv_cost = material.find("#Amount").val();
+        materialCost += parseFloat(mat_indiv_cost);
     }
     var totalCost = opCost + materialCost;
     $("#totalOpCost").val(opCost);
     $("#totalMatCost").val(materialCost);
     $("#totalBOMCost").val(totalCost);
-    // Code for computing material costs will be made later when connection between BOM and purchase order has been established.
-    // Code for material costs go here.
 }
 
 /**Experimental function from back-end*/
@@ -147,11 +151,11 @@ $(`#manprod`).change(function () {
             var table = $("#bom-materials tbody");
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
-            console.log(materials);
             for(let i = 0; i < materials.length; i++) {
+                let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
                 table.append(
                     `
-                    <tr data-id="${i}">
+                    <tr id="bomMaterial-${i}">
                         <td class="text-center">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input">
@@ -159,15 +163,15 @@ $(`#manprod`).change(function () {
                         </td>
                         <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i+1}" readonly
                                 name="No" id="No" class="form-control"></td>
-                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${materials[i+1].product_rates.item.item_code}" readonly
+                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${materials[i].product_rates.item.item_code}" readonly
                                 name="ItemCode" id="ItemCode" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i+1].qty}" readonly name="Quantity"
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].qty}" readonly name="Quantity"
                                 id="Quantity" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i+1].product_rates.item.uom_id}" readonly name="UOM" id="UOM"
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.item.uom_id}" readonly name="UOM" id="UOM"
                                 class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i+1].product_rates.rate}" readonly name="Rate" id="Rate"
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" readonly name="Rate" id="Rate"
                                 class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="" readonly name="Amount" id="Amount"
+                        <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"
                                 class="form-control"></td>
                         <td>
                             <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#"
@@ -182,6 +186,7 @@ $(`#manprod`).change(function () {
                     `
                 )
             }
+            computeCosts();
         }, error: function (response) {
             console.log(response);
         }
