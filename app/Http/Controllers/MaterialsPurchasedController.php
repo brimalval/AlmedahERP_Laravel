@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MaterialPurchased;
+use App\Models\MPRecord;
 use App\Models\SuppliersQuotation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,16 +47,19 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
-    public function sampleFunction() {
+    public function sampleFunction()
+    {
         return view('modules.buying.potest');
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         $data = MaterialPurchased::all();
         return ['items' => $data];
     }
 
-    public function view_items($id) {
+    public function view_items($id)
+    {
         $order = MaterialPurchased::find($id);
         return ['items' => $order->itemsPurchased()];
     }
@@ -72,7 +76,7 @@ class MaterialsPurchasedController extends Controller
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
             $to_append = strlen(strval($nextId));
-            
+
             $purchase_id = "PUR-ORD-" . Carbon::now()->year . '-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
 
             $data->purchase_id = $purchase_id;
@@ -83,6 +87,26 @@ class MaterialsPurchasedController extends Controller
             $data->total_cost = $form_data['total_price'];
 
             $data->save();
+
+            return ['purchase_id' => $purchase_id];
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function storeMaterial(Request $request)
+    {
+        try {
+            $mp_record = new MPRecord();
+            $form_data = $request->input();
+            $mp_record->purchase_id = $form_data['purchase_id'];
+            $mp_record->item_code = $form_data['item_code'];
+            $mp_record->qty = $form_data['qty'];
+            $mp_record->supplier_id = $form_data['supplier_id'];
+            $mp_record->required_date = $form_data['required_date'];
+            $mp_record->rate = $form_data['rate'];
+            $mp_record->subtotal = $form_data['subtotal'];
+            $mp_record->save();
         } catch (Exception $e) {
             return $e;
         }
@@ -100,7 +124,6 @@ class MaterialsPurchasedController extends Controller
             $data->total_cost = $form_data['total_price'];
 
             $data->save();
-
         } catch (Exception $e) {
             return $e;
         }
