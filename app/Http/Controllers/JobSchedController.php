@@ -8,6 +8,7 @@ use App\Models\WorkOrder;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Carbon;
 
 class JobSchedController extends Controller
 {
@@ -141,5 +142,59 @@ class JobSchedController extends Controller
             'operations' => $routing->operationsThrough,
             'routingOperations' => $routing->routingOperations,
         ]);
+    }
+
+    public function startOperation(Request $request){
+        //Needs tracking_id
+        //Assuming that the operations json has the ff columns. sequence name, real start, real end
+        $job = JobSched::where('id', $request->input('id'));
+        $operations = json_decode($job->operations, true);
+        for ($i=0; $i < count($operations); $i++) { 
+            if ($operations[$i]['sequence_name'] == $request->input('sequence_name')) {
+                $currDate = Carbon\Carbon::now();
+                $currDate = $currDate->toDateString();
+                $operations[$i]['status'] = "In progress";
+                $operations[$i]['real_start'] = $currDate;
+            }
+        }
+        $job->operations = json_encode($operations);
+        $job->save();
+        return response()->json(['operations' => json_encode($operations), 'sequence_name' => $request->input('sequence_name'), 
+            'jobSchedId' => $job->id]);
+    }
+
+    public function pauseOperation(Request $request){
+        //Needs tracking_id
+        //Assuming that the operations json has the ff columns. sequence name, real start, real end
+        $job = JobSched::where('id', $request->input('id'));
+        $operations = json_decode($job->operations, true);
+        for ($i=0; $i < count($operations); $i++) { 
+            if ($operations[$i]['sequence_name'] == $request->input('sequence_name')) {
+                $operations[$i]['status'] = "Paused";
+            }
+        }
+        $job->operations = json_encode($operations);
+        $job->save();
+        return response()->json(['operations' => json_encode($operations), 'sequence_name' => $request->input('sequence_name'), 
+            'jobSchedId' => $job->id]);
+    }
+
+    public function finishOperation(Request $request){
+        //Needs tracking_id
+        //Assuming that the operations json has the ff columns. sequence name, real start, real end
+        $job = JobSched::where('id', $request->input('id'));
+        $operations = json_decode($job->operations, true);
+        for ($i=0; $i < count($operations); $i++) { 
+            if ($operations[$i]['sequence_name'] == $request->input('sequence_name')) {
+                $currDate = Carbon\Carbon::now();
+                $currDate = $currDate->toDateString();
+                $operations[$i]['status'] = "Finished";
+                $operations[$i]['real_end'] = $currDate;
+            }
+        }
+        $job->operations = json_encode($operations);
+        $job->save();
+        return response()->json(['operations' => json_encode($operations), 'sequence_name' => $request->input('sequence_name'), 
+            'jobSchedId' => $job->id]);
     }
 }
