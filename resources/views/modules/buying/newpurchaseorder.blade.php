@@ -124,7 +124,7 @@ $i = 1;
                                 class="form-input form-control">
                             <br>
                             <label for="reqdbydate">Reqd by Date</label>
-                            <input readonly type="date" name="reqdbydate" id="reqDate" class="form-input form-control">
+                            <input type="date" name="reqdbydate" id="reqDate" class="form-input form-control">
                         </div>
                     </div>
                 </form>

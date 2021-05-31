@@ -73,9 +73,10 @@ class SupplierQuotationController extends Controller
         $quotation = SuppliersQuotation::find($id);
         $supplier = $quotation->supplier;
         $items = $quotation->items();
-        $req_date = $quotation->req_quotation->material_request->required_date;
+        $req_quotation = $quotation->req_quotation;
+        $req_date = ($req_quotation === null) ? date('Y-m-d') : date_format($req_quotation->material_request->required_date, "Y-m-d");
 
-        return ['quotation' => $quotation, 'supplier' => $supplier, 'items' => $items, 'req_date' => date_format($req_date, "Y-m-d")];
+        return ['quotation' => $quotation, 'supplier' => $supplier, 'items' => $items, 'req_date' => $req_date];
     }
 
     /**

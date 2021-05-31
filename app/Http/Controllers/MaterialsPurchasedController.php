@@ -95,7 +95,7 @@ class MaterialsPurchasedController extends Controller
 
             $data = MaterialPurchased::where('purchase_id', $form_data['purchase_id'])->first();
 
-            $data->items_list_purchased = json_encode($form_data['materials_purchased']);
+            $data->items_list_purchased = $form_data['materials_purchased'];
             $data->purchase_date = $form_data['purchase_date'];
             $data->total_cost = $form_data['total_price'];
 
