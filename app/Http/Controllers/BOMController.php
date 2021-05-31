@@ -107,8 +107,13 @@ class BOMController extends Controller
             foreach($product_mats as $material) {
                 $item_code = $material['material']->item_code;
                 $p_order = MaterialPurchased::where('items_list_purchased', 'LIKE', "%{$item_code}%")->first();
+                if($p_order != null) {
+                    $po_items = $p_order->productsAndRates($item_code);
+                }
                 //dd(DB::getQueryLog());
-                $po_items = $p_order->productsAndRates($item_code);
+                else{
+                    $po_items = $material['material'];
+                }
                 array_push(
                     $products_and_rates,
                     array(
