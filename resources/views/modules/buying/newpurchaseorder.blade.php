@@ -116,6 +116,7 @@ $i = 1;
                             <label class=" text-nowrap align-middle" for="supplier">Supplier</label>
                             <input class="form-input form-control" readonly type="text" id="supplierField"
                                 name="supplier">
+                            <input type="text" id="hiddenSupplierField" hidden>
                         </div>
                         <div class="col-6">
                             <label for="date">Date</label>
