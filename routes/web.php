@@ -78,6 +78,7 @@ Route::get('/bom', function () {
 });
 Route::get('/newbom', [BOMController::class, 'BOMForm']);
 Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
+Route::post('/create-bom', [BOMController::class, 'store']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -489,7 +490,7 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
-#Route::get('/supplier', [SupplierController::class, 'index']);   
+#Route::get('/supplier', [SupplierController::class, 'index']);
 #Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
 #Route::post('/create-supplier', [SupplierController::class, 'store']);
 #Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
@@ -498,7 +499,7 @@ Route::get('/create-new-supplier', function () {
     return view('modules.buying.createnewsupplier');
 });
 
-/*SUPPLIER GROUP*/ 
+/*SUPPLIER GROUP*/
 Route::get('/newsuppliergroup', function() {
     return view('modules.NewUI.NewSupplierGroup');
 });

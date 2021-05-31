@@ -42,7 +42,22 @@ class BOMController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $form_data = $request->input();
+            $last_bom = BillOfMaterials::latest()->first();
+            $next_id = $last_bom ? $last_bom->id + 1 : 1;
+            $bom_name = "BOM-"; //initialize "BOM-"
+            $bom_label = $form_data['routingSelect'];
+            $words = explode(' ', $bom_label);
+            $bom_name .= strtoupper($words[0])."-". str_pad($next_id, 3, "0", STR_PAD_LEFT);
+
+            $bills_of_materials = new BillOfMaterials();
+            $bills_of_materials->product_code = $form_data['manprod'];
+            $bills_of_materials->routing_id = $form_data['routingSelect'];
+            $bills_of_materials->raw_materials_rate = $form_data['manprod'];
+        } catch (Exception $e) {
+            return $e;
+        }//
     }
 
     /**
