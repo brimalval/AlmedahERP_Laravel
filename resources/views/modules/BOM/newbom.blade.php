@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;"
-                        onclick="loadAddress();">Save</button>
+                        onclick="" id="saveBOMBtn">Save</button>
                 </li>
             </ul>
         </div>
@@ -50,7 +50,8 @@
     </div>
 </div>
 
-<form action="#" method="post" id="BOM" class="create">
+<form action="/create-bom" method="post" id="BOM" class="create">
+    @csrf
     <br>
     <div class="container">
         <div class="row">
@@ -113,9 +114,9 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="routing">Routing</label>
-                            <select class="form-control" name="routing" id="routingSelect">
+                            <select class="form-control" name="routingSelect" id="routingSelect">
                                 <option value="0">-No Routing Selected-</option>
-                                @foreach ($routings as $routing) 
+                                @foreach ($routings as $routing)
                                     <option value="{{ $routing->routing_id }}">{{ $routing->routing_name }}</option>
                                 @endforeach
                                 <option value="newRouting">Create New Routing</option>

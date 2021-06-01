@@ -76,6 +76,7 @@ Route::get('/address', function() {
 Route::get('/bom', [BOMController::class , 'index']);
 Route::get('/newbom', [BOMController::class, 'BOMForm']);
 Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
+Route::get('/bominfo/{id}', [BOMController::class, 'view']);
 Route::post('/create-bom', [BOMController::class, 'store']);
 Route::delete('/delete-bom/{id}', [BOMController::class, 'delete']);
 Route::patch('/update-bom/{id}', [BOMController::class, 'update']);

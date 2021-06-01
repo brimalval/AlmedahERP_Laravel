@@ -50,7 +50,9 @@
     </div>
 </div>
 
-<form action="/create-bom" method="post" id="BOM" class="create">
+<form action="/update-bom/{{ $bom->id }}" method="post" id="BOM" class="create">
+    @csrf
+    @method('PATCH')
     <br>
     <div class="container">
         {{-- <form id="contactForm" name="contact" role="form">
