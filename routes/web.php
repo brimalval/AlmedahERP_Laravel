@@ -73,12 +73,12 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::get('/bom', function () {
-    return view('modules.BOM.bom');
-});
+Route::get('/bom', [BOMController::class , 'index']);
 Route::get('/newbom', [BOMController::class, 'BOMForm']);
 Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
 Route::post('/create-bom', [BOMController::class, 'store']);
+Route::delete('/delete-bom/{id}', [BOMController::class, 'delete']);
+Route::patch('/update-bom/{id}', [BOMController::class, 'update']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {

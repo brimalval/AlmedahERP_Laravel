@@ -20,18 +20,8 @@ class BOMController extends Controller
      */
     public function index()
     {
-        //$bills_of_materials = BillsOfMaterials::all();
-        //return view('modules.BOM.routing', ['bom' => $bills_of_materials]);//
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $bills_of_materials = BillOfMaterials::all();
+        return view('modules.BOM.bom', ['bills_of_materials' => $bills_of_materials]);//
     }
 
     /**
@@ -46,40 +36,21 @@ class BOMController extends Controller
             $form_data = $request->input();
             $last_bom = BillOfMaterials::latest()->first();
             $next_id = $last_bom ? $last_bom->id + 1 : 1;
-            $bom_name = "BOM-"; //initialize "BOM-"
+            $bom_name = "BOM-";       //initialize "BOM-"
             $bom_label = $form_data['routingSelect'];
             $words = explode(' ', $bom_label);
-            $bom_name .= strtoupper($words[0])."-". str_pad($next_id, 3, "0", STR_PAD_LEFT);
+            $bom_name .= strtoupper($words[0])."-". str_pad($next_id, 3, "0", STR_PAD_LEFT); //get the first word of routing name + str pad to add "-000"
 
             $bills_of_materials = new BillOfMaterials();
             $bills_of_materials->product_code = $form_data['manprod'];
             $bills_of_materials->routing_id = $form_data['routingSelect'];
-            $bills_of_materials->raw_materials_rate = $form_data['manprod'];
+            $bills_of_materials->raw_materials_rate = $form_data['Rate'];
+            $bills_of_materials->raw_materials_cost = $form_data['Material_Cost'];
+            $bills_of_materials->total_cost = $form_data['total_Cost'];
+            $bills_of_materials->save();
         } catch (Exception $e) {
             return $e;
         }//
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BillOfMaterials $billsOfMaterials)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(BillOfMaterials $billsOfMaterials)
-    {
-        //
     }
 
     /**
@@ -89,9 +60,27 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BillOfMaterials $billsOfMaterials)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $last_bom = BillOfMaterials::find($id);
+            $form_data = $request->input();
+            $next_id = $last_bom ? $last_bom->id + 1 : 1;
+            $bom_name = "BOM-";       //initialize "BOM-"
+            $bom_label = $form_data['routingSelect'];
+            $words = explode(' ', $bom_label);
+            $bom_name .= strtoupper($words[0])."-". str_pad($next_id, 3, "0", STR_PAD_LEFT); //get the first word of routing name + str pad to add "-000"
+
+            $bills_of_materials = new BillOfMaterials();
+            $bills_of_materials->product_code = $form_data['manprod'];
+            $bills_of_materials->routing_id = $form_data['routingSelect'];
+            $bills_of_materials->raw_materials_rate = $form_data['Rate'];
+            $bills_of_materials->raw_materials_cost = $form_data['Material_Cost'];
+            $bills_of_materials->total_cost = $form_data['total_Cost'];
+            $bills_of_materials->save();
+        } catch (Exception $e) {
+            return $e;
+        }////
     }
 
     /**
@@ -100,9 +89,10 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BillOfMaterials $billsOfMaterials)
+    public function delete($id)
     {
-        //
+        $bills_of_materials = BillOfMaterials::find($id);
+        $bills_of_materials->delete();
     }
 
     public function BOMForm()

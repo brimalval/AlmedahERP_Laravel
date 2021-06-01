@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;"
-                        onclick="loadAddress();">Save</button>
+                        onclick="" id="saveBOMBtn">Save</button>
                 </li>
             </ul>
         </div>
