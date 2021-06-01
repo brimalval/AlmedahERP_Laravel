@@ -35,7 +35,7 @@ class MaterialPurchased extends Model
                 array(
                     //'purchase_id' => $this->purchase_id,
                     //'supplier' => $item->supplier_id,
-                    //'item_code' => $item->item_code,
+                    'item_code' => $item->item_code,
                     'item' => ManufacturingMaterials::where('item_code', $item->item_code)->first(),
                     'req_date' => $item->req_date,
                     'qty' => $item->qty,

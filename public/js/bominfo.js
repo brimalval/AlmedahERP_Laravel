@@ -151,6 +151,7 @@ $(`#manprod`).change(function () {
             var table = $("#bom-materials tbody");
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
+            console.log(materials);
             for(let i = 0; i < materials.length; i++) {
                 let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
                 table.append(

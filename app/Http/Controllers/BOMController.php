@@ -117,7 +117,16 @@ class BOMController extends Controller
                 }
                 //dd(DB::getQueryLog());
                 else{
-                    $po_items = $material['material'];
+                    $po_items = array(
+                        //'purchase_id' => $this->purchase_id,
+                        //'supplier' => $item->supplier_id,
+                        'item_code' => $material['material']->item_code,
+                        'item' => ManufacturingMaterials::where('item_code', $material['material']->item_code)->first(),
+                        'req_date' => date('Y-m-d'),
+                        'qty' => $material['qty'],
+                        'rate' => 1,
+                        'subtotal' => $material['qty']
+                    );
                 }
                 array_push(
                     $products_and_rates,
