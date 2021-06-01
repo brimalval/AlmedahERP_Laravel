@@ -219,6 +219,22 @@ function viewQuotationItems(id) {
 
 }
 
+$("#cancelOrder").click(function () { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: `/delete-order/${$("#p_id").html()}`,
+        success: function (response) {
+            loadPurchaseOrder();
+        }
+    });
+    
+});
+
 //For permanently changing purchase orders
 //Only works on existing purchase orders
 $("#submitOrder").on('click', submitOrder);
@@ -357,7 +373,7 @@ function saveOrder() {
         }
         ++materialCount;
     }
-    console.log(purchased_mats);
+   
     if ($("#purch_id").val()) {
         form_data.append('purchase_id', $("#purch_id").val());
     }
@@ -385,31 +401,33 @@ function saveOrder() {
         }
     });
 
-    for(let i=1; i<=materialCount; i++) {
-        let mp_material = new FormData();
-        mp_material.append('purchase_id', purchase_id);
-        mp_material.append('item_code', purchased_mats[i].item_code);
-        mp_material.append('qty', purchased_mats[i].qty);
-        mp_material.append('supplier_id', $("#hiddenSupplierField").val());
-        mp_material.append('required_date', purchased_mats[i].req_date);
-        mp_material.append('rate', purchased_mats[i].rate);
-        mp_material.append('subtotal',purchased_mats[i].subtotal);
-        for (var pair of mp_material.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]);
+    //Only store these materials when creating purchase order
+    if (!$("#purch_id").val()) {
+        for(let i=1; i<=materialCount; i++) {
+            let mp_material = new FormData();
+            mp_material.append('purchase_id', purchase_id);
+            mp_material.append('item_code', purchased_mats[i].item_code);
+            mp_material.append('qty', purchased_mats[i].qty);
+            mp_material.append('supplier_id', $("#hiddenSupplierField").val());
+            mp_material.append('required_date', purchased_mats[i].req_date);
+            mp_material.append('rate', purchased_mats[i].rate);
+            mp_material.append('subtotal',purchased_mats[i].subtotal);
+            $.ajax({
+                type: "POST",
+                url: '/store-mp-material',
+                data: mp_material,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log("success");
+                    loadPurchaseOrder();
+                }
+            });
         }
-        $.ajax({
-            type: "POST",
-            url: '/store-mp-material',
-            data: mp_material,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                console.log("success");
-                loadPurchaseOrder();
-            }
-        });
     }
+
+    
 
 }
 

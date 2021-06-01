@@ -47,17 +47,6 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
-    public function sampleFunction()
-    {
-        return view('modules.buying.potest');
-    }
-
-    public function getAll()
-    {
-        $data = MaterialPurchased::all();
-        return ['items' => $data];
-    }
-
     public function view_items($id)
     {
         $order = MaterialPurchased::find($id);
@@ -137,5 +126,41 @@ class MaterialsPurchasedController extends Controller
             $data->save();
         } catch (Exception $e) {
         }
+    }
+
+    /**
+     * Function is here as onDelete('cascade') does not work :(
+     * Yes, maraming if statement...di kasi gumagana yung onDelete('cascade') sa akin :(
+     */
+    public function deleteOrder($purchase_id)
+    {
+        $mp_record = MaterialPurchased::where('purchase_id', $purchase_id)->first();
+        //delete all records with same purchase_id 
+        $material_records = $mp_record->materialRecords;
+        foreach ($material_records as $material) {
+            $material->delete();
+        }
+        //get purchase receipt and delete pending orders record related to purchase receipt
+        $p_receipt = $mp_record->receipt;
+        if ($p_receipt != null) {
+            $order_record = $p_receipt->order_record;
+            if($order_record != null) $order_record->delete();
+            $p_invoice = $p_receipt->invoice;
+            if ($p_invoice != null) {
+                //get purchase invoice related to purchase receipt, and delete logs related to purchase invoice
+                $invoice_logs = $p_invoice->invoice_logs;
+                if($invoice_logs != null) {
+                    foreach ($invoice_logs as $invoice_log) {
+                        $invoice_log->delete();
+                    }
+                }
+                //delete invoice record
+                $p_invoice->delete();
+            }
+            //delete purchase receipt
+            $p_receipt->delete();
+        }
+        //delete purchase order
+        $mp_record->delete();
     }
 }

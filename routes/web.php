@@ -350,6 +350,7 @@ Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_it
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
 Route::post('/store-mp-material', [MaterialsPurchasedController::class, 'storeMaterial']);
+Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
