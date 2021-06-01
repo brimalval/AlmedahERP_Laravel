@@ -157,9 +157,6 @@ class PurchaseInvoiceController extends Controller
 
             $lastInvoice = PurchaseInvoice::orderby('id', 'desc')->first();
             $nextId = ($lastInvoice) ? $lastInvoice->id + 1 : 1;
-            //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
-
-            $to_append = strlen(strval($nextId));
 
             $invoice_id = "PI-" . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 

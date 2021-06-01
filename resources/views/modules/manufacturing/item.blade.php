@@ -636,6 +636,17 @@
                                 });
                             </script>
                         </div>
+                        <div class="form-group" id="attribute_group">
+                            <label>Value</label>
+                            <select id="value_item_variants" class="selectpicker2 form-control" name="value_item_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                                <option value="none" selected disabled hidden>
+                                    Select an Option
+                                </option>
+                                <option value="New">
+                                    &#43; Create a new Attribute
+                                </option>
+                            </select>
+                        </div>
 
                         <div class="form-group" id="materials-picker">
                             <label>Materials</label>

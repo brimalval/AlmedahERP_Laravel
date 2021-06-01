@@ -35,7 +35,7 @@ class MaterialPurchased extends Model
                 array(
                     //'purchase_id' => $this->purchase_id,
                     //'supplier' => $item->supplier_id,
-                    'item_code' => $item->item_code,
+                    //'item_code' => $item->item_code,
                     'item' => ManufacturingMaterials::where('item_code', $item->item_code)->first(),
                     'req_date' => $item->req_date,
                     'qty' => $item->qty,
@@ -58,6 +58,10 @@ class MaterialPurchased extends Model
 
     public function supplier_quotation() {
         return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
+    }
+
+    public function materialRecords() {
+        return $this->hasMany(MPRecord::class, 'purchase_id', 'purchase_id');
     }
 
     public function receipt() {

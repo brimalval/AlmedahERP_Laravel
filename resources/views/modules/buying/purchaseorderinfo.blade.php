@@ -6,7 +6,7 @@ $i = 1; ?>
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
             <a href='javascript:onclick=loadPurchaseOrder();' class="fas fa-arrow-left back-button"><span></span></a>
-            <h2 class="navbar-brand" style="font-size: 35px;">{{ $purchase_order->purchase_id }}</h2>
+            <h2 class="navbar-brand" style="font-size: 35px;" id="p_id">{{ $purchase_order->purchase_id }}</h2>
             <p id="mp_status">{{ $purchase_order->mp_status }}</p>
         </h2>
         @if ($purchase_order->mp_status === 'Draft')
@@ -43,6 +43,14 @@ $i = 1; ?>
                     </li>
                 </ul>
             </div>
+        @elseif($mp_status->status !== 'Completed')
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item li-bom">
+                    <button class="btn btn-danger" id="cancelOrder" type="button">Cancel</button>
+                </li>
+            </ul>
+        </div>
         @endif
     </div>
 </nav>
