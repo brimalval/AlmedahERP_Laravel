@@ -264,3 +264,27 @@ function addRowmaterials() {
     $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
 
+$("#saveBOMBtn").click(function () {
+    $("#BOMForm").submit();
+});
+
+$("#BOMForm").submit(function () {
+    var formData = new FormData(this);
+    for (var key of formData.entries()) {
+        console.log(key[0] + ', ' + key[1]);
+    }
+
+    $.ajax({
+        type: "POST",
+        url: $(this).attr('action'),
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log("success");
+        }
+    });
+
+    return false;
+});

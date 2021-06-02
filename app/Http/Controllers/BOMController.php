@@ -76,7 +76,7 @@ class BOMController extends Controller
             $bills_of_materials->routing_id = $form_data['routingSelect'];
             $bills_of_materials->raw_materials_rate = $form_data['Rate'];
             $bills_of_materials->raw_materials_cost = $form_data['Material_Cost'];
-            $bills_of_materials->total_cost = $form_data['total_Cost'];
+            $bills_of_materials->total_cost = $form_data['totalBOM_Cost'];
             $bills_of_materials->save();
         } catch (Exception $e) {
             return $e;
