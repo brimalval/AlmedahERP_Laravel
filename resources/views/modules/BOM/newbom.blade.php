@@ -24,8 +24,7 @@
                         onclick="loadBOMtable();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;"
-                        type="submit" id="saveBOMBtn">Save</button>
+                    <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;" id="saveBom">Save</button>
                 </li>
             </ul>
         </div>
@@ -34,19 +33,15 @@
 
 <div class="card">
     <div class="card-body ml-auto">
-
-
         <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenu2" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             Links
         </a>
-
         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
             <a class="dropdown-item" href="#">Link1</a>
             <a class="dropdown-item" href="#">Link2</a>
             <a class="dropdown-item" href="#">Link3</a>
         </div>
-
     </div>
 </div>
 
@@ -58,10 +53,10 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="Type">Item</label>
-                    <select class="form-control" id="manprod">
+                    <select class="form-control selectpicker" id="manprod">
                         <option value="0">-No Product Selected-</option>
                         @foreach ($man_prods as $mp)
-                            <option value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
+                            <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -71,7 +66,6 @@
                 <div id="item_content" style="display:none">
                     <div class="form-group">
                         <label for="Item_name">Item Name</label>
-
                         <input type="text" readonly name="Item_name" id="Item_name" class="form-control">
                     </div>
                     <div class="form-group">
@@ -159,7 +153,6 @@
                                         id="Operation_Time" class="form-control"></td>
                                 <td class="mr-unit-input"><input type="text" value="" readonly name="Operation_cost"
                                         id="Operation_cost" class="form-control"></td>
-
                                 <td>
                                     <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#"
                                         role="button">
@@ -200,7 +193,6 @@
                                         <input type="checkbox" class="form-check-input">
                                     </div>
                                 </td>
-
                                 <td class="text-center">No.</td>
                                 <td class="text-center">Item Code</td>
                                 <td class="text-center">Quantity</td>
@@ -213,7 +205,6 @@
                         <tbody class="" id="materials-input-rows">
                             <tr data-id="${nextID}">
                                 <td class="text-center">
-
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                     </div>
@@ -280,7 +271,8 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="total_Cost">Total Cost</label>
-                                <input type="text" value="0" readonly name="totalBOMCost" id="totalBOMCost" class="form-control">
+                                <input type="text" value="0" readonly name="totalBOMCost" id="totalBOMCost"
+                                    class="form-control">
                             </div>
                         </div>
                     </div>
@@ -290,9 +282,4 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
-
-    </div>
 </form>
-</div>
