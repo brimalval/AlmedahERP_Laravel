@@ -20,8 +20,8 @@ class BOMController extends Controller
      */
     public function index()
     {
-        //$bills_of_materials = BillsOfMaterials::all();
-        //return view('modules.BOM.routing', ['bom' => $bills_of_materials]);//
+        $bills_of_materials = BillOfMaterials::all();
+        return view('modules.BOM.bom', ['boms' => $bills_of_materials]);//
     }
 
     /**
@@ -45,19 +45,32 @@ class BOMController extends Controller
         try {
             $form_data = $request->input();
             $last_bom = BillOfMaterials::latest()->first();
-            $next_id = $last_bom ? $last_bom->id + 1 : 1;
+            $next_id = $last_bom ? $last_bom->bom_id + 1 : 1;
             $bom_name = "BOM-"; //initialize "BOM-"
-            $bom_label = $form_data['routingSelect'];
+            //routing name ba talaga basehan? hindi product/component name?
+            $bom_label = Routings::where('routing_id', $form_data['routing_id'])->first()->routing_name;
             $words = explode(' ', $bom_label);
-            $bom_name .= strtoupper($words[0])."-". str_pad($next_id, 3, "0", STR_PAD_LEFT);
+            $bom_name .= strtoupper($words[0]) . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
 
-            $bills_of_materials = new BillOfMaterials();
-            $bills_of_materials->product_code = $form_data['manprod'];
-            $bills_of_materials->routing_id = $form_data['routingSelect'];
-            $bills_of_materials->raw_materials_rate = $form_data['manprod'];
+            $bom = new BillOfMaterials();
+            $bom->product_code = $form_data['product_code'];
+            $bom->routing_id = $form_data['routing_id'];
+            $bom->raw_materials_rate = $form_data['rm_rates'];
+            $bom->raw_material_cost = $form_data['rm_cost'];
+            $bom->total_cost = $form_data['total_cost'];
+            $bom->is_active = $form_data['is_active'];
+            $bom->is_default = $form_data['is_default'];
+            $bom->bom_name = $bom_name;
+
+            $bom->save();
         } catch (Exception $e) {
             return $e;
-        }//
+        } //
+    }
+
+    public function viewBOM($bom_id) {
+        $bom = BillOfMaterials::find($bom_id);
+        return view('modules.BOM.bominfo', ['bom' => $bom]);
     }
 
     /**
@@ -119,14 +132,14 @@ class BOMController extends Controller
             $product = ManufacturingProducts::where('product_code', $product_code)->first();
             $product_mats = $product->materials();
             $products_and_rates = array();
-            foreach($product_mats as $material) {
+            foreach ($product_mats as $material) {
                 $item_code = $material['material']->item_code;
                 $p_order = MaterialPurchased::where('items_list_purchased', 'LIKE', "%{$item_code}%")->first();
-                if($p_order != null) {
+                if ($p_order != null) {
                     $po_items = $p_order->productsAndRates($item_code);
                 }
                 //dd(DB::getQueryLog());
-                else{
+                else {
                     $po_items = array(
                         'item_code' => $material['material']->item_code,
                         'item' => ManufacturingMaterials::where('item_code', $material['material']->item_code)->first(),

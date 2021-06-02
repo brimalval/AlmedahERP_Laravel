@@ -814,11 +814,18 @@ function loadAddress() {
     });
 }
 
-function loadBOM() {
+function loadBOMForm() {
     $(document).ready(function () {
         $("#contentBom").load("/newbom");
     });
 }
+
+function loadBOM(id) {
+    $(document).ready(function () {
+        $("#contentBom").load(`/view-bom/${id}`);
+    });
+}
+
 function loadBOMtable() {
     $(document).ready(function () {
         $("#contentBom").load("/bom");

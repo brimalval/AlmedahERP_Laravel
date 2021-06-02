@@ -1,3 +1,12 @@
+var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+/**
+ * $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+ */
+
 $(document).ready(function () {
     $('#table_operations').DataTable();
     $('#table_materials').DataTable();
@@ -151,7 +160,6 @@ $(`#manprod`).change(function () {
             var table = $("#bom-materials tbody");
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
-            console.log(materials);
             for(let i = 0; i < materials.length; i++) {
                 let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
                 table.append(
@@ -264,3 +272,54 @@ function addRowmaterials() {
     $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
 
+$("#saveBom").click(function () { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+
+    if($("#manprod").val() == 0) {
+        alert('No product/component to make a BOM on.')
+        return;
+    }
+    if($("#routingSelect").val() == 0) {
+        alert('No routing has been provided.')
+        return;
+    }
+
+    let bomData = new FormData();
+    let isActive = $("#Is_active").prop('checked') ? 1 : 0;
+    let isDefault = $("#default").prop('checked') ? 1 : 0;
+    let productsAndRates = {};
+
+    for(let i=0; i<$("#bom-materials tbody tr").length; i++) {
+        let material = $(`#bomMaterial-${i}`);
+        productsAndRates[i] = {
+            'item_code' : material.find("#ItemCode").val(),
+            'qty' : parseInt(material.find("#Quantity").val()),
+            'rate' : parseFloat(material.find("#Rate").val()),
+        }
+    }
+
+    bomData.append('product_code', $("#manprod").val());
+    bomData.append('routing_id', $("#routingSelect").val());
+    bomData.append('is_active', isActive);
+    bomData.append('is_default', isDefault);
+    bomData.append('rm_cost', parseFloat($("#totalMatCost").val()));
+    bomData.append('total_cost', parseFloat($("#totalBOMCost").val()));
+    bomData.append('rm_rates', JSON.stringify(productsAndRates));
+    
+    $.ajax({
+        type: "POST",
+        url: "/create-bom",
+        data: bomData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log('bom sent');
+            loadBOMtable();
+        }
+    });
+});
