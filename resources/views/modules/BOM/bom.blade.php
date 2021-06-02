@@ -49,7 +49,7 @@
                 <tr>
                     <td>{{ $bom->bom_id }}</td>
                     <td>
-                        <a href="">
+                        <a href="javascript:onclick=loadBOM({{ $bom->bom_id }});">
                             {{ $bom->bom_name }}
                         </a>
                     </td>

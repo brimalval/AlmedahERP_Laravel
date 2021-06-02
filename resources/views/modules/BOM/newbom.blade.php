@@ -52,10 +52,10 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="Type">Item</label>
-                    <select class="form-control" id="manprod">
+                    <select class="form-control selectpicker" id="manprod">
                         <option value="0">-No Product Selected-</option>
                         @foreach ($man_prods as $mp)
-                            <option value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
+                            <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
                         @endforeach
                     </select>
                 </div>

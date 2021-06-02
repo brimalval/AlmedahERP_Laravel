@@ -48,9 +48,8 @@ class BOMController extends Controller
             $next_id = $last_bom ? $last_bom->bom_id + 1 : 1;
             $bom_name = "BOM-"; //initialize "BOM-"
             //routing name ba talaga basehan? hindi product/component name?
-            $bom_label = Routings::where('routing_id', $form_data['routing_id'])->first()->routing_name;
-            $words = explode(' ', $bom_label);
-            $bom_name .= strtoupper($words[0]) . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
+            $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
+            $bom_name .= $product->product_name . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
 
             $bom = new BillOfMaterials();
             $bom->product_code = $form_data['product_code'];
@@ -70,7 +69,16 @@ class BOMController extends Controller
 
     public function viewBOM($bom_id) {
         $bom = BillOfMaterials::find($bom_id);
-        return view('modules.BOM.bominfo', ['bom' => $bom]);
+        $routing = $bom->routing;
+        $product = $bom->product;
+        $routing_ops = $routing->operations();
+        $rateList = $bom->rateList();
+        $man_prod = ManufacturingProducts::all();
+        $routings = Routings::all();
+        return view('modules.BOM.bominfo', 
+                    ['bom' => $bom, 'routing' => $routing, 'product' => $product, 'routing_ops' => $routing_ops, 'rateList' => $rateList, 
+                    'man_prods' => $man_prod, 'routings' => $routings]
+                   );
     }
 
     /**

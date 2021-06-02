@@ -1,8 +1,13 @@
+<?php
+$op_index = 0;
+$mat_index = 0;
+?>
+
 <script src="{{ asset('js/address.js') }}"></script>
 <script src="{{ asset('js/bominfo.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
-        <h2 class="navbar-brand" style="font-size: 35px;">New BOM</h2>
+        <h2 class="navbar-brand" style="font-size: 35px;">{{ $bom->bom_name }}</h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#responsive">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -25,7 +30,7 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;"
-                        onclick="loadAddress();">Save</button>
+                        id="saveBom">Save</button>
                 </li>
             </ul>
         </div>
@@ -34,84 +39,69 @@
 
 <div class="card">
     <div class="card-body ml-auto">
-
-
         <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenu2" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             Links
         </a>
-
         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
             <a class="dropdown-item" href="#">Link1</a>
             <a class="dropdown-item" href="#">Link2</a>
             <a class="dropdown-item" href="#">Link3</a>
         </div>
-
     </div>
 </div>
 
-<form action="/create-bom" method="post" id="BOM" class="create">
+<form action="#" method="post" id="BOM" class="create">
     <br>
     <div class="container">
-        {{-- <form id="contactForm" name="contact" role="form">
-            @csrf --}}
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
                     <label for="Type">Item</label>
-                    <select class="form-control" name="manprod" id="manprod">
-                        <option value="0">-No Product Selected-</option>
-                    </select>
+                        <select class="form-control selectpicker" id="manprod">
+                            <option selected data-subtext="{{ $product->product_name }}" value="{{ $product->product_code }}">{{ $product->product_code }}
+                            </option>
+                            @foreach ($man_prods as $mp)
+                                @if ($mp->product_code != $product->product_code)
+                                <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
+                                @endif
+                            @endforeach
+                        </select>
                 </div>
             </div>
-
             <div class="col-6"></div>
-
             <div class="col-6">
-                <div id="item_content" style="display:none">
-
+                <div id="item_content">
                     <div class="form-group">
-                        <label for="Item_name">Item name</label>
-
-                        <input type="text" readonly name="Item_name" id="Item_name" class="form-control">
+                        <label for="Item_name">Item Name</label>
+                        <input type="text" readonly name="Item_name" id="Item_name"
+                            value="{{ $product->product_name }}" class="form-control">
                     </div>
-
-
-
                     <div class="form-group">
                         <label for="Item_UOM">Item UOM</label>
-                        <input type="text" readonly name="Item_UOM" id="Item_UOM" class="form-control">
+                        <input type="text" readonly name="Item_UOM" id="Item_UOM" value="{{ $product->unit }}"
+                            class="form-control">
                     </div>
-
-
                 </div>
             </div>
-
             <div class="col-6"></div>
             <div class="col-6">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="Is_active">
+                    <input class="form-check-input" type="checkbox" value="" id="Is_active" @if ($bom->is_active == 1) checked @endif>
                     <label class="form-check-label" for="Is_active">
                         Is Active
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="default">
+                    <input class="form-check-input" type="checkbox" value="" id="default" @if ($bom->is_default == 1) checked @endif>
                     <label class="form-check-label" for="default">
                         Default
                     </label>
                 </div>
             </div>
-
         </div>
-
-
-
-        {{-- </form> --}}
-
     </div>
     <br>
-    @csrf
     <div id="accordion">
         <div class="card">
             <div class="card-header" id="headingOne">
@@ -128,15 +118,18 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="routing">Routing</label>
-                            <select class="form-control" name="routingSelect" id="routingSelect">
-                                <option value=""></option>
+                            <select class="form-control" name="routing" id="routingSelect">
+                                <option value="{{ $routing->routing_id }}" selected hidden>
+                                    {{ $routing->routing_name }}</option>
+                                @foreach ($routings as $ro)
+                                    <option value="{{ $ro->routing_id }}">{{ $ro->routing_name }}</option>
+                                @endforeach
                                 <option value="newRouting">Create New Routing</option>
-
                             </select>
                         </div>
                     </div>
                     <label>Operations</label>
-                    <table class="table border-bottom table-hover table-bordered" id="bom-operations-tbl">
+                    <table class="table border-bottom table-hover table-bordered" id="bom-operations">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
                                 <td class="text-center">
@@ -153,24 +146,29 @@
                                 <td></td>
                             </tr>
                         </thead>
-                        <tbody class="" id="">
-                            <tr data-id="${nextID}">
+                        <tbody class="" id="operations-input-rows">
+                            @foreach ($routing_ops as $operation)
+                            <tr id="bomOperation-<?= $op_index ?>">
                                 <td class="text-center">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                     </div>
                                 </td>
-                                <td id="mr-code-input" class="mr-code-input"><input type="text" value="" readonly
-                                        name="Operation_name" id="Operation_name" class="form-control"></td>
-                                <td style="width: 10%;" class="mr-qty-input"><input type="text" value="" readonly
-                                        name="D_workcenter" id="D_workcenter" class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="" readonly name="Desc" id="Desc"
-                                        class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="" readonly name="Operation_Time"
-                                        id="Operation_Time" class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="" readonly name="Operation_cost"
-                                        id="Operation_cost" class="form-control"></td>
-
+                                <td id="mr-code-input" class="mr-code-input">
+                                    <input type="text" value="{{ $operation['operation']->operation_name }}" readonly name="Operation_name" id="Operation_name" class="form-control">
+                                </td>
+                                <td style="width: 10%;" class="mr-qty-input">
+                                    <input type="text" value="{{ $operation['operation']->wc_code }}" readonly name="D_workcenter" id="D_workcenter" class="form-control">
+                                </td>
+                                <td class="mr-unit-input">
+                                    <input type="text" value="{{ $operation['operation']->description }}" readonly name="Desc" id="Desc" class="form-control">
+                                </td>
+                                <td class="mr-unit-input">
+                                    <input type="text" value="{{ $operation['operation_time'] }}" readonly name="Operation_Time" id="Operation_Time" class="form-control">
+                                </td>
+                                <td class="mr-unit-input">
+                                    <input type="text" value="{{ $operation['operating_cost'] }}" readonly name="Operation_cost" id="Operation_cost" class="form-control">
+                                </td>
                                 <td>
                                     <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#"
                                         role="button">
@@ -180,6 +178,10 @@
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                 </td>
+                                @php
+                                ++$op_index;   
+                                @endphp
+                            @endforeach
                             </tr>
                         </tbody>
                     </table>
@@ -203,7 +205,7 @@
             <div id="materials" class="collapse" aria-labelledby="headingOne">
                 <div class="card-body">
                     <!--Materials contents-->
-                    <table class="table border-bottom table-hover table-bordered" id="operations">
+                    <table class="table border-bottom table-hover table-bordered" id="bom-materials">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
                                 <td class="text-center">
@@ -211,7 +213,6 @@
                                         <input type="checkbox" class="form-check-input">
                                     </div>
                                 </td>
-
                                 <td class="text-center">No.</td>
                                 <td class="text-center">Item Code</td>
                                 <td class="text-center">Quantity</td>
@@ -222,24 +223,29 @@
                             </tr>
                         </thead>
                         <tbody class="" id="materials-input-rows">
-                            <tr data-id="${nextID}">
+                            @foreach ($rateList as $mat_data)
+                            <tr id="bomMaterial-<?= $mat_index ?>">
                                 <td class="text-center">
-
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                     </div>
                                 </td>
-                                <td id="mr-code-input" class="mr-code-input"><input type="text" value="" readonly
-                                        name="No" id="No" class="form-control"></td>
-                                <td style="width: 10%;" class="mr-qty-input"><input type="text" value="" readonly
-                                        name="ItemCode" id="ItemCode" class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="" readonly name="Quantity"
-                                        id="Quantity" class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="" readonly name="UOM" id="UOM"
-                                        class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="" readonly name="Rate" id="Rate"
-                                        class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="" readonly name="Amount" id="Amount"
+                                <td id="mr-code-input" class="mr-code-input">
+                                    <input type="text" value="<?= $mat_index+1 ?>" readonly name="No" id="No" class="form-control">
+                                </td>
+                                <td style="width: 10%;" class="mr-qty-input">
+                                    <input type="text" value="{{ $mat_data->item_code }}" readonly name="ItemCode" id="ItemCode" class="form-control">
+                                </td>
+                                <td class="mr-unit-input">
+                                    <input type="text" value="{{ $mat_data->qty }}" readonly name="Quantity" id="Quantity" class="form-control">
+                                </td>
+                                <td class="mr-unit-input">
+                                    <input type="text" value="{{ $mat_data->item->uom_id }}" readonly name="UOM" id="UOM" class="form-control">
+                                </td>
+                                <td class="mr-unit-input">
+                                    <input type="number" value="{{ $mat_data->rate }}" readonly name="Rate" id="Rate" class="form-control">
+                                </td>
+                                <td class="mr-unit-input"><input type="number" value="<?= $mat_data->qty * $mat_data->rate ?>" readonly name="Amount" id="Amount"
                                         class="form-control"></td>
                                 <td>
                                     <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#"
@@ -251,6 +257,10 @@
                                     </a>
                                 </td>
                             </tr>
+                            @php
+                                ++$mat_index;
+                            @endphp
+                            @endforeach
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
@@ -276,34 +286,35 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Operationg_Cost">Operationg Cost</label>
-                                <input type="text" readonly name="Operationg_Cost Cost" id="Operationg_Cost"
+                                <label for="Operationg_Cost">Operation Cost</label>
+                                <input type="number" value="0" readonly name="totalOpCost" id="totalOpCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="Material_Cost">Raw Material Cost</label>
-                                <input type="text" readonly name="Material_Cost Cost" id="Material_Cost"
+                                <input type="text" value="0" readonly name="totalMatCost" id="totalMatCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="total_Cost">Total Cost</label>
-                                <input type="text" readonly name="total_Cost Cost" id="total_Cost" class="form-control">
+                                <input type="text" value="0" readonly name="totalBOMCost" id="totalBOMCost"
+                                    class="form-control">
                             </div>
                         </div>
                     </div>
-
                     <!--end contents-->
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
-
-    </div>
 </form>
-</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        computeCosts();
+    });
+</script>

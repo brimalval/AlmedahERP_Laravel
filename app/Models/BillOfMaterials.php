@@ -13,6 +13,7 @@ class BillOfMaterials extends Model
      */
     use HasFactory;
     protected $table = "bom_bill_of_materials";
+    protected $primaryKey = 'bom_id';
     public $timestamps = true;
     protected $fillable = [
         'product_code',
@@ -23,7 +24,8 @@ class BillOfMaterials extends Model
         'raw_material_cost', 
         'total_cost', 
         'is_active',
-        'is_default'
+        'is_default',
+        'raw_materials_rate'
     ]; 
 
     //public function getRates($id) {
@@ -44,5 +46,13 @@ class BillOfMaterials extends Model
         return ($this->component_code == null) ?
                 null :
                 $this->belongsTo(Component::class, 'component_code', 'component_code');
+    }
+
+    public function rateList() {
+        $rateList = json_decode($this->raw_materials_rate);
+        foreach($rateList as $rate_data) {
+            $rate_data->item = ManufacturingMaterials::where('item_code', $rate_data->item_code)->first();
+        }
+        return $rateList;
     }
 }
