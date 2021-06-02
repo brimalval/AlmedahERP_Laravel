@@ -113,8 +113,6 @@ class BOMController extends Controller
                 //dd(DB::getQueryLog());
                 else{
                     $po_items = array(
-                        //'purchase_id' => $this->purchase_id,
-                        //'supplier' => $item->supplier_id,
                         'item_code' => $material['material']->item_code,
                         'item' => ManufacturingMaterials::where('item_code', $material['material']->item_code)->first(),
                         'req_date' => date('Y-m-d'),
