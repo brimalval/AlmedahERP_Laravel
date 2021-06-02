@@ -88,27 +88,28 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $bom_id)
     {
         try {
-            $last_bom = BillOfMaterials::find($id);
+            $bom = BillOfMaterials::find($bom_id);
             $form_data = $request->input();
-            $next_id = $last_bom ? $last_bom->id + 1 : 1;
-            $bom_name = "BOM-";       //initialize "BOM-"
-            $bom_label = $form_data['routingSelect'];
-            $words = explode(' ', $bom_label);
-            $bom_name .= strtoupper($words[0])."-". str_pad($next_id, 3, "0", STR_PAD_LEFT); //get the first word of routing name + str pad to add "-000"
+            $bom_name = "BOM-"; //initialize "BOM-"
+            $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
+            $bom_name .= $product->product_name . "-" . str_pad($bom_id, 3, "0", STR_PAD_LEFT);
 
-            $bills_of_materials = new BillOfMaterials();
-            $bills_of_materials->product_code = $form_data['manprod'];
-            $bills_of_materials->routing_id = $form_data['routingSelect'];
-            $bills_of_materials->raw_materials_rate = $form_data['Rate'];
-            $bills_of_materials->raw_materials_cost = $form_data['Material_Cost'];
-            $bills_of_materials->total_cost = $form_data['totalBOM_Cost'];
-            $bills_of_materials->save();
+            $bom->product_code = $form_data['product_code'];
+            $bom->routing_id = $form_data['routing_id'];
+            $bom->raw_materials_rate = $form_data['rm_rates'];
+            $bom->raw_material_cost = $form_data['rm_cost'];
+            $bom->total_cost = $form_data['total_cost'];
+            $bom->is_active = $form_data['is_active'];
+            $bom->is_default = $form_data['is_default'];
+            $bom->bom_name = $bom_name;
+
+            $bom->save();
         } catch (Exception $e) {
             return $e;
-        }////
+        } //
     }
 
     /**

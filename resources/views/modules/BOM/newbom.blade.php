@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<form action="/create-bom" method="post" id="BOM" class="create">
+<form action="/create-bom" method="post" id="saveBomForm" class="create">
     @csrf
     <br>
     <div class="container">

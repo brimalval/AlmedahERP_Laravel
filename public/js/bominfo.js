@@ -273,6 +273,10 @@ function addRowmaterials() {
 }
 
 $("#saveBom").click(function () {
+    $("#saveBomForm").submit();
+});
+
+$("#saveBomForm").submit(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
@@ -288,7 +292,7 @@ $("#saveBom").click(function () {
         return;
     }
 
-    let bomData = new FormData();
+    let bomData = new FormData(this);
     let isActive = $("#Is_active").prop('checked') ? 1 : 0;
     let isDefault = $("#default").prop('checked') ? 1 : 0;
     let productsAndRates = {};
@@ -312,7 +316,7 @@ $("#saveBom").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "/create-bom",
+        url: $(this).attr('action'),
         data: bomData,
         cache: false,
         processData: false,
@@ -322,4 +326,5 @@ $("#saveBom").click(function () {
             loadBOMtable();
         }
     });
+    return false;
 });
