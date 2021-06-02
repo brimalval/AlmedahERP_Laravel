@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<form action="#" method="post" id="BOM" class="create">
+<form action="/create-bom" method="post" id="BOM" class="create">
     <br>
     <div class="container">
         {{-- <form id="contactForm" name="contact" role="form">
@@ -59,7 +59,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="Type">Item</label>
-                    <select class="form-control" id="manprod">
+                    <select class="form-control" name="manprod" id="manprod">
                         <option value="0">-No Product Selected-</option>
                     </select>
                 </div>
@@ -128,7 +128,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="routing">Routing</label>
-                            <select class="form-control" name="routing" id="routingSelect">
+                            <select class="form-control" name="routingSelect" id="routingSelect">
                                 <option value=""></option>
                                 <option value="newRouting">Create New Routing</option>
 
