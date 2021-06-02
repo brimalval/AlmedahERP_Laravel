@@ -19,9 +19,9 @@ class MaterialPurchased extends Model
         'total_cost'
     ];
 
-    protected $casts = [
-        'items_list_purchased' => 'array'
-    ];
+    //protected $casts = [
+    //    'items_list_purchased' => 'array'
+    //];
 
     public function itemsPurchased() {
         $items_purchased = json_decode($this->items_list_purchased);
@@ -33,9 +33,10 @@ class MaterialPurchased extends Model
         foreach($items_purchased as $item) {
             array_push($items_purchased_array,
                 array(
-                    'purchase_id' => $this->purchase_id,
-                    'supplier' => $item->supplier_id,
-                    'item' =>    ManufacturingMaterials::where('item_code', $item->item_code)->first(),
+                    //'purchase_id' => $this->purchase_id,
+                    //'supplier' => $item->supplier_id,
+                    'item_code' => $item->item_code,
+                    'item' => ManufacturingMaterials::where('item_code', $item->item_code)->first(),
                     'req_date' => $item->req_date,
                     'qty' => $item->qty,
                     'rate' => $item->rate,
@@ -46,8 +47,21 @@ class MaterialPurchased extends Model
         return $items_purchased_array;
     }
 
+    public function productsAndRates($item_code) {
+        $materials = $this->itemsPurchased();
+        foreach ($materials as $material) {
+            if(in_array($item_code, $material)) {
+                return $material; 
+            }
+        }
+    }
+
     public function supplier_quotation() {
         return $this->belongsTo(SuppliersQuotation::class, 'supp_quotation_id', 'supp_quotation_id');
+    }
+
+    public function materialRecords() {
+        return $this->hasMany(MPRecord::class, 'purchase_id', 'purchase_id');
     }
 
     public function receipt() {

@@ -223,7 +223,7 @@
                     </a>
                     <a href="#" data-parent="buying" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Supplier</span>
+                        <span class="menu-collapsed align-middle">Item</span>
                     </a>
                     <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Supplier Quotation</span>

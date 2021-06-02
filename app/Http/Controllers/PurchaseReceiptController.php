@@ -254,17 +254,33 @@ class PurchaseReceiptController extends Controller
             $nextId = ($lastReceipt) ? PurchaseReceipt::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-            $to_append = strlen((string) $nextId);
-
             $receipt_id = "PR-" . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 
             $data->p_receipt_id = $receipt_id;
             $data->date_created = $form_data['date_created'];
             $data->purchase_id = $form_data['purchase_id'];
-            $data->item_list_received = json_encode($form_data['items_received']);
+            $data->item_list_received = $form_data['items_received'];
             $data->grand_total = $form_data['grand_total'];
 
             $data->save();
+
+            //create purchase invoice after purchase receipt
+
+            $p_invoice = new PurchaseInvoice();
+
+            $lastInvoice = PurchaseInvoice::orderby('id', 'desc')->first();
+            $nextId = ($lastInvoice) ? $lastInvoice->id + 1 : 1;
+
+            $invoice_id = "PI-" . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+
+            $p_invoice->p_invoice_id = $invoice_id;
+            $p_invoice->p_receipt_id = $receipt_id;
+            $p_invoice->date_created = date('Y-m-d');
+            $p_invoice->payment_mode = 'Cash';
+            $p_invoice->grand_total = $form_data['grand_total'];
+            $p_invoice->payment_balance = $form_data['grand_total'];
+
+            $p_invoice->save();
         } catch (Exception $e) {
             return $e;
         }
@@ -279,7 +295,7 @@ class PurchaseReceiptController extends Controller
 
             $data->date_created = $form_data['date_created'];
             $data->purchase_id = $form_data['purchase_id'];
-            $data->item_list_received = json_encode($form_data['items_received']);
+            $data->item_list_received = $form_data['items_received'];
             $data->grand_total = $form_data['grand_total'];
 
             $data->save();

@@ -44,6 +44,9 @@ function saveReceipt() {
         processData: false,
         success: function (response) {
             loadPurchaseReceipt();
+            if($("#contentPurchaseInvoice").length) {
+                loadPurchaseInvoice();
+            }
         },
     });
 }
