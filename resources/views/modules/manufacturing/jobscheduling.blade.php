@@ -17,6 +17,9 @@
                 </li>
             </ul>
         </div>
+        <li class="nav-item li-bom">
+            <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');" style="float: left;">New</button>
+        </li>
     </div>
 </nav>
 <div class="container">
@@ -61,30 +64,23 @@
                 </tr>
             </thead>
             <tbody class="">
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a href='#' onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>1]) }}');">jobsched001</a></td>
-                    <td class="text-black-50">workorder001</td>
-                    <td class="text-black-50">2</td>
-                    <td class="text-black-50">04/04/21 23:11</td>
-                    <td class="text-black-50">In Draft</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a href='javascript:onclick=loadJobsched();'>jobsched002</a></td>
-                    <td class="text-black-50">EM_CRS</td>
-                    <td class="text-black-50">3</td>
-                    <td class="text-black-50">04/29/21 08:31</td>
-                    <td class="text-black-50">In Draft</td>
-                </tr>
+                <!-- Iterating through list of job schedules --> 
+                @foreach ($jobscheds as $jobsched)
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                        </td>
+                        <td><a href='#' onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>$jobsched->id]) }}');">{{ $jobsched->jobs_sched_id }}</a></td>
+                        <td class="text-black-50">
+                            {{ $jobsched->work_order->item->product_name ?? $jobsched->work_order->component_name }} ({{ $jobsched->work_order->item->product_code ?? $jobsched->work_order->item->component_code }})
+                        </td>
+                        <td class="text-black-50">{{ $jobsched->work_order->sales_order->orderedProducts($jobsched->work_order->product_code)->quantity_purchased ?? "N/A"}}</td>
+                        <td class="text-black-50">{{ $jobsched->start_date }} {{ $jobsched->start_time }}</td>
+                        <td class="text-black-50">{{ $jobsched->js_status }}</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

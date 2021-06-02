@@ -27,7 +27,7 @@
 
 <form id="js-form" role="form" action="{{ $form_route }}"> 
 	{{-- If we're not trying to create something, then we're trying to update something --}}
-	@if ($form_route != route('jobscheduling.create'))
+	@if ($form_route != route('jobscheduling.store'))
 		@method('PATCH')	
 	@endif
 	@csrf
@@ -89,13 +89,13 @@
 						<div class="col-6">
 							<label for="productCode">Product/Component</label>
 							<div class="input-group">
-								<input type="text" id="js-product-code" class="form-control" value="{{ $item_name }}" readonly placeholder="Product/Component Code & Name">
+								<input type="text" id="js-product-code" class="form-control" value="{{ $item_name ?? "" }}" readonly placeholder="Product/Component Code & Name">
 							</div>
 						</div>
 						<div class="col-2">
 							<div class="form-group">
 								<label for="productQuantity">Quantity</label>
-								<input type="text" name="productQuantity" class="form-control" value="3">
+								<input type="text" name="quantity_purchased" id="productQuantity" class="form-control" value="{{ $quantity_purchased ?? 0 }}" required>
 							</div>
 						</div>
 
@@ -115,7 +115,8 @@
 							<div class="input-group">
 								<select name="employee_id" id="js-emp-id-select" class="selectpicker">
 									@foreach ($employees as $employee)
-										<option value="{{ $employee->employee_id }}" data-subtext="{{ $employee->employee_id }}: {{ $employee->position }}">
+										<option value="{{ $employee->employee_id }}" data-subtext="{{ $employee->employee_id }}: {{ $employee->position }}"
+										@if(isset($jobsched) && $jobsched->employee_id == $employee->employee_id) selected @endif>
 											{{ $employee->last_name }}, {{ $employee->first_name }}
 										</option>
 									@endforeach
@@ -201,8 +202,9 @@
 									@foreach (json_decode($operations) as $operation)
 										@include('modules.manufacturing.jobschedSubmodules.jobsched_operation_row', [
 											'operation' => $operation,
-											'index' => $loop->index,
+											'index' => $loop->index + 1,
 											'jobsched' => $jobsched,
+											'predecessor' => json_decode($operations)[$loop->index - 1] ?? "N/A", 
 										])	
 									@endforeach
 								@endif
@@ -357,6 +359,7 @@
 					`);
 				});
 				$('#js-product-code').val(data.item_name + " (" + data.item_code + ")");
+				$('#productQuantity').val(data.ordered_quantity);
 			},
 			error: function(data){
 				console.log("error");
@@ -366,7 +369,10 @@
 
 	// If an encoded operations string was given, parse it and assign it to operations
 	// otherwise, make operations an empty array
-	var operations = ({!! $operations_encoded ?? "" !!} == "") ? [] : JSON.parse({!! $operations_encoded !!});
+	var operations_string = {!! $operations_encoded ?? "[]" !!};
+	// Operations string will be read as type "object" if "[]" is given as its value
+	// (even though "[]" is a string, wtf javascript/laravel)
+	var operations = (typeof operations_string == "string") ? JSON.parse(operations_string) : [];
 </script>
 
 <script src="{{ asset('js/jobscheduling.js') }}"></script>

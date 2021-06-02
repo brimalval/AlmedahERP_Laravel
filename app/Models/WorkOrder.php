@@ -40,4 +40,8 @@ class WorkOrder extends Model
                $this->belongsTo(ManufacturingProducts::class, 'product_code', 'product_code') :
                $this->belongsTo(Component::class, 'component_code', 'component_code');
     }
+
+    public function sales_order(){
+        return $this->hasOne(SalesOrder::class, 'id', 'sales_id');
+    }
 }

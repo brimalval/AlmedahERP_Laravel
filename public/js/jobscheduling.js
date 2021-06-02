@@ -26,6 +26,7 @@ $('#js-form').off('submit').on('submit', function(){
         operations[i].real_end = real_ends[i];
     }
     fd.append('operations', JSON.stringify(operations));
+    let element = this;
     $.ajax({
         type: 'POST',
         url: this.action,
@@ -36,16 +37,29 @@ $('#js-form').off('submit').on('submit', function(){
         success: function(data){
             swal({
                 title: "Success",
-                text: "Successfully updated {jobsched ID here}",
+                text: `Successfully ${data.action}d ${data.jobsched.jobs_sched_id}!`,
                 icon: "success",
             });
+            console.log(data);
+            loadIntoPage(element, data.redirect);
         },
         error: function(data){
+            var errorString = "";
+            let obj = data.responseJSON.errors;
+            // The response JSON from the controller sends back a message bag whose properties are
+            // iterable through JS. The error messages list inherits other properties from base objects
+            // and the if statement checks if the properties being iterated through are unique to the object.
+            for (var prop in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                    errorString += obj[prop] + " "; 
+                }
+            }
             swal({
                 title: "Error",
-                text: "An error has occurred.",
+                text: `An error has occurred. ${errorString}`,
                 icon: "error",
-            })
+            });
+            console.log(data.responseJSON);
         }
     });
     return false;

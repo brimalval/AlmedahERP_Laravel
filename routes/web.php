@@ -187,9 +187,9 @@ Route::resource('/jobscheduling/part', PartsController::class);
 Route::resource('/jobscheduling/component', ComponentController::class);
 
 //Routes for pause play finish of operations
-Route::post('/startOperation' , JobSchedController::class, 'startOperation');
-Route::post('/pauseOperation' , JobSchedController::class, 'pauseOperation');
-Route::post('/finishOperation' , JobSchedController::class, 'finishOperation');
+// Route::post('/startOperation' , JobSchedController::class, 'startOperation');
+// Route::post('/pauseOperation' , JobSchedController::class, 'pauseOperation');
+// Route::post('/finishOperation' , JobSchedController::class, 'finishOperation');
 
 /**MACHINES MANUAL ROUTES */
 Route::get('/machinemanual', [MachinesManualController::class , 'index']);

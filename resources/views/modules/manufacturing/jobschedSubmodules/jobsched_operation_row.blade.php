@@ -15,7 +15,7 @@
     </td>
     <td>
         {{-- Predecessor Value --}}
-        {{-- {{ $predecessor ?? "N/A" }} --}}
+        {{ $predecessor->operation_name ?? "N/A" }}
     </td>
     <td>
         {{-- Machine Code Value --}}
