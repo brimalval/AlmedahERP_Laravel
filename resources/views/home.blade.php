@@ -172,6 +172,12 @@
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Item</span>
+                    </a>
+                </div>
+                <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                        class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Component</span>
                     </a>
                 </div>
@@ -221,10 +227,10 @@
                     <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Request for Quotation</span>
                     </a>
-                    <a href="#" data-parent="buying" id="inbox-toggle" data-parent="manufacturing"
+                    <!-- <a href="#" data-parent="buying" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Item</span>
-                    </a>
+                    </a> -->
                     <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Supplier Quotation</span>
                     </a>
