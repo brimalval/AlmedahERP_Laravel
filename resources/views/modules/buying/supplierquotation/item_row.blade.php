@@ -58,6 +58,11 @@
     </div>
     </td>
     <td>
+        <div class="form-group">
+          <input type="date" name="delivery_date[]" id="sq-delivery-date" class="form-control" value="{{ $item->delivery_date ?? "" }}" aria-describedby="helpId">
+        </div>
+    </td>
+    <td>
         @if (isset($deletable))
             <a href="#" class="btn btn-outline-light btn-sm delete-btn text-muted">
                 <i class="fa fa-minus" aria-hidden="true"></i>
