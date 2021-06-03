@@ -554,7 +554,41 @@
                                 }
                             }
                         </script>
-
+                        <div class="form-group">
+                            <label class=" text-nowrap align-middle">
+                                Sales Supply Method
+                            </label>
+                            <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
+                                <option selected disabled>Please Select</option>
+                                <option value="stock">Made to Stock</option>
+                                <option value="produce">To Produce</option>
+                            </select>
+                        </div>
+                        <div class="form-group row" id="madeToStockFields" hidden>
+                            <div class="col">
+                                <label for="reorderLevel">Minimum Order Quantity</label>
+                                <input type="text" name="reorderLevel" id="reorderLevel" class="form-control">
+                            </div>
+                            <div class="col">
+                                <label for="reorderQty">Maximum Order Quantity</label>
+                                <input type="text" name="reorderQty" id="reorderQty" class="form-control">
+                            </div>
+                        </div>
+                        <script>
+                            function changeSaleSupplyMethod(){
+                                var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
+                                if (salesSupplyMethod == "stock") {
+                                    document.getElementById("madeToStockFields").removeAttribute("hidden");
+                                    document.getElementById("reorderLevel").setAttribute("required", "");
+                                    document.getElementById("reorderQty").setAttribute("required", "");
+                                } else {
+                                    document.getElementById("madeToStockFields").setAttribute("hidden", "");
+                                    
+                                    document.getElementById("reorderLevel").removeAttribute("required");
+                                    document.getElementById("reorderQty").removeAttribute("required");
+                                }
+                            }
+                        </script>
                         <div class="form-group">
                             <label for="">Barcode</label>
                             <input class="form-control" type="text" id="bar_code" name="bar_code" required placeholder="Ex. 036000291452">
