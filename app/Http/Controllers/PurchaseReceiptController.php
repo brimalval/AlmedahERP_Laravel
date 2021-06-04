@@ -73,17 +73,6 @@ class PurchaseReceiptController extends Controller
         try {
             $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
 
-            //$mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->get();
-            //$materials_ordered = $mat_purchased->itemsPurchased();
-            //$materials_received = $receipt->receivedMats();
-
-            //for($i = 0; $i < sizeof($materials_ordered); $i++) {
-            //    $materials_ordered[$i]['qty'] = $materials_ordered[$i]['qty'] - $materials_received[$i]['qty']; 
-            //}
-
-            //$mat_purchased->items_list_purchased = json_encode($materials_ordered);
-            //$mat_purchased->save();
-
             $receipt->pr_status = "To Receive and Bill";
             $receipt->save();
 
@@ -103,6 +92,7 @@ class PurchaseReceiptController extends Controller
                     array(
                         'item_code' => $item['item_code'],
                         'qty_received' => '0',
+                        'item_condition' => 'New'
                     )
                 );
             }
