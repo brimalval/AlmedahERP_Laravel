@@ -78,6 +78,7 @@ Route::get('/newbom', [BOMController::class, 'BOMForm']);
 Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
 Route::post('/create-bom', [BOMController::class, 'store']);
 Route::get('/view-bom/{bom_id}', [BOMController::class, 'viewBOM']);
+Route::patch('/update-bom/{bom_id}', [BOMController::class, 'update']);
 
 
 /**BUYING ROUTES */

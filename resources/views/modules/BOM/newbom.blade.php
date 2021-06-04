@@ -45,7 +45,8 @@
     </div>
 </div>
 
-<form action="#" method="post" id="BOM" class="create">
+<form action="/create-bom" method="post" id="saveBomForm" class="create">
+    @csrf
     <br>
     <div class="container">
         <div class="row">
@@ -107,7 +108,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="routing">Routing</label>
-                            <select class="form-control" name="routing" id="routingSelect">
+                            <select class="form-control" name="routingSelect" id="routingSelect">
                                 <option value="0">-No Routing Selected-</option>
                                 @foreach ($routings as $routing)
                                     <option value="{{ $routing->routing_id }}">{{ $routing->routing_name }}</option>

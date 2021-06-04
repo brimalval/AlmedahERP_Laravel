@@ -75,32 +75,10 @@ class BOMController extends Controller
         $rateList = $bom->rateList();
         $man_prod = ManufacturingProducts::all();
         $routings = Routings::all();
-        return view('modules.BOM.bominfo', 
-                    ['bom' => $bom, 'routing' => $routing, 'product' => $product, 'routing_ops' => $routing_ops, 'rateList' => $rateList, 
+        return view('modules.BOM.bominfo',
+                    ['bom' => $bom, 'routing' => $routing, 'product' => $product, 'routing_ops' => $routing_ops, 'rateList' => $rateList,
                     'man_prods' => $man_prod, 'routings' => $routings]
                    );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BillOfMaterials $billsOfMaterials)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(BillOfMaterials $billsOfMaterials)
-    {
-        //
     }
 
     /**
@@ -110,9 +88,28 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BillOfMaterials $billsOfMaterials)
+    public function update(Request $request, $bom_id)
     {
-        //
+        try {
+            $bom = BillOfMaterials::find($bom_id);
+            $form_data = $request->input();
+            $bom_name = "BOM-"; //initialize "BOM-"
+            $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
+            $bom_name .= $product->product_name . "-" . str_pad($bom_id, 3, "0", STR_PAD_LEFT);
+
+            $bom->product_code = $form_data['product_code'];
+            $bom->routing_id = $form_data['routing_id'];
+            $bom->raw_materials_rate = $form_data['rm_rates'];
+            $bom->raw_material_cost = $form_data['rm_cost'];
+            $bom->total_cost = $form_data['total_cost'];
+            $bom->is_active = $form_data['is_active'];
+            $bom->is_default = $form_data['is_default'];
+            $bom->bom_name = $bom_name;
+
+            $bom->save();
+        } catch (Exception $e) {
+            return $e;
+        } //
     }
 
     /**
@@ -121,9 +118,10 @@ class BOMController extends Controller
      * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BillOfMaterials $billsOfMaterials)
+    public function delete($id)
     {
-        //
+        $bills_of_materials = BillOfMaterials::find($id);
+        $bills_of_materials->delete();
     }
 
     public function BOMForm()

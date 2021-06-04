@@ -4,7 +4,6 @@ $mat_index = 0;
 ?>
 
 <script src="{{ asset('js/address.js') }}"></script>
-<script src="{{ asset('js/bominfo.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">{{ $bom->bom_name }}</h2>
@@ -51,8 +50,10 @@ $mat_index = 0;
     </div>
 </div>
 
-<form action="#" method="post" id="BOM" class="create">
+<form action="/update-bom/{{ $bom->bom_id }}" method="post" id="saveBomForm" class="create">
     <br>
+    @csrf
+    @method('PATCH')
     <div class="container">
         <div class="row">
             <div class="col-6">
@@ -179,7 +180,7 @@ $mat_index = 0;
                                     </a>
                                 </td>
                                 @php
-                                ++$op_index;   
+                                ++$op_index;
                                 @endphp
                             @endforeach
                             </tr>
@@ -312,6 +313,8 @@ $mat_index = 0;
         </div>
     </div>
 </form>
+
+<script src="{{ asset('js/bominfo.js') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
