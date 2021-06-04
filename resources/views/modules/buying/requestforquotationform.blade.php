@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h2 class="navbar-brand tab-list-title">
         <a href='#' onclick="loadIntoPage(this, '{{ route('requestforquotation.index') }}')"
@@ -46,12 +47,9 @@
     <br>
 
 </nav>
-
-<div class="container-fluid" style="margin: 0; padding: 0;">
-    <div class="float-right" id="headingOne">
-        <div class="float-right">
-            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <div class="btn-group btn-group-sm" role="group">
+<br>
+<div class="float-right">
+<div class="btn-group btn-group-sm" role="group">
                     <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Supplier Quotation
@@ -61,6 +59,13 @@
                         <a class="dropdown-item" href="#">View</a>
                     </div>
                 </div>
+</div>
+<br>
+<div class="container-fluid" style="margin: 0; padding: 0;">
+    <div class="float-right" id="headingOne">
+        <div class="float-right">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                
                 <!-- Shows the send email button only if the quotation has already been
                    submitted -->
                 @if (isset($rfquotation) && $rfquotation->req_status == "Submitted")
@@ -137,6 +142,17 @@
             <!--supplier detail contents-->
             <div class="container">
                 {{-- <form id="contactForm" name="contact" role="form"> --}}
+
+                <div class="float-right">
+                <label>Search:</label>
+                <select class="selectpicker2" data-live-search="true">
+                <option data-tokens="supplier1">Supplier 1</option>
+                <option data-tokens="supplier2">Supplier 2</option>
+                <option data-tokens="supplier3">Supplier 3</option>
+                </select>
+                </div>            
+                <br><br><br>
+
                     <table class="table border-bottom table-hover table-bordered" id="rfq-suppliers-tbl">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
@@ -395,7 +411,15 @@
             $(this).selectpicker();
         });
     });
+    $('.selectpicker2').each(function () {
+            $(this).selectpicker();
+        });
 </script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
 
 <!-- Material Request Modal -->
 <div class="modal fade" id="material-requests-modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
@@ -429,3 +453,4 @@
         </div>
     </div>
 </div>
+
