@@ -287,21 +287,21 @@ $mat_index = 0;
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Operationg_Cost">Operation Cost</label>
-                                <input type="number" value="0" readonly name="totalOpCost" id="totalOpCost"
+                                <label for="totalOpCost">Operation Cost</label>
+                                <input type="text" value="0" readonly name="totalOpCost" id="totalOpCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Material_Cost">Raw Material Cost</label>
+                                <label for="totalMatCost">Raw Material Cost</label>
                                 <input type="text" value="0" readonly name="totalMatCost" id="totalMatCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="total_Cost">Total Cost</label>
+                                <label for="totalBOMCost">Total Cost</label>
                                 <input type="text" value="0" readonly name="totalBOMCost" id="totalBOMCost"
                                     class="form-control">
                             </div>

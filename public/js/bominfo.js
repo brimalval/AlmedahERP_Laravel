@@ -81,10 +81,10 @@ function computeCosts() {
         let mat_indiv_cost = material.find("#Amount").val();
         materialCost += parseFloat(mat_indiv_cost);
     }
-    var totalCost = opCost + materialCost;
-    $("#totalOpCost").val(opCost);
-    $("#totalMatCost").val(materialCost);
-    $("#totalBOMCost").val(totalCost);
+    var totalCost = parseFloat(opCost) + parseFloat(materialCost);
+    $("#totalOpCost").val(parseFloat(opCost));
+    $("#totalMatCost").val(parseFloat(materialCost));
+    $("#totalBOMCost").val(parseFloat(totalCost));
 }
 
 /**Experimental function from back-end*/
