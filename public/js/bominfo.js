@@ -328,3 +328,27 @@ $("#saveBomForm").submit(function () {
     });
     return false;
 });
+
+
+$("#bomDelete").click(function () {
+    $("#deleteBOM").submit();
+});
+
+$("#deleteBOM").submit(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    $.ajax({
+        type: "DELETE",
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            loadBOMtable();
+        }
+    });
+    return false;
+});

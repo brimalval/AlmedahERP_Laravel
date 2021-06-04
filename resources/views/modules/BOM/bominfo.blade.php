@@ -28,6 +28,14 @@ $mat_index = 0;
                         onclick="loadBOMtable();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
+                    <form action="/delete-bom/{{ $bom->bom_id }}" id="deleteBOM" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button style="background-color: #ff0000d7;" class="btn btn-danger btn" style="float: left;"
+                            onclick="" id="bomDelete">Delete</button>
+                    </form>
+                </li>
+                <li class="nav-item li-bom">
                     <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;"
                         id="saveBom">Save</button>
                 </li>
