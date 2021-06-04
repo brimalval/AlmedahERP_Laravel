@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h2 class="navbar-brand tab-list-title">
         <a href='#' onclick="loadIntoPage(this, '{{ route('requestforquotation.index') }}')"
@@ -143,14 +142,19 @@
             <div class="container">
                 {{-- <form id="contactForm" name="contact" role="form"> --}}
 
-                <div class="float-right">
-                <label>Search:</label>
-                <select class="selectpicker2" data-live-search="true">
-                <option data-tokens="supplier1">Supplier 1</option>
-                <option data-tokens="supplier2">Supplier 2</option>
-                <option data-tokens="supplier3">Supplier 3</option>
-                </select>
-                </div>            
+                @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                    <div class="float-right">
+                        <label>Search:</label>
+                        <select class="selectpicker" data-live-search="true" id="supplier-search">
+                            <option value="none" disabled selected>Search for supplier by item</option>
+                            @foreach ($suppliers as $supplier)
+                                <option value="{{ $supplier->supplier_id }}" data-tokens="{{ $loop->index . " " . ($loop->index + 1) }}">
+                                    {{ $supplier->company_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>            
+                @endif
                 <br><br><br>
 
                     <table class="table border-bottom table-hover table-bordered" id="rfq-suppliers-tbl">
@@ -191,22 +195,24 @@
                                 </td>
                                 <td class="rfq-contact">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="" aria-describedby="helpId"
+                                        <input type="text" class="form-control" aria-describedby="helpId"
                                             placeholder="ex. John Doe">
                                     </div>
                                 </td>
                                 <td class="rfq-email">
                                     <div class="form-group">
-                                        <input required type="text" class="form-control" readonly id=""
+                                        <input required type="text" class="form-control" readonly
                                             aria-describedby="helpId" placeholder="example@gmail.com"
                                             value="{{ $supplier->supplier_email }}">
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" id="" class="btn delete-btn" role="button"
-                                        onclick="$(this).parents('tr').remove()">
-                                        <i class="fa fa-minus" aria-hidden="true"></i>
-                                    </button>
+                                    @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                                        <button type="button" class="btn delete-btn" role="button"
+                                            onclick="$(this).parents('tr').remove()">
+                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -226,8 +232,11 @@
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
-                        <button type="button" onclick="addSupplier()" class="btn btn-sm btn-sm btn-secondary">Add
-                            Row</button>
+                        @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                            <button type="button" onclick="addSupplier()" class="btn btn-sm btn-sm btn-secondary">
+                                Add Row
+                            </button>
+                        @endif
                     </td>
                     {{--
                 </form> --}}
@@ -319,14 +328,16 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a id="" class="btn item-edit-btn" href="#" role="button"
-                                        onclick="openItemEditModal($(this).parents('tr'), '#contentMaterialRequest')">
-                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
-                                    </a>
-                                    <button type="button" id="" class="btn delete-btn" role="button"
-                                        onclick="$(this).parents('tr').remove()">
-                                        <i class="fa fa-minus" aria-hidden="true"></i>
-                                    </button>
+                                    @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                                        <a class="btn item-edit-btn" href="#" role="button"
+                                            onclick="openItemEditModal($(this).parents('tr'), '#contentMaterialRequest')">
+                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                        </a>
+                                        <button type="button" class="btn delete-btn" role="button"
+                                            onclick="$(this).parents('tr').remove()">
+                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -346,11 +357,15 @@
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
-                        <button type="button" onclick="rfqAddItem()" class="btn btn-sm btn-secondary">Add Row</button>
+                        @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                            <button type="button" onclick="rfqAddItem()" class="btn btn-sm btn-secondary">Add Row</button>
+                        @endif
                     </td>
                     <td colspan="7" rowspan="5">
+                        @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
                         <button type="button" onclick="$('#material-requests-modal').modal('show')"
                             class="btn btn-sm btn-primary">Link a Material Request</button>
+                        @endif
                     </td>
 
                     {{--
@@ -409,17 +424,9 @@
         });
         $('.selectpicker').each(function () {
             $(this).selectpicker();
-        });
+        })
     });
-    $('.selectpicker2').each(function () {
-            $(this).selectpicker();
-        });
 </script>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
-<!-- (Optional) Latest compiled and minified JavaScript translation files -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
 
 <!-- Material Request Modal -->
 <div class="modal fade" id="material-requests-modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"

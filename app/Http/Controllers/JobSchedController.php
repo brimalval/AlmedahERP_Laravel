@@ -228,13 +228,15 @@ class JobSchedController extends Controller
                 $currDate = $currDate->toDateString();
                 $operations[$i]['status'] = "In progress";
                 $operations[$i]['real_start'] = $currDate;
+                break;
             }
         }
         $job->operations = json_encode($operations);
         $job->save();
         return response()->json([
-            'operations' => json_encode($operations), 'sequence_name' => $request->input('sequence_name'),
-            'jobSchedId' => $job->id
+            'operations' => json_encode($operations),
+            'sequence_name' => $request->input('sequence_name'),
+            'jobSchedId' => $job->id,
         ]);
     }
 
@@ -247,6 +249,7 @@ class JobSchedController extends Controller
         for ($i = 0; $i < count($operations); $i++) {
             if ($operations[$i]['sequence_name'] == $request->input('sequence_name')) {
                 $operations[$i]['status'] = "Paused";
+                break;
             }
         }
         $job->operations = json_encode($operations);
@@ -269,6 +272,7 @@ class JobSchedController extends Controller
                 $currDate = $currDate->toDateString();
                 $operations[$i]['status'] = "Finished";
                 $operations[$i]['real_end'] = $currDate;
+                break;
             }
         }
         $job->operations = json_encode($operations);
