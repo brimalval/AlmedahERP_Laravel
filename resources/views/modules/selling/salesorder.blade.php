@@ -263,19 +263,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class=" text-nowrap align-middle">
-                                            Sales Supply Method
-                                        </label>
-                                        <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
-                                            <option selected disabled>Please Select</option>
-                                            <option value="Produce">Instock</option>
-                                            <option value="Purchase">Purchase</option>
-                                        </select>
-                                        <br>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="card" id="cardComponent">
