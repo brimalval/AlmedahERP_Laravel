@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillOfMaterials;
+use App\Models\Component;
 use App\Models\ManufacturingMaterials;
 use App\Models\ManufacturingProducts;
 use App\Models\MaterialPurchased;
@@ -37,12 +38,20 @@ class BOMController extends Controller
             $last_bom = BillOfMaterials::latest()->first();
             $next_id = $last_bom ? $last_bom->bom_id + 1 : 1;
             $bom_name = "BOM-"; //initialize "BOM-"
-            //routing name ba talaga basehan? hindi product/component name?
-            $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
-            $bom_name .= $product->product_name . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
 
             $bom = new BillOfMaterials();
-            $bom->product_code = $form_data['product_code'];
+
+            if(isset($form_data['product_code'])) {
+                $bom->product_code = $form_data['product_code'];
+                $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
+                $name = $product->product_name;
+            } else {
+                $bom->component_code = $form_data['component_code'];
+                $component = Component::where('component_code', $form_data['component_code'])->first();
+                $name = $component->component_name;
+            }
+
+            $bom_name .= $name . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
             $bom->routing_id = $form_data['routing_id'];
             $bom->raw_materials_rate = $form_data['rm_rates'];
             $bom->raw_material_cost = $form_data['rm_cost'];
@@ -64,10 +73,11 @@ class BOMController extends Controller
         $routing_ops = $routing->operations();
         $rateList = $bom->rateList();
         $man_prod = ManufacturingProducts::all();
+        $components = Component::all();
         $routings = Routings::all();
         return view('modules.BOM.bominfo',
                     ['bom' => $bom, 'routing' => $routing, 'product' => $product, 'routing_ops' => $routing_ops, 'rateList' => $rateList,
-                    'man_prods' => $man_prod, 'routings' => $routings]
+                    'man_prods' => $man_prod, 'routings' => $routings, 'components' => $components]
                    );
     }
 
@@ -117,14 +127,14 @@ class BOMController extends Controller
     public function BOMForm()
     {
         $man_prod = ManufacturingProducts::all();
+        $components = Component::all();
         $routings = Routings::all();
-        return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'routings' => $routings]);
+        return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'components' => $components, 'routings' => $routings]);
     }
 
     public function getProduct($product_code)
     {
         try {
-            DB::enableQueryLog();
             $product = ManufacturingProducts::where('product_code', $product_code)->first();
             $product_mats = $product->materials();
             $products_and_rates = array();
@@ -158,6 +168,43 @@ class BOMController extends Controller
             return response()->json([
                 "error" => $e->getMessage()
             ]);
+        }
+    }
+
+    public function getComponent($component_code) {
+        try {
+            //code...
+            $component = Component::where('component_code', $component_code)->first();
+            $product_mats = $component->materials();
+            $products_and_rates = array();
+            foreach ($product_mats as $material) {
+                $item_code = $material['material']->item_code;
+                $p_order = MaterialPurchased::where('items_list_purchased', 'LIKE', "%{$item_code}%")->first();
+                if ($p_order != null) {
+                    $po_items = $p_order->productsAndRates($item_code);
+                }
+                //dd(DB::getQueryLog());
+                else {
+                    $po_items = array(
+                        'item_code' => $material['material']->item_code,
+                        'item' => ManufacturingMaterials::where('item_code', $material['material']->item_code)->first(),
+                        'req_date' => date('Y-m-d'),
+                        'qty' => $material['qty'],
+                        'rate' => 1,
+                        'subtotal' => $material['qty']
+                    );
+                }
+                array_push(
+                    $products_and_rates,
+                    array(
+                        'product_rates' => $po_items,
+                        'qty' => $material['qty']
+                    )
+                );
+            }
+            return ["component" => $component, 'materials_info' => $products_and_rates];
+        } catch (Exception $e) {
+            //throw $th;
         }
     }
 }

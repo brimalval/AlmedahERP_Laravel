@@ -138,7 +138,23 @@ function showRoutingsForm() {
     $(`#tab${menu}`).tab("show");
 }
 
-$(`#manprod`).change(function () {
+$("#is_component").change(function () { 
+    if($(this).prop('checked') == true) {
+        $("#component-select").prop('hidden', false);
+        $("#product-select").prop('hidden', true);
+        $("#manprod").val(0);
+
+    } else {
+        $("#component-select").prop('hidden', true);
+        $("#product-select").prop('hidden', false);
+        $("#components").val(0);
+    }
+    $("#item_content").css("display", "none");
+    $(`#Item_name`).val(null);
+    $(`#Item_UOM`).val(null);    
+});
+
+$("#manprod, #components").change(function () { 
     let showForm = $(this).val();
     if (showForm == 0) {
         $("#item_content").css("display", "none");
@@ -147,8 +163,70 @@ $(`#manprod`).change(function () {
     }
     else {
         $("#item_content").css("display", "block");
+        if($(this).attr("id") === 'components')  $("#selected-uom").css('display', 'none');
     }
+});
+
+$("#components").change(function () { 
+    if ($(this).val() == 0) return;
+    let component_code = $(this).val().trim();
+    console.log(component_code);
+    $.ajax({
+        type: "GET",
+        url: `/get-component/${component_code}`,
+        data: component_code,
+        success: function (response) {
+            let component = response.component;
+            $(`#Item_name`).val(component.component_name);
+            var table = $("#bom-materials tbody");
+            $("#bom-materials tbody tr").remove();
+            let materials = response.materials_info;
+            for(let i = 0; i < materials.length; i++) {
+                let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
+                table.append(
+                    `
+                    <tr id="bomMaterial-${i}">
+                        <td class="text-center">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                        </td>
+                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i+1}" readonly
+                                name="No" id="No" class="form-control"></td>
+                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${materials[i].product_rates.item.item_code}" readonly
+                                name="ItemCode" id="ItemCode" class="form-control"></td>
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].qty}" readonly name="Quantity"
+                                id="Quantity" class="form-control"></td>
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.item.uom_id}" readonly name="UOM" id="UOM"
+                                class="form-control"></td>
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" readonly name="Rate" id="Rate"
+                                class="form-control"></td>
+                        <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"
+                                class="form-control"></td>
+                        <td>
+                            <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#"
+                                role="button">
+                                <i class="fa fa-edit" aria-hidden="true"></i>
+                            </a>
+                            <a id="" class="btn delete-btn" href="#" role="button">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    `
+                )
+            }
+            computeCosts();
+        }, error: function (response) {
+            console.log(response);
+        }
+    })
+});
+
+$(`#manprod`).change(function () {
+    if ($(this).val() == 0) return;
     let prod_code = $(this).val().trim();
+    console.log(prod_code);
     $.ajax({
         type: "GET",
         url: `/get-product/${prod_code}`,
@@ -283,13 +361,13 @@ $("#saveBomForm").submit(function () {
         }
     });
 
-    if($("#manprod").val() == 0) {
+    if($("#manprod").val() == 0 && $("#components").val() == 0) {
         alert('No product/component to make a BOM on.')
-        return;
+        return false;
     }
     if($("#routingSelect").val() == 0) {
         alert('No routing has been provided.')
-        return;
+        return false;
     }
 
     let bomData = new FormData(this);
@@ -306,7 +384,12 @@ $("#saveBomForm").submit(function () {
         }
     }
 
-    bomData.append('product_code', $("#manprod").val());
+    console.log($("#manprod").val());
+
+    let name = $("#is_component").prop('checked') ? 'component_code' : 'product_code';
+    let value = $("#is_component").prop('checked') ? $("#components").val() : $("#manprod").val(); 
+
+    bomData.append(name, value);
     bomData.append('routing_id', $("#routingSelect").val());
     bomData.append('is_active', isActive);
     bomData.append('is_default', isDefault);
