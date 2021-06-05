@@ -69,14 +69,14 @@ class BOMController extends Controller
     public function viewBOM($bom_id) {
         $bom = BillOfMaterials::find($bom_id);
         $routing = $bom->routing;
-        $product = $bom->product;
+        $item = ($bom->product != null) ? $bom->product : $bom->component;
         $routing_ops = $routing->operations();
         $rateList = $bom->rateList();
         $man_prod = ManufacturingProducts::all();
         $components = Component::all();
         $routings = Routings::all();
         return view('modules.BOM.bominfo',
-                    ['bom' => $bom, 'routing' => $routing, 'product' => $product, 'routing_ops' => $routing_ops, 'rateList' => $rateList,
+                    ['bom' => $bom, 'routing' => $routing, 'item' => $item, 'routing_ops' => $routing_ops, 'rateList' => $rateList,
                     'man_prods' => $man_prod, 'routings' => $routings, 'components' => $components]
                    );
     }

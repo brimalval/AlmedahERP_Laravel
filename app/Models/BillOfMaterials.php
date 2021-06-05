@@ -37,15 +37,11 @@ class BillOfMaterials extends Model
     }
 
     public function product(){
-        return ($this->product_code == null) ? 
-                null :
-                $this->belongsTo(ManufacturingProducts::class, 'product_code', 'product_code');
+        return $this->belongsTo(ManufacturingProducts::class, 'product_code', 'product_code');
     }
 
     public function component(){
-        return ($this->component_code == null) ?
-                null :
-                $this->belongsTo(Component::class, 'component_code', 'component_code');
+        return $this->belongsTo(Component::class, 'component_code', 'component_code');
     }
 
     public function rateList() {
