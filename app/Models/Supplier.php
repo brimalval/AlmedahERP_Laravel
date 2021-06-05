@@ -31,4 +31,25 @@ class Supplier extends Model
                 'req_quotation_id',
             );
     }
+
+    public function mats_sold(){
+        return $this
+            ->hasManyThrough(
+                 ManufacturingMaterials::class,
+                 SupplierMats::class,
+                'supplier_id',
+                'item_code',
+                'supplier_id',
+                'item_code',
+            );
+    }
+
+    // Used on RFQ for searching supplier by the items they sell
+    public function supplier_tokens(){
+        $tokens = "";
+        foreach($this->mats_sold->pluck('item_name', 'item_code') as $item_code => $item_name){
+            $tokens .= $item_code . " " . $item_name . " ";
+        }
+        return $tokens;
+    }
 }

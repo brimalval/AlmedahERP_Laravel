@@ -19,6 +19,23 @@ use Illuminate\Support\Facades\Validator;
 class MaterialQuotationController extends Controller
 {
     /**
+     * Returns search tokens for each of the suppliers
+     *
+     * Iterates through each of the existing suppliers and returns a string of item
+     * codes and item names, separated by spaces. The resulting string can be used
+     * as an data property of a selectpicker "data-tokens"
+     *
+     * @return string
+     **/
+    private function getSupplierTokens(){
+        $token_list = array();
+        foreach(Supplier::get() as $supplier){
+            array_push($token_list, $supplier->supplier_tokens());
+        }
+        return $token_list;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -45,6 +62,7 @@ class MaterialQuotationController extends Controller
         $material_requests = MaterialRequest::with('raw_mats')
             ->where('mr_status', '=', 'Submitted')
             ->get();
+        $token_list = $this->getSupplierTokens();
         return view('modules.buying.requestforquotationform', [
             'materials' => $materials,
             'stations' => $stations,
@@ -52,6 +70,7 @@ class MaterialQuotationController extends Controller
             'suppliers' => $suppliers,
             'material_requests' => $material_requests,
             'action' => route('rfquotation.store'),
+            'token_list' => $token_list,
         ]);
     }
 
@@ -162,6 +181,7 @@ class MaterialQuotationController extends Controller
         $material_requests = MaterialRequest::with('raw_mats')
             ->where('mr_status', '=', 'Submitted')
             ->get();
+        $token_list = $this->getSupplierTokens();
         return view('modules.buying.requestforquotationform', [
             'rfquotation' => $rfquotation,
             'materials' => $materials,
@@ -170,6 +190,7 @@ class MaterialQuotationController extends Controller
             'suppliers' => $suppliers,
             'material_requests' => $material_requests,
             'action' => route('rfquotation.update', ['rfquotation' => $rfquotation->id]),
+            'token_list' => $token_list,
         ]);
     }
 

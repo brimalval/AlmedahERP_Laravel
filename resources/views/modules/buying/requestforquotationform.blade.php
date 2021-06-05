@@ -148,7 +148,7 @@
                         <select class="selectpicker" data-live-search="true" id="supplier-search">
                             <option value="none" disabled selected>Search for supplier by item</option>
                             @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->supplier_id }}" data-tokens="{{ $loop->index . " " . ($loop->index + 1) }}">
+                                <option value="{{ $supplier->supplier_id }}" data-tokens="{{ $token_list[$loop->index] }}">
                                     {{ $supplier->company_name }}
                                 </option>
                             @endforeach

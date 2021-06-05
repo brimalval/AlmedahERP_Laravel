@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\JobSched;
-use App\Models\SalesOrder;
 use App\Models\WorkOrder;
 use Exception;
 use Illuminate\Http\Request;
@@ -224,7 +223,7 @@ class JobSchedController extends Controller
         $operations = json_decode($job->operations, true);
         for ($i = 0; $i < count($operations); $i++) {
             if ($operations[$i]['sequence_name'] == $request->input('sequence_name')) {
-                $currDate = Carbon\Carbon::now();
+                $currDate = Carbon::now();
                 $currDate = $currDate->toDateString();
                 $operations[$i]['status'] = "In progress";
                 $operations[$i]['real_start'] = $currDate;
@@ -268,7 +267,7 @@ class JobSchedController extends Controller
         $operations = json_decode($job->operations, true);
         for ($i = 0; $i < count($operations); $i++) {
             if ($operations[$i]['sequence_name'] == $request->input('sequence_name')) {
-                $currDate = Carbon\Carbon::now();
+                $currDate = Carbon::now();
                 $currDate = $currDate->toDateString();
                 $operations[$i]['status'] = "Finished";
                 $operations[$i]['real_end'] = $currDate;
