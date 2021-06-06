@@ -558,15 +558,16 @@
     });
 
     function newTask() {
-        switch(gantt.getTask(gantt.getSelectedId()).parent){
-            case 0:{
-                gantt.createTask();
-                // gantt.refreshData(); Refreshes the gantt chart
-                break;
-            }
-            default:{
-                break;
-            }
-        }
+        gantt.createTask(); // It's buggy since it does not parse any data.
+        // switch(gantt.getTask(gantt.getSelectedId()).parent){
+        //     case 0:{
+        //         gantt.createTask();
+        //         // gantt.refreshData(); Refreshes the gantt chart
+        //         break;
+        //     }
+        //     default:{
+        //         break;
+        //     }
+        // }
     }
 </script>
