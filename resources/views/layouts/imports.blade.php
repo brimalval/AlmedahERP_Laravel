@@ -41,3 +41,6 @@
 <!-- vertical timeline -->
 <link rel="stylesheet" type="text/css" href="{{ asset('vendor/vertical-timeline/vertical-timeline.css') }}">
 <script src="{{ asset('vendor/vertical-timeline/vertical-timeline.min.js') }}"></script>
+
+<link rel="stylesheet" href="http://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" type="text/css">
+<script src="http://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
