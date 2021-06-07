@@ -2,7 +2,7 @@
 $op_index = 0;
 $mat_index = 0;
 ?>
-
+<script src="{{ asset('js/bominfo.js') }}"></script>
 <script src="{{ asset('js/address.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
@@ -26,6 +26,14 @@ $mat_index = 0;
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadBOMtable();">Cancel</button>
+                </li>
+                <li class="nav-item li-bom">
+                    <form action="/delete-bom/{{ $bom->bom_id }}" id="deleteBOM" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button style="background-color: #ff0000d7;" class="btn btn-danger btn" style="float: left;"
+                            onclick="" id="bomDelete">Delete</button>
+                    </form>
                 </li>
                 <li class="nav-item li-bom">
                     <button style="background-color: #007bff;" class="btn btn-info btn" style="float: left;"
@@ -57,17 +65,43 @@ $mat_index = 0;
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <div class="form-group">
-                    <label for="Type">Item</label>
-                        <select class="form-control selectpicker" id="manprod">
-                            <option selected data-subtext="{{ $product->product_name }}" value="{{ $product->product_code }}">{{ $product->product_code }}
+                <div class="form-group" id="product-select" @if ($bom->product_code == null) hidden @endif>
+                    <label for="manprod">Item</label>
+                    <select class="form-control selectpicker" id="manprod">
+                        @if ($bom->product_code == null)
+                            <option value="0">-No Product Selected-</option>
+                            @foreach ($man_prods as $mp)
+                                <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
+                            @endforeach
+                        @else
+                            <option selected data-subtext="{{ $item->product_name }}" value="{{ $item->product_code }}">{{ $item->product_code }}
                             </option>
                             @foreach ($man_prods as $mp)
-                                @if ($mp->product_code != $product->product_code)
-                                <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
+                                @if ($mp->product_code != $item->product_code)
+                                    <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
                                 @endif
                             @endforeach
-                        </select>
+                        @endif
+                    </select>
+                </div>
+                <div class="form-group" id="component-select" @if($bom->component_code == null) hidden @endif>
+                    <label for="components">Component</label>
+                    <select class="form-control selectpicker" id="components">
+                        @if ($bom->component_code == null)
+                            <option value="0">-No Component Selected-</option>
+                            @foreach ($components as $cp)
+                                <option data-subtext="{{ $cp->component_name }}" value="{{ $cp->component_code }}">{{ $cp->component_code }}</option>
+                            @endforeach
+                        @else
+                            <option selected data-subtext="{{ $item->component_name }}" value="{{ $item->component_code }}">{{ $item->component_code }}
+                            </option>
+                            @foreach ($components as $cp)
+                                @if ($item->component_code != $cp->component_code)
+                                    <option data-subtext="{{ $cp->component_name }}" value="{{ $cp->component_code }}">{{ $cp->component_code }}</option>
+                                @endif
+                            @endforeach
+                        @endif
+                    </select>
                 </div>
             </div>
             <div class="col-6"></div>
@@ -76,17 +110,25 @@ $mat_index = 0;
                     <div class="form-group">
                         <label for="Item_name">Item Name</label>
                         <input type="text" readonly name="Item_name" id="Item_name"
-                            value="{{ $product->product_name }}" class="form-control">
+                            value="@if ($bom->product_code != null) {{ $item->product_name }} @else {{ $item->component_name }} @endif" class="form-control">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="selected-uom">
                         <label for="Item_UOM">Item UOM</label>
-                        <input type="text" readonly name="Item_UOM" id="Item_UOM" value="{{ $product->unit }}"
-                            class="form-control">
+                        <input type="text" readonly name="Item_UOM" id="Item_UOM" value="@if ($bom->product_code != null) {{ $item->unit }} @endif" class="form-control">
                     </div>
                 </div>
             </div>
             <div class="col-6"></div>
             <div class="col-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="is_component" 
+                    @if ($bom->component_code != null)
+                        checked
+                    @endif>
+                    <label class="form-check-label" for="is_component">
+                        Is Component
+                    </label>
+                </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="Is_active" @if ($bom->is_active == 1) checked @endif>
                     <label class="form-check-label" for="Is_active">
@@ -287,21 +329,21 @@ $mat_index = 0;
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Operationg_Cost">Operation Cost</label>
-                                <input type="number" value="0" readonly name="totalOpCost" id="totalOpCost"
+                                <label for="totalOpCost">Operation Cost</label>
+                                <input type="text" value="0" readonly name="totalOpCost" id="totalOpCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Material_Cost">Raw Material Cost</label>
+                                <label for="totalMatCost">Raw Material Cost</label>
                                 <input type="text" value="0" readonly name="totalMatCost" id="totalMatCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="total_Cost">Total Cost</label>
+                                <label for="totalBOMCost">Total Cost</label>
                                 <input type="text" value="0" readonly name="totalBOMCost" id="totalBOMCost"
                                     class="form-control">
                             </div>
@@ -314,10 +356,9 @@ $mat_index = 0;
     </div>
 </form>
 
-<script src="{{ asset('js/bominfo.js') }}"></script>
-
 <script type="text/javascript">
     $(document).ready(function () {
+        if($("#is_component").prop('checked') == true)  $("#selected-uom").css('display', 'none');
         computeCosts();
     });
 </script>

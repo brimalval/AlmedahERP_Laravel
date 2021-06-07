@@ -51,12 +51,21 @@
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <div class="form-group">
-                    <label for="Type">Item</label>
+                <div class="form-group" id="product-select">
+                    <label for="manprod">Item</label>
                     <select class="form-control selectpicker" id="manprod">
                         <option value="0">-No Product Selected-</option>
                         @foreach ($man_prods as $mp)
                             <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group" id="component-select" hidden>
+                    <label for="components">Component</label>
+                    <select class="form-control selectpicker" id="components">
+                        <option value="0">-No Component Selected-</option>
+                        @foreach ($components as $component)
+                            <option data-subtext="{{ $component->component_name }}" value="{{ $component->component_code }}">{{ $component->component_code }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -68,7 +77,7 @@
                         <label for="Item_name">Item Name</label>
                         <input type="text" readonly name="Item_name" id="Item_name" class="form-control">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="selected-uom">
                         <label for="Item_UOM">Item UOM</label>
                         <input type="text" readonly name="Item_UOM" id="Item_UOM" class="form-control">
                     </div>
@@ -76,6 +85,12 @@
             </div>
             <div class="col-6"></div>
             <div class="col-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="is_component">
+                    <label class="form-check-label" for="is_component">
+                        Is Component
+                    </label>
+                </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="Is_active">
                     <label class="form-check-label" for="Is_active">
@@ -256,21 +271,21 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Operationg_Cost">Operation Cost</label>
-                                <input type="number" value="0" readonly name="totalOpCost" id="totalOpCost"
+                                <label for="totalOpCost">Operation Cost</label>
+                                <input type="text" value="0" readonly name="totalOpCost" id="totalOpCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="Material_Cost">Raw Material Cost</label>
+                                <label for="totalMatCost">Raw Material Cost</label>
                                 <input type="text" value="0" readonly name="totalMatCost" id="totalMatCost"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="total_Cost">Total Cost</label>
+                                <label for="totalBOMCost">Total Cost</label>
                                 <input type="text" value="0" readonly name="totalBOMCost" id="totalBOMCost"
                                     class="form-control">
                             </div>
