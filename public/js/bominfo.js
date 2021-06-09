@@ -11,7 +11,20 @@ $(document).ready(function () {
     $('#table_operations').DataTable();
     $('#table_materials').DataTable();
     $('#table_costing').DataTable();
+
+    amountChanger();
 });
+
+function amountChanger() {
+    $("input[name='Rate']").each(function () {
+        $(this).change(function () {
+            let master = $(this).parent('td').parent();
+            let qty = parseInt(master.find('#Quantity').val());
+            let newAmount = parseFloat($(this).val()) * qty;
+            master.find('#Amount').val(newAmount);
+        })
+    });
+}
 
 $("#routingSelect").change(function () {
     if ($(this).val() === 'newRouting') {
@@ -76,7 +89,7 @@ function computeCosts() {
         opCost += parseFloat(op_indiv_cost);
     }
     var materials = $("#bom-materials tbody tr");
-    for(let i = 0; i < materials.length; i++) {
+    for (let i = 0; i < materials.length; i++) {
         let material = $(`#bomMaterial-${i}`);
         let mat_indiv_cost = material.find("#Amount").val();
         materialCost += parseFloat(mat_indiv_cost);
@@ -138,8 +151,8 @@ function showRoutingsForm() {
     $(`#tab${menu}`).tab("show");
 }
 
-$("#is_component").change(function () { 
-    if($(this).prop('checked') == true) {
+$("#is_component").change(function () {
+    if ($(this).prop('checked') == true) {
         $("#component-select").prop('hidden', false);
         $("#product-select").prop('hidden', true);
         $("#manprod").val(0);
@@ -151,10 +164,10 @@ $("#is_component").change(function () {
     }
     $("#item_content").css("display", "none");
     $(`#Item_name`).val(null);
-    $(`#Item_UOM`).val(null);    
+    $(`#Item_UOM`).val(null);
 });
 
-$("#manprod, #components").change(function () { 
+$("#manprod, #components").change(function () {
     let showForm = $(this).val();
     if (showForm == 0) {
         $("#item_content").css("display", "none");
@@ -163,11 +176,11 @@ $("#manprod, #components").change(function () {
     }
     else {
         $("#item_content").css("display", "block");
-        if($(this).attr("id") === 'components')  $("#selected-uom").css('display', 'none');
+        if ($(this).attr("id") === 'components') $("#selected-uom").css('display', 'none');
     }
 });
 
-$("#components").change(function () { 
+$("#components").change(function () {
     if ($(this).val() == 0) return;
     let component_code = $(this).val().trim();
     console.log(component_code);
@@ -181,8 +194,9 @@ $("#components").change(function () {
             var table = $("#bom-materials tbody");
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
-            for(let i = 0; i < materials.length; i++) {
+            for (let i = 0; i < materials.length; i++) {
                 let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
+                let is_readonly = (materials[i].product_rates.rate == 1) ? '' : 'readonly';
                 table.append(
                     `
                     <tr id="bomMaterial-${i}">
@@ -191,15 +205,15 @@ $("#components").change(function () {
                                 <input type="checkbox" class="form-check-input">
                             </div>
                         </td>
-                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i+1}" readonly
+                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i + 1}" readonly
                                 name="No" id="No" class="form-control"></td>
                         <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${materials[i].product_rates.item.item_code}" readonly
                                 name="ItemCode" id="ItemCode" class="form-control"></td>
                         <td class="mr-unit-input"><input type="text" value="${materials[i].qty}" readonly name="Quantity"
                                 id="Quantity" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.item.uom_id}" readonly name="UOM" id="UOM"
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.uom.item_uom}" readonly name="UOM" id="UOM"
                                 class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" readonly name="Rate" id="Rate"
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" ${is_readonly} name="Rate" id="Rate"
                                 class="form-control"></td>
                         <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"
                                 class="form-control"></td>
@@ -217,6 +231,7 @@ $("#components").change(function () {
                 )
             }
             computeCosts();
+            amountChanger();
         }, error: function (response) {
             console.log(response);
         }
@@ -238,8 +253,9 @@ $(`#manprod`).change(function () {
             var table = $("#bom-materials tbody");
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
-            for(let i = 0; i < materials.length; i++) {
+            for (let i = 0; i < materials.length; i++) {
                 let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
+                let is_readonly = (materials[i].product_rates.rate == 1) ? '' : 'readonly';
                 table.append(
                     `
                     <tr id="bomMaterial-${i}">
@@ -248,15 +264,15 @@ $(`#manprod`).change(function () {
                                 <input type="checkbox" class="form-check-input">
                             </div>
                         </td>
-                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i+1}" readonly
+                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i + 1}" readonly
                                 name="No" id="No" class="form-control"></td>
                         <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${materials[i].product_rates.item.item_code}" readonly
                                 name="ItemCode" id="ItemCode" class="form-control"></td>
                         <td class="mr-unit-input"><input type="text" value="${materials[i].qty}" readonly name="Quantity"
                                 id="Quantity" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.item.uom_id}" readonly name="UOM" id="UOM"
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.uom.item_uom}" readonly name="UOM" id="UOM"
                                 class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" readonly name="Rate" id="Rate"
+                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" ${is_readonly} name="Rate" id="Rate"
                                 class="form-control"></td>
                         <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"
                                 class="form-control"></td>
@@ -274,6 +290,7 @@ $(`#manprod`).change(function () {
                 )
             }
             computeCosts();
+            amountChanger();
         }, error: function (response) {
             console.log(response);
         }
@@ -361,11 +378,11 @@ $("#saveBomForm").submit(function () {
         }
     });
 
-    if($("#manprod").val() == 0 && $("#components").val() == 0) {
+    if ($("#manprod").val() == 0 && $("#components").val() == 0) {
         alert('No product/component to make a BOM on.')
         return false;
     }
-    if($("#routingSelect").val() == 0) {
+    if ($("#routingSelect").val() == 0) {
         alert('No routing has been provided.')
         return false;
     }
@@ -375,19 +392,19 @@ $("#saveBomForm").submit(function () {
     let isDefault = $("#default").prop('checked') ? 1 : 0;
     let productsAndRates = {};
 
-    for(let i=0; i<$("#bom-materials tbody tr").length; i++) {
+    for (let i = 0; i < $("#bom-materials tbody tr").length; i++) {
         let material = $(`#bomMaterial-${i}`);
         productsAndRates[i] = {
-            'item_code' : material.find("#ItemCode").val(),
-            'qty' : parseInt(material.find("#Quantity").val()),
-            'rate' : parseFloat(material.find("#Rate").val()),
+            'item_code': material.find("#ItemCode").val(),
+            'qty': parseInt(material.find("#Quantity").val()),
+            'rate': parseFloat(material.find("#Rate").val()),
         }
     }
 
     console.log($("#manprod").val());
 
     let name = $("#is_component").prop('checked') ? 'component_code' : 'product_code';
-    let value = $("#is_component").prop('checked') ? $("#components").val() : $("#manprod").val(); 
+    let value = $("#is_component").prop('checked') ? $("#components").val() : $("#manprod").val();
 
     bomData.append(name, value);
     bomData.append('routing_id', $("#routingSelect").val());

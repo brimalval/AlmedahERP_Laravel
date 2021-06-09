@@ -146,9 +146,11 @@ class BOMController extends Controller
                 }
                 //dd(DB::getQueryLog());
                 else {
+                    $raw_mat = ManufacturingMaterials::where('item_code', $material['material']->item_code)->first();
                     $po_items = array(
                         'item_code' => $material['material']->item_code,
-                        'item' => ManufacturingMaterials::where('item_code', $material['material']->item_code)->first(),
+                        'item' => $raw_mat,
+                        'uom' => $raw_mat->uom,
                         'req_date' => date('Y-m-d'),
                         'qty' => $material['qty'],
                         'rate' => 1,

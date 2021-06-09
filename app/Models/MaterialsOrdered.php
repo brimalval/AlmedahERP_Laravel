@@ -21,9 +21,6 @@ class MaterialsOrdered extends Model
     public function items_list()
     {
         $items = json_decode($this->items_list_received, true);
-        while (gettype($items) === 'string') {
-            $items = json_decode($items, true);
-        }
         //var_dump($items);
         $order = $this->p_receipt->order;
         $ordered_mats = $order->itemsPurchased();

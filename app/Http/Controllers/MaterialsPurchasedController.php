@@ -143,7 +143,7 @@ class MaterialsPurchasedController extends Controller
         //get purchase receipt and delete pending orders record related to purchase receipt
         $p_receipt = $mp_record->receipt;
         if ($p_receipt != null) {
-            if ($p_receipt->pr_status === 'Draft') {
+            if ($p_receipt->pr_status === 'Draft' || $p_receipt->noReceivedMaterials() == true) {
                 $order_record = $p_receipt->order_record;
                 if ($order_record != null) $order_record->delete();
                 $p_invoice = $p_receipt->invoice;

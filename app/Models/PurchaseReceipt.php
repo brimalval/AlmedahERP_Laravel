@@ -42,6 +42,15 @@ class PurchaseReceipt extends Model
         return $received_mats_array;
     }
 
+    public function noReceivedMaterials() {
+        $materials = $this->order_record->items_list();
+        foreach($materials as $material) {
+            if($material['qty_received'] != 0) 
+                return false;
+        }
+        return true;
+    }
+
     public function order() {
         return $this->belongsTo(MaterialPurchased::class, 'purchase_id', 'purchase_id');
     }
