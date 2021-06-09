@@ -229,6 +229,10 @@ $("#cancelOrder").click(function () {
         type: "POST",
         url: `/delete-order/${$("#p_id").html()}`,
         success: function (response) {
+            if(response.error) {
+                alert(response.error);
+                return;
+            }
             loadPurchaseOrder();
         }
     });
