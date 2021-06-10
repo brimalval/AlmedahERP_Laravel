@@ -2,7 +2,7 @@
 $today = date('Y-m-d');
 ?>
 
-<script src="{{ asset('js/new-purchase-receipt.js') }}"></script>
+<script src="{{ asset('js/purchasereceipt.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">

@@ -26,17 +26,16 @@ class MaterialPurchased extends Model
     public function itemsPurchased() {
         $items_purchased = json_decode($this->items_list_purchased);
         // sometimes, one json_decode is not enough to convert json string to json object
-        while(gettype($items_purchased) === 'string') {
-            $items_purchased = json_decode($items_purchased);
-        }
         $items_purchased_array = array();
         foreach($items_purchased as $item) {
+            $material = ManufacturingMaterials::where('item_code', $item->item_code)->first();
             array_push($items_purchased_array,
                 array(
                     //'purchase_id' => $this->purchase_id,
                     //'supplier' => $item->supplier_id,
                     'item_code' => $item->item_code,
-                    'item' => ManufacturingMaterials::where('item_code', $item->item_code)->first(),
+                    'item' => $material,
+                    'uom' => $material->uom,
                     'req_date' => $item->req_date,
                     'qty' => $item->qty,
                     'rate' => $item->rate,

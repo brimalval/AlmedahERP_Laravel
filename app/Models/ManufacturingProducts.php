@@ -44,8 +44,11 @@ class ManufacturingProducts extends Model
         $materials = json_decode($this->materials);
         $materials_with_qty = array();
         foreach($materials as $material){
+            $raw_mat = ManufacturingMaterials::find($material->material_id);
+            $uom = $raw_mat->uom;
             array_push($materials_with_qty, array(
-                'material' => ManufacturingMaterials::find($material->material_id),
+                'material' => $raw_mat,
+                'uom' => $uom,
                 'qty' => $material->material_qty,
             ));
         }

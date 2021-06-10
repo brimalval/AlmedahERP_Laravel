@@ -283,10 +283,10 @@ $mat_index = 0;
                                     <input type="text" value="{{ $mat_data->qty }}" readonly name="Quantity" id="Quantity" class="form-control">
                                 </td>
                                 <td class="mr-unit-input">
-                                    <input type="text" value="{{ $mat_data->item->uom_id }}" readonly name="UOM" id="UOM" class="form-control">
+                                    <input type="text" value="{{ $mat_data->item->uom->item_uom }}" readonly name="UOM" id="UOM" class="form-control">
                                 </td>
                                 <td class="mr-unit-input">
-                                    <input type="number" value="{{ $mat_data->rate }}" readonly name="Rate" id="Rate" class="form-control">
+                                    <input type="number" value="{{ $mat_data->rate }}" @if($mat_data->rate != 1) readonly @endif name="Rate" id="Rate" class="form-control">
                                 </td>
                                 <td class="mr-unit-input"><input type="number" value="<?= $mat_data->qty * $mat_data->rate ?>" readonly name="Amount" id="Amount"
                                         class="form-control"></td>

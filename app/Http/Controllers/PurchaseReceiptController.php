@@ -156,16 +156,12 @@ class PurchaseReceiptController extends Controller
             $receipt_id = $form_data['receipt_id'];
             $received_mats = $form_data['mat_received'];
 
-            while (gettype($received_mats) === "string") {
-                $received_mats = json_decode($received_mats, true);
-            }
+            $received_mats = json_decode($received_mats, true);
 
             $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
             $receipt_mats = $receipt->item_list_received;
 
-            while (gettype($receipt_mats) === "string") {
-                $receipt_mats = json_decode($receipt_mats, true);
-            }
+            $receipt_mats = json_decode($receipt_mats, true);
 
             $i = 1;
 
@@ -176,10 +172,7 @@ class PurchaseReceiptController extends Controller
                 $i++;
             }
 
-            //dd($receipt_mats);
-
             $receipt->item_list_received = json_encode($receipt_mats);
-            //echo $receipt->item_list_received;
             $receipt->save();
 
             $i = 1;
@@ -191,7 +184,6 @@ class PurchaseReceiptController extends Controller
             }
             foreach ($order_items as $index => $order_item) {
                 $order_items[$index]['qty_received'] = strval(intval($order_items[$index]['qty_received']) + intval($received_mats[$i]['qty_received']));
-                //'curr_progress' => intval(($items[$i]['qty_received']/$item['qty'])*100)
                 $i++;
             }
             //dd($order_items);

@@ -1,7 +1,7 @@
 <?php
 $today = date('Y-m-d');
 $i = 1; ?>
-<script src="{{ asset('js/new-purchase-invoice.js') }}"></script>
+<script src="{{ asset('js/purchaseinvoice.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">

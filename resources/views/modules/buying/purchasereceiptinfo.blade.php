@@ -3,7 +3,7 @@ $today = date('Y-m-d');
 $i = 1;
 ?>
 
-<script src="{{ asset('js/new-purchase-receipt.js') }}"></script>
+<script src="{{ asset('js/purchasereceipt.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         let total_price = 0;
