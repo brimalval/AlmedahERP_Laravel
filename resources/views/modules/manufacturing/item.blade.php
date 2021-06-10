@@ -287,7 +287,7 @@
                     </script>
                 </div>
                 <div class="col text-right" style="padding-top:5px;">
-                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal">To Reproduce</button></p>
+                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal" onclick="getLowOnStocks()">To Reproduce</button></p>
                 </div>
                 
                 <table id="products-table" class="table table-striped table-bordered hover" style="width:100%">
@@ -1013,6 +1013,7 @@
                     <tr>
                         <th>Product</th>
                         <th>Quantity to Reproduce</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1025,13 +1026,21 @@
                             sammple
                             <!-- needed quantity to reproduce-->
                         </td>
+                        <td>
+                            <p><button type="button" id="" class="btn">try to click me!</button></p>
+                            <!-- needed quantity to reproduce-->
+                        </td>
+
                     </tr>
                 </tbody>
+                
             </table>
             <script>
+                var reproduceTable;
                 $(document).ready(function() {
-                    $('#toReproduceTable').DataTable();
+                    reproduceTable = $('#toReproduceTable').DataTable();
                 } );
+
             </script>
         </div>
         </div>
@@ -1043,7 +1052,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Checking of Materials</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Materials of Product</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -1059,20 +1068,16 @@
                         <td>Category</td>
                         <td>Qty. Available</td>
                         <td>Qty. Needed</td>
-                        <td>Status</td>
                     </tr>
                 </thead>
-                <tbody class="components">
+                <tbody class="components" id="checkingOfMaterialsTable">
                     <!--Components Body -->
                     
                 </tbody>
                 
             </table>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+        
         </div>
     </div>
 </div>
@@ -1403,5 +1408,93 @@
         setTimeout(function(){
             $('#alert-message').html('');
         }, 4000);
+    }
+
+    function getLowOnStocks(){
+        $.ajax({
+            type: 'GET',
+            url:'/getLowOnStocks',
+            success: function(data){
+                reproduceTable.clear();
+                data['data'].forEach((row) => {
+                    var quan = row['reorder_qty'] - row['stock_unit'];
+                    reproduceTable.row.add([
+                        `<tr>
+                            <td>
+                                <p><button type="button" id="" class="btn" data-toggle="modal" data-target="#test" onclick="getComponent(`+row['id'] + `)">` + row['product_code'] + `</button></p>
+                            </td>
+                            `,`
+                            <td>
+                                ` +quan+`
+                            </td>
+                            `,`
+                            <td>
+                                <p><button type="button"  class="btn btn-primary" onclick="reorder(`+row['id'] + `)"> Reorder</button></p>
+                            </td>
+                        </tr>`
+                    ]
+                    ).draw(false);
+                });
+            }
+        })
+    }
+
+    function getComponent(id){
+        var data = {};
+        data['id'] = id;
+        $.ajax({
+            type:'GET',
+            url: '/getComponent',
+            data: data,
+            success: function(data){
+                console.log(data);
+                var materials = data['data'];
+                //@TODO might be buggy if materials/component was not passed or did not enter for loop
+                
+                $('#checkingOfMaterialsTable tr').remove();
+                materials.forEach((row) => {
+                $("#checkingOfMaterialsTable").append(
+                    `<tr>
+                        <td></td>
+
+                        <td>
+                            ` +row[2]+ `
+                        </td>
+
+                        <td>
+                            ` +row[1]+ `
+                        </td>
+
+                        <td>
+                            ` +row[3]+ `
+                        </td>
+
+                        <td>
+                            ` +row[0]+ `
+                        </td>
+
+                    </tr>`
+                );
+                });
+            }
+        })
+    }
+
+    function reorder(id){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        var data = {};
+        data['id'] = id;
+        $.ajax({
+            type:'POST',
+            url: '/reorder',
+            data: data,
+            success: function(data){
+                
+            }
+        )};
     }
 </script>

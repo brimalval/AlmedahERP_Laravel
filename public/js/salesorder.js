@@ -274,27 +274,18 @@ function rawMaterials() {
     let filter = [];
     console.log("This is stockMinusQuantity");
     console.log(stockMinusQuantity);
-    if( document.getElementById("saleSupplyMethod").value == "Produce"){
-        //Filters cart for 0 values
-        for (let index = 0; index < stockMinusQuantity.length; index++) {
-            if( stockMinusQuantity[index][1] != 0){
-                filter.push(stockMinusQuantity[index]);
-            }
+    //Filters cart for 0 values
+    for (let index = 0; index < stockMinusQuantity.length; index++) {
+        if( stockMinusQuantity[index][1] != 0){
+            filter.push(stockMinusQuantity[index]);
         }
-        for (let index = 0; index < filter.length; index++) {
-            products[index] = filter[index][0];
-            qty[index] = filter[index][1];
-        }
-        data["products"] = products;
-        data["qty"] = qty;
-    }else{
-        for (let index = 0; index < currentCart.length; index++) {
-            products[index] = currentCart[index][0];
-            qty[index] = currentCart[index][1];
-        }
-        data["products"] = products;
-        data["qty"] = qty;
     }
+    for (let index = 0; index < filter.length; index++) {
+        products[index] = filter[index][0];
+        qty[index] = filter[index][1];
+    }
+    data["products"] = products;
+    data["qty"] = qty;
 
     if(products.length == 0 || qty.length == 0){
         $(".components tr").remove();
