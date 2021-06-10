@@ -24,7 +24,13 @@ class ManufacturingProducts extends Model
         'picture',
         'materials',
         'components',
-        'stock_unit'
+        'stock_unit',
+        'sale_supply_method',
+        'reorder_level',
+        'reorder_qty',
+        'prototype',
+        'manufacturing_date',
+        'product_pulled_off_market'
     ];
     protected $casts = [
         'materials' => 'array',

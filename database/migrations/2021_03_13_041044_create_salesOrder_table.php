@@ -21,7 +21,6 @@ class CreateSalesOrderTable extends Migration
             $table->integer('customer_id');
 
             $table->float('cost_price')->nullable();
-            $table->string('sale_supply_method');
             $table->date('transaction_date');
             $table->string('payment_mode');
             $table->float('payment_balance');

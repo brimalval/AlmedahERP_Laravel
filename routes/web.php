@@ -167,6 +167,8 @@ Route::patch('/update-product/{id}', [ProductsController::class, 'update']);
 Route::post('/delete-product/{id}', [ProductsController::class, 'delete']);
 Route::post('/create-item-group', [ProductsController::class, 'add_item_group']);
 Route::post('/create-product-unit', [ProductsController::class, 'add_product_unit']);
+Route::get('/getLowOnStocks', [ProductsController::class, 'getLowOnStocks']);
+Route::get('/getComponent', [ProductsController::class, 'getComponent']);
 
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function () {

@@ -17,6 +17,9 @@ class UpdateProductsTableAddSsMethodReorderLvlQty extends Migration
             $table->string('sale_supply_method');
             $table->double('reorder_level', 8, 2)->nullable();
             $table->double('reorder_qty', 8, 2)->nullable();
+            $table->tinyInteger('prototype');
+            $table->date('manufacturing_date')->nullable();
+            $table->date('product_pulled_off_market')->nullable();
         });
     }
 
@@ -31,6 +34,9 @@ class UpdateProductsTableAddSsMethodReorderLvlQty extends Migration
             $table->dropColumn('reorder_qty');
             $table->dropColumn('reorder_level');
             $table->dropColumn('sale_supply_method');
+            $table->dropColumn('prototype');
+            $table->dropColumn('manufacturing_date');
+            $table->dropColumn('product_pulled_off_market');
         });
     }
 }
