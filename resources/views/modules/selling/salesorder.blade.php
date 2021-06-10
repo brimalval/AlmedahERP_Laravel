@@ -196,18 +196,13 @@
                                                 <label class=" text-nowrap align-middle">
                                                     Product Code
                                                 </label>
-                                                <select class="form-control" id="saleProductCode" required
-                                                    name="saleProductCode" onchange="enableAddtoProduct()">
-                                                    <option value="none" selected disabled hidden>
+                                                <select class="form-control" id="saleProductCode"  name="saleProductCode" onchange="enableAddtoProduct()" required>
+                                                    <option value="none" selected disabled>
                                                         Select an Option
                                                     </option>
-                                                    @foreach ($products as $row)
-                                                        <option value="{{ $row->product_code }}" data-price = "{{ $row->sales_price_wt }}" data-stock = "{{ $row->stock_unit }}">
-                                                            {{ $row->product_code }}</option>
-                                                    @endforeach
                                                 </select>
                                                 <br>
-
+                                                
                                             </div>
                                         </div>
                                         <?php $today = date('Y-m-d'); ?>
@@ -968,8 +963,8 @@
                                                     </option>`);
                 response.forEach(row =>{
                     $('#saleProductCode').append(
-                        `<option value="` + row['product_code'] + `" data-price = "` + row['sales_price_wt'] + `" data-stock = "` + row['stock_unit'] +`">
-                                                            ` + row['product_code']  +`</option>`
+                        `<option value="` + row['product_code'] + `" data-price = "` + row['sales_price_wt'] + `" data-stock = "` + row['stock_unit'] +`" data-id="` +row['id'] + `">
+                                                            ` + row['product_code'] + ` (` + row['sale_supply_method'] + `)` +`</option>`
                     );
                 })
                 

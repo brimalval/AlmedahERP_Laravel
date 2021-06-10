@@ -164,6 +164,17 @@
         $('#product_code').val(product['product_code']);
         $('#product_name').val(product['product_name']);
         $('#stock_unit').val(product['stock_unit']);
+        $('#manufacturing_date').val(product['manufacturing_date']);
+        $('#product_pulled_off_market').val(product['product_pulled_off_market']);
+        $('#saleSupplyMethod').val(product['sale_supply_method'])
+        
+        $('#reorderLevel').val(product['reorder_level']);
+        $('#reorderQty').val(product['reorder_qty']);
+        if(product['prototype'] == 1){
+            $('#prototype').prop('checked', true);
+        }else{
+            $('#prototype').prop('checked', false);
+        }
         $('.selectpicker').selectpicker('val', product['product_type']);
         $('#sales_price_wt').val(product['sales_price_wt']);
         $('.selectpicker1').selectpicker('val', product['unit']);
@@ -308,12 +319,15 @@
                             <td class="font-weight-bold">{{ $product->product_name }}</td>
                             <td class="text-black-50">
                                 <!-- sales price data -->
+                                {{ $product->sales_price_wt }}
                             </td>
                             <td class="text-black-50">
                                 <!-- sales supply method -->
+                                {{ $product->sale_supply_method }}
                             </td>
                             <td class="text-black-50">
                                 <!-- stock quantity data -->
+                                {{ $product->stock_unit }}
                             </td>
 
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
@@ -557,18 +571,18 @@
                             </label>
                             <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
                                 <option selected disabled>Please Select</option>
-                                <option value="stock">Made to Stock</option>
-                                <option value="produce">To Produce</option>
+                                <option value="Made to Stock">Made to Stock</option>
+                                <option value="To Produce">To Produce</option>
                             </select>
                         </div>
                         <div class="form-group row" id="madeToStockFields" hidden>
                             <div class="col">
                                 <label for="reorderLevel">Minimum Order Quantity</label>
-                                <input type="text" name="reorderLevel" id="reorderLevel" class="form-control">
+                                <input type="number" name="reorderLevel" id="reorderLevel" class="form-control" placeholder="Ex. 100">
                             </div>
                             <div class="col">
                                 <label for="reorderQty">Maximum Order Quantity</label>
-                                <input type="text" name="reorderQty" id="reorderQty" class="form-control">
+                                <input type="number" name="reorderQty" id="reorderQty" class="form-control" placeholder="Ex. 100">
                             </div>
                         </div>
                         <script>
@@ -755,7 +769,7 @@
                             <textarea class="form-control" type="text" id="internal_description" name="internal_description" required></textarea>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" name="prototype" id="prototype" class="form-check-input">
+                            <input type="checkbox" name="prototype" id="prototype" class="form-check-input" value = 1>
                             <label for="prototype" class="form-check-label">Prototype</label>
                         </div>
                         <div class="modal-footer">
@@ -1325,13 +1339,11 @@
                             `,
                             `<span class="font-weight-bold">${data.product.product_code}</span>`,
                             `<span class="font-weight-bold">${data.product.product_name}</span>`,
-                            `<span class="dot-${(data.product.product_status == "Template") ? 'orange' : (data.product_status == "Variant") ? 'green' : 'blue'}"></span>
-                            ${data.product.product_status}`,
                             `<span class="text-black-50">
-                                ${data.product.product_type}
+                                ${data.product.sales_price_wt}
                             </span>`,
                             `<span class="text-black-50">
-                                ${data.product.unit}
+                                ${data.product.sale_supply_method}
                             </span>`,
                             `<span class="text-black-50">
                                 ${data.product.stock_unit}
@@ -1359,10 +1371,12 @@
                         $('#template_img').remove();
                         $('#attribute').selectpicker('refresh');
                     } else {
+                        console.log(data);
                         flashMessage('error', data.message);
                     }
                 },
                 error: function(data) {
+                    console.log(data);
                     flashMessage('error', data.message);
                 }
             });

@@ -52,6 +52,12 @@ class ProductsController extends Controller
             // Required to have at least 1 material OR at least 1 component 
             'materials' => 'required_if:components, {}', 
             'components' => 'required_if:materials, {}',
+            'saleSupplyMethod' =>'required|string',
+            'reorderLevel'=>'nullable|numeric|min:1',
+            'reorderQty'=>'nullable|numeric|min:1',
+            'prototype'=>'nullable|numeric|min:0',
+            'manufacturing_date'=>'required|date',
+            'product_pulled_off_market'=>'required|date'
         ];
         if(request('product_status') != 'Variant'){
             $rules['picture'] = 'required';
@@ -101,6 +107,23 @@ class ProductsController extends Controller
             $data->sales_price_wt = $form_data['sales_price_wt'];
             $data->unit = $form_data['unit'];
             $data->stock_unit = $form_data['stock_unit'];
+            $data->sale_supply_method = $form_data['saleSupplyMethod'];
+            $data->manufacturing_date = $form_data['manufacturing_date'];
+            $data->product_pulled_off_market = $form_data['product_pulled_off_market'];
+            
+            //Would fail if prototype is unchecked
+            //Since forms does not submit unchecked checkboxes
+            try {
+                $data->prototype = $form_data['prototype'];
+            } catch (\Throwable $th) {
+                $data->prototype = 0;
+            }
+
+            //If sales supply method stock is chosen adds reorderlevel and reorder qty
+            if($form_data['saleSupplyMethod'] == "Made to Stock"){
+                $data->reorder_level = $form_data['reorderLevel'];
+                $data->reorder_qty = $form_data['reorderQty'];
+            }
 
             if ($form_data['product_status'] == "Template") {
                 $concat = substr($form_data['product_name'], 0, 3) . "-" . substr($form_data['product_type'], 0, 3);
@@ -152,6 +175,7 @@ class ProductsController extends Controller
             return response()->json([
                 'status' => 'error',
                 'error' => $e->getCode(),
+                'idk' => $e->getMessage(),
             ]);
         }
 
@@ -202,6 +226,24 @@ class ProductsController extends Controller
             $data->unit = $form_data['unit'];
             $data->internal_description = $form_data['internal_description'];
             $data->bar_code = $form_data['bar_code'];
+
+            $data->sale_supply_method = $form_data['saleSupplyMethod'];
+            $data->manufacturing_date = $form_data['manufacturing_date'];
+            $data->product_pulled_off_market = $form_data['product_pulled_off_market'];
+            
+            //Would fail if prototype is unchecked
+            //Since forms does not submit unchecked checkboxes
+            try {
+                $data->prototype = $form_data['prototype'];
+            } catch (\Throwable $th) {
+                $data->prototype = 0;
+            }
+
+            //If sales supply method stock is chosen adds reorderlevel and reorder qty
+            if($form_data['saleSupplyMethod'] == "Made to Stock"){
+                $data->reorder_level = $form_data['reorderLevel'];
+                $data->reorder_qty = $form_data['reorderQty'];
+            }
 
             $data->save();
 
