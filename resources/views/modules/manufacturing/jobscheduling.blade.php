@@ -6,7 +6,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown li-bom">
+                <li class="nav-item li-bom">
+                    <a href="javascript:void(0)" onclick="loadJobschedhome()" class="btn btn-primary text-white" type="button">Refresh</a>
+                </li>
+                <!-- <li class="nav-item dropdown li-bom">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         More
                     </a>
@@ -14,7 +17,7 @@
                         <li><a class="dropdown-item" href="#">Edit</a></li>
                         <li><a class="dropdown-item" href="#">Delete</a></li>
                     </ul>
-                </li>
+                </li> -->
             </ul>
         </div>
         <li class="nav-item li-bom">
@@ -22,33 +25,7 @@
         </li>
     </div>
 </nav>
-<div class="container">
-    <div class="card my-2">
-        {{-- <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-3">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Component Code">
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        <div class="card-body filter">
-            <div class="row">
-                <div class="float-left">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Add Filter
-                    </button>
-                </div>
-                <div class=" ml-auto float-right">
-                    <span class="text-muted ">Last Modified On</span>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <table class="table table-bom border-bottom" id="jobScheduleTable">
+        <table class="table table-bom border-bottom w-100" id="jobScheduleTable">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
                     <td>
@@ -83,22 +60,62 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
-    <div class="row">
-        <div class="col-1 text-center">
-            <button type="submit" class=""> <span class="fas fa-chevron-left"></span></button>
-        </div>
-        <div class="col-1 text-center">
-            <p>1 of 2</p>
-        </div>
-        <div class="col-1 text-center">
-            <button type="submit" class=""> <span class="fas fa-chevron-right"></span></button>
-        </div>
-    </div>
-</div>
-
-<script>
+    <!-- <div id="gantt" style="height: 40em"></div> -->
+<script type="text/javascript">
     $('#jobScheduleTable').DataTable( {
-    responsive: true
-} );
+        responsive: true
+    });
+    function planJobSched() {
+        // Temporary condition to check if the current job has been planned, to hide or display the start and pause buttons
+        if (!$("#SPBtn").is(':visible')) {
+            $("#SPBtn").css("display", "inline");
+            $("#startBtn").css("display", "inline");
+            $("#SPBtn").css("display", "inline");
+            $("#finBtn").css("display", "inline");
+            $("#planBtn").css("display", "none");
+        } else {
+            $("#SPBtn").css("display", "none");
+            $("#startBtn").css("display", "none");
+            $("#SPBtn").css("display", "none");
+            $("#finBtn").css("display", "none");
+        }
+    }
+
+    $(document).ready(function() {
+        $("#SPBtn").css("display", "none");
+        $("#startBtn").css("display", "none");
+        $("#SPBtn").css("display", "none");
+        $("#finBtn").css("display", "none");
+        $('#operationsTable').DataTable({
+            responsive: true,
+            deferRender: true,
+            scrollX: true,
+            scrollY: 200,
+            scrollCollapse: true,
+            scroller: true,
+            searching: false,
+            paging: false,
+            info: false,
+            columnDefs: [{
+                orderable: false,
+                targets: [6, 13, 14, 15]
+            }]
+        });
+
+    });
+
+    function newTask() {
+        gantt.createTask(); // It's buggy since it does not parse any data.
+        // switch(gantt.getTask(gantt.getSelectedId()).parent){
+        //     case 0:{
+        //         gantt.createTask();
+        //         // gantt.refreshData(); Refreshes the gantt chart
+        //         break;
+        //     }
+        //     default:{
+        //         break;
+        //     }
+        // }
+    }
 </script>
+

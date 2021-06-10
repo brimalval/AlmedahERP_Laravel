@@ -53,7 +53,13 @@
                             {{ $bom->bom_name }}
                         </a>
                     </td>
-                    <td>{{ $bom->product_code }}</td>
+                    <td>
+                        @if (isset($bom->product_code))
+                            {{ $bom->product_code }}
+                        @else
+                            {{ $bom->component_code }}
+                        @endif
+                    </td>
                     <td>
                         @if ($bom->is_active == true)
                             <span>✓</span>

@@ -210,6 +210,7 @@
 								@endif
 							</tbody>
 						</table>
+						<div id="gantt_here" style='width:1000px; height:680px;'></div>
 					</div>
 				</div>
 			</div>

@@ -15,11 +15,22 @@ class Component extends Model
         'component_description',
         'item_code',
     ];
-
-    // public function raw_material(){
-    //     return $this->hasOne(ManufacturingMaterials::class, 'item_code', 'item_code');
-    // }
     
+    // Returns the component's materials & their respective quantities
+    // as an array of arrays {{material_object1, qty}, {material_object2, qty}, etc.}
+    // Expects that the json is formatted as {"0":{'material_id' : 'id', 'material_qty': 'qty'}, "1"...}
+    public function materials(){
+        $materials = json_decode($this->item_code);
+        $materials_with_qty = array();
+        foreach($materials as $material){
+            array_push($materials_with_qty, array(
+                'material' => ManufacturingMaterials::where('item_code', $material->item_code)->first(),
+                'qty' => $material->item_qty,
+            ));
+        }
+        return $materials_with_qty;
+    }
+
     /**
      * Returns the latest default BOM of the component. If none exist,
      * the latest non-default BOM of the component is given.

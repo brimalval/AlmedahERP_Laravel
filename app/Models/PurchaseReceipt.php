@@ -22,10 +22,6 @@ class PurchaseReceipt extends Model
 
     public function receivedMats() {
         $received_mats = json_decode($this->item_list_received);
-        while(gettype($received_mats) === 'string') {
-            $received_mats = json_decode($received_mats);
-        }
-        //var_dump($received_mats);
         $received_mats_array = array();
         foreach($received_mats as $mat) {
             $item_code = $mat->item_code;
@@ -38,7 +34,8 @@ class PurchaseReceipt extends Model
                     "item_name" => $item_name,
                     "qty" => $mat->qty_received,
                     "rate" => $mat->rate,
-                    "amount" => $mat->amount
+                    "amount" => $mat->amount,
+                    "item_condition" => $mat->item_condition
                 )
             );
         }
