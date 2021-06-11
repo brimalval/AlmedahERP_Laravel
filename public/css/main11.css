@@ -6,347 +6,399 @@
 /* ==========================================================================
    #FONT
    ========================================================================== */
+
 .font-robo {
-  font-family: "Roboto", "Arial", "Helvetica Neue", sans-serif;
+    font-family: "Roboto", "Arial", "Helvetica Neue", sans-serif;
 }
 
 .font-poppins {
-  font-family: "Poppins", "Arial", "Helvetica Neue", sans-serif;
+    font-family: "Poppins", "Arial", "Helvetica Neue", sans-serif;
 }
+
 
 /* ==========================================================================
    #GRID
    ========================================================================== */
+
 .row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 
 .row-space {
-  -webkit-box-pack: justify;
-  /*-webkit-justify-content: space-between;
+    -webkit-box-pack: justify;
+    /*-webkit-justify-content: space-between;
   -moz-box-pack: justify;
   -ms-flex-pack: justify;
   /*justify-content: space-between;*/
 }
 
 .col-2 {
-  width: -webkit-calc((100% - 30px) / 2);
-  width: -moz-calc((100% - 30px) / 2);
-  width: calc((100% - 30px) / 2);
+    width: -webkit-calc((100% - 30px) / 2);
+    width: -moz-calc((100% - 30px) / 2);
+    width: calc((100% - 30px) / 2);
 }
 
 @media (max-width: 767px) {
-  .col-2 {
-    width: 100%;
-  }
+    .col-2 {
+        width: 100%;
+    }
 }
+
 
 /* ==========================================================================
    #BOX-SIZING
    ========================================================================== */
+
+
 /**
  * More sensible default box-sizing:
  * css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice
  */
+
 html {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 * {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
-*, *:before, *:after {
-  -webkit-box-sizing: inherit;
-  -moz-box-sizing: inherit;
-  box-sizing: inherit;
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
 }
+
 
 /* ==========================================================================
    #RESET
    ========================================================================== */
+
+
 /**
  * A very simple reset that sits on top of Normalize.css.
  */
+
 body,
-h1, h2, h3, h4, h5, h6,
-blockquote, p, pre,
-dl, dd, ol, ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+blockquote,
+p,
+pre,
+dl,
+dd,
+ol,
+ul,
 figure,
 hr,
-fieldset, legend {
-  margin: 0;
-  padding: 0;
+fieldset,
+legend {
+    margin: 0;
+    padding: 0;
 }
+
 
 /**
  * Remove trailing margins from nested lists.
  */
-li > ol,
-li > ul {
-  margin-bottom: 0;
+
+li>ol,
+li>ul {
+    margin-bottom: 0;
 }
+
 
 /**
  * Remove default table spacing.
  */
+
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
+
 
 /**
  * 1. Reset Chrome and Firefox behaviour which sets a `min-width: min-content;`
  *    on fieldsets.
  */
+
 fieldset {
-  min-width: 0;
-  /* [1] */
-  border: 0;
+    min-width: 0;
+    /* [1] */
+    border: 0;
 }
 
 button {
-  outline: none;
-  background: none;
-  border: none;
+    outline: none;
+    background: none;
+    border: none;
 }
+
 
 /* ==========================================================================
    #PAGE WRAPPER
    ========================================================================== */
+
 .page-wrapper {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 
 body {
-  font-family: "Poppins", "Arial", "Helvetica Neue", sans-serif;
-  font-weight: 400;
-  font-size: 14px;
+    font-family: "Poppins", "Arial", "Helvetica Neue", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 400;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 400;
 }
 
 h1 {
-  font-size: 36px;
+    font-size: 36px;
 }
 
 h2 {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 h3 {
-  font-size: 24px;
+    font-size: 24px;
 }
 
 h4 {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 h5 {
-  font-size: 15px;
+    font-size: 15px;
 }
 
 h6 {
-  font-size: 13px;
+    font-size: 13px;
 }
-
-
 
 
 /* ==========================================================================
    #FORM
    ========================================================================== */
 
-
 .input--style-4 {
-  line-height: 50px;
-  background: #fafafa;
-  -webkit-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
-  -moz-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
-  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  padding: 0 20px;
-  font-size: 16px;
-  color: #666;
-  -webkit-transition: all 0.4s ease;
-  -o-transition: all 0.4s ease;
-  -moz-transition: all 0.4s ease;
-  transition: all 0.4s ease;
+    line-height: 50px;
+    background: #fafafa;
+    -webkit-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    -moz-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 0 20px;
+    font-size: 16px;
+    color: #666;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
 }
 
 .input--style-4::-webkit-input-placeholder {
-  /* WebKit, Blink, Edge */
-  color: #666;
+    /* WebKit, Blink, Edge */
+    color: #666;
 }
 
 .input--style-4:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-  color: #666;
-  opacity: 1;
+    /* Mozilla Firefox 4 to 18 */
+    color: #666;
+    opacity: 1;
 }
 
 .input--style-4::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-  color: #666;
-  opacity: 1;
+    /* Mozilla Firefox 19+ */
+    color: #666;
+    opacity: 1;
 }
 
 .input--style-4:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  color: #666;
+    /* Internet Explorer 10-11 */
+    color: #666;
 }
 
 .input--style-4:-ms-input-placeholder {
-  /* Microsoft Edge */
-  color: #666;
+    /* Microsoft Edge */
+    color: #666;
 }
 
 .label {
-  font-size: 16px;
-  color: #555;
-  text-transform: capitalize;
-  /*display: block;*/
-  margin-bottom: 5px;
-  display: inline-block;
+    font-size: 16px;
+    color: #555;
+    text-transform: capitalize;
+    /*display: block;*/
+    margin-bottom: 5px;
+    display: inline-block;
 }
 
 #labelid {
-	display: inline-block;
+    display: inline-block;
 }
 
 .radio-container {
-  display: inline-block;
-  position: relative;
-  padding-left: 30px;
-  cursor: pointer;
-  font-size: 16px;
-  color: #666;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    display: inline-block;
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .radio-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
 }
 
-.radio-container input:checked ~ .checkmark {
-  background-color: #e5e5e5;
+.radio-container input:checked~.checkmark {
+    background-color: #e5e5e5;
 }
 
-.radio-container input:checked ~ .checkmark:after {
-  display: block;
+.radio-container input:checked~.checkmark:after {
+    display: block;
 }
 
 .radio-container .checkmark:after {
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  background: #57b846;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: #57b846;
 }
 
 .checkmark {
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  transform: translateY(-50%);
-  left: 0;
-  height: 20px;
-  width: 20px;
-  background-color: #e5e5e5;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  -webkit-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
-  -moz-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
-  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #e5e5e5;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    -moz-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
 }
 
 .checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
+    content: "";
+    position: absolute;
+    display: none;
 }
 
 .input-group {
-  position: relative;
-  margin-bottom: 22px;
+    position: relative;
+    margin-bottom: 22px;
 }
 
 .input-group-icon {
-  position: relative;
+    position: relative;
 }
 
 .input-icon {
-  position: absolute;
-  font-size: 18px;
-  color: #999;
-  right: 18px;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  transform: translateY(-50%);
-  cursor: pointer;
+    position: absolute;
+    font-size: 18px;
+    color: #999;
+    right: 18px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    cursor: pointer;
 }
 
-.shadow-card{
-	box-shadow: 4px 4px 5px gray;
+.shadow-card {
+    box-shadow: 4px 4px 5px gray;
 }
-
 
 a.back-button {
-  color: black;
-  text-decoration: none;
+    color: black;
+    text-decoration: none;
 }
 
 a.back-button:hover {
-  color: black;
-  text-decoration: none;
+    color: black;
+    text-decoration: none;
 }
 
-.button-left-inventory, .button-right-inventory {
-  width: 10px;
+.button-left-inventory,
+.button-right-inventory {
+    width: 10px;
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 .manufacturing-body {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
-.list-bom{
-  list-style-type: none;
+.list-bom {
+    list-style-type: none;
+}
+
+.nav {
+    white-space: nowrap;
+    display: block!important;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nav li {
+    display: inline-block
+}
+
+#divMain {
+    overflow: auto;
 }

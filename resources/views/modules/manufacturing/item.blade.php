@@ -256,12 +256,14 @@
     <div class="container rounded">
         <div class="row d-flex justify-content-center">
             <div class="col-sm p-4 bg-light">
-                <h4 class="font-weight-bold text-black">Item List</h4>
+                <h4 class="font-weight-bold text-black">Product List</h4>
                 <div id="alert-message">
                 </div>
 
             <div class="row pb-2">
+                
                 <div class="col-12 text-right">
+
                     <p><button type="button" id="addNew" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus" aria-hidden="true"></i> Add New</button></p>
                     <script>
                         $('#addNew').click(function(){
@@ -273,6 +275,10 @@
                         });
                     </script>
                 </div>
+                <div class="col text-right" style="padding-top:5px;">
+                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal">To Reproduce</button></p>
+                </div>
+                
                 <table id="products-table" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
                         <tr>
@@ -283,9 +289,8 @@
                             </td>
                             <td>Item Code</td>
                             <td>Item Name</td>
-                            <td>Status</td>
-                            <td>Type</td>
-                            <td>Unit</td>
+                            <td>Sales Price</td>
+                            <td>Sales Supply Method</td>
                             <td>Stock Quantity </td>
                             <td>View</td>
                             <td>Action</td>
@@ -301,28 +306,14 @@
                                 </td>
                             <td class="font-weight-bold">{{ $product->product_code }}</td>
                             <td class="font-weight-bold">{{ $product->product_name }}</td>
-                            <td>
-                                <?php
-                                $color = "";
-                                if ($product->product_status == "Template") {
-                                    $color = "orange";
-                                } else if ($product->product_status == "Variant") {
-                                    $color = "green";
-                                } else {
-                                    $color = "blue";
-                                }
-                                ?>
-                                <span class="dot-<?= $color ?>"></span>
-                                {{ $product->product_status }}
+                            <td class="text-black-50">
+                                <!-- sales price data -->
                             </td>
                             <td class="text-black-50">
-                                {{ $product->product_type }}
+                                <!-- sales supply method -->
                             </td>
                             <td class="text-black-50">
-                                {{ $product->unit }}
-                            </td>
-                            <td class="text-black-50">
-                                {{ $product->stock_unit }}
+                                <!-- stock quantity data -->
                             </td>
 
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
@@ -332,7 +323,7 @@
                                     <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
                                         Actions
                                     </button>
-                                       <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
+                                        <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
                                         <li><button onclick="editProduct({{ json_encode($product) }})" style="width:100%" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</button></li>
                                         <li><button onclick="deleteProduct({{ $product->id }})" style="width:100%" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button></li>
                                         @if ($product->product_status == "Template")
@@ -402,7 +393,7 @@
                         @csrf
                         @method('PATCH')
                         <div class="row">
-                            <div class="col-sm" style="display:none;" id="item_code">
+                            <!-- <div class="col-sm" id="item_code">
                                 <div class="form-group">
                                     <label for="">Item Code</label>
                                     <input readonly class="form-control" type="text" id="product_code" name="product_code" placeholder="Ex. EM181204" required>
@@ -411,6 +402,12 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
+                                </div>
+                            </div> -->
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label for="product_code">Item Code</label>
+                                    <input type="text" name="product_code" id="product_code" class="form-control" placeholder="Ex. EM181204" required>
                                 </div>
                             </div>
                             <div class="col-sm">
@@ -554,7 +551,41 @@
                                 }
                             }
                         </script>
-
+                        <div class="form-group">
+                            <label class=" text-nowrap align-middle">
+                                Sales Supply Method
+                            </label>
+                            <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
+                                <option selected disabled>Please Select</option>
+                                <option value="stock">Made to Stock</option>
+                                <option value="produce">To Produce</option>
+                            </select>
+                        </div>
+                        <div class="form-group row" id="madeToStockFields" hidden>
+                            <div class="col">
+                                <label for="reorderLevel">Minimum Order Quantity</label>
+                                <input type="text" name="reorderLevel" id="reorderLevel" class="form-control">
+                            </div>
+                            <div class="col">
+                                <label for="reorderQty">Maximum Order Quantity</label>
+                                <input type="text" name="reorderQty" id="reorderQty" class="form-control">
+                            </div>
+                        </div>
+                        <script>
+                            function changeSaleSupplyMethod(){
+                                var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
+                                if (salesSupplyMethod == "stock") {
+                                    document.getElementById("madeToStockFields").removeAttribute("hidden");
+                                    document.getElementById("reorderLevel").setAttribute("required", "");
+                                    document.getElementById("reorderQty").setAttribute("required", "");
+                                } else {
+                                    document.getElementById("madeToStockFields").setAttribute("hidden", "");
+                                    
+                                    document.getElementById("reorderLevel").removeAttribute("required");
+                                    document.getElementById("reorderQty").removeAttribute("required");
+                                }
+                            }
+                        </script>
                         <div class="form-group">
                             <label for="">Barcode</label>
                             <input class="form-control" type="text" id="bar_code" name="bar_code" required placeholder="Ex. 036000291452">
@@ -636,7 +667,29 @@
                                 });
                             </script>
                         </div>
-
+                        <div class="form-group" id="attribute_group">
+                            <label>Value</label>
+                            <select id="value_item_variants" class="selectpicker2 form-control" name="value_item_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                                <option value="none" selected disabled hidden>
+                                    Select an Option
+                                </option>
+                                <option value="New">
+                                    &#43; Create a new Attribute
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="manufacturing_date">Manufacturing Date</label>
+                                    <input type="date" name="manufacturing_date" id="manufacturing_date" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label for="product_pulled_off_market">Product Pulled off Market</label>
+                                    <input type="date" name="product_pulled_off_market" id="product_pulled_off_market" class="form-control">
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group" id="materials-picker">
                             <label>Materials</label>
                             <select id="materials" class="selectpicker3 form-control" name="materials" data-container="body" data-live-search="true" title="Select Materials" data-hide-disabled="true">
@@ -701,7 +754,10 @@
                             <label for="">Item Description</label>
                             <textarea class="form-control" type="text" id="internal_description" name="internal_description" required></textarea>
                         </div>
-
+                        <div class="form-check">
+                            <input type="checkbox" name="prototype" id="prototype" class="form-check-input">
+                            <label for="prototype" class="form-check-label">Prototype</label>
+                        </div>
                         <div class="modal-footer">
 
                         </div>
@@ -927,7 +983,85 @@
         });
     </script>
 </div>
+<!-- to Reproduce Modal -->
+<div class="modal fade" id="toReproduceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Product To Reproduce</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <table id="toReproduceTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity to Reproduce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <!-- product that needs to reproduce -->
+                            <p><button type="button" id="" class="btn" data-toggle="modal" data-target="#test">try to click me!</button></p>
+                        </td>
+                        <td>
+                            sammple
+                            <!-- needed quantity to reproduce-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <script>
+                $(document).ready(function() {
+                    $('#toReproduceTable').DataTable();
+                } );
+            </script>
+        </div>
+        </div>
+    </div>
+</div>
 
+<!-- to reproduce Sub Modal -->
+    <div class="modal fade bd-example-modal-lg" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Checking of Materials</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <table class="table border-bottom table-hover table-bordered">
+                <thead class="border-top border-bottom bg-light">
+                    <tr class="text-muted">
+                        <td>
+                            <!-- must contain check box -->
+                        </td>
+                        <td>Component Name</td>
+                        <td>Category</td>
+                        <td>Qty. Available</td>
+                        <td>Qty. Needed</td>
+                        <td>Status</td>
+                    </tr>
+                </thead>
+                <tbody class="components">
+                    <!--Components Body -->
+                    
+                </tbody>
+                
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+    </div>
+</div>
 <!-- ADD ATTRIBUTE  MODAL -->
 <div class="modal fade" id="add-attribute-modal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">

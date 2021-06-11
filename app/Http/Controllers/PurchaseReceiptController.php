@@ -73,17 +73,6 @@ class PurchaseReceiptController extends Controller
         try {
             $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
 
-            //$mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->get();
-            //$materials_ordered = $mat_purchased->itemsPurchased();
-            //$materials_received = $receipt->receivedMats();
-
-            //for($i = 0; $i < sizeof($materials_ordered); $i++) {
-            //    $materials_ordered[$i]['qty'] = $materials_ordered[$i]['qty'] - $materials_received[$i]['qty']; 
-            //}
-
-            //$mat_purchased->items_list_purchased = json_encode($materials_ordered);
-            //$mat_purchased->save();
-
             $receipt->pr_status = "To Receive and Bill";
             $receipt->save();
 
@@ -103,6 +92,7 @@ class PurchaseReceiptController extends Controller
                     array(
                         'item_code' => $item['item_code'],
                         'qty_received' => '0',
+                        'item_condition' => 'New'
                     )
                 );
             }
@@ -166,16 +156,12 @@ class PurchaseReceiptController extends Controller
             $receipt_id = $form_data['receipt_id'];
             $received_mats = $form_data['mat_received'];
 
-            while (gettype($received_mats) === "string") {
-                $received_mats = json_decode($received_mats, true);
-            }
+            $received_mats = json_decode($received_mats, true);
 
             $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
             $receipt_mats = $receipt->item_list_received;
 
-            while (gettype($receipt_mats) === "string") {
-                $receipt_mats = json_decode($receipt_mats, true);
-            }
+            $receipt_mats = json_decode($receipt_mats, true);
 
             $i = 1;
 
@@ -186,10 +172,7 @@ class PurchaseReceiptController extends Controller
                 $i++;
             }
 
-            //dd($receipt_mats);
-
             $receipt->item_list_received = json_encode($receipt_mats);
-            //echo $receipt->item_list_received;
             $receipt->save();
 
             $i = 1;
@@ -201,7 +184,6 @@ class PurchaseReceiptController extends Controller
             }
             foreach ($order_items as $index => $order_item) {
                 $order_items[$index]['qty_received'] = strval(intval($order_items[$index]['qty_received']) + intval($received_mats[$i]['qty_received']));
-                //'curr_progress' => intval(($items[$i]['qty_received']/$item['qty'])*100)
                 $i++;
             }
             //dd($order_items);
@@ -254,17 +236,33 @@ class PurchaseReceiptController extends Controller
             $nextId = ($lastReceipt) ? PurchaseReceipt::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-            $to_append = strlen((string) $nextId);
-
             $receipt_id = "PR-" . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 
             $data->p_receipt_id = $receipt_id;
             $data->date_created = $form_data['date_created'];
             $data->purchase_id = $form_data['purchase_id'];
-            $data->item_list_received = json_encode($form_data['items_received']);
+            $data->item_list_received = $form_data['items_received'];
             $data->grand_total = $form_data['grand_total'];
 
             $data->save();
+
+            //create purchase invoice after purchase receipt
+
+            $p_invoice = new PurchaseInvoice();
+
+            $lastInvoice = PurchaseInvoice::orderby('id', 'desc')->first();
+            $nextId = ($lastInvoice) ? $lastInvoice->id + 1 : 1;
+
+            $invoice_id = "PI-" . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+
+            $p_invoice->p_invoice_id = $invoice_id;
+            $p_invoice->p_receipt_id = $receipt_id;
+            $p_invoice->date_created = date('Y-m-d');
+            $p_invoice->payment_mode = 'Cash';
+            $p_invoice->grand_total = $form_data['grand_total'];
+            $p_invoice->payment_balance = $form_data['grand_total'];
+
+            $p_invoice->save();
         } catch (Exception $e) {
             return $e;
         }
@@ -279,7 +277,7 @@ class PurchaseReceiptController extends Controller
 
             $data->date_created = $form_data['date_created'];
             $data->purchase_id = $form_data['purchase_id'];
-            $data->item_list_received = json_encode($form_data['items_received']);
+            $data->item_list_received = $form_data['items_received'];
             $data->grand_total = $form_data['grand_total'];
 
             $data->save();

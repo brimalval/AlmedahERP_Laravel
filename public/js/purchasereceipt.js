@@ -23,6 +23,7 @@ function saveReceipt() {
             qty_received: $(`#qtyAcc${i}`).html(),
             rate: $(`#rateAcc${i}`).html(),
             amount: $(`#amtAcc${i}`).html(),
+            item_condition: "New"
         };
     }
 
@@ -44,6 +45,9 @@ function saveReceipt() {
         processData: false,
         success: function (response) {
             loadPurchaseReceipt();
+            if($("#contentPurchaseInvoice").length) {
+                loadPurchaseInvoice();
+            }
         },
     });
 }
@@ -101,6 +105,9 @@ function submitReceipt() {
             success: function (response) {
                 console.log(response);
                 loadPurchaseReceipt();
+                if($("#contentPendingOrders").length) {
+                    loadPendingOrders();
+                }
             },
         });
     } else {

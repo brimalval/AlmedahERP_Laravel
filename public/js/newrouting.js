@@ -51,6 +51,10 @@ function clearOperationFields() {
     $("#Description").html(null);
 }
 
+$("#saveRouting").click(function () {
+    $("#routingsForm").submit();
+});
+
 $("#routingsForm").submit(function () {
     $.ajaxSetup({
         headers: {
@@ -124,10 +128,6 @@ $("#deleteRouting").submit(function () {
         }
     });
     return false;
-});
-
-$("#saveRouting").click(function () {
-    $("#routingsForm").submit();
 });
 
 $("#saveOperation").click(function() {

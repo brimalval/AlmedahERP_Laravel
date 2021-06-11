@@ -279,6 +279,30 @@
                         </select>
                     </div>
 
+                    <div class="form-group" id="attribute_group">
+                        <label>Attributes</label>
+                        <select id="attribute_inventory_variants" class="selectpicker2 form-control" name="attribute_inventory_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="New">
+                                &#43; Create a new Attribute
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Value</label>
+                        <select id="value_inventory_variants" class="selectpicker2 form-control" name="value_inventory_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="New">
+                                &#43; Create a new Attribute
+                            </option>
+                        </select>
+                    </div>
+                    
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
                             onclick="$('#update-material-form-modal').modal('hide')">Close</button>
@@ -388,6 +412,29 @@
                             </option>
                             <option value="To Purchase">To Purchase</option>
                             <option value="Available">Available</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="attribute_group">
+                        <label>Attributes</label>
+                        <select id="attribute_inventory_variants" class="selectpicker2 form-control" name="attribute_inventory_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="New">
+                                &#43; Create a new Attribute
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Value</label>
+                        <select id="value_inventory_variants" class="selectpicker2 form-control" name="value_inventory_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="New">
+                                &#43; Create a new Attribute
+                            </option>
                         </select>
                     </div>
 
@@ -520,6 +567,29 @@
                             </option>
                             <option value="To Purchase">To Purchase</option>
                             <option value="Available">Available</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="attribute_group">
+                        <label>Attributes</label>
+                        <select id="attribute_inventory_variants" class="selectpicker2 form-control" name="attribute_inventory_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="New">
+                                &#43; Create a new Attribute
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Value</label>
+                        <select id="value_inventory_variants" class="selectpicker2 form-control" name="value_inventory_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="New">
+                                &#43; Create a new Attribute
+                            </option>
                         </select>
                     </div>
 

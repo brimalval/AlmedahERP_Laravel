@@ -219,6 +219,39 @@ function viewQuotationItems(id) {
 
 }
 
+$("#cancelOrder").click(function () { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    let cancel = confirm("Are you sure that you want to cancel this purchase order?");
+
+    if(cancel) {
+        $.ajax({
+            type: "POST",
+            url: `/delete-order/${$("#p_id").html()}`,
+            success: function (response) {
+                if(response.error) {
+                    alert(response.error);
+                    return;
+                }
+                loadPurchaseOrder();
+                if($("#contentPurchaseReceipt").length) {
+                    loadPurchaseReceipt();
+                }
+                if($("#contentPurchaseInvoice").length) {
+                    loadPurchaseInvoice();
+                }
+                if($("#contentPendingOrders").length) {
+                    loadPendingOrders();
+                }
+            }
+        });
+    }
+    
+});
+
 //For permanently changing purchase orders
 //Only works on existing purchase orders
 $("#submitOrder").on('click', submitOrder);
@@ -241,6 +274,7 @@ function loadQuotation(id) {
             $("#sqID").val(data.quotation.supp_quotation_id);
             $("#reqDate").val(data.req_date);
             let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
+            $("#hiddenSupplierField").val(data.supplier.supplier_id);
             $("#supplierField").val(data.supplier.company_name);
             $("#suppAddress").val(data.supplier.supplier_address);
             for (let i = 1; i <= data.items.length; i++) {
@@ -330,6 +364,7 @@ function saveOrder() {
 
     var form_data = new FormData();
     var purchased_mats = {};
+    var materialCount = 0;
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
         reqDate = new Date($("#date" + i).val());
         if (transDate > reqDate) {
@@ -353,9 +388,9 @@ function saveOrder() {
             "rate": parseFloat($("#rate" + i).html()),
             "subtotal": parseFloat(price_string.replaceAll(',', ''))
         }
-        //
+        ++materialCount;
     }
-    //console.log(JSON.stringify(purchased_mats));
+   
     if ($("#purch_id").val()) {
         form_data.append('purchase_id', $("#purch_id").val());
     }
@@ -366,19 +401,51 @@ function saveOrder() {
     form_data.set('materials_purchased', JSON.stringify(purchased_mats));
 
     let url = !$("#mp_status").length ? '/create-order' : '/update-order';
+    let purchase_id = '';
 
     $.ajax({
         url: url,
         type: 'POST',
         data: form_data,
+        async: false,
         cache: false,
         contentType: false,
         processData: false,
         success: function (data) {
             console.log("Success");
-            loadPurchaseOrder();
+            //loadPurchaseOrder();
+            purchase_id = data.purchase_id;
         }
     });
+
+    //Only store these materials when creating purchase order
+    if (!$("#purch_id").val()) {
+        for(let i=1; i<=materialCount; i++) {
+            let mp_material = new FormData();
+            mp_material.append('purchase_id', purchase_id);
+            mp_material.append('item_code', purchased_mats[i].item_code);
+            mp_material.append('qty', purchased_mats[i].qty);
+            mp_material.append('supplier_id', $("#hiddenSupplierField").val());
+            mp_material.append('required_date', purchased_mats[i].req_date);
+            mp_material.append('rate', purchased_mats[i].rate);
+            mp_material.append('subtotal',purchased_mats[i].subtotal);
+            $.ajax({
+                type: "POST",
+                url: '/store-mp-material',
+                data: mp_material,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log("success");
+                    loadPurchaseOrder();
+                }
+            });
+        }
+    }
+
+    
+
 }
 
 $(document).ready(function () {

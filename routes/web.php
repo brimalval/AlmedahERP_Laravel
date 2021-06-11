@@ -73,11 +73,15 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::get('/bom', function () {
-    return view('modules.BOM.bom');
-});
+Route::get('/bom', [BOMController::class, 'index']);
 Route::get('/newbom', [BOMController::class, 'BOMForm']);
 Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
+Route::get('/get-component/{component_code}', [BOMController::class, 'getComponent']);
+Route::post('/create-bom', [BOMController::class, 'store']);
+Route::get('/view-bom/{bom_id}', [BOMController::class, 'viewBOM']);
+Route::patch('/update-bom/{bom_id}', [BOMController::class, 'update']);
+Route::delete('/delete-bom/{bom_id}', [BOMController::class, 'delete']);
+
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -349,8 +353,8 @@ Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
-Route::get('/test', [MaterialsPurchasedController::class, 'sampleFunction']);
-Route::get('/get-all', [MaterialsPurchasedController::class, 'getAll']);
+Route::post('/store-mp-material', [MaterialsPurchasedController::class, 'storeMaterial']);
+Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
@@ -495,7 +499,7 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
-#Route::get('/supplier', [SupplierController::class, 'index']);   
+#Route::get('/supplier', [SupplierController::class, 'index']);
 #Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
 #Route::post('/create-supplier', [SupplierController::class, 'store']);
 #Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
@@ -504,7 +508,7 @@ Route::get('/create-new-supplier', function () {
     return view('modules.buying.createnewsupplier');
 });
 
-/*SUPPLIER GROUP*/ 
+/*SUPPLIER GROUP*/
 Route::get('/newsuppliergroup', function() {
     return view('modules.NewUI.NewSupplierGroup');
 });
