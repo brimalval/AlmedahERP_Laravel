@@ -1,6 +1,5 @@
 // // Functions here will not work on the full page tab of a new sale as there are duplicates
 
-
 $("#idBtn").on("click", function () {
     var id = $("#custId").val();
     $.ajax({
@@ -54,7 +53,6 @@ $("#idBtn").on("click", function () {
 //  });
 //}
 var mat_insufficient = false;
-
 
 function selectPaymentMethod() {
     var selectedPayment = document.getElementById("salePaymentMethod").value;
@@ -130,8 +128,9 @@ function installmentType() {
         );
     } else {
         installment_type = document.getElementById("installmentType").value;
-        saleDownpaymentCost = document.getElementById("saleDownpaymentCost")
-            .value;
+        saleDownpaymentCost = document.getElementById(
+            "saleDownpaymentCost"
+        ).value;
         $("#payments_table_body").append(
             '<tr><td><div class="form-check"><input type="checkbox" class="form-check-input append-check"></div></td><td class="text-center">Downpayment </td><td class="text-center">' +
                 saleDownpaymentCost +
@@ -180,7 +179,8 @@ function installmentType() {
 }
 
 var totalValue = 0;
-
+// array to add in transferred qty in Work Order Transferred Qty column
+var addToTransferredQtyInWO = [];
 // 2d Array [ProductCode, Quantity]
 var currentCart = [];
 // Array for storing Insufficient Quantity Items to be used for Material Request
@@ -210,20 +210,28 @@ function contains(names, arr) {
 function addToTable() {
     currentProduct = document.getElementById("saleProductCode").value;
     currentProductPrice = document.getElementById("saleProductCode");
-    currentProductPrice = $('option:selected', currentProductPrice).attr('data-price');
+    currentProductPrice = $("option:selected", currentProductPrice).attr(
+        "data-price"
+    );
     currentProductStock = document.getElementById("saleProductCode");
-    currentProductStock = $('option:selected', currentProductStock).attr('data-stock');
+    currentProductStock = $("option:selected", currentProductStock).attr(
+        "data-stock"
+    );
 
     if (!contains(currentProduct, currentCart)) {
         currentCart.push([currentProduct, 0]);
         stockMinusQuantity.push([currentCart, 0]);
         $("#ProductsTable").append(
-            `<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ` 
-            + currentProduct +
-            `</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control text-center" data-stock="`+currentProductStock+ `"value="0" onchange="changeQuantity(this)"></td>
-            <td class="text-center">` + currentProductStock +
-            `<td class="text-center">` + currentProductPrice +
-            `<td class="text-center">   <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>`
+            `<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ` +
+                currentProduct +
+                `</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control text-center" data-stock="` +
+                currentProductStock +
+                `"value="0" onchange="changeQuantity(this)"></td>
+            <td class="text-center">` +
+                currentProductStock +
+                `<td class="text-center">` +
+                currentProductPrice +
+                `<td class="text-center">   <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Remove</button></td></tr>`
         );
     }
 }
@@ -231,7 +239,7 @@ function addToTable() {
 //Quantity inside the products table
 function changeQuantity(r) {
     stock = r.value - r.getAttribute("data-stock");
-    if(stock <= 0 ){
+    if (stock <= 0) {
         stock = 0;
     }
     index = r.parentNode.parentNode.rowIndex - 1;
@@ -263,7 +271,7 @@ $("#btnSalesCalculate").click(function () {
     rawMaterials();
 });
 
-function changeSaleSupplyMethod(){
+function changeSaleSupplyMethod() {
     rawMaterials();
 }
 
@@ -274,31 +282,24 @@ function rawMaterials() {
     let filter = [];
     console.log("This is stockMinusQuantity");
     console.log(stockMinusQuantity);
-    if( document.getElementById("saleSupplyMethod").value == "Produce"){
-        //Filters cart for 0 values
-        for (let index = 0; index < stockMinusQuantity.length; index++) {
-            if( stockMinusQuantity[index][1] != 0){
-                filter.push(stockMinusQuantity[index]);
-            }
+    console.log(stockMinusQuantity.length);
+    //Filters cart for 0 values
+    for (let index = 0; index < stockMinusQuantity.length; index++) {
+        if (stockMinusQuantity[index][1] != 0) {
+            filter.push(stockMinusQuantity[index]);
         }
-        for (let index = 0; index < filter.length; index++) {
-            products[index] = filter[index][0];
-            qty[index] = filter[index][1];
-        }
-        data["products"] = products;
-        data["qty"] = qty;
-    }else{
-        for (let index = 0; index < currentCart.length; index++) {
-            products[index] = currentCart[index][0];
-            qty[index] = currentCart[index][1];
-        }
-        data["products"] = products;
-        data["qty"] = qty;
     }
 
-    if(products.length == 0 || qty.length == 0){
+    for (let index = 0; index < filter.length; index++) {
+        products[index] = filter[index][0];
+        qty[index] = filter[index][1];
+    }
+    data["products"] = products;
+    data["qty"] = qty;
+
+    if (products.length == 0 || qty.length == 0) {
         $(".components tr").remove();
-    }else{
+    } else {
         $.ajax({
             url: "/getCompo",
             type: "GET",
@@ -316,11 +317,13 @@ function rawMaterials() {
 
 function finalizer(arr_components) {
     componentsOrder = arr_components;
+    console.log(arr_components);
     $("#create-material-req-btn").html("");
     $(".components tr").remove();
 
     // Raw materials that are insufficient are stored in this array
     createMatRequestItems = [];
+    addToTransferredQtyInWO = [];
     // Raw Materials inside Components
     materialsInComponents = [];
     // Raw Materials only
@@ -694,9 +697,8 @@ function viewPayments(id) {
                     url: "getAmountToBePaid/" + id,
                     type: "get",
                     success: function (response) {
-                        document.getElementById(
-                            "view_totalamount"
-                        ).value = response;
+                        document.getElementById("view_totalamount").value =
+                            response;
                     },
                 });
             }
