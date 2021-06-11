@@ -184,6 +184,8 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 Route::resource('/jobscheduling', JobSchedController::class);
 Route::get('/jobscheduling/{work_order}/get-operations', [JobSchedController::class, 'get_operations'])
        ->name('jobscheduling.getoperations');
+Route::get('/jobscheduling/{jobsched}/get-operations/gantt', [JobSchedController::class, 'get_operations_gantt']);
+Route::put('/jobscheduling/{jobsched}/status/{status}', [JobSchedController::class, 'set_status'])->name('jobscheduling.setStatus');
 
 // Route for parts needed in a job scheduling entry
 Route::resource('/jobscheduling/part', PartsController::class);
@@ -191,9 +193,9 @@ Route::resource('/jobscheduling/part', PartsController::class);
 Route::resource('/jobscheduling/component', ComponentController::class);
 
 //Routes for pause play finish of operations
-Route::post('/startOperation' , [JobSchedController::class, 'startOperation']);
-Route::post('/pauseOperation' , [JobSchedController::class, 'pauseOperation']);
-Route::post('/finishOperation' , [JobSchedController::class, 'finishOperation']);
+Route::put('/jobscheduling/{jobsched}/startOperation' , [JobSchedController::class, 'startOperation'])->name('jobscheduling.op.start');
+Route::put('/jobscheduling/{jobsched}/pauseOperation' , [JobSchedController::class, 'pauseOperation'])->name('jobscheduling.op.pause');
+Route::put('/jobscheduling/{jobsched}/finishOperation' , [JobSchedController::class, 'finishOperation'])->name('jobscheduling.op.finish');
 
 /**MACHINES MANUAL ROUTES */
 Route::get('/machinemanual', [MachinesManualController::class , 'index']);

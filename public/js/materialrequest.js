@@ -219,10 +219,21 @@ function loadEdit(url){
 }
 
 function loadIntoPage(element, url){
-    let parentPane = $(element).parents('.tab-pane');
-    parentPane.html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
-    parentPane.load(url);
-    return parentPane.length;
+    $.getScript('js/ajaxloader.js', function(){
+        let parentPane = $(element).parents('.tab-pane');
+        parentPane.html('<canvas id="spinner" aria-hidden="true"></canvas>');
+        var opts = {
+            size: 85,           // Width and height of the spinner
+            // factor: 0.25,       // Factor of thickness, density, etc.
+            // color: "#000",      // Color #rgb or #rrggbb
+            // speed: 1.0,         // Number of turns per second
+            // clockwise: true     // Direction of rotation
+        };
+        var ajaxLoader = new AjaxLoader("spinner", opts);
+        ajaxLoader.show();
+        parentPane.load(url);
+        return parentPane.length;
+    })
 }
 
 // These two listeners will fix stacking modals

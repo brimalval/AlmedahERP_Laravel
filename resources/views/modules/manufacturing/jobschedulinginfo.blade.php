@@ -150,19 +150,30 @@
 								<h3>Actions</h3>
 							</div>
 							<div class="col-12">
-									<button class="btn btn-sm btn-primary form-control my-1" onclick="planJobSched()"
-										id="planBtn">Plan</button>
+								<button class="btn btn-sm btn-primary form-control my-1" onclick="planJobSched(); return false;"
+									id="planBtn">Plan</button>
 							</div>
 						@endif
-						<div class="col-12">
-							<button class="btn btn-sm btn-primary form-control my-1" id="startBtn">Start</button>
-						</div>
-						<div class="col-12">
-							<button class="btn btn-sm btn-primary form-control my-1" id="SPBtn">Pause/Resume</button>
-						</div>
-						<div class="col-12">
-							<button class="btn btn-sm btn-primary form-control my-1" id="finBtn">Finish</button>
-						</div>
+						@if (isset($jobsched))
+							<div class="col-12">
+								<button class="btn btn-sm btn-primary form-control my-1" onclick="startJobSched(); return false;" id="startBtn">Start</button>
+							</div>
+							<div class="col-12">
+								<button class="btn btn-sm btn-primary form-control my-1" id="SPBtn">Pause/Resume</button>
+							</div>
+							<div class="col-12">
+								<button class="btn btn-sm btn-primary form-control my-1" id="finBtn">Finish</button>
+							</div>
+							{{-- Hide the buttons if the jobsched does not have "planned" status yet --}}
+							@if($jobsched->js_status != "Planned")
+								<script>
+									$("#SPBtn").css("display","none");
+									$("#startBtn").css("display","none");
+									$("#SPBtn").css("display","none");
+									$("#finBtn").css("display","none");
+								</script>
+							@endif
+						@endif
 					</div>
 				</div>
 
@@ -185,7 +196,7 @@
 								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL START</td>
 								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL END</td>
 								<td style="font-size:90%;font-weight:bold" class="text-nowrap">STATUS</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">QTY FINISHED</td>
+								{{-- <td style="font-size:90%;font-weight:bold" class="text-nowrap">QTY FINISHED</td> --}}
 								<td>
 									<!--empty-->
 								</td>
@@ -210,7 +221,15 @@
 								@endif
 							</tbody>
 						</table>
-						<div id="gantt_here" style='width:1000px; height:680px;'></div>
+						{{-- Show the gantt chart only if one exists (currently updating one) & status is planned --}}
+						@if(isset($jobsched))
+							<div id="gantt_here" style='width:1000px; height:680px;'></div>
+							@if ($jobsched->js_status != "Planned")
+								<script>
+									$('#gantt_here').css('display', 'none');
+								</script>
+							@endif
+						@endif
 					</div>
 				</div>
 			</div>
@@ -218,13 +237,32 @@
 	</div>
 </form>
 
+{{-- Forms for updating a jobsched --}}
+@if(isset($jobsched))
+	<form action="{{ route('jobscheduling.setStatus', ['jobsched'=>$jobsched->id, 'status'=>'plan']) }}" id="js-plan-form">
+		@csrf
+		@method('PUT')
+	</form>
+
+	<form action="{{ route('jobscheduling.setStatus', ['jobsched'=>$jobsched->id, 'status'=>'start']) }}" id="js-start-form">
+		@csrf
+		@method('PUT')
+	</form>
+	<form action="{{ route('jobscheduling.op.start', ['jobsched'=>$jobsched->id]) }}" id="op-start-form">
+		@csrf
+		@method('PUT')
+	</form>
+	<form action="{{ route('jobscheduling.op.pause', ['jobsched'=>$jobsched->id]) }}" id="op-pause-form">
+		@csrf
+		@method('PUT')
+	</form>
+	<form action="{{ route('jobscheduling.op.finish', ['jobsched'=>$jobsched->id]) }}" id="op-finish-form">
+		@csrf
+		@method('PUT')
+	</form>
+@endif
+
 <script>
-	$( document ).ready(function() {
-		$("#SPBtn").css("display","none");
-		$("#startBtn").css("display","none");
-		$("#SPBtn").css("display","none");
-		$("#finBtn").css("display","none");
-	});
 	$('#operationsTable').DataTable( {
 		responsive: true,
 		deferRender:    true,
@@ -236,24 +274,238 @@
         paging:         false,
         info:           false,
 		columnDefs: [{ 
-			orderable: false, targets: [6,13,14,15] 
+			orderable: false,
 		}]
 	});
 	function planJobSched(){
+		var fd = new FormData($('#js-plan-form')[0]);
+		$.ajax({
+			type: 'POST',
+			url: $('#js-plan-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				swal({
+					title: "Updated info",
+					text: `Set ${data.jobsched.jobs_sched_id} status to "planned".`,
+					icon: "info",
+				});
+				$("#SPBtn").css("display","inline");
+				$("#startBtn").css("display","inline");
+				$("#SPBtn").css("display","inline");
+				$("#finBtn").css("display","inline");
+				$("#planBtn").css("display","none");
+				$('#js-status').text('Planned');
+			console.log(data);
+			// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
 		// Temporary condition to check if the current job has been planned, to hide or display the start and pause buttons
-		if(!$("#SPBtn").is(':visible')){
-			$("#SPBtn").css("display","inline");
-			$("#startBtn").css("display","inline");
-			$("#SPBtn").css("display","inline");
-			$("#finBtn").css("display","inline");
-			$("#planBtn").css("display","none");
-		}
-		else{
-			$("#SPBtn").css("display","none");
-			$("#startBtn").css("display","none");
-			$("#SPBtn").css("display","none");
-			$("#finBtn").css("display","none");
-		}
+		// if(!$("#SPBtn").is(':visible')){
+		// 	$("#SPBtn").css("display","inline");
+		// 	$("#startBtn").css("display","inline");
+		// 	$("#SPBtn").css("display","inline");
+		// 	$("#finBtn").css("display","inline");
+		// 	$("#planBtn").css("display","none");
+		// }
+		// else{
+		// 	$("#SPBtn").css("display","none");
+		// 	$("#startBtn").css("display","none");
+		// 	$("#SPBtn").css("display","none");
+		// 	$("#finBtn").css("display","none");
+		// }
+	}
+
+	function startJobSched() {
+		var fd = new FormData($('#js-start-form')[0]);
+		$.ajax({
+			type: 'POST',
+			url: $('#js-start-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				swal({
+					title: "Updated info",
+					text: `Set ${data.jobsched.jobs_sched_id} status to "in progress".`,
+					icon: "info",
+				});
+				$("#startBtn").attr("disabled", true);
+				$('#js-status').text('In Progress');
+				$('.operation-play-btn').each(function(){
+					$(this).attr('onclick', 'startOperation(this); return false;');
+				});
+				$('.operation-stop-btn').each(function(){
+					$(this).attr('onclick', 'finishOperation(this); return false;');
+				});
+				$('.operation-pause-btn').each(function(){
+					$(this).attr('onclick', 'pauseOperation(this); return false;');
+				});
+			console.log(data);
+			// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " ";
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+
+	function startOperation(element) {
+		let row = $(element).parents('tr');
+		var operation_id = $(row).find('input[name="operation_id[]"]');
+		console.log(operation_id.val());
+		var real_start = $(row).find('input[name="real_start[]"]');
+		var status = $(row).find('.js-status-td');
+		var fd = new FormData($('#op-start-form')[0]);
+		fd.append('operation_id', operation_id.val());
+		$.ajax({
+			type: 'POST',
+			url: $('#op-start-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				real_start.val(data.currDate);
+				$(status).text('In Progress');
+				console.log(data);
+				// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+
+	function finishOperation(element) {
+		let row = $(element).parents('tr');
+		var operation_id = $(row).find('input[name="operation_id[]"]');
+		var status = $(row).find('.js-status-td');
+		var real_end = $(row).find('input[name="real_end[]"]');
+		var fd = new FormData($('#op-finish-form')[0]);
+		fd.append('operation_id', operation_id.val());
+		$.ajax({
+			type: 'POST',
+			url: $('#op-finish-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				real_end.val(data.currDate);
+				$(status).text("Finished");
+				console.log(data.currDate);
+				// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+
+	function pauseOperation(element) {
+		let row = $(element).parents('tr');
+		var operation_id = $(row).find('input[name="operation_id[]"]');
+		var status = $(row).find('.js-status-td');
+		var fd = new FormData($('#op-pause-form')[0]);
+		fd.append('operation_id', operation_id.val());
+		$.ajax({
+			type: 'POST',
+			url: $('#op-pause-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				console.log(data);
+				$(status).text('Paused');
+				// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
 	}
 	// $("#preFillBtn").click(function(){
 	// 	console.log("Pre fill inputs");	
@@ -311,7 +563,7 @@
 								{{-- Outsourced Value --}}
 
 								<div class="form-check ">
-									<input type="checkbox" class="form-check-input">
+									<input type="checkbox" name="outsourced[]" class="form-check-input">
 								</div>
 
 
@@ -336,25 +588,21 @@
 								{{-- Status Value --}}
 
 							</td>
-							<td>
-								{{-- Quantity Finished --}}
-
-							</td>
 							{{-- Action Buttons --}}
 							<td>
-								<a href="#" onclick="return false;" class="operation-play-btn">
+								{{--<a href="#" onclick="return false;" class="operation-play-btn">
 									<i class="fas fa-play"></i>
-								</a>
+								</a>--}}
 							</td>
 							<td>
-								<a href="#" onclick="return false;" class="operation-pause-btn">
+								{{--<a href="#" onclick="return false;" class="operation-pause-btn">
 									<i class="fas fa-pause"></i>
-								</a>
+								</a>--}}
 							</td>
 							<td>
-								<a href="#" onclick="return false;" class="operation-stop-btn">
+								{{--<a href="#" onclick="return false;" class="operation-stop-btn">
 									<i class="fas fa-power-off"></i>
-								</a>
+								</a>--}}
 							</td>
 						</tr>
 					`);
