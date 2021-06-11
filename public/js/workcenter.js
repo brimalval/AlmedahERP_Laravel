@@ -11,6 +11,14 @@ $("#save_wc").click(function () {
     formData.append('wc_label', $("#Work_Center_label").val());
     formData.append('wc_type', $("#wc_select").val());
 
+    var hrs = document.getElementById("Employee_hours").value;
+    var mins = document.getElementById("Employee_minutes").value;
+    var sec = document.getElementById("Employee_seconds").value;
+
+    var time = hrs + ":" + mins + ":" + sec;
+
+    formData.append('duration', time);
+
     if($("#wc_select").val() == "Human"){ //to check if wc_type is human
         var employee_id_set = {};
         for(let i=1; i <= $("#newemployee-input-rows tr").length; i++) {

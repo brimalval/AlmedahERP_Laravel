@@ -44,11 +44,13 @@ class WorkCenterController extends Controller
         $words = explode(' ', $wc_label);
         $wc_code .= strtoupper($words[0]); //get wc_label first word
         $wc_type = $form_data['wc_type'];
+        $duration = $form_data["duration"];
 
         $work_center = new WorkCenter(); //inserting all the necessary data/value needed
         $work_center->wc_code = $wc_code;
         $work_center->wc_label = $wc_label;
         $work_center->wc_type = $wc_type;
+        $work_center->duration = $duration;
         if(isset($form_data['employee_id_set'])){ //checks if theres employee ID
             $work_center->employee_id_set = $form_data['employee_id_set'];
         }
