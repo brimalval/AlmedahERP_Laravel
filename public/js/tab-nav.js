@@ -565,6 +565,136 @@ function loadStockEntry() {
     });
 }
 
+function loadStockMoves() {
+    $(document).ready(function () {
+        $("#contentStockMoves").load("/stockmoves");
+    });
+}
+
+function loadStockReturn() {
+    // $(document).ready(function () {
+    //     $("#contentStock").load("/stockmovesreturn");
+    // });
+    $(document).ready(function () {
+        $("#contentStockMoves").load("/returnitems");
+    });
+}
+
+function loadStockReturnInfo(
+    trackingId,
+    stockMovesType,
+    matOrdered,
+    employeeId,
+    moveDate
+) {
+    $("#contentStockMoves").load("/returnitems", function () {
+        $("#tracking_id_ret").val(trackingId);
+        $("#stock_moves_type_ret").val(stockMovesType);
+        $("#mat_ordered_id_ret").val(matOrdered);
+        $("#employee_id_ret").val(employeeId);
+        $("#move_date_ret").val(moveDate);
+        if (stockMovesType === "Return") {
+            $("#saveCancelButtons").hide().css("visibility", "hidden");
+            $("#backButton").css("display", "block");
+        }
+        showItemsRet(trackingId);
+    });
+}
+
+function showItemsRet(trackingId) {
+    $("#itemsRet").empty();
+    let itemsTransTable = $("#itemsTrans");
+    let itemsRetTable = $("#itemsRet");
+    itemsTrans = [];
+    itemsRet = [];
+    itemsTransCurrent = [];
+    $.ajax({
+        type: "GET",
+        url: "/showItemsRet/" + trackingId,
+        success: function (data) {
+            if (data["return_date"]) {
+                $("#return_date_ret").val(data["return_date"]);
+            }
+            let items_list_received = JSON.parse(data["transfer"]);
+            items_list_received.forEach((item) => {
+                let obj = {
+                    item_code: item.item_code,
+                    qty_received: item.qty_received,
+                    source_station: "ex",
+                    target_station: item.target_station,
+                    consumable: "true",
+                    item_condition: "good",
+                    transfer_status: "pending",
+                };
+                itemsTrans.push(obj);
+            });
+            JSON.parse(data["transfer"]).forEach((item) => {
+                itemsTransTable.append(
+                    `<tr><td>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input">
+                          </div>
+                      </td>
+                      <td>` +
+                        item.item_code +
+                        `</td>
+                    <td>` +
+                        item.qty_received +
+                        `</td>
+                    <td>Consumable</td>
+                    <td>Source_Station</td>
+                    <td>` +
+                        item.target_station +
+                        `</td>
+                    <td>Item_Condition</td></tr>`
+                );
+            });
+
+            // -------------
+            if (data["return"]) {
+                let items_to_be_returned = JSON.parse(data["return"]);
+                items_to_be_returned.forEach((item) => {
+                    let obj = {
+                        item_code: item.item_code,
+                        qty_transferred: item.qty_transferred,
+                        source_station: "ex",
+                        target_station: item.target_station,
+                        consumable: "true",
+                        item_condition: "good",
+                        transfer_status: "pending",
+                    };
+                    itemsRet.push(obj);
+                });
+                JSON.parse(data["return"]).forEach((item) => {
+                    itemsRetTable.append(
+                        `<tr><td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                        </td>
+                        <td>` +
+                            item.item_code +
+                            `</td>
+                        <td>` +
+                            item.qty_transferred +
+                            `</td>
+                        <td>Consumable</td>
+                        <td>Source_Station</td>
+                        <td>` +
+                            item.target_station +
+                            `</td>
+                        <td>Item_Condition</td></tr>`
+                    );
+                });
+            }
+        },
+        error: function (data) {
+            console.log("error");
+            console.log(data);
+        },
+    });
+}
+
 function openNewTask() {
     $("#contentTask").load("/openNewTask");
 }

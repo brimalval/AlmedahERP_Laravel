@@ -62,6 +62,7 @@
                         <td>Item Code</td>
                         <td>Item Name</td>
                         <td>Category</td>
+                        <td>Consumable</td>
                         <td>Stock Qty.</td>
                         <td>RM Status</td>
                         <td>View</td>
@@ -79,6 +80,9 @@
                             <td>{{ $row->item_code }}</td>
                             <td>{{ $row->item_name }}</td>
                             <td>{{ $row->category->category_title }}</td>
+                            <td><div class="form-check">
+                                <input type="checkbox" class="form-check-input" {{ $row->consumable ? "checked" : null }} disabled>
+                            </div></td>
                             <td id="item-qty-{{ $row->id }}" class="text-black-50">{{ $row->stock_quantity }}</td>
                             <td class="text-black-50">{{ $row->rm_status }}</td>
 
@@ -519,6 +523,13 @@
                         </select>
                     </div>
 
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label for="" class="mr-3">Consumable</label>
+                            <input type="checkbox" name="consumable" id="consumable" style="transform: scale(1.4);">
+                        </div>
+                      </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
                             onclick="$('#create-material-form').modal('hide')">Close</button>
@@ -903,6 +914,7 @@
                                     formData.get('material_code'),
                                     formData.get('material_name'),
                                     data.category_title,
+                                    data.material.consumable === 1 ? "yes" : "no",
                                     '<span class="text-black-50">' + formData
                                     .get('stock_quantity') + '</span>',
                                     '<span class="text-black-50">' + formData
