@@ -12,7 +12,15 @@ $("#save_wc").click(function () {
     formData.append('wc_type', $("#wc_select").val());
 
     if($("#wc_select").val() == "Human"){ //to check if wc_type is human
-        formData.append('employee_id', $("#Employee_name").val());
+        var employee_id_set = {};
+        for(let i=1; i <= $("#newemployee-input-rows tr").length; i++) {
+            let employee_data = $(`#employee-${i}`);
+            let emp_id = employee_data.find("#Employee_name").val();
+            employee_id_set[i] = {
+                'employee_id' : emp_id
+            }
+        }
+        formData.append('employee_id_set', JSON.stringify(employee_id_set));
     }
     else if($("#wc_select").val() == "Machine"){ //to check if wc_type is machine
         formData.append('machine_code', $("#Available_Machine").val());
@@ -55,3 +63,31 @@ $("#Available_Machine").change(function () {
         }
     });
 });
+
+function addRownewEmployee(){
+    if($('#no-data')[0]){
+        deleteItemRow($('#no-data').parents('tr'));
+    }
+    //let lastRow = $('#newemployee-input-rows tr:last');
+    let nextID = $("#newemployee-input-rows tr").length + 1;
+    $('#newemployee-input-rows').append(
+    `
+    <tr id="employee-${nextID}">
+        <td id="mr-code-input" class="mr-code-input"><input type="text" value=""
+                name="Employee_name" list="employees" id="Employee_name" class="form-control">
+        </td>
+        <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
+                name="Employee_hours" id="Employee_hours" class="form-control"></td>
+        <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
+                name="Employee_minutes" id="Employee_minutes" class="form-control"></td>
+        <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
+                name="Employee_seconds" id="Employee_seconds" class="form-control"></td>
+        <td>
+            <a id="" class="btn delete-btn" href="#" role="button">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </a>
+        </td>
+    </tr>
+    `);
+}
+

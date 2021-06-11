@@ -21,7 +21,7 @@ function showForm() {
 
     }
  }
- function addRownewEmployee(){
+ /*function addRownewEmployee(){
     if($('#no-data')[0]){
         deleteItemRow($('#no-data').parents('tr'));
     }
@@ -49,3 +49,4 @@ function showForm() {
  </td>
 </tr>`);
 }
+*/

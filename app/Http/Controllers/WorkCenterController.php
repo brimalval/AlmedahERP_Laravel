@@ -49,8 +49,8 @@ class WorkCenterController extends Controller
         $work_center->wc_code = $wc_code;
         $work_center->wc_label = $wc_label;
         $work_center->wc_type = $wc_type;
-        if(isset($form_data['employee_id'])){ //checks if theres employee ID
-            $work_center->employee_id = $form_data['employee_id'];
+        if(isset($form_data['employee_id_set'])){ //checks if theres employee ID
+            $work_center->employee_id_set = $form_data['employee_id_set'];
         }
         if(isset($form_data['machine_code'])){ //checks if theres machine_code
             $work_center->machine_code = $form_data['machine_code'];
