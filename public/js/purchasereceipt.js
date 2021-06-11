@@ -105,6 +105,9 @@ function submitReceipt() {
             success: function (response) {
                 console.log(response);
                 loadPurchaseReceipt();
+                if($("#contentPendingOrders").length) {
+                    loadPendingOrders();
+                }
             },
         });
     } else {
