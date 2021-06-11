@@ -63,6 +63,7 @@ class BOMController extends Controller
 
             if($is_default_boms && $form_data['is_default'] == 1) {
                 $is_default_boms->is_default = 0;
+                $is_default_boms->is_active = 1;
                 $is_default_boms->save();
                 $default_flag = true;
             }
