@@ -595,6 +595,7 @@
                                 } else {
                                     document.getElementById("madeToStockFields").setAttribute("hidden", "");
                                     
+                                    document.getElementById("stock_unit").value = 0;
                                     document.getElementById("reorderLevel").removeAttribute("required");
                                     document.getElementById("reorderQty").removeAttribute("required");
                                 }
@@ -1322,6 +1323,7 @@
             }
             formData.set('components', JSON.stringify(components));
             console.log('components'+components);
+            //Add product form
             $.ajax({
                 type: 'POST',
                 url: $('#product-form').attr('action'),
@@ -1493,8 +1495,8 @@
             url: '/reorder',
             data: data,
             success: function(data){
-                
+                console.log(data);
             }
-        )};
+        });
     }
 </script>
