@@ -64,8 +64,6 @@ class MaterialsPurchasedController extends Controller
             $nextId = ($lastPurchase) ? MaterialPurchased::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
 
-            $to_append = strlen(strval($nextId));
-
             $purchase_id = "PUR-ORD-" . Carbon::now()->year . '-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
 
             $data->purchase_id = $purchase_id;
@@ -164,7 +162,8 @@ class MaterialsPurchasedController extends Controller
                 return ['error' => 'The purchase receipt connected to this purchase order is already currently receiving materials.'];
             }
         }
-        //delete purchase order
-        $mp_record->delete();
+        //cancel purchase order
+        $mp_record->mp_status = 'Cancelled';
+        $mp_record->save();
     }
 }
