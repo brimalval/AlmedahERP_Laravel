@@ -43,15 +43,31 @@ class BOMController extends Controller
 
             if(isset($form_data['product_code'])) {
                 $bom->product_code = $form_data['product_code'];
+                $code = $form_data['product_code'];
                 $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
                 $name = $product->product_name;
             } else {
                 $bom->component_code = $form_data['component_code'];
+                $code = $form_data['component_code'];
                 $component = Component::where('component_code', $form_data['component_code'])->first();
                 $name = $component->component_name;
             }
 
             $bom_name .= $name . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
+            
+            $matching_boms = BillOfMaterials::where('product_code', $code)->orWhere('component_code', $code)->get();
+
+            $is_default_boms = $matching_boms->where('is_default', 1)->first();
+
+            $default_flag = false;
+
+            if($is_default_boms && $form_data['is_default'] == 1) {
+                $is_default_boms->is_default = 0;
+                $is_default_boms->is_active = 1;
+                $is_default_boms->save();
+                $default_flag = true;
+            }
+
             $bom->routing_id = $form_data['routing_id'];
             $bom->raw_materials_rate = $form_data['rm_rates'];
             $bom->raw_material_cost = $form_data['rm_cost'];
@@ -61,6 +77,10 @@ class BOMController extends Controller
             $bom->bom_name = $bom_name;
 
             $bom->save();
+
+            if($default_flag) {
+                return ['message' => 'This will be the new default bill of materials for '. $name . '. '];
+            }
         } catch (Exception $e) {
             return $e;
         } //
@@ -81,6 +101,9 @@ class BOMController extends Controller
                    );
     }
 
+
+    //Check if there is an identical BOM with 
+
     /**
      * Update the specified resource in storage.
      *
@@ -93,11 +116,36 @@ class BOMController extends Controller
         try {
             $bom = BillOfMaterials::find($bom_id);
             $form_data = $request->input();
-            $bom_name = "BOM-"; //initialize "BOM-"
-            $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
-            $bom_name .= $product->product_name . "-" . str_pad($bom_id, 3, "0", STR_PAD_LEFT);
 
-            $bom->product_code = $form_data['product_code'];
+            $bom_name = "BOM-"; //initialize "BOM-"
+            
+            if(isset($form_data['product_code'])) {
+                $bom->product_code = $form_data['product_code'];
+                $code = $form_data['product_code'];
+                $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
+                $name = $product->product_name;
+            } else {
+                $bom->component_code = $form_data['component_code'];
+                $code = $form_data['component_code'];
+                $component = Component::where('component_code', $form_data['component_code'])->first();
+                $name = $component->component_name;
+            }
+
+            $bom_name .= $name . "-" . str_pad($bom_id, 3, "0", STR_PAD_LEFT);
+            
+            $matching_boms = BillOfMaterials::where('product_code', $code)->orWhere('component_code', $code)->get();
+
+            $is_default_boms = $matching_boms->where('is_default', 1)->first();
+
+            $default_flag = false;
+
+            if($is_default_boms && $form_data['is_default'] == 1) {
+                $is_default_boms->is_default = 0;
+                $is_default_boms->is_active = 1;
+                $is_default_boms->save();
+                $default_flag = true;
+            }
+
             $bom->routing_id = $form_data['routing_id'];
             $bom->raw_materials_rate = $form_data['rm_rates'];
             $bom->raw_material_cost = $form_data['rm_cost'];
@@ -107,6 +155,10 @@ class BOMController extends Controller
             $bom->bom_name = $bom_name;
 
             $bom->save();
+
+            if($default_flag) {
+                return ['message' => 'This will be the new default bill of materials for '. $name . '. '];
+            }
         } catch (Exception $e) {
             return $e;
         } //
@@ -187,9 +239,11 @@ class BOMController extends Controller
                 }
                 //dd(DB::getQueryLog());
                 else {
+                    $raw_mat = ManufacturingMaterials::where('item_code', $material['material']->item_code)->first();
                     $po_items = array(
                         'item_code' => $material['material']->item_code,
-                        'item' => ManufacturingMaterials::where('item_code', $material['material']->item_code)->first(),
+                        'item' => $raw_mat,
+                        'uom' => $raw_mat->uom,
                         'req_date' => date('Y-m-d'),
                         'qty' => $material['qty'],
                         'rate' => 1,

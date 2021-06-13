@@ -132,6 +132,7 @@
                                 <br>
                             </div>
                         </div>
+<<<<<<< HEAD
                     </td>
                     <td>Job Schedule Code</td>
                     <td>Product/Component Code</td>
@@ -170,6 +171,9 @@
         </div>
         <div class="col-1 text-center">
             <button type="submit" class=""> <span class="fas fa-chevron-right"></span></button>
+=======
+<<<<<<< HEAD
+>>>>>>> bf4a20dd10b5693d5c378ce88e3547481474af5d
                         <div class="col-3">
                             <div class="row">
                                 <div class="col-12">
@@ -308,6 +312,49 @@
                     <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
+=======
+                    </td>
+                    <td>Job Schedule Code</td>
+                    <td>Product/Component Code</td>
+                    <td>Quantity</td>
+                    <td>Start Date & Time</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            <tbody class="">
+                <!-- Iterating through list of job schedules --> 
+                @foreach ($jobscheds as $jobsched)
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                        </td>
+                        <td><a href='#' onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>$jobsched->id]) }}');">{{ $jobsched->jobs_sched_id }}</a></td>
+                        <td class="text-black-50">
+                            {{ $jobsched->work_order->item->product_name ?? $jobsched->work_order->component_name }} ({{ $jobsched->work_order->item->product_code ?? $jobsched->work_order->item->component_code }})
+                        </td>
+                        <td class="text-black-50">{{ $jobsched->work_order->sales_order->orderedProducts($jobsched->work_order->product_code)->quantity_purchased ?? "N/A"}}</td>
+                        <td class="text-black-50">{{ $jobsched->start_date }} {{ $jobsched->start_time }}</td>
+                        <td class="text-black-50">{{ $jobsched->js_status }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-1 text-center">
+            <button type="submit" class=""> <span class="fas fa-chevron-left"></span></button>
+        </div>
+        <div class="col-1 text-center">
+            <p>1 of 2</p>
+        </div>
+        <div class="col-1 text-center">
+            <button type="submit" class=""> <span class="fas fa-chevron-right"></span></button>
+>>>>>>> 41b4d0b53f4b1a1e9a1e18cb34415115ee60cae6
+>>>>>>> bf4a20dd10b5693d5c378ce88e3547481474af5d
         </div>
     </div>
     <!-- <div id="gantt" style="height: 40em"></div> -->

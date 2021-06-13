@@ -44,12 +44,12 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="Default_workcenter">Default Work Center</label>
-                    <input type="text" name="Default_WorkCenter" id="Default_WorkCenter" class="form-control" list="work_center_list">
-                    <datalist id="work_center_list">
+                    <input type="text" name="Default_WorkCenter" id="Default_WorkCenter" list="wc_list" class="form-control">
+                    <datalist id="wc_list">
                       @foreach ($work_centers as $wc)
                           <option value="{{ $wc->wc_code }}">{{ $wc->wc_label }}</option>
                       @endforeach
-                  </datalist>
+                    </datalist>
                 </div>
             </div>
             <div class="col-6">

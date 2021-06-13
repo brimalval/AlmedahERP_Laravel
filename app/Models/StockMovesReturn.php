@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StockMoves extends Model
+class StockMovesReturn extends Model
 {
     use HasFactory;
-    protected $table = 'stock_moves';
-    public $timestamps = true;
-
+    protected $table = 'stock_return';
+    
     protected $fillable = [
         'tracking_id',
-        'stock_moves_type',
-        'mat_ordered_id',
-        'move_date',
-        'employee_id'
+        'item_code',
+        'return_date',
+        'return_status'
     ]; 
 }

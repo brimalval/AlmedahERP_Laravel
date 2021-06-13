@@ -225,17 +225,30 @@ $("#cancelOrder").click(function () {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
     });
-    $.ajax({
-        type: "POST",
-        url: `/delete-order/${$("#p_id").html()}`,
-        success: function (response) {
-            if(response.error) {
-                alert(response.error);
-                return;
+    let cancel = confirm("Are you sure that you want to cancel this purchase order?");
+
+    if(cancel) {
+        $.ajax({
+            type: "POST",
+            url: `/delete-order/${$("#p_id").html()}`,
+            success: function (response) {
+                if(response.error) {
+                    alert(response.error);
+                    return;
+                }
+                loadPurchaseOrder();
+                if($("#contentPurchaseReceipt").length) {
+                    loadPurchaseReceipt();
+                }
+                if($("#contentPurchaseInvoice").length) {
+                    loadPurchaseInvoice();
+                }
+                if($("#contentPendingOrders").length) {
+                    loadPendingOrders();
+                }
             }
-            loadPurchaseOrder();
-        }
-    });
+        });
+    }
     
 });
 

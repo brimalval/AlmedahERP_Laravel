@@ -401,8 +401,6 @@ $("#saveBomForm").submit(function () {
         }
     }
 
-    console.log($("#manprod").val());
-
     let name = $("#is_component").prop('checked') ? 'component_code' : 'product_code';
     let value = $("#is_component").prop('checked') ? $("#components").val() : $("#manprod").val();
 
@@ -422,7 +420,10 @@ $("#saveBomForm").submit(function () {
         processData: false,
         contentType: false,
         success: function (response) {
-            console.log('bom sent');
+            if(response.message) {
+                console.log(response.message);
+                alert(response.message);
+            }
             loadBOMtable();
         }
     });

@@ -471,10 +471,16 @@ Route::get('/selling', function () {
 Route::get('/shippingrule', function() {
     return view('modules.NewUI.ShippingRule');
 });
+
 Route::get('/stockmoves', [StockMovesController::class, 'index']);
 Route::get('/newstockmoves', [NewStockMovesController::class, 'index']);
-Route::get('/showItems/{selected}', [NewStockMovesController::class, 'showItems']);
-Route::get('/stockmovesreturn', [StockMovesReturnController::class, 'index']);
+Route::post('/create-newstockmoves', [NewStockMovesController::class, 'store']);
+Route::post('/create-newstockmovesreturn', [StockMovesReturnController::class, 'store']);
+Route::get('/showItemsNew/{selected}', [NewStockMovesController::class, 'showItemsNew']);
+Route::get('/showItemsRet/{selected}', [NewStockMovesController::class, 'showItemsRet']);
+Route::get('/view-mo-items/{id}', [NewStockMovesController::class, 'view_items']);
+Route::get('/returnitems', [StockMovesReturnController::class, 'index']);
+
 
 Route::get('/shippingruleinfo', function() {
     return view('modules.NewUI.ShippingRuleInfo');

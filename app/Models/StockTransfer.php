@@ -15,11 +15,8 @@ class StockTransfer extends Model
         'tracking_id',
         'move_date',
         'item_code',
-        'qty_transferred',
         'source_station',
         'target_station',
-        'consumable',
-        'item_condition',
         'transfer_status'
 
     ]; 

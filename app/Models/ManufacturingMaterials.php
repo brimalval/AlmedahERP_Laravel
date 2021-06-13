@@ -21,6 +21,7 @@ class ManufacturingMaterials extends Model
         'rm_quantity',
         'uom_id',
         'stock_quantity',
+        'consumable'
     ];
 
     public function category(){
