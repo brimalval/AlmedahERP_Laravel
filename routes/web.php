@@ -169,6 +169,7 @@ Route::post('/create-item-group', [ProductsController::class, 'add_item_group'])
 Route::post('/create-product-unit', [ProductsController::class, 'add_product_unit']);
 Route::get('/getLowOnStocks', [ProductsController::class, 'getLowOnStocks']);
 Route::get('/getComponent', [ProductsController::class, 'getComponent']);
+Route::post('/reorderToStock', [ProductsController::class, 'reorder']);
 
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function () {

@@ -1434,7 +1434,7 @@
                             </td>
                             `,`
                             <td>
-                                <p><button type="button"  class="btn btn-primary" onclick="reorder(`+row['id'] + `)"> Reorder</button></p>
+                                <p><button type="button"  class="btn btn-primary" onclick="reorder([`+row['id'] + `])"> Reorder</button></p>
                             </td>
                         </tr>`
                     ]
@@ -1495,7 +1495,7 @@
         data['id'] = id;
         $.ajax({
             type:'POST',
-            url: '/reorder',
+            url: '/reorderToStock',
             data: data,
             success: function(data){
                 console.log(data);
