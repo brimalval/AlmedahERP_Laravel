@@ -588,7 +588,7 @@
                         <script>
                             function changeSaleSupplyMethod(){
                                 var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
-                                if (salesSupplyMethod == "stock") {
+                                if (salesSupplyMethod == "Made to Stock") {
                                     document.getElementById("madeToStockFields").removeAttribute("hidden");
                                     document.getElementById("reorderLevel").setAttribute("required", "");
                                     document.getElementById("reorderQty").setAttribute("required", "");
@@ -1034,7 +1034,6 @@
 
                     </tr>
                 </tbody>
-                
             </table>
             <script>
                 var reproduceTable;
@@ -1043,6 +1042,10 @@
                 } );
 
             </script>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Reorder All</button>
         </div>
         </div>
     </div>
