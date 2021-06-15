@@ -20,9 +20,7 @@
                 </li> -->
             </ul>
         </div>
-        <li class="nav-item li-bom">
-            <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');" style="float: left;">New</button>
-        </li>
+        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');" style="float: left;">New</button>
     </div>
 </nav>
         <table class="table table-bom border-bottom w-100" id="jobScheduleTable">
@@ -38,6 +36,7 @@
                     <td>Quantity</td>
                     <td>Start Date & Time</td>
                     <td>Status</td>
+                    <td></td>
                 </tr>
             </thead>
             <tbody class="">
@@ -56,6 +55,17 @@
                         <td class="text-black-50">{{ $jobsched->work_order->sales_order->orderedProducts($jobsched->work_order->product_code)->quantity_purchased ?? "N/A"}}</td>
                         <td class="text-black-50">{{ $jobsched->start_date }} {{ $jobsched->start_time }}</td>
                         <td class="text-black-50">{{ $jobsched->js_status }}</td>
+                        <td class="text-black-50">
+                            @if ($jobsched->js_status == "Draft")
+                                <form class="delete-js-form" action="{{ route('jobscheduling.destroy', ['jobscheduling'=>$jobsched->id]) }}" data-js="{{ $jobsched->jobs_sched_id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -119,3 +129,5 @@
     }
 </script>
 
+
+<script src="{{ asset('js/jobscheduling.js') }}"></script>

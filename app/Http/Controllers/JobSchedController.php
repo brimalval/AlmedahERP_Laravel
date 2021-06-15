@@ -196,7 +196,22 @@ class JobSchedController extends Controller
      */
     public function destroy(JobSched $jobscheduling)
     {
-        //
+        try {
+            if($jobscheduling->js_status != "Draft") {
+                return response()->json([
+                    "error" => "This JS entry is not a draft!",
+                ], 400);
+            }
+
+            $jobscheduling->delete();
+            return response()->json([
+                "message" => "success",
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "error" => $e->getMessage(),
+            ], 400);
+        }
     }
 
     public function get_operations(WorkOrder $work_order)
@@ -235,7 +250,7 @@ class JobSchedController extends Controller
                     ], 400);
                 }
 
-                if($operations[$i]['real_end'] != ""){
+                if ($operations[$i]['real_end'] != "") {
                     return response()->json([
                         'errors' => array("pauseBtn" => "This operation has already finished."),
                     ], 400);
@@ -244,7 +259,7 @@ class JobSchedController extends Controller
                 // If it was just paused, just make it unpause. If it does not have an existing start date
                 // change the start date because that means it's the first time it's started. 
                 // If both conditions fail, then the user is trying to start twice; throw an error
-                if(isset($operations[$i]['is_paused']) && $operations[$i]['is_paused'] == true){
+                if (isset($operations[$i]['is_paused']) && $operations[$i]['is_paused'] == true) {
                     $operations[$i]['is_paused'] = false;
                     $newDate = $operations[$i]['real_start'];
                 } elseif ($operations[$i]['real_start'] == "") {
@@ -254,7 +269,7 @@ class JobSchedController extends Controller
                         'errors' => array("startBtn" => "This operation has already started and was not paused.")
                     ], 400);
                 }
-                
+
 
                 $operations[$i]['status'] = "In progress";
                 break;
@@ -285,7 +300,7 @@ class JobSchedController extends Controller
             if ($operations[$i]['operation_id'] == $request->input('operation_id')) {
                 // If real start field is empty, then it has not started yet.
                 // Throws an error back to the ajax request
-                if($operations[$i]['real_start'] == ""){
+                if ($operations[$i]['real_start'] == "") {
                     return response()->json([
                         'errors' => array("pauseBtn" => "This operation has not yet started."),
                     ], 400);
@@ -293,7 +308,7 @@ class JobSchedController extends Controller
 
                 // If real end field is not empty, then it has already ended.
                 // Throws an error
-                if($operations[$i]['real_end'] != ""){
+                if ($operations[$i]['real_end'] != "") {
                     return response()->json([
                         'errors' => array("pauseBtn" => "This operation has already finished."),
                     ], 400);
@@ -332,7 +347,7 @@ class JobSchedController extends Controller
         $job->operations = json_encode($operations);
         $job->save();
         return response()->json([
-            'operations' => json_encode($operations), 
+            'operations' => json_encode($operations),
             'sequence_name' => $request->input('sequence_name'),
             'jobSchedId' => $job->id
         ]);
@@ -359,7 +374,7 @@ class JobSchedController extends Controller
                 }
 
                 // If the operation hadn't even started yet, throw an error
-                if($operations[$i]['real_start'] == "") {
+                if ($operations[$i]['real_start'] == "") {
                     return response()->json([
                         'errors' => array("finishBtn" => "The operation has not started yet."),
                     ], 400);
@@ -367,7 +382,7 @@ class JobSchedController extends Controller
 
                 // Total hours first gets recorded upon pausing
                 // If the key does not exist, that means there was no pause in between start & finish
-                if (!isset($operations[$i]['total_hours'])){
+                if (!isset($operations[$i]['total_hours'])) {
                     $curr_parsed = Carbon::parse($currDate);
                     $start_parsed = Carbon::parse($operations[$i]['real_start']);
                     $operations[$i]['total_hours'] = $curr_parsed->diffInHours($start_parsed);
@@ -379,9 +394,15 @@ class JobSchedController extends Controller
             }
         }
         $job->operations = json_encode($operations);
+        // If there is no next operation
+        if ($operations[sizeof($operations) - 1]['status'] == "Finished") {
+            $jobsched->js_status = "Finished";
+        }
         $job->save();
         return response()->json([
-            'operations' => json_encode($operations), 'sequence_name' => $request->input('sequence_name'),
+            'operations' => json_encode($operations),
+            'sequence_name' => $request->input('sequence_name'),
+            'jobsched' => $jobsched,
             'jobSchedId' => $job->id,
             'currDate' => $currDate,
             'status' => "Finished",
@@ -417,7 +438,8 @@ class JobSchedController extends Controller
         }
     }
 
-    public function get_operations_gantt(JobSched $jobsched){
+    public function get_operations_gantt(JobSched $jobsched)
+    {
         $operations = json_decode($jobsched->operations);
         $data = array();
         $links = array();
@@ -432,7 +454,7 @@ class JobSchedController extends Controller
             'status' => 'In Progress',
         ));
         $i = 0;
-        foreach($operations as $operation) {
+        foreach ($operations as $operation) {
             $start_parsed = Carbon::parse($operation->real_start);
             $end_parsed = Carbon::parse($operation->real_end);
             $duration = $start_parsed->diffInDays($end_parsed);
@@ -445,14 +467,14 @@ class JobSchedController extends Controller
                 'open' => true,
                 'status' => 'In Progress',
             ));
-            if ($i > 0){ 
+            if ($i > 0) {
                 array_push($links, array(
-                    'id'=> $jobsched->jobs_sched_id . "step" . ($i+1) . "to" . ($i+2),
-                    'source'=> $data[$i]['id'], // From Operation 1 
-                    'target'=> $data[$i+1]['id'], // to Operation 2 
-                    'type'=> "0" // Specifies how should the arrows are displayed. 0 Means from end to start
+                    'id' => $jobsched->jobs_sched_id . "step" . ($i + 1) . "to" . ($i + 2),
+                    'source' => $data[$i]['id'], // From Operation 1 
+                    'target' => $data[$i + 1]['id'], // to Operation 2 
+                    'type' => "0" // Specifies how should the arrows are displayed. 0 Means from end to start
                 ));
-             }
+            }
             $i++;
         }
         return response()->json(['data' => $data, 'links' => $links]);
