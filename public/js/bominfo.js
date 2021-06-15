@@ -41,6 +41,8 @@ $("#routingSelect").change(function () {
             success: function (response) {
                 let operations = response.operations;
                 for (let i = 0; i < operations.length; i++) {
+                    let description = operations[i].operation.description;
+                    let desc_clean = description.replace( /(<([^>]+)>)/ig, '');
                     table.append(
                         `
                         <tr id="bomOperation-${i}">
@@ -53,7 +55,7 @@ $("#routingSelect").change(function () {
                                         name="Operation_name" id="Operation_name" class="form-control"></td>
                                 <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${operations[i].operation.wc_code}" readonly
                                         name="D_workcenter" id="D_workcenter" class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="${operations[i].operation.description}" readonly name="Desc" id="Desc"
+                                <td class="mr-unit-input"><input type="text" value="${desc_clean}" readonly name="Desc" id="Desc"
                                         class="form-control"></td>
                                 <td class="mr-unit-input"><input type="text" value="${operations[i].operation_time}" readonly name="Operation_Time"
                                         id="Operation_Time" class="form-control"></td>
