@@ -107,6 +107,7 @@ class SupplierQuotationController extends Controller
             $quantities = request('qty_requested');
             $rates = request('rate');
             $units = request('uom_id');
+            $delivery_dates = request('delivery_date');
             $items_list_rate_amt = array();
             for ($i = 0, $len = count($item_codes); $i < $len; $i++) {
                 $item = [
@@ -115,6 +116,7 @@ class SupplierQuotationController extends Controller
                     'quantity_requested' => $quantities[$i],
                     'rate' => $rates[$i] ?? 0,
                     'uom_id' => $units[$i],
+                    'delivery_date' => $delivery_dates[$i],
                 ];
                 array_push($items_list_rate_amt, $item);
             }
@@ -195,6 +197,7 @@ class SupplierQuotationController extends Controller
             $quantities = request('qty_requested');
             $rates = request('rate');
             $units = request('uom_id');
+            $delivery_dates = request('delivery_date');
             $items_list_rate_amt = array();
             for ($i = 0, $len = count($item_codes); $i < $len; $i++) {
                 $item = [
@@ -203,6 +206,7 @@ class SupplierQuotationController extends Controller
                     'quantity_requested' => $quantities[$i],
                     'rate' => $rates[$i] ?? 0,
                     'uom_id' => $units[$i],
+                    'delivery_date' => $delivery_dates[$i],
                 ];
                 array_push($items_list_rate_amt, $item);
             }

@@ -41,7 +41,7 @@ function addRFQ() {
     $("#req-forquotation-form").submit();
 }
 
-function addSupplier() {
+function addSupplier(selected = 0) {
     $("#no-suppliers").remove();
     let nextID = $("#rfq-suppliers-tbl tr:last").data("id") + 1 ?? 0;
     $("#suppliers-input-rows").append(`
@@ -71,6 +71,7 @@ function addSupplier() {
   `);
     $('#selects select[data-id="supplier_id"]')
         .clone()
+        .prop('selectedIndex', selected)
         .appendTo(`#rfq-suppliers-tbl tr:last .rfq-supplier`)
         .selectpicker();
     $("#rfq-suppliers-tbl tr:last .rfq-email input").val(
@@ -252,3 +253,14 @@ function submitRFQ(form) {
     });
     return false;
 }
+
+/**
+ * Upon clicking a supplier, add a row with the specified supplier selected
+ */
+$(document).off('change', '#supplier-search').on('change', '#supplier-search', function(){
+    console.log(this.selectedIndex);
+    // Subtracting 1 since the first index is for the placeholder text
+    addSupplier(this.selectedIndex - 1);
+    this.selectedIndex = 0;
+    $(this).selectpicker('refresh');
+});

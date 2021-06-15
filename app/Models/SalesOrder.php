@@ -32,7 +32,14 @@ class SalesOrder extends Model
         return $this->hasMany(payment_logs::class, 'sales_id', 'id');
     }
 
-    public function orderedProducts() {
-        return $this->hasMany(ordered_products::class, 'sales_id', 'id');
+    // Return all the products associated with a sales order if a product code is not given
+    // otherwise return only the ordered_product with the specified product code if it exists
+    public function orderedProducts($product_code=null) {
+        if (!isset($product_code)){
+            return $this->hasMany(ordered_products::class, 'sales_id', 'id');
+        }
+        return ordered_products::where([['sales_id', $this->id], ['product_code', $product_code]])->first();
     }
+
+
 }
