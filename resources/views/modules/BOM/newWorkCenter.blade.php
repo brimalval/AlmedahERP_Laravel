@@ -1,5 +1,6 @@
 <script src="{{ asset('js/address.js') }}"></script>
 <script src="{{ asset('js/workcenter.js') }}"></script>
+<script src="{{ asset('js/newWorkcenter.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">New Work Center</h2>
@@ -79,7 +80,7 @@
                             </tr>
                         </thead>
                         <tbody class="" id="newemployee-input-rows">
-                            <tr data-id="${nextID}">
+                            <tr id="employee-1">
                                 <td id="mr-code-input" class="mr-code-input"><input type="text" value=""
                                         name="Employee_name" list="employees" id="Employee_name" class="form-control">
                                 </td>
@@ -194,5 +195,3 @@
         {{-- </form> --}}
     </div>
     <br>
-    @csrf
-    <script src="{{ asset('js/newWorkcenter.js') }}"></script>
