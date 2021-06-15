@@ -237,6 +237,15 @@ $("#cancelOrder").click(function () {
                     return;
                 }
                 loadPurchaseOrder();
+                if($("#contentPurchaseReceipt").length) {
+                    loadPurchaseReceipt();
+                }
+                if($("#contentPurchaseInvoice").length) {
+                    loadPurchaseInvoice();
+                }
+                if($("#contentPendingOrders").length) {
+                    loadPendingOrders();
+                }
             }
         });
     }
