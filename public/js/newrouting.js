@@ -167,8 +167,10 @@ function operationSearch(id) {
         data: field.val(),
         success: function (response) {
             let operation = response.operation;
+            let description = operation.description;
+            let desc_clean = description.replace( /(<([^>]+)>)/ig, '');
             $(`#workcenter${id}`).val(operation.wc_code);
-            $(`#description${id}`).val(operation.description);
+            $(`#description${id}`).val(desc_clean);
         }
     });
 }
