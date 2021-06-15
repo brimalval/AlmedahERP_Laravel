@@ -9,15 +9,28 @@
     <div class="collapse navbar-collapse" id="responsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown li-bom">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Menu
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Option 1</a></li>
-            <li><a class="dropdown-item" href="#">Option 2</a></li>
-          </ul>
+        <div class="btn-group">
+                <button class="nav-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 New Operation / Work Center
+                </button>
+                <div class="dropdown-menu">
+                <td class="mr-qty-input">
+                        <a  class="dropdown-item" type="button" data-toggle="modal"
+                            data-target="#operation_modal">
+                            New Operation
+                        </a>
+                    </td>
+                    
+                    <td class="mr-unit-input">
+                        <a   class="dropdown-item" type="button"  type="submit" onclick="loadnewworkcenter();">
+                            New Work Center
+                        </a>
+                    </td>
+                 </div>
+            </div>
+            
         </li>
-        </li>
+        
         <li class="nav-item li-bom">
           <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="RoutingTable();">Cancel</button>
         </li>
@@ -79,11 +92,11 @@
                             class="form-control" disabled>
                     </td>
                     </td>
-                    <td class="mr-unit-input"><input type="text" value="" name="description" id="description1"
-                            class="form-control" disabled></td>
-                    <td class="mr-unit-input"><input type="number" value="" name="hour_rate" id="hour_rate1"
+                    <td  class="mr-unit-input col-4">
+                            <textarea class="form-control" id="description1" name="description" rows="2" disabled></textarea></td>
+                    <td class="mr-unit-input col-1"><input type="number" min="0" value="" name="hour_rate" id="hour_rate1"
                             class="form-control"></td>
-                    <td class="mr-unit-input"><input type="number" value="" name="operation_time" id="operation_time1"
+                    <td class="mr-unit-input col-2"><input type="number" value="" name="operation_time" id="operation_time1"
                             class="form-control"></td>
                     <td>
                         <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
@@ -95,35 +108,20 @@
                     </td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr>
-                    <td class="text-center">
-                    </td>
-                    <td id="mr-code-input" class="mr-code-input"></td>
-                    <td class="mr-qty-input">
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target="#operation_modal">
-                            New Operation
-                        </button>
-                    </td>
-                    <td class="mr-unit-input">
-                        <button type="button" class="btn btn-primary" type="submit" onclick="loadnewworkcenter();">
-                            New Work Center
-                        </button>
-                    </td>
-                    </td>
-                    <td class="mr-unit-input"></td>
-                    <td class="mr-unit-input"></td>
-                    <td class="mr-unit-input"></td>
-                    <td>
-                    </td>
-                </tr>
-            </tfoot>
+    
         </table>
-        <td colspan="7" rowspan="5">
-            <button type="button" onclick="addRowbomOperation()" class="btn btn-sm btn-sm btn-secondary">Add
-                Row</button>
-        </td>
+        <div class="row">
+            <div class="col-6">
+            <td colspan="7" rowspan="5">
+            <button type="button" onclick="addRowbomOperation()" class="btn btn-sm btn-sm btn-secondary">Add Row</button>
+            </td>
+          
+            </div>
+        </div>
+
+
+</div>
+       
     </div>
     <br>
     <!-- Edit Modal -->

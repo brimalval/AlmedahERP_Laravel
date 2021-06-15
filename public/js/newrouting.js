@@ -27,10 +27,11 @@ function addRowbomOperation(){
         <td style="width: 10%;" class="mr-qty-input">
             <input type="text" value=""  name="operation" id="operation${nextID}" class="form-control" list="operations_list" onchange="operationSearch(${nextID});">
         </td>
-        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control"></td>
-        <td class="mr-unit-input"><input type="text" value=""  name="description" id="description${nextID}" class="form-control"></td>
-        <td class="mr-unit-input"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control"></td>
-        <td class="mr-unit-input"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>
+        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control" disabled></td>
+        <td  class="mr-unit-input col-4">
+        <textarea class="form-control" id="description${nextID}"  name="description" rows="2" disabled></textarea></td>
+        <td class="mr-unit-input col-1"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control"></td>
+        <td class="mr-unit-input col-2"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>
         <td>
             <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                 <i class="fa fa-edit" aria-hidden="true"></i>
@@ -175,8 +176,8 @@ function operationSearch(id) {
 
 
 $(document).ready(function() {
-    $('.summernote').summernote({
-        height: 200
+    $('.summernote').summernote('code', '')({
+        height: 300,
     });
     $('#myTimeline').verticalTimeline({
         startLeft: false,
