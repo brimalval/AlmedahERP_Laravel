@@ -46,12 +46,9 @@
     <br>
 
 </nav>
-
-<div class="container-fluid" style="margin: 0; padding: 0;">
-    <div class="float-right" id="headingOne">
-        <div class="float-right">
-            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <div class="btn-group btn-group-sm" role="group">
+<br>
+<div class="float-right">
+<div class="btn-group btn-group-sm" role="group">
                     <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Supplier Quotation
@@ -61,6 +58,13 @@
                         <a class="dropdown-item" href="#">View</a>
                     </div>
                 </div>
+</div>
+<br>
+<div class="container-fluid" style="margin: 0; padding: 0;">
+    <div class="float-right" id="headingOne">
+        <div class="float-right">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                
                 <!-- Shows the send email button only if the quotation has already been
                    submitted -->
                 @if (isset($rfquotation) && $rfquotation->req_status == "Submitted")
@@ -137,6 +141,22 @@
             <!--supplier detail contents-->
             <div class="container">
                 {{-- <form id="contactForm" name="contact" role="form"> --}}
+
+                @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                    <div class="float-right">
+                        <label>Search:</label>
+                        <select class="selectpicker" data-live-search="true" id="supplier-search">
+                            <option value="none" disabled selected>Search for supplier by item</option>
+                            @foreach ($suppliers as $supplier)
+                                <option value="{{ $supplier->supplier_id }}" data-tokens="{{ $token_list[$loop->index] }}">
+                                    {{ $supplier->company_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>            
+                @endif
+                <br><br><br>
+
                     <table class="table border-bottom table-hover table-bordered" id="rfq-suppliers-tbl">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
@@ -175,22 +195,24 @@
                                 </td>
                                 <td class="rfq-contact">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="" aria-describedby="helpId"
+                                        <input type="text" class="form-control" aria-describedby="helpId"
                                             placeholder="ex. John Doe">
                                     </div>
                                 </td>
                                 <td class="rfq-email">
                                     <div class="form-group">
-                                        <input required type="text" class="form-control" readonly id=""
+                                        <input required type="text" class="form-control" readonly
                                             aria-describedby="helpId" placeholder="example@gmail.com"
                                             value="{{ $supplier->supplier_email }}">
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" id="" class="btn delete-btn" role="button"
-                                        onclick="$(this).parents('tr').remove()">
-                                        <i class="fa fa-minus" aria-hidden="true"></i>
-                                    </button>
+                                    @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                                        <button type="button" class="btn delete-btn" role="button"
+                                            onclick="$(this).parents('tr').remove()">
+                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -210,8 +232,11 @@
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
-                        <button type="button" onclick="addSupplier()" class="btn btn-sm btn-sm btn-secondary">Add
-                            Row</button>
+                        @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                            <button type="button" onclick="addSupplier()" class="btn btn-sm btn-sm btn-secondary">
+                                Add Row
+                            </button>
+                        @endif
                     </td>
                     {{--
                 </form> --}}
@@ -303,14 +328,16 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a id="" class="btn item-edit-btn" href="#" role="button"
-                                        onclick="openItemEditModal($(this).parents('tr'), '#contentMaterialRequest')">
-                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
-                                    </a>
-                                    <button type="button" id="" class="btn delete-btn" role="button"
-                                        onclick="$(this).parents('tr').remove()">
-                                        <i class="fa fa-minus" aria-hidden="true"></i>
-                                    </button>
+                                    @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                                        <a class="btn item-edit-btn" href="#" role="button"
+                                            onclick="openItemEditModal($(this).parents('tr'), '#contentMaterialRequest')">
+                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                        </a>
+                                        <button type="button" class="btn delete-btn" role="button"
+                                            onclick="$(this).parents('tr').remove()">
+                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -330,11 +357,15 @@
                         </tbody>
                     </table>
                     <td colspan="7" rowspan="5">
-                        <button type="button" onclick="rfqAddItem()" class="btn btn-sm btn-secondary">Add Row</button>
+                        @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
+                            <button type="button" onclick="rfqAddItem()" class="btn btn-sm btn-secondary">Add Row</button>
+                        @endif
                     </td>
                     <td colspan="7" rowspan="5">
+                        @if (!isset($rfquotation) || (isset($rfquotation) && $rfquotation->req_status == "Draft"))
                         <button type="button" onclick="$('#material-requests-modal').modal('show')"
                             class="btn btn-sm btn-primary">Link a Material Request</button>
+                        @endif
                     </td>
 
                     {{--
@@ -393,7 +424,7 @@
         });
         $('.selectpicker').each(function () {
             $(this).selectpicker();
-        });
+        })
     });
 </script>
 
@@ -429,3 +460,4 @@
         </div>
     </div>
 </div>
+

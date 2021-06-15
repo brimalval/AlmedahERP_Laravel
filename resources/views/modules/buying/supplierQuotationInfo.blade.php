@@ -184,6 +184,7 @@ action="{{ route('supplierquotation.update', ['supplierquotation'=>$sq->supp_quo
                     <th>Stock UOM</th>
                     <th>Rate</th>
                     <th>Sub-total</th>
+                    <th>Delivery Date</th>
                     <th></th>
                     
                   </tr>
