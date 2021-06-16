@@ -6,6 +6,7 @@ use App\Models\Operation;
 use App\Models\WorkCenter;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OperationsController extends Controller
 {
@@ -17,7 +18,12 @@ class OperationsController extends Controller
     public function index()
     {
         //
-        $operations = Operation::all();
+
+        $operations = DB::table('operations')
+        ->select('operations.id','operations.operation_id','operations.operation_name','operations.description','work_center.wc_label')
+        ->join('work_center','operations.wc_code','=','work_center.wc_code')
+        ->get();
+
         return view('modules.BOM.operation', ['operations' => $operations]);
     }
 
@@ -74,7 +80,7 @@ class OperationsController extends Controller
         //
     }
 
-    public function openOperationForm() 
+    public function openOperationForm()
     {
         $work_centers = WorkCenter::all();
         return view('modules.BOM.newoperation', ['work_centers' => $work_centers]);
