@@ -25,7 +25,6 @@ function addRowbomOperation(){
         </td>
         <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}"  name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
         <td style="width: 10%;" class="mr-qty-input">
-            <input type="text" value=""  name="operation" id="operation${nextID}" class="form-control" list="operations_list" onchange="operationSearch(${nextID});">
         </td>
         <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control" disabled></td>
         <td  class="mr-unit-input col-3">
@@ -42,6 +41,13 @@ function addRowbomOperation(){
         </td>
     </tr>`
     );
+    $('select[name="operation"]')
+        .eq(0)
+        .clone()
+        .attr('id', `operation${nextID}`)
+        .attr('onchange', `operationSearch(${nextID})`)
+        .appendTo(`#newrouting-input-rows tr:last .mr-qty-input`)
+        .selectpicker();
 }
 
 $("#closeOpModal, #operationCross").click(clearOperationFields);
@@ -146,14 +152,18 @@ $("#operationForm").submit(function () {
         processData: false,
         success: function (response) {
             clearOperationFields();
-            let dl = $("#operations_list");
-            $("#operations_list option").remove();
+            let operation_elem = $(".operation");
+            let dl = operation_elem.find("select");
+            dl.find("option").remove();
             let operations = response.operations;
             for(let i = 0; i < operations.length; i++) {
                 dl.append(
-                    `<option value="${operations[i].operation_id}">${operations[i].operation_name}</option>`
+                    `<option data-subtext="${operations[i].operation_id}" value="${operations[i].operation_id}">
+                        ${operations[i].operation_name}
+                    </option>`
                 );
             }
+            $('.selectpicker').selectpicker('refresh');
         }
     });
     return false;
