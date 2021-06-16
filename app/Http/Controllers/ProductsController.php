@@ -567,24 +567,34 @@ class ProductsController extends Controller
                 $material->save();
             }
 
-            //Material Request here
-            // $mat_insufficient the array where materials needs to order
-            // Structure
-            // { "item_code" : string 
-            //   "item_qty" : int
-            // }
-            // Note: Duplicate values are inside 
-            //       ie. Material = "Screw" Component: EmulCap->"Screw", "MetalSheet"
-            //       Array = Screw, Screw, MetalSheet
+            $mat_insufficient = squash($mat_insufficient);
+
+            //Decided to ajax call mat request
         }
-        
-
-
-        //@TODO Material Request and work order
 
         return response()->json([
             'status' => 'success',
-            'productId' => $product_id
+            'productId' => $product_id,
+            'mat_insufficient' => $mat_insufficient
         ]);
+    }
+
+
+    //Squashes materials
+    function squash($arr){
+        $newArr = [];
+        $keys = [];
+        for ($i=0; $i < count($arr); $i++) { 
+            if(in_array($arr[$i]['item_code'] ,  $keys)){
+                $newArr[array_search('item_code', $keys)]['item_qty'] +=  $arr[$i]['item_qty'];
+            }else{
+                array_push($keys, $arr[$i]['item_code']);
+                array_push($newArr, [
+                    "item_code" => $arr[$i]['item_code'],
+                    "item_qty" =>  $arr[$i]['item_qty'] ,
+                ]);
+            }
+        }
+        return $newArr;
     }
 }
