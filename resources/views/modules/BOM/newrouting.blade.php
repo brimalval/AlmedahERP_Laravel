@@ -92,11 +92,11 @@
                             class="form-control" disabled>
                     </td>
                     </td>
-                    <td  class="mr-unit-input col-4">
+                    <td  class="mr-unit-input col-3">
                             <textarea class="form-control" id="description1" name="description" rows="2" disabled></textarea></td>
-                    <td class="mr-unit-input col-1"><input type="number" min="0" value="" name="hour_rate" id="hour_rate1"
+                    <td class="mr-unit-input col-2"><input type="number" min="0" value="" name="hour_rate" id="hour_rate1"
                             class="form-control"></td>
-                    <td class="mr-unit-input col-2"><input type="number" value="" name="operation_time" id="operation_time1"
+                    <td class="mr-unit-input col-1"><input type="number" value="" name="operation_time" id="operation_time1"
                             class="form-control"></td>
                     <td>
                         <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
