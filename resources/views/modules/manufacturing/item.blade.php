@@ -1442,7 +1442,7 @@
                     ).draw(false);
                     idss.push( row['id']);
                 });
-                document.getElementById('reorderAll').setAttribute('data-ids', `[` + idss +`]`);
+                document.getElementById('reorderAll').setAttribute('data-ids', idss);
             }
         })
     }
@@ -1494,6 +1494,9 @@
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                 }
         });
+        console.log("Checkers");
+        console.log(id);
+        console.log(typeof id);
         var data = {};
         data['id'] = id;
         $.ajax({
@@ -1552,8 +1555,8 @@
             reproduceTable.row( $(r).parents('tr') ).remove().draw();
         }else{
             var x = document.getElementById("reorderAll").getAttribute('data-ids');
-            console.log(x);
-            reorder(x)
+            var array = JSON.parse("[" + x + "]");
+            reorder(array)
             reproduceTable.clear().draw();
         }
     }
