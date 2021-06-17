@@ -10,11 +10,13 @@ use \App\Models\ManufacturingProducts;
 use \App\Models\ProductAttribute;
 use \App\Models\ProductVariantWithValue;
 use App\Models\MaterialCategory;
+use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 use DB;
 use PhpOption\None;
 use Exception;
 use Throwable;
+use Carbon\Carbon;
 
 class ProductsController extends Controller
 {
@@ -514,18 +516,18 @@ class ProductsController extends Controller
             $work_order->work_order_no = $won;
             $work_order->save();
 
-            $components = json_decode($product->components);
-            $materials = json_decode($product->materials);
+            $components = json_decode($product->components, true);
+            $materials = json_decode($product->materials, true);
 
             foreach ($components as $component) {
-                $item_code = $component['item_code'];
-                $item_qty = $component['item_qty'] * $quantityToReproduce;
-                $item_name = $component['item_name'];
-                $material = ManufacturingMaterials::where('item_code', $item_code)->first();
+                $item_id = $component['component_id'];
+                $item_qty = $component['component_qty'] * $quantityToReproduce;
+                $material = ManufacturingMaterials::where('id', $item_id)->first();
                 if($material->stock_quantity < $item_qty){
                     array_push($mat_insufficient, [
-                    "item_code" => $item_code,
+                    "item_id" => $item_id,
                     "item_qty" =>  $item_qty - $material->stock_quantity,
+                    "item_code" => $material->item_code
                     ]);
                     $material->stock_quantity = 0;
                 }else{
@@ -534,11 +536,11 @@ class ProductsController extends Controller
                 $material->save();
 
                 //Work Order for component
-                $mainComponent = Component::where('component_name', "=", $component_name)->first();
+                $mainComponent = Component::where('id', "=", $item_id)->first();
                 $work_order = new WorkOrder();
-                $work_order->component_code = $item_code;
+                $work_order->component_code = $mainComponent->component_code;
                 $work_order->mat_ordered_id = null;
-                $work_order->sales_id = $data->id;
+                $work_order->sales_id = null;
                 $work_order->planned_start_date = null;
                 $work_order->planned_end_date = null;
                 $work_order->real_start_date = null;
@@ -554,20 +556,21 @@ class ProductsController extends Controller
             foreach ($materials as $material) {
                 $material_id = $material['material_id'];
                 $material_qty = $material['material_qty'] * $quantityToReproduce;
-                $mat = ManufacturingMaterials::where('item_code', $item_code)->first();
-                if($material->stock_quantity < $material_qty){
+                $mat = ManufacturingMaterials::where('id', $material_id)->first();
+                if($mat->stock_quantity < $material_qty){
                     array_push($mat_insufficient, [
-                    "item_code" => $material_id,
+                    "item_id" => $material_id,
                     "item_qty" =>  $material_qty - $mat->stock_quantity ,
+                    "item_code" => $mat->item_code
                     ]);
                     $mat->stock_quantity = 0;
                 }else{
-                    $mat->stock_quantity = $material_qty - $material->stock_quantity;
+                    $mat->stock_quantity = $material_qty - $mat->stock_quantity;
                 }
-                $material->save();
+                $mat->save();
             }
 
-            $mat_insufficient = squash($mat_insufficient);
+            $mat_insufficient = self::squash($mat_insufficient);
 
             //Decided to ajax call mat request
         }

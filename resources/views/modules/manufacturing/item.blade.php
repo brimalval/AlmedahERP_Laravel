@@ -1045,7 +1045,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Reorder All</button>
+            <button type="button" id="reorderAll" data-ids="" class="btn btn-primary" onclick="deleteRow(this, true)">Reorder All</button>
         </div>
         </div>
     </div>
@@ -1420,6 +1420,7 @@
             type: 'GET',
             url:'/getLowOnStocks',
             success: function(data){
+                var idss= [];
                 reproduceTable.clear();
                 data['data'].forEach((row) => {
                     var quan = row['reorder_qty'] - row['stock_unit'];
@@ -1434,12 +1435,14 @@
                             </td>
                             `,`
                             <td>
-                                <p><button type="button"  class="btn btn-primary" onclick="reorder([`+row['id'] + `])"> Reorder</button></p>
+                                <p><button type="button" class="btn btn-primary" onclick="deleteRow(this, [`+row['id'] + `] , false)"> Reorder</button></p>
                             </td>
                         </tr>`
                     ]
                     ).draw(false);
+                    idss.push( row['id']);
                 });
+                document.getElementById('reorderAll').setAttribute('data-ids', `[` + idss +`]`);
             }
         })
     }
@@ -1501,11 +1504,14 @@
                 console.log("MATERIALS FOR MATREQ");
                 console.log(data);
                 var fd = new FormData();
-                createMatRequestItems.forEach(element => {
+                data["mat_insufficient"].forEach(element => {
                     fd.append('item_code[]', element.item_code);
                     fd.append('quantity_requested[]', element.item_qty);
                     fd.append('procurement_method[]', 'buy');
                 });
+                for (var pair of fd.entries()) {
+                    console.log(pair[0]+ ', ' + pair[1]); 
+                }
                 var requiredDate = new Date();
                 requiredDate.setDate(requiredDate.getDate() + 7);
                 var requiredYear = requiredDate.getFullYear();
@@ -1513,7 +1519,7 @@
                 var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
                 var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
                 fd.append('required_date', formattedDate);
-                var currProd = $('#saleProductCode').val();
+                var currProd = "";
                 fd.append('purpose', 'Restock materials');
                 fd.append('mr_status', 'Draft');
                 fd.append('work_order_no', data);
@@ -1538,5 +1544,17 @@
                 });
             }
         });
+    }
+
+    function deleteRow(r, id, delA) {
+        if(delA === false){
+            reorder(id);
+            reproduceTable.row( $(r).parents('tr') ).remove().draw();
+        }else{
+            var x = document.getElementById("reorderAll").getAttribute('data-ids');
+            console.log(x);
+            reorder(x)
+            reproduceTable.clear().draw();
+        }
     }
 </script>
