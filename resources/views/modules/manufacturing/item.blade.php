@@ -1560,6 +1560,7 @@
             reorder(array)
             reproduceTable.clear().draw();
             getLowOnStocks();
+            //@TODO Prob: Since stocks aren't added as soon as ordered
         }
     }
 </script>
