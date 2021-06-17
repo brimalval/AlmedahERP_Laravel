@@ -1553,11 +1553,13 @@
         if(delA === false){
             reorder(id);
             reproduceTable.row( $(r).parents('tr') ).remove().draw();
+            getLowOnStocks();
         }else{
             var x = document.getElementById("reorderAll").getAttribute('data-ids');
             var array = JSON.parse("[" + x + "]");
             reorder(array)
             reproduceTable.clear().draw();
+            getLowOnStocks();
         }
     }
 </script>
