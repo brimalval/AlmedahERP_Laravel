@@ -184,7 +184,7 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 Route::resource('/jobscheduling', JobSchedController::class);
 Route::get('/jobscheduling/{work_order}/get-operations', [JobSchedController::class, 'get_operations'])
        ->name('jobscheduling.getoperations');
-Route::get('/jobscheduling/{jobsched}/get-operations/gantt', [JobSchedController::class, 'get_operations_gantt']);
+Route::get('/jobscheduling/{jobsched}/get-operations/gantt', [JobSchedController::class, 'get_operations_gantt'])->name('jobscheduling.gantt_ops');
 Route::put('/jobscheduling/{jobsched}/status/{status}', [JobSchedController::class, 'set_status'])->name('jobscheduling.setStatus');
 
 // Route for parts needed in a job scheduling entry

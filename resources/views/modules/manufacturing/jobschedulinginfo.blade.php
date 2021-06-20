@@ -53,7 +53,7 @@
 						<div class="col-6">
 							<label for="workOrderJobSched">Work Order</label>
 							<div class="input-group">
-								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }} required>
+								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }} required @if (isset($jobsched) && $jobsched->js_status != "Draft") readonly @endif>
 									<option value="none" selected disabled>
 										Select a work order
 									</option>
@@ -95,7 +95,7 @@
 						<div class="col-2">
 							<div class="form-group">
 								<label for="productQuantity">Quantity</label>
-								<input type="text" name="quantity_purchased" id="productQuantity" class="form-control" value="{{ $quantity_purchased ?? 0 }}" required>
+								<input type="text" name="quantity_purchased" id="productQuantity" class="form-control" value="{{ $quantity_purchased ?? 0 }}" required readonly>
 							</div>
 						</div>
 
@@ -224,7 +224,7 @@
 						{{-- Show the gantt chart only if one exists (currently updating one) & status is planned --}}
 						@if(isset($jobsched))
 							<div id="gantt_here" style='width:1000px; height:680px;'></div>
-							@if ($jobsched->js_status != "Planned")
+							@if ($jobsched->js_status != "Finished")
 								<script>
 									$('#gantt_here').css('display', 'none');
 								</script>
@@ -260,6 +260,12 @@
 		@csrf
 		@method('PUT')
 	</form>
+@endif
+
+@if ($jobsched->js_status == "Finished")
+	<script>
+		gantt.load('{{ route('jobscheduling.gantt_ops', ['jobsched' => $jobsched->id]) }}');
+	</script>
 @endif
 
 <script>

@@ -301,118 +301,118 @@ if (!!$("#gantt_here")[0]) {
         },
     ];
     gantt.init("gantt_here");
-    gantt.parse({
-        // Data can be an Object(Ajax), JSON, or an XML
-        // See www.docs.dhtmlx.com/gantt/desktop__loading.html for the data loading documentation
-        data: [
-            {
-                // Job Data / Task resource
-                id: "jobsched001", // We can use the tracking id here
-                text: "jobsched001", // What should the data display. We can use a TEMPLATE if we want to customize the text.
-                start_date: null, //We can specify It's start date and End date, but it can also be left as null as it follows all the operations or it's sub tasks
-                duration: null,
-                parent: 0, // Such data has no parent as it is the Job itself.
-                progress: 0,
-                open: true, // specifies whether the operations in the gantt chart are displayed
-                status: "In Progress", // Where the JS_status column can be used
-                work_order: "workorder001", // An extra column to show the work order of the job
-            },
-            // jobsched001's Children
-            {
-                id: "jobsched001+op1212", // IT IS TO BE NOTED THAT A SEQUENCE MUST HAVE A UNIQUE VALUE REGARDLESS OF IT'S JOB
-                text: "op1212", // Operation Name
-                start_date: "2019-08-01 00:00",
-                duration: 5,
-                parent: "jobsched001", //Use this to specify the job id
-                progress: 1, // it can be left to 0 if there are no calculations for the progress
-                status: "Done", // The Status of the OPERATION
-            },
-            {
-                id: "jobsched001+op1818",
-                text: "op1818",
-                start_date: "2019-08-06 00:00",
-                duration: 2,
-                parent: "jobsched001",
-                progress: 0.5,
-                status: "In Progress",
-            },
-            {
-                id: "jobsched001+op1919",
-                text: "op1919",
-                start_date: "2019-08-07 00:00",
-                duration: 2,
-                parent: "jobsched001",
-                progress: 0.5,
-                status: "In Progress",
-            },
-            // New Job Scheduling Job
-            {
-                id: "jobsched002",
-                text: "Job #2",
-                start_date: null,
-                duration: null,
-                parent: 0,
-                progress: 0,
-                open: true,
-                status: "In Progress",
-                work_order: "workorder002",
-            },
-            // jobsched002's Children
-            {
-                id: "jobsched002+op1212",
-                text: "op1212",
-                start_date: "2019-08-01 00:00",
-                duration: 5,
-                parent: "jobsched002",
-                progress: 1,
-                status: "Done",
-            },
-            {
-                id: "jobsched002+op1818",
-                text: "op1818",
-                start_date: "2019-08-06 00:00",
-                duration: 2,
-                parent: "jobsched002",
-                progress: 0.5,
-                status: "In Progress",
-            },
-            // Unplanned Job
-            {
-                id: "jobsched003",
-                text: "Job #3",
-                start_date: null,
-                end_date: null,
-                duration: null,
-                parent: 0,
-                progress: 0,
-                open: true,
-                status: "In Draft",
-                unscheduled: true, // We can specify if the job is not started yet by using unscheduled.
-            },
-        ],
-        // Links states how should the steps of the operation or job be.
-        links: [
-            {
-                id: "jobsched001step1_to_step2",
-                source: "jobsched001+op1212", // From Operation 1
-                target: "jobsched001+op1818", // to Operation 2
-                type: "0", // Specifies how should the arrows are displayed. 0 Means from end to start
-            },
-            {
-                id: "jobsched001step2_to_step3",
-                source: "jobsched001+op1818",
-                target: "jobsched001+op1919",
-                type: "0",
-            },
-            {
-                id: "jobsched002step1_to_step2",
-                source: "jobsched002+op1212",
-                target: "jobsched002+op1818",
-                type: "0",
-            },
-        ],
-        // See www.docs.dhtmlx.com/gantt/api__gantt_links_config.html for more details
-    });
+    // gantt.parse({
+    //     // Data can be an Object(Ajax), JSON, or an XML
+    //     // See www.docs.dhtmlx.com/gantt/desktop__loading.html for the data loading documentation
+    //     data: [
+    //         {
+    //             // Job Data / Task resource
+    //             id: "jobsched001", // We can use the tracking id here
+    //             text: "jobsched001", // What should the data display. We can use a TEMPLATE if we want to customize the text.
+    //             start_date: null, //We can specify It's start date and End date, but it can also be left as null as it follows all the operations or it's sub tasks
+    //             duration: null,
+    //             parent: 0, // Such data has no parent as it is the Job itself.
+    //             progress: 0,
+    //             open: true, // specifies whether the operations in the gantt chart are displayed
+    //             status: "In Progress", // Where the JS_status column can be used
+    //             work_order: "workorder001", // An extra column to show the work order of the job
+    //         },
+    //         // jobsched001's Children
+    //         {
+    //             id: "jobsched001+op1212", // IT IS TO BE NOTED THAT A SEQUENCE MUST HAVE A UNIQUE VALUE REGARDLESS OF IT'S JOB
+    //             text: "op1212", // Operation Name
+    //             start_date: "2019-08-01 00:00",
+    //             duration: 5,
+    //             parent: "jobsched001", //Use this to specify the job id
+    //             progress: 1, // it can be left to 0 if there are no calculations for the progress
+    //             status: "Done", // The Status of the OPERATION
+    //         },
+    //         {
+    //             id: "jobsched001+op1818",
+    //             text: "op1818",
+    //             start_date: "2019-08-06 00:00",
+    //             duration: 2,
+    //             parent: "jobsched001",
+    //             progress: 0.5,
+    //             status: "In Progress",
+    //         },
+    //         {
+    //             id: "jobsched001+op1919",
+    //             text: "op1919",
+    //             start_date: "2019-08-07 00:00",
+    //             duration: 2,
+    //             parent: "jobsched001",
+    //             progress: 0.5,
+    //             status: "In Progress",
+    //         },
+    //         // New Job Scheduling Job
+    //         {
+    //             id: "jobsched002",
+    //             text: "Job #2",
+    //             start_date: null,
+    //             duration: null,
+    //             parent: 0,
+    //             progress: 0,
+    //             open: true,
+    //             status: "In Progress",
+    //             work_order: "workorder002",
+    //         },
+    //         // jobsched002's Children
+    //         {
+    //             id: "jobsched002+op1212",
+    //             text: "op1212",
+    //             start_date: "2019-08-01 00:00",
+    //             duration: 5,
+    //             parent: "jobsched002",
+    //             progress: 1,
+    //             status: "Done",
+    //         },
+    //         {
+    //             id: "jobsched002+op1818",
+    //             text: "op1818",
+    //             start_date: "2019-08-06 00:00",
+    //             duration: 2,
+    //             parent: "jobsched002",
+    //             progress: 0.5,
+    //             status: "In Progress",
+    //         },
+    //         // Unplanned Job
+    //         {
+    //             id: "jobsched003",
+    //             text: "Job #3",
+    //             start_date: null,
+    //             end_date: null,
+    //             duration: null,
+    //             parent: 0,
+    //             progress: 0,
+    //             open: true,
+    //             status: "In Draft",
+    //             unscheduled: true, // We can specify if the job is not started yet by using unscheduled.
+    //         },
+    //     ],
+    //     // Links states how should the steps of the operation or job be.
+    //     links: [
+    //         {
+    //             id: "jobsched001step1_to_step2",
+    //             source: "jobsched001+op1212", // From Operation 1
+    //             target: "jobsched001+op1818", // to Operation 2
+    //             type: "0", // Specifies how should the arrows are displayed. 0 Means from end to start
+    //         },
+    //         {
+    //             id: "jobsched001step2_to_step3",
+    //             source: "jobsched001+op1818",
+    //             target: "jobsched001+op1919",
+    //             type: "0",
+    //         },
+    //         {
+    //             id: "jobsched002step1_to_step2",
+    //             source: "jobsched002+op1212",
+    //             target: "jobsched002+op1818",
+    //             type: "0",
+    //         },
+    //     ],
+    //     // See www.docs.dhtmlx.com/gantt/api__gantt_links_config.html for more details
+    // });
 
     // Gantt config to disable the dragging features from the gantt
     gantt.config.drag_move = false;

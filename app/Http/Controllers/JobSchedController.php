@@ -323,22 +323,18 @@ class JobSchedController extends Controller
 
                 $operations[$i]['status'] = "Paused";
                 $parsed_curr = Carbon::parse($currDate);
+                $time_diff = 0;
                 if (isset($operations[$i]['last_paused'])) {
                     $last_paused = $operations[$i]['last_paused'];
                     $parsed_last = Carbon::parse($last_paused);
                     // $time_diff = $parsed_last->diffInHours($parsed_curr);
                     $time_diff = $parsed_last->diffInMinutes($parsed_curr) / 60;
-                    $operation['total_hours'] = (isset($operation['total_hours']))
-                        ? $operation['total_hours'] + $time_diff
-                        : $time_diff;
                 } else {
                     $real_start = $operations[$i]['real_start'];
                     $parsed_start = Carbon::parse($real_start);
                     $time_diff = $parsed_start->diffInMinutes($parsed_curr) / 60;
-                    $operation['total_hours'] = (isset($operation['total_hours']))
-                        ? $operation['total_hours'] + $time_diff
-                        : $time_diff;
                 }
+                $operations[$i]['total_hours'] = ($operations[$i]['total_hours'] ?? 0) + $time_diff;
                 $operations[$i]['last_paused'] = $currDate;
                 $operations[$i]['is_paused'] = true;
                 break;
@@ -395,8 +391,9 @@ class JobSchedController extends Controller
         }
         $job->operations = json_encode($operations);
         // If there is no next operation
-        if ($operations[sizeof($operations) - 1]['status'] == "Finished") {
-            $jobsched->js_status = "Finished";
+        $final_op = $operations[sizeof($operations) - 1]['status'] ?? null;
+        if (isset($final_op) && $final_op == "Finished") {
+            $job->js_status = "Finished";
         }
         $job->save();
         return response()->json([
