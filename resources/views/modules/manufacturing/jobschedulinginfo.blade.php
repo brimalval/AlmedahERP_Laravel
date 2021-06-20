@@ -262,7 +262,7 @@
 	</form>
 @endif
 
-@if ($jobsched->js_status == "Finished")
+@if (isset($jobsched) && $jobsched->js_status == "Finished")
 	<script>
 		gantt.load('{{ route('jobscheduling.gantt_ops', ['jobsched' => $jobsched->id]) }}');
 	</script>
@@ -452,6 +452,9 @@
 				real_end.val(data.currDate);
 				$(status).text("Finished");
 				console.log(data.currDate);
+				if(data.allFinished) {
+					$('#js-status').text("Finished");
+				}
 				// loadIntoPage(element, data.redirect);
 			},
 			error: function(data){

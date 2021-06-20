@@ -354,6 +354,7 @@ class JobSchedController extends Controller
         //Needs tracking_id
         //Assuming that the operations json has the ff columns. sequence name, real start, real end
         //Changing sequence name to operation_id
+        $allFinished = false;
         $job = $jobsched;
         $operations = json_decode($job->operations, true);
         $currDate = Carbon::now();
@@ -394,6 +395,7 @@ class JobSchedController extends Controller
         $final_op = $operations[sizeof($operations) - 1]['status'] ?? null;
         if (isset($final_op) && $final_op == "Finished") {
             $job->js_status = "Finished";
+            $allFinished = true;
         }
         $job->save();
         return response()->json([
@@ -403,6 +405,7 @@ class JobSchedController extends Controller
             'jobSchedId' => $job->id,
             'currDate' => $currDate,
             'status' => "Finished",
+            'allFinished' => $allFinished,
         ]);
     }
 
