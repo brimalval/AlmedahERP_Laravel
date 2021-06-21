@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MaterialsPurchasedMail;
 use App\Models\MaterialPurchased;
 use App\Models\MPRecord;
 use App\Models\SuppliersQuotation;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -121,6 +123,9 @@ class MaterialsPurchasedController extends Controller
         try {
             $data = MaterialPurchased::where('purchase_id', $purchase_id)->first();
             $data->mp_status = "To Receive and Bill";
+            $supplier = $data->supplier_quotation->supplier;
+            $mail = new MaterialsPurchasedMail($supplier, $data, 1); 
+            Mail::to($supplier->supplier_email)->send($mail);
             $data->save();
         } catch (Exception $e) {
         }
@@ -165,5 +170,9 @@ class MaterialsPurchasedController extends Controller
         //cancel purchase order
         $mp_record->mp_status = 'Cancelled';
         $mp_record->save();
+
+        $supplier = $mp_record->supplier_quotation->supplier;
+        $mail = new MaterialsPurchasedMail($supplier, $mp_record, 0); 
+        Mail::to($supplier->supplier_email)->send($mail);
     }
 }
