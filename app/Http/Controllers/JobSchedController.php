@@ -20,8 +20,10 @@ class JobSchedController extends Controller
     public function index()
     {
         $jobscheds = JobSched::with('work_order')->get();
+        $finished_jobscheds = JobSched::with('work_order')->where('js_status', 'Finished')->get();
         return view('modules.manufacturing.jobscheduling', [
             'jobscheds' => $jobscheds,
+            'finished_jobscheds' => $finished_jobscheds,
         ]);
     }
 
@@ -422,6 +424,8 @@ class JobSchedController extends Controller
                 $jobsched->js_status = 'Planned';
             } elseif ($status == 'start') {
                 $jobsched->js_status = 'In Progress';
+            } elseif ($status == 'pause') {
+                $jobsched->js_status = 'Paused';
             } else {
                 return response()->json([
                     'error' => 'Unknown status.'
@@ -451,7 +455,7 @@ class JobSchedController extends Controller
             'parent' => 0,
             'progress' => 0,
             'open' => true,
-            'status' => 'In Progress',
+            'status' => $jobsched->js_status,
         ));
         $i = 0;
         foreach ($operations as $operation) {
@@ -465,7 +469,7 @@ class JobSchedController extends Controller
                 'duration' => $duration,
                 'parent' => $jobsched->jobs_sched_id,
                 'open' => true,
-                'status' => 'In Progress',
+                'status' => $operation->status,
             ));
             if ($i > 0) {
                 array_push($links, array(

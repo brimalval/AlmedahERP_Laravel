@@ -248,6 +248,10 @@
 		@csrf
 		@method('PUT')
 	</form>
+	<form action="{{ route('jobscheduling.setStatus', ['jobsched'=>$jobsched->id, 'status'=>'pause']) }}" id="js-pause-form">
+		@csrf
+		@method('PUT')
+	</form>
 	<form action="{{ route('jobscheduling.op.start', ['jobsched'=>$jobsched->id]) }}" id="op-start-form">
 		@csrf
 		@method('PUT')
@@ -264,6 +268,7 @@
 
 @if (isset($jobsched) && $jobsched->js_status == "Finished")
 	<script>
+		gantt.clearAll();
 		gantt.load('{{ route('jobscheduling.gantt_ops', ['jobsched' => $jobsched->id]) }}');
 	</script>
 @endif
@@ -342,6 +347,55 @@
 		// }
 	}
 
+	function pauseJobSched() {
+		var fd = new FormData($('#js-pause-form')[0]);
+		$.ajax({
+			type: 'POST',
+			url: $('#js-pause-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				swal({
+					title: "Updated info",
+					text: `Set ${data.jobsched.jobs_sched_id} status to "paused".`,
+					icon: "info",
+				});
+				$("#startBtn").attr("disabled", true);
+				$('#js-status').text('In Progress');
+				$('.operation-play-btn').each(function(){
+					$(this).attr('onclick', 'startOperation(this); return false;');
+				});
+				$('.operation-stop-btn').each(function(){
+					$(this).attr('onclick', 'finishOperation(this); return false;');
+				});
+				$('.operation-pause-btn').each(function(){
+					$(this).attr('onclick', 'pauseOperation(this); return false;');
+				});
+			console.log(data);
+			// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " ";
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
 	function startJobSched() {
 		var fd = new FormData($('#js-start-form')[0]);
 		$.ajax({

@@ -70,6 +70,14 @@
                 @endforeach
             </tbody>
         </table>
+        @if (!empty($finished_jobscheds))
+            <div id="gantt_here" style='width:1000px; height:680px;'></div>
+            @foreach ($finished_jobscheds as $finished_jobsched)
+                <script>
+                    gantt.load('{{ route('jobscheduling.gantt_ops', ['jobsched' => $finished_jobsched->id]) }}');
+                </script>
+            @endforeach
+        @endif
     <!-- <div id="gantt" style="height: 40em"></div> -->
 <script type="text/javascript">
     $('#jobScheduleTable').DataTable( {
