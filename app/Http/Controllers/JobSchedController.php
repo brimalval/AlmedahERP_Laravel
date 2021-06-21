@@ -20,7 +20,7 @@ class JobSchedController extends Controller
     public function index()
     {
         $jobscheds = JobSched::with('work_order')->get();
-        $finished_jobscheds = JobSched::with('work_order')->where('js_status', 'Finished')->get();
+        $finished_jobscheds = JobSched::with('work_order')->where('js_status', 'Finished')->orWhere('js_status', 'In Progress')->get();
         return view('modules.manufacturing.jobscheduling', [
             'jobscheds' => $jobscheds,
             'finished_jobscheds' => $finished_jobscheds,
@@ -199,7 +199,7 @@ class JobSchedController extends Controller
     public function destroy(JobSched $jobscheduling)
     {
         try {
-            if($jobscheduling->js_status != "Draft") {
+            if ($jobscheduling->js_status != "Draft") {
                 return response()->json([
                     "error" => "This JS entry is not a draft!",
                 ], 400);
@@ -459,13 +459,15 @@ class JobSchedController extends Controller
         ));
         $i = 0;
         foreach ($operations as $operation) {
-            $start_parsed = Carbon::parse($operation->real_start);
-            $end_parsed = Carbon::parse($operation->real_end);
+            $start = $jobsched->js_status == "In Progress" ? $operation->planned_start : $operation->real_start;
+            $end = $jobsched->js_status == "In Progress" ? $operation->planned_end : $operation->real_end;
+            $start_parsed = Carbon::parse($start);
+            $end_parsed = Carbon::parse($end);
             $duration = $start_parsed->diffInDays($end_parsed);
             array_push($data, array(
                 'id' => $jobsched->jobs_sched_id . "+" . $operation->operation_id,
                 'text' => $operation->operation_id,
-                'start_date' => $operation->real_start,
+                'start_date' => $start,
                 'duration' => $duration,
                 'parent' => $jobsched->jobs_sched_id,
                 'open' => true,

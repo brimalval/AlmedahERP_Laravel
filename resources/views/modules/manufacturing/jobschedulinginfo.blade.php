@@ -17,7 +17,7 @@
 				<!-- If a jobsched variable was not given or is a draft, that means we're trying to create/update something -->
 				@if (!isset($jobsched) || $jobsched->js_status == "Draft")
 					<li class="nav-item li-bom">
-						<button class="btn btn-primary" type="button" onclick="$('#js-form').submit();">Save</button>
+						<button class="btn btn-primary" type="button" id="js-save-btn" onclick="$('#js-form').submit();">Save</button>
 					</li>
 				@endif
 			</ul>
@@ -224,7 +224,7 @@
 						{{-- Show the gantt chart only if one exists (currently updating one) & status is planned --}}
 						@if(isset($jobsched))
 							<div id="gantt_here" style='width:1000px; height:680px;'></div>
-							@if ($jobsched->js_status != "Finished")
+							@if ($jobsched->js_status != "Finished" && $jobsched->js_status != "Planned")
 								<script>
 									$('#gantt_here').css('display', 'none');
 								</script>
@@ -266,7 +266,7 @@
 	</form>
 @endif
 
-@if (isset($jobsched) && $jobsched->js_status == "Finished")
+@if (isset($jobsched) && ($jobsched->js_status == "Finished") || $jobsched->js_status == "In Progress")
 	<script>
 		gantt.clearAll();
 		gantt.load('{{ route('jobscheduling.gantt_ops', ['jobsched' => $jobsched->id]) }}');
@@ -309,6 +309,15 @@
 				$("#finBtn").css("display","inline");
 				$("#planBtn").css("display","none");
 				$('#js-status').text('Planned');
+				// Remove the save button
+				$('#js-save-btn').remove();
+				// Disable changes on planned start & end
+				$("input[name='planned_start[]']").each(function() {
+					$(this).attr('readonly', true);
+				});
+				$("input[name='planned_end[]']").each(function() {
+					$(this).attr('readonly', true);
+				});
 			console.log(data);
 			// loadIntoPage(element, data.redirect);
 			},
