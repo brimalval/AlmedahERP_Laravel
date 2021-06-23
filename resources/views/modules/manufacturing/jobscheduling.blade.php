@@ -1,13 +1,20 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Job Scheduling</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item li-bom">
-                    <a href="javascript:void(0)" onclick="loadJobschedhome()" class="btn btn-primary text-white" type="button">Refresh</a>
+                <li class="nav-item li-bom m-auto">
+                    <a href="javascript:void(0)" onclick="loadJobschedhome()" class="btn btn-primary text-white m-1"
+                        type="button">Refresh</a>
+                </li>
+                <li class="nav-item li-bom m-auto">
+                    <button style="background-color: #007bff;" class="btn btn-info btn m-1"
+                        onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');"
+                        style="float: left;">New</button>
                 </li>
                 <!-- <li class="nav-item dropdown li-bom">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -20,47 +27,49 @@
                 </li> -->
             </ul>
         </div>
-        <li class="nav-item li-bom">
-            <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');" style="float: left;">New</button>
-        </li>
     </div>
 </nav>
-        <table class="table table-bom border-bottom w-100" id="jobScheduleTable">
-            <thead class="border-top border-bottom bg-light">
-                <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Job Schedule Code</td>
-                    <td>Product/Component Code</td>
-                    <td>Quantity</td>
-                    <td>Start Date & Time</td>
-                    <td>Status</td>
-                </tr>
-            </thead>
-            <tbody class="">
-                <!-- Iterating through list of job schedules --> 
-                @foreach ($jobscheds as $jobsched)
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input">
-                            </div>
-                        </td>
-                        <td><a href='#' onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>$jobsched->id]) }}');">{{ $jobsched->jobs_sched_id }}</a></td>
-                        <td class="text-black-50">
-                            {{ $jobsched->work_order->item->product_name ?? $jobsched->work_order->component_name }} ({{ $jobsched->work_order->item->product_code ?? $jobsched->work_order->item->component_code }})
-                        </td>
-                        <td class="text-black-50">{{ $jobsched->work_order->sales_order->orderedProducts($jobsched->work_order->product_code)->quantity_purchased ?? "N/A"}}</td>
-                        <td class="text-black-50">{{ $jobsched->start_date }} {{ $jobsched->start_time }}</td>
-                        <td class="text-black-50">{{ $jobsched->js_status }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    <!-- <div id="gantt" style="height: 40em"></div> -->
+<table class="table table-bom border-bottom w-100" id="jobScheduleTable">
+    <thead class="border-top border-bottom bg-light">
+        <tr class="text-muted">
+            <td>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input">
+                </div>
+            </td>
+            <td>Job Schedule Code</td>
+            <td>Product/Component Code</td>
+            <td>Quantity</td>
+            <td>Start Date & Time</td>
+            <td>Status</td>
+        </tr>
+    </thead>
+    <tbody class="">
+        <!-- Iterating through list of job schedules -->
+        @foreach ($jobscheds as $jobsched)
+        <tr>
+            <td>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input">
+                </div>
+            </td>
+            <td><a href='#'
+                    onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>$jobsched->id]) }}');">{{ $jobsched->jobs_sched_id }}</a>
+            </td>
+            <td class="text-black-50">
+                {{ $jobsched->work_order->item->product_name ?? $jobsched->work_order->component_name }}
+                ({{ $jobsched->work_order->item->product_code ?? $jobsched->work_order->item->component_code }})
+            </td>
+            <td class="text-black-50">
+                {{ $jobsched->work_order->sales_order->orderedProducts($jobsched->work_order->product_code)->quantity_purchased ?? "N/A"}}
+            </td>
+            <td class="text-black-50">{{ $jobsched->start_date }} {{ $jobsched->start_time }}</td>
+            <td class="text-black-50">{{ $jobsched->js_status }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+<!-- <div id="gantt" style="height: 40em"></div> -->
 <script type="text/javascript">
     $('#jobScheduleTable').DataTable( {
         responsive: true
@@ -80,7 +89,6 @@
             $("#finBtn").css("display", "none");
         }
     }
-
     $(document).ready(function() {
         $("#SPBtn").css("display", "none");
         $("#startBtn").css("display", "none");
@@ -101,9 +109,7 @@
                 targets: [6, 13, 14, 15]
             }]
         });
-
     });
-
     function newTask() {
         gantt.createTask(); // It's buggy since it does not parse any data.
         // switch(gantt.getTask(gantt.getSelectedId()).parent){
@@ -118,4 +124,3 @@
         // }
     }
 </script>
-
