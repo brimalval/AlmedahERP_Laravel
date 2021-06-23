@@ -10,7 +10,10 @@ class StockMovesReturnController extends Controller
 {
     public function index()
     {
-        return view('modules.stock.stockmovesreturn');
+        $stock_transfer = StockTransfer::get();
+        $stock_moves = StockMoves::get();
+        // $stock_moves = StockMoves::where('tracking_id', $stock_transfer->tracking_id)->first();
+        return view('modules.stock.stockmovesreturn', ['stock_transfer' => $stock_transfer, 'stock_moves'=> $stock_moves]);
     }
 
     public function store(Request $request){
@@ -19,8 +22,11 @@ class StockMovesReturnController extends Controller
             // $data = \App\Models\StockMoves::create($form_data);
             // $data = \App\Models\StockTransfer::create($form_data);
             if(StockMovesReturn::where('tracking_id', request('tracking_id'))->exists()){
+                $atleast_one_return = false;
                 if(empty(json_decode(request('item_code'), true))){
                     return Response::json(['error' => 'Error msg'], 404);
+                }else{
+                    $atleast_one_return = true;
                 }
                 StockMovesReturn::where('tracking_id', request('tracking_id'))->delete();
             }
@@ -34,7 +40,7 @@ class StockMovesReturnController extends Controller
                 $stockMoves = StockMoves::where('tracking_id', $stockMovesReturn->tracking_id)->first();
                 $worked = '';
                 $stockMovesTransfer = StockTransfer::where('tracking_id', $stockMovesReturn->tracking_id)->first();
-                if(empty(json_decode(request('stockTransferItemsUpdated'), true))){
+                if($atleast_one_return){
                     $stockMoves->update(['stock_moves_type' => 'Return']);
                     $worked = 'worked';
                 }
@@ -43,5 +49,10 @@ class StockMovesReturnController extends Controller
         } catch (Exception $e) {
             return $e;
         }
+    }
+
+    public function view_items($id) {
+        $stock_transfer = StockTransfer::find($id);
+        return response($stock_transfer->item_code);
     }
 }

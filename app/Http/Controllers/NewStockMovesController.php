@@ -27,18 +27,26 @@ class NewStockMovesController extends Controller
     {
         $employees = Employee::get();
         $stockmoves = DB::table('stock_moves')->pluck('mat_ordered_id');
+        $stations = Station::get();
         $materials_ordered = MaterialsOrdered::get();
         $raw_materials = ManufacturingMaterials::get();
-
         return view('modules.stock.newstockmoves', [
             'employees' => $employees,
             'materials_ordered' => $materials_ordered,
             'raw_materials' => $raw_materials,
+            'stations' => $stations,
         ]);
 
     }
     public function showItemsNew($matOrderedId){
         $matOrdered = MaterialsOrdered::where('mat_ordered_id', $matOrderedId)->first();
+        $items_list_received = json_decode($matOrdered->items_list_received, true);
+        $consumable_data = array();
+        foreach ($items_list_received as $item) {
+           $raw_material = ManufacturingMaterials::where('item_code', $item['item_code'])->first();
+           array_push($consumable_data, $raw_material->consumable);
+        }
+
         $p_receipt_id = $matOrdered->p_receipt_id;
         $purchaseReceipt = PurchaseReceipt::where('p_receipt_id', $p_receipt_id)->first();
 
@@ -57,7 +65,7 @@ class NewStockMovesController extends Controller
         $station_id = $requestedRawMat->station_id;
         $station = Station::where('station_id', $station_id)->first();
 
-        return response()->json(['mat_ordered'=>$matOrdered,'station_name'=>$station->station_name]);
+        return response()->json(['mat_ordered'=>$matOrdered,'station_name'=>$station->station_name, 'consumable_data'=>$consumable_data]);
         // return response($req_quotation_id);
     }
 
@@ -65,10 +73,15 @@ class NewStockMovesController extends Controller
         $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
         $items_to_be_transferred = $stock_transfer->item_code;
         $stock_return = StockMovesReturn::where('tracking_id', $trackingId)->first();
+        $stock_moves = StockMoves::where('tracking_id', $trackingId)->first();
+        $mat_ordered_id = $stock_moves->mat_ordered_id;
+        $mat_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
+        $items_list_received = $mat_ordered->items_list_received;
+
         if($stock_return){
             $items_to_be_returned = $stock_return->item_code;
         }
-        return response()->json(['transfer'=>$items_to_be_transferred,'return'=>$items_to_be_returned ?? null, 'return_date'=>$stock_return->return_date ?? null]);
+        return response()->json(['transfer'=>$items_to_be_transferred,'return'=>$items_to_be_returned ?? null, 'return_date'=>$stock_return->return_date ?? null, 'items_list_received'=>$items_list_received]);
     }
 
     public function store(Request $request){
@@ -93,6 +106,7 @@ class NewStockMovesController extends Controller
             if($sm->exists() && $sm->first()->mat_ordered_id != null){
                 return Response::json(['error' => 'Error msg'], 404);
             }else{
+                $transfer_status = $request->input("transfer_status");
                 $stockMoves = new StockMoves();
                 $stockMoves->move_date = request('move_date');
                 $stockMoves->employee_id = request('employee_id');
@@ -111,7 +125,7 @@ class NewStockMovesController extends Controller
                 $stockMovesTransfer->item_code = request('item_code');
                 $stockMovesTransfer->source_station = request('source_station') ?? null;
                 $stockMovesTransfer->target_station = request('target_station');
-                $stockMovesTransfer->transfer_status = 'Pending';
+                $stockMovesTransfer->transfer_status = $transfer_status;
                 $stockMovesTransfer->save();
 
                 return response($stockMovesTransfer);
@@ -125,5 +139,18 @@ class NewStockMovesController extends Controller
     public function view_items($id) {
         $order = MaterialsOrdered::find($id);
         return response($order->items_list_received);
+    }
+
+    public function getStockTransfer($trackingId){
+        $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
+        $stock_moves = StockMoves::where('tracking_id', $trackingId)->first();
+        return response()->json(['stock_moves'=>$stock_moves, 'stock_transfer'=>$stock_transfer]);
+    }
+
+    public function confirmStockTransfer($trackingId, Request $request){
+        $item_code = $request->get('item_code');
+        $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
+        $stock_transfer->update(['transfer_status' => 'Successfully Transferred', 'item_code'=>$item_code]);
+        return response($stock_transfer);
     }
 }

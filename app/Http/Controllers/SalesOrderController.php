@@ -26,7 +26,7 @@ class SalesOrderController extends Controller
         $products = ManufacturingProducts::get();
 
         $salesorders = DB::table('salesorder')
-        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status', 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
         ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
@@ -105,7 +105,6 @@ class SalesOrderController extends Controller
             
             $data = new SalesOrder();
             $data->cost_price = $form_data['costPrice'];
-            $data->sale_supply_method = $form_data['saleSupplyMethod'];
 
 
             $data->transaction_date = $form_data['saleDate'];
@@ -241,20 +240,20 @@ class SalesOrderController extends Controller
                 $order->quantity_purchased = $row[1];
                 $order->save();
                 
-                if($form_data['saleSupplyMethod'] == "Produce"){
-                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                    if( $prod->stock_unit - $row[1] > 0){
-                        $prod->stock_unit = $prod->stock_unit - $row[1];
-                    }else{
-                        $prod->stock_unit = 0;
-                    }
-                    $prod->save();
+                
+                $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                if( $prod->stock_unit - $row[1] > 0){
+                    $prod->stock_unit = $prod->stock_unit - $row[1];
+                }else{
+                    $prod->stock_unit = 0;
                 }
+                $prod->save();
             }
 
             $work_order_ids = array();
-
-            foreach ($cart as $row){ 
+            $componentMaterials = json_decode($request->input("componentMaterials"), true);
+            $productMaterials = json_decode($request->input("productMaterials"), true);
+            foreach ($cart as $i=>$row){ 
 
                 $work_order = new WorkOrder();
                 $work_order->product_code = $row[0];
@@ -266,6 +265,7 @@ class SalesOrderController extends Controller
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
                 $work_order->work_order_no = "WOK";
+                $work_order->transferred_qty = json_encode($productMaterials[$i]);
                 $work_order->save();
                 $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
@@ -273,7 +273,7 @@ class SalesOrderController extends Controller
                 //array_push($work_order_ids, $work_order->id);
             }
 
-            foreach($new_component as $c){
+            foreach($new_component as $i=>$c){
                 $component_name = $c['component_name'];
                 $component = Component::where('component_name', "=", $component_name)->first();
                 $component_code = $component->component_code;
@@ -287,6 +287,7 @@ class SalesOrderController extends Controller
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
                 $work_order->work_order_no = "WOK";
+                $work_order->transferred_qty = json_encode($componentMaterials[$i]);
                 $work_order->save();
                 $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
@@ -295,7 +296,7 @@ class SalesOrderController extends Controller
             }
 
             //return "Sucess";
-            return response(json_encode($work_order_ids));
+            return response(json_encode($componentMaterials));
             // return response($work_order->id);
 
         }catch(Exception $e){
@@ -440,7 +441,7 @@ class SalesOrderController extends Controller
 
     function refresh(){
         $salesorders = DB::table('salesorder')
-        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
         ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
@@ -478,7 +479,8 @@ class SalesOrderController extends Controller
                     $raw_material_quantity, 
                     "item_code" => $raw_material_code,
                     "reorder_qty" => $raw_material_reorder_qty,
-                    "reorder_level" => $raw_material_reorder_level
+                    "reorder_level" => $raw_material_reorder_level,
+                    "product_code" => $product->product_code,
                 ]);
             }
 
@@ -490,7 +492,7 @@ class SalesOrderController extends Controller
                 $raw_material_name = $raw_material->component_name;
                 $raw_material_quantity = 0;
                 $raw_materials_needed = $raw_material->item_code;
-                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
+                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed, "product_code" => $product->product_code]);
             }
             
         }
@@ -533,7 +535,6 @@ class SalesOrderController extends Controller
     }
 
     function minusStocks(Request $request){
-        
         $products = $request->input('products');
         $qty = $request->input('qty');
 

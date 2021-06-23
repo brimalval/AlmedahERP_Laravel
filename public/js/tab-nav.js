@@ -565,6 +565,27 @@ function loadStockEntry() {
     });
 }
 
+function loadNewStockMoves(transferId) {
+    $.ajax({
+        type: "GET",
+        url: `/getStockTransfer/${transferId}`,
+        data: transferId,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            $("#contentStockMoves").load("/newstockmoves", function () {
+                console.log(data);
+                $("#tracking_id").attr("disabled", true);
+                $("#tracking_id").val(data["stock_transfer"].tracking_id);
+                $("#move_date").val(data["stock_transfer"].move_date);
+                $("#mat_ordered_id").val(data["stock_moves"].mat_ordered_id);
+                $("#employee_id").val(data["stock_moves"].employee_id);
+                showItemsNew(data["stock_moves"].mat_ordered_id);
+            });
+        },
+    });
+}
+
 function loadStockMoves() {
     $(document).ready(function () {
         $("#contentStockMoves").load("/stockmoves");
@@ -601,38 +622,148 @@ function loadStockReturnInfo(
     });
 }
 
+function onChangeItemTransQty(itemTransQty, el) {
+    let currentRow = $(el).closest("tr");
+    let itemCodeFound = currentRow.find("td:nth-child(2)").html();
+    // console.log("before pass_val");
+    // console.log(itemsTransPassValue);
+    // console.log("before real_val");
+    // console.log(itemsTrans);
+    passValueArray.forEach((itemPV) => {
+        if (itemCodeFound === itemPV.item_code) {
+            itemPV.qty_received = itemTransQty;
+        }
+    });
+
+    console.log("pass_val");
+    console.log(passValueArray);
+    console.log("real_val");
+    console.log(itemsTrans);
+}
+
+function viewStockTransferItems(id) {
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr("content"),
+        },
+    });
+    $.ajax({
+        type: "GET",
+        url: `/view-st-items/${id}`,
+        data: id,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            let table = $("#stockTransfer_itemList tbody");
+            $("#stockTransfer_itemList tbody tr").remove();
+            let items = JSON.parse(response);
+            items.forEach((item) => {
+                table.append(
+                    `
+                    <tr>
+                        <td>${item.item_code}</td>
+                        <td>${item.qty_received}</td>
+                    </tr>
+                    `
+                );
+            });
+        },
+    });
+}
+
+function markAsReturn(e) {
+    let currentRow = $(e).closest("tr");
+    let attr = currentRow
+        .find("td:nth-child(1) .form-check .checkbox")
+        .is(":checked");
+    currentRow
+        .find("td:nth-child(9) .btn")
+        .attr("disabled", attr ? false : true);
+}
+
+function writeRemark(el) {
+    $("#remarks").modal("toggle");
+    let currentRow = $(el).closest("tr");
+    let itemCodeFound = currentRow.find("td:nth-child(2)").html();
+    console.log(itemsRet);
+    itemsRet.forEach((itemRet) => {
+        if (itemCodeFound == itemRet.item_code) {
+            console.log(itemRet.remarks);
+            $("#remarkText").val(function (text) {
+                return itemRet.remarks;
+            });
+        }
+    });
+    $("#itemCodeRemark").text(itemCodeFound);
+}
+
+function submitRemark() {
+    $("#remarks").modal("toggle");
+    let text = $("#remarkText").val();
+    let itemCode = $("#itemCodeRemark").text();
+    passValueArray.forEach((passValueObj) => {
+        if (passValueObj.item_code == itemCode) {
+            passValueObj["remarks"] = text;
+        }
+    });
+    console.log("new");
+    console.log(passValueArray);
+}
+
 function showItemsRet(trackingId) {
     $("#itemsRet").empty();
     let itemsTransTable = $("#itemsTrans");
     let itemsRetTable = $("#itemsRet");
     itemsTrans = [];
+    passValueArray = [];
     itemsRet = [];
     itemsTransCurrent = [];
     $.ajax({
         type: "GET",
         url: "/showItemsRet/" + trackingId,
         success: function (data) {
+            let qty_checker = [];
+            JSON.parse(data["items_list_received"]).forEach((item) => {
+                qty_checker.push(item.qty_received);
+            });
+            console.log(qty_checker);
             if (data["return_date"]) {
                 $("#return_date_ret").val(data["return_date"]);
             }
             let items_list_received = JSON.parse(data["transfer"]);
-            items_list_received.forEach((item) => {
+            items_list_received.forEach((item, index) => {
                 let obj = {
                     item_code: item.item_code,
                     qty_received: item.qty_received,
-                    source_station: "ex",
+                    qty_checker: qty_checker[index],
+                    source_station: item.source_station,
                     target_station: item.target_station,
-                    consumable: "true",
-                    item_condition: "good",
-                    transfer_status: "pending",
+                    consumable: item.consumable,
+                    item_condition: item.item_condition,
+                    transfer_status: item.transfer_status,
                 };
                 itemsTrans.push(obj);
             });
+            itemsTrans.forEach((item) => {
+                let obj = {
+                    item_code: item.item_code,
+                    qty_received: item.qty_received,
+                    qty_checker: item.qty_received,
+                    source_station: item.source_station,
+                    target_station: item.target_station,
+                    consumable: item.consumable,
+                    item_condition: item.item_condition,
+                    transfer_status: item.transfer_status,
+                };
+                passValueArray.push(obj);
+            });
+            console.log(passValueArray);
+            console.log(itemsTrans);
             JSON.parse(data["transfer"]).forEach((item) => {
                 itemsTransTable.append(
                     `<tr><td>
                           <div class="form-check">
-                              <input type="checkbox" class="form-check-input">
+                              <input type="checkbox" class="checkbox form-check-input" onchange="markAsReturn(this)">
                           </div>
                       </td>
                       <td>` +
@@ -641,12 +772,27 @@ function showItemsRet(trackingId) {
                     <td>` +
                         item.qty_received +
                         `</td>
-                    <td>Consumable</td>
-                    <td>Source_Station</td>
+                    <td><input type="number" onchange="onChangeItemTransQty(this.value, this)" class="form-control w-75" max=` +
+                        item.qty_received +
+                        ` value=` +
+                        item.qty_received +
+                        `></td>
+                    <td>` +
+                        item.consumable +
+                        `</td>
+                    <td>` +
+                        item.source_station +
+                        `</td>
                     <td>` +
                         item.target_station +
                         `</td>
-                    <td>Item_Condition</td></tr>`
+                    <td>` +
+                        item.item_condition +
+                        `</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="writeRemark(this)" disabled>Write</button>
+                    </td></tr>
+                    `
                 );
             });
 
@@ -657,11 +803,12 @@ function showItemsRet(trackingId) {
                     let obj = {
                         item_code: item.item_code,
                         qty_transferred: item.qty_transferred,
-                        source_station: "ex",
+                        source_station: item.source_station,
                         target_station: item.target_station,
-                        consumable: "true",
-                        item_condition: "good",
-                        transfer_status: "pending",
+                        consumable: item.consumable,
+                        item_condition: item.item_condition,
+                        transfer_status: item.transfer_status,
+                        remarks: item.remarks,
                     };
                     itemsRet.push(obj);
                 });
@@ -678,12 +825,18 @@ function showItemsRet(trackingId) {
                         <td>` +
                             item.qty_transferred +
                             `</td>
-                        <td>Consumable</td>
-                        <td>Source_Station</td>
+                        <td>` +
+                            item.consumable +
+                            `</td>
+                        <td>` +
+                            item.source_station +
+                            `</td>
                         <td>` +
                             item.target_station +
                             `</td>
-                        <td>Item_Condition</td></tr>`
+                        <td>` +
+                            item.item_condition +
+                            `</td></tr>`
                     );
                 });
             }

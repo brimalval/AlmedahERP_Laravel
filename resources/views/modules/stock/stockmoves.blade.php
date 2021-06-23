@@ -18,7 +18,7 @@
     </div>
 </nav>
 <div class="container">
-    <div class="card my-2"> 
+    <div class="card my-2 p-4"> 
         <div class="card-body filter">
             <div class="row">
                 <div class=" ml-auto float-right">
@@ -44,7 +44,7 @@
             <tbody>
                 @foreach ($stockmoves as $row)
                     <tr id="<?=$row["id"]?>">
-                        <td class="text-black-50"><?=$row["tracking_id"]?></td>
+                        <td class="text-black-50"><a href="javascript:loadNewStockMoves(`<?=$row["tracking_id"]?>`)"><?=$row["tracking_id"]?></a></td>
                         <td class="text-black-50"><?=$row["stock_moves_type"]?></td>
                         <td class="text-black-50"><?=$row["mat_ordered_id"]?></td>
                         <td class="text-black-50"><?=$row["employee_id"]?></td>
@@ -57,15 +57,6 @@
                                 <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
                                     <li>
                                         <button class="btn-sm btn-primary" type="submit" onclick="getStockData(this)">Return Items</button>
-                                    </li>
-                                    <li><button id="{{$row->employee_id}}" class="employee-edit-btn btn btn-warning btn-sm rounded-0" type="button">
-                                        <i class="fa fa-edit"></i> Edit</button>
-                                    </li>
-
-                                    <li>
-                                        <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
-                                            <i class="fa fa-trash"></i> Delete
-                                        </button>
                                     </li>
                                 </ul>
                             </div>

@@ -67,7 +67,6 @@
             materialList.push(id);
         }
     }
-
     function addComponent(id, qty=""){
         console.log(id);
          if (componentList.indexOf(id) !== -1) {
@@ -164,6 +163,17 @@
         $('#product_code').val(product['product_code']);
         $('#product_name').val(product['product_name']);
         $('#stock_unit').val(product['stock_unit']);
+        $('#manufacturing_date').val(product['manufacturing_date']);
+        $('#product_pulled_off_market').val(product['product_pulled_off_market']);
+        $('#saleSupplyMethod').val(product['sale_supply_method'])
+        
+        $('#reorderLevel').val(product['reorder_level']);
+        $('#reorderQty').val(product['reorder_qty']);
+        if(product['prototype'] == 1){
+            $('#prototype').prop('checked', true);
+        }else{
+            $('#prototype').prop('checked', false);
+        }
         $('.selectpicker').selectpicker('val', product['product_type']);
         $('#sales_price_wt').val(product['sales_price_wt']);
         $('.selectpicker1').selectpicker('val', product['unit']);
@@ -209,7 +219,6 @@
                         flashMessage('error', data.message);
                     });
                 }
-
             },
             error: function(data) {
                 console.log("error");
@@ -276,7 +285,7 @@
                     </script>
                 </div>
                 <div class="col text-right" style="padding-top:5px;">
-                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal">To Reproduce</button></p>
+                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal" onclick="getLowOnStocks()">To Reproduce</button></p>
                 </div>
                 
                 <table id="products-table" class="table table-striped table-bordered hover" style="width:100%">
@@ -308,12 +317,15 @@
                             <td class="font-weight-bold">{{ $product->product_name }}</td>
                             <td class="text-black-50">
                                 <!-- sales price data -->
+                                {{ $product->sales_price_wt }}
                             </td>
                             <td class="text-black-50">
                                 <!-- sales supply method -->
+                                {{ $product->sale_supply_method }}
                             </td>
                             <td class="text-black-50">
                                 <!-- stock quantity data -->
+                                {{ $product->stock_unit }}
                             </td>
 
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
@@ -495,7 +507,6 @@
                                     $("#product_selected").hide();
                                 }
                             });
-
                             $("#procurement_method").change(function() {
                                 if ($(this).val() == "produce" || $(this).val() == "buy and produce") {
                                     $("#made-to-selected").show();
@@ -541,12 +552,10 @@
                             function readURL1(input) {
                                 if (input.files && input.files[0]) {
                                     var reader = new FileReader();
-
                                     reader.onload = function(e) {
                                         $('#img_tmp')
                                             .attr('src', e.target.result)
                                     };
-
                                     reader.readAsDataURL(input.files[0]);
                                 }
                             }
@@ -557,18 +566,18 @@
                             </label>
                             <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
                                 <option selected disabled>Please Select</option>
-                                <option value="stock">Made to Stock</option>
-                                <option value="produce">To Produce</option>
+                                <option value="Made to Stock">Made to Stock</option>
+                                <option value="To Produce">To Produce</option>
                             </select>
                         </div>
                         <div class="form-group row" id="madeToStockFields" hidden>
                             <div class="col">
                                 <label for="reorderLevel">Minimum Order Quantity</label>
-                                <input type="text" name="reorderLevel" id="reorderLevel" class="form-control">
+                                <input type="number" name="reorderLevel" id="reorderLevel" class="form-control" placeholder="Ex. 100">
                             </div>
                             <div class="col">
                                 <label for="reorderQty">Maximum Order Quantity</label>
-                                <input type="text" name="reorderQty" id="reorderQty" class="form-control">
+                                <input type="number" name="reorderQty" id="reorderQty" class="form-control" placeholder="Ex. 100">
                             </div>
                         </div>
                         <script>
@@ -581,6 +590,7 @@
                                 } else {
                                     document.getElementById("madeToStockFields").setAttribute("hidden", "");
                                     
+                                    document.getElementById("stock_unit").value = 0;
                                     document.getElementById("reorderLevel").removeAttribute("required");
                                     document.getElementById("reorderQty").removeAttribute("required");
                                 }
@@ -649,7 +659,6 @@
                             <script type="text/javascript">
                                 attributeList = ""
                                 attributeList = (typeof attributeList != 'undefined' && attributeList instanceof Array) ? attributeList : []
-
                                 $(document).ready(function() {
                                     $('.selectpicker2').selectpicker();
                                     $('#attribute').on('change', function() {
@@ -660,7 +669,6 @@
                                             console.log('chosen');
                                         }
                                     });
-
                                     $('#add-attribute-modal').on('shown.bs.modal', function() {
                                         $(document).off('focusin.modal');
                                     });
@@ -755,7 +763,7 @@
                             <textarea class="form-control" type="text" id="internal_description" name="internal_description" required></textarea>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" name="prototype" id="prototype" class="form-check-input">
+                            <input type="checkbox" name="prototype" id="prototype" class="form-check-input" value = 1>
                             <label for="prototype" class="form-check-label">Prototype</label>
                         </div>
                         <div class="modal-footer">
@@ -807,7 +815,6 @@
                         // });
                     });
                 }
-
             },
             error: function(data) {}
         });
@@ -867,22 +874,17 @@
                         $('.selectpicker').selectpicker('refresh');
                         $('.selectpicker').selectpicker('val', item_group);
                         $('#item_group').val('');
-
                         $('#create-product-form').modal('show');
-
                         $('#create-product-form').on('shown.bs.modal', function() {
                             $('#product_type').focus();
                             $(document).off('focusin.modal');
                             $('.modal').css('overflow-y', 'auto');
                         });
-
-
                     } else {
                         $(document).ready(function() {
                             flashMessage('error', data.message);
                         });
                     }
-
                 },
                 error: function(data) {
                     console.log("error");
@@ -953,23 +955,17 @@
                         $('.selectpicker1').selectpicker('refresh');
                         $('.selectpicker1').selectpicker('val', unit_name);
                         $('#unit_name').val('');
-
-
                         $('#create-product-form').modal('show');
                         $('#create-product-form').on('shown.bs.modal', function() {
                             $(document).off('focusin.modal');
                             $('#unit').focus();
                             $('.modal').css('overflow-y', 'auto');
                         });
-
-
-
                     } else {
                         $(document).ready(function() {
                             flashMessage('error', data.message);
                         });
                     }
-
                 },
                 error: function(data) {
                     console.log("error");
@@ -999,6 +995,7 @@
                     <tr>
                         <th>Product</th>
                         <th>Quantity to Reproduce</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1011,12 +1008,19 @@
                             sammple
                             <!-- needed quantity to reproduce-->
                         </td>
+                        <td>
+                            <p><button type="button" id="" class="btn">try to click me!</button></p>
+                            <!-- needed quantity to reproduce-->
+                        </td>
+
                     </tr>
                 </tbody>
+                
             </table>
             <script>
+                var reproduceTable;
                 $(document).ready(function() {
-                    $('#toReproduceTable').DataTable();
+                    reproduceTable = $('#toReproduceTable').DataTable();
                 } );
             </script>
         </div>
@@ -1029,7 +1033,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Checking of Materials</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Materials of Product</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -1045,20 +1049,16 @@
                         <td>Category</td>
                         <td>Qty. Available</td>
                         <td>Qty. Needed</td>
-                        <td>Status</td>
                     </tr>
                 </thead>
-                <tbody class="components">
+                <tbody class="components" id="checkingOfMaterialsTable">
                     <!--Components Body -->
                     
                 </tbody>
                 
             </table>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+        
         </div>
     </div>
 </div>
@@ -1117,14 +1117,12 @@
                         $('.selectpicker2').selectpicker('refresh');
                         $('.selectpicker2').selectpicker('val', attribute_name);
                         $('#attribute').selectpicker('refresh');
-
                         $('#create-product-form').modal('show');
                         $('#create-product-form').on('shown.bs.modal', function() {
                             $(document).off('focusin.modal');
                             $('#attribute').focus();
                             $('.modal').css('overflow-y', 'auto');
                         });
-
                         if (attributeList.indexOf(attribute_name) !== -1) {
                             alert("Value exists!");
                         } else {
@@ -1132,14 +1130,11 @@
                             $('#attributes_div').append('<span class="attb-badge-'+attribute_name+' badge badge-success m-1 p-1">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
                             $('.modal').css('overflow-y', 'auto');
                         }
-
-
                     } else {
                         $(document).ready(function() {
                             flashMessage('error', data.message);
                         });
                     }
-
                 },
                 error: function(data) {
                     console.log("error");
@@ -1303,6 +1298,7 @@
             }
             formData.set('components', JSON.stringify(components));
             console.log('components'+components);
+            //Add product form
             $.ajax({
                 type: 'POST',
                 url: $('#product-form').attr('action'),
@@ -1325,13 +1321,11 @@
                             `,
                             `<span class="font-weight-bold">${data.product.product_code}</span>`,
                             `<span class="font-weight-bold">${data.product.product_name}</span>`,
-                            `<span class="dot-${(data.product.product_status == "Template") ? 'orange' : (data.product_status == "Variant") ? 'green' : 'blue'}"></span>
-                            ${data.product.product_status}`,
                             `<span class="text-black-50">
-                                ${data.product.product_type}
+                                ${data.product.sales_price_wt}
                             </span>`,
                             `<span class="text-black-50">
-                                ${data.product.unit}
+                                ${data.product.sale_supply_method}
                             </span>`,
                             `<span class="text-black-50">
                                 ${data.product.stock_unit}
@@ -1359,17 +1353,18 @@
                         $('#template_img').remove();
                         $('#attribute').selectpicker('refresh');
                     } else {
+                        console.log(data);
                         flashMessage('error', data.message);
                     }
                 },
                 error: function(data) {
+                    console.log(data);
                     flashMessage('error', data.message);
                 }
             });
             return false;
         }));
     });
-
     function flashMessage(status, message=null){
         if(status == 'success'){
             $('#alert-message').html(`
@@ -1389,5 +1384,85 @@
         setTimeout(function(){
             $('#alert-message').html('');
         }, 4000);
+    }
+    function getLowOnStocks(){
+        $.ajax({
+            type: 'GET',
+            url:'/getLowOnStocks',
+            success: function(data){
+                reproduceTable.clear();
+                data['data'].forEach((row) => {
+                    var quan = row['reorder_qty'] - row['stock_unit'];
+                    reproduceTable.row.add([
+                        `<tr>
+                            <td>
+                                <p><button type="button" id="" class="btn" data-toggle="modal" data-target="#test" onclick="getComponent(`+row['id'] + `)">` + row['product_code'] + `</button></p>
+                            </td>
+                            `,`
+                            <td>
+                                ` +quan+`
+                            </td>
+                            `,`
+                            <td>
+                                <p><button type="button"  class="btn btn-primary" onclick="reorder(`+row['id'] + `)"> Reorder</button></p>
+                            </td>
+                        </tr>`
+                    ]
+                    ).draw(false);
+                });
+            }
+        })
+    }
+    function getComponent(id){
+        var data = {};
+        data['id'] = id;
+        $.ajax({
+            type:'GET',
+            url: '/getComponent',
+            data: data,
+            success: function(data){
+                console.log(data);
+                var materials = data['data'];
+                //@TODO might be buggy if materials/component was not passed or did not enter for loop
+                
+                $('#checkingOfMaterialsTable tr').remove();
+                materials.forEach((row) => {
+                $("#checkingOfMaterialsTable").append(
+                    `<tr>
+                        <td></td>
+                        <td>
+                            ` +row[2]+ `
+                        </td>
+                        <td>
+                            ` +row[1]+ `
+                        </td>
+                        <td>
+                            ` +row[3]+ `
+                        </td>
+                        <td>
+                            ` +row[0]+ `
+                        </td>
+                    </tr>`
+                );
+                });
+            }
+        })
+    }
+    function reorder(id){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        var data = {};
+        data['id'] = id;
+        $.ajax({
+            type:'POST',
+            url: '/reorder',
+            data: data,
+            success: function(data){
+                console.log(data);
+            }
+        });
     }
 </script>

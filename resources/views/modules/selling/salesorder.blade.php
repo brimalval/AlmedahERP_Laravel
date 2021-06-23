@@ -196,18 +196,13 @@
                                                 <label class=" text-nowrap align-middle">
                                                     Product Code
                                                 </label>
-                                                <select class="form-control" id="saleProductCode" required
-                                                    name="saleProductCode" onchange="enableAddtoProduct()">
-                                                    <option value="none" selected disabled hidden>
+                                                <select class="form-control" id="saleProductCode"  name="saleProductCode" onchange="enableAddtoProduct()" required>
+                                                    <option value="none" selected disabled>
                                                         Select an Option
                                                     </option>
-                                                    @foreach ($products as $row)
-                                                        <option value="{{ $row->product_code }}" data-price = "{{ $row->sales_price_wt }}" data-stock = "{{ $row->stock_unit }}">
-                                                            {{ $row->product_code }}</option>
-                                                    @endforeach
                                                 </select>
                                                 <br>
-
+                                                
                                             </div>
                                         </div>
                                         <?php $today = date('Y-m-d'); ?>
@@ -742,7 +737,6 @@
         var materialsInComponents;
         var mat_insufficient = false;
     });
-
     $("#gotoworkorder").click(function(){
         console.log("Clicked");
         $("#hiddenworkorder").click();
@@ -809,7 +803,6 @@
             error: function(data) {
                 console.log("error");
                 console.log(data);
-
                 $('#view_notif').text('');
                 $('#view_notif').html(
                     '<li>' + data.responseJSON["message"] + '</li>'
@@ -829,6 +822,8 @@
         console.log(currentCart);
         formData.append("cart", currentCart);
         formData.append("component", JSON.stringify(componentsOnly));
+        formData.append("componentMaterials", JSON.stringify(componentMaterials));
+        formData.append("productMaterials", JSON.stringify(productMaterials));
         $.ajax({
             type: 'POST',
             url: "/createsalesorder",
@@ -895,7 +890,6 @@
             error: function(data) {
                 console.log("error");
                 console.log(data);
-
                 $('#notif').text('');
                 $('#notif').html(
                     '<li>' + data.responseJSON["message"] + '</li>'
@@ -937,7 +931,6 @@
                    ]).draw(false);
                 });
                 formReset();
-
             }
         });
     }
@@ -956,7 +949,6 @@
         $('#notif').text('');
         $('#view_notif').text('');
     }
-
     function loadProducts(){
         $.ajax({
             type: "GET",
@@ -968,12 +960,11 @@
                                                     </option>`);
                 response.forEach(row =>{
                     $('#saleProductCode').append(
-                        `<option value="` + row['product_code'] + `" data-price = "` + row['sales_price_wt'] + `" data-stock = "` + row['stock_unit'] +`">
-                                                            ` + row['product_code']  +`</option>`
+                        `<option value="` + row['product_code'] + `" data-price = "` + row['sales_price_wt'] + `" data-stock = "` + row['stock_unit'] +`" data-id="` +row['id'] + `">
+                                                            ` + row['product_code'] + ` (` + row['sale_supply_method'] + `)` +`</option>`
                     );
                 })
                 
-
             },
             error: function (response, error) {
                 // alert("Request: " + JSON.stringify(request));

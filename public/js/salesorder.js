@@ -179,8 +179,7 @@ function installmentType() {
 }
 
 var totalValue = 0;
-// array to add in transferred qty in Work Order Transferred Qty column
-var addToTransferredQtyInWO = [];
+
 // 2d Array [ProductCode, Quantity]
 var currentCart = [];
 // Array for storing Insufficient Quantity Items to be used for Material Request
@@ -189,8 +188,13 @@ var createMatRequestItems = [];
 //Array for storing stocks to be minus from components needed
 var componentsOrder;
 var materialsInComponents;
-var componentsOnly = [];
 var stockMinusQuantity = [];
+var workOrderComp = [];
+var workOrderCompElements = [];
+var workOrderProd = [];
+var workOrderProdElements = [];
+let componentMaterials = [];
+let productMaterials = [];
 
 function contains(names, arr) {
     namelist = [];
@@ -269,6 +273,7 @@ $("#btnSalesCalculate").click(function () {
     document.getElementById("costPrice").value = cost;
     document.getElementById("payment_total_amount").value = cost;
     rawMaterials();
+    console.log(currentCart);
 });
 
 function changeSaleSupplyMethod() {
@@ -282,14 +287,12 @@ function rawMaterials() {
     let filter = [];
     console.log("This is stockMinusQuantity");
     console.log(stockMinusQuantity);
-    console.log(stockMinusQuantity.length);
     //Filters cart for 0 values
-    for (let index = 0; index < stockMinusQuantity.length; index++) {
-        if (stockMinusQuantity[index][1] != 0) {
-            filter.push(stockMinusQuantity[index]);
+    for (let index = 0; index < currentCart.length; index++) {
+        if (currentCart[index][1] != 0) {
+            filter.push(currentCart[index]);
         }
     }
-
     for (let index = 0; index < filter.length; index++) {
         products[index] = filter[index][0];
         qty[index] = filter[index][1];
@@ -297,39 +300,39 @@ function rawMaterials() {
     data["products"] = products;
     data["qty"] = qty;
 
-    if (products.length == 0 || qty.length == 0) {
-        $(".components tr").remove();
-    } else {
-        $.ajax({
-            url: "/getCompo",
-            type: "GET",
-            data: data,
-            success: function (response) {
-                console.log(response);
-                finalizer(response);
-            },
-            error: function (response, error) {
-                // alert("Request: " + JSON.stringify(request));
-            },
-        });
-    }
+    // if (products.length == 0 || qty.length == 0) {
+    //     $(".components tr").remove();
+    // } else {
+    $.ajax({
+        url: "/getCompo",
+        type: "GET",
+        data: data,
+        success: function (response) {
+            finalizer(response);
+        },
+        error: function (response, error) {
+            // alert("Request: " + JSON.stringify(request));
+        },
+    });
+    // }
 }
 
 function finalizer(arr_components) {
     componentsOrder = arr_components;
-    console.log(arr_components);
     $("#create-material-req-btn").html("");
     $(".components tr").remove();
 
     // Raw materials that are insufficient are stored in this array
     createMatRequestItems = [];
-    addToTransferredQtyInWO = [];
     // Raw Materials inside Components
     materialsInComponents = [];
     // Raw Materials only
-    rawMaterialsOnly = [];
-    // Component Names only
     componentsOnly = [];
+    rawMaterialsOnly = [];
+    workOrderComp = [];
+    workOrderCompElements = [];
+    workOrderProd = [];
+    workOrderProdElements = [];
     mat_insufficient = false;
     for (let index = 0; index < arr_components.length; index++) {
         component = [
@@ -340,7 +343,10 @@ function finalizer(arr_components) {
             arr_components[index]["item_code"],
             arr_components[index]["reorder_qty"],
             arr_components[index]["reorder_level"],
+            arr_components[index]["product_code"],
         ];
+
+        // console.log(component);
         /* 
             Checks if it is a component, if it is, it gets its JSON data and adds it to the
             materialsInComponents array.
@@ -348,15 +354,20 @@ function finalizer(arr_components) {
         if (arr_components[index][4] != null) {
             componentsOnly.push({ component_name: component[0] });
             let materials_needed = JSON.parse(arr_components[index][4]);
+            // console.log("materials_needed");
+            // console.log(materials_needed);
             materials_needed.forEach((el) => {
                 let reorder_data = getReorderLevelAndQty(el["item_name"]);
+                let stock_data = getRawMaterialQuantity(el["item_name"]);
                 materialsInComponents.push({
                     component_name: el["item_name"],
                     category: "Component",
-                    quantity_needed_for_request: el["item_qty"] * component[2],
+                    quantity_needed: el["item_qty"] * component[2],
+                    quantity_avail: parseInt(stock_data),
                     item_code: el["item_code"],
                     reorder_qty: reorder_data[0],
                     reorder_level: reorder_data[1],
+                    product_code: component[7],
                 });
             });
         } else {
@@ -368,9 +379,13 @@ function finalizer(arr_components) {
                 item_code: component[4],
                 reorder_qty: component[5],
                 reorder_level: component[6],
+                product_code: component[7],
             });
         }
-
+        // console.log("raw mats only");
+        // console.log(rawMaterialsOnly);
+        // console.log("materials in components");
+        // console.log(materialsInComponents);
         // set status of each component
         if (component[3] <= 0) {
             status = "Out of stock";
@@ -382,6 +397,8 @@ function finalizer(arr_components) {
                     quantity_needed_for_request:
                         component[2] - component[3] + component[5],
                     item_code: component[4],
+                    product_code: component[7],
+                    quantity_avail: component[3],
                 });
             }
         } else if (component[3] > 0 && component[3] < component[2]) {
@@ -395,6 +412,8 @@ function finalizer(arr_components) {
                 quantity_needed_for_request:
                     component[2] - component[3] + component[5],
                 item_code: component[4],
+                product_code: component[7],
+                quantity_avail: component[3],
             });
         } else if (component[3] >= component[2]) {
             status = "Available";
@@ -406,6 +425,8 @@ function finalizer(arr_components) {
                     category: component[1],
                     quantity_needed_for_request: component[5],
                     item_code: component[4],
+                    product_code: component[7],
+                    quantity_avail: component[3],
                 });
             }
         }
@@ -459,7 +480,7 @@ function finalizer(arr_components) {
         if (rawMatFound) {
             let rawMaterialsNeeded =
                 parseInt(rawMatFound["quantity_needed"]) +
-                parseInt(matComponent["quantity_needed_for_request"]) -
+                parseInt(matComponent["quantity_needed"]) -
                 parseInt(rawMatFound["quantity_avail"]);
 
             if (rawMaterialsNeeded > 0) {
@@ -481,25 +502,29 @@ function finalizer(arr_components) {
                         category: rawMatFound["category"],
                         quantity_needed_for_request: rawMaterialsNeeded,
                         item_code: rawMatFound["item_code"],
+                        product_code: rawMatFound["product_code"],
+                        quantity_avail: RawMatFound["quantity_avail"],
                     });
                 } else {
                     matItemExists["quantity_needed_for_request"] +=
-                        matComponent["quantity_needed_for_request"];
+                        matComponent["quantity_needed"];
                 }
             }
         } else {
             let quantity_avail = getRawMaterialQuantity(
                 matComponent["component_name"]
             );
-            if (matComponent["quantity_needed_for_request"] >= quantity_avail) {
+            if (matComponent["quantity_needed"] >= quantity_avail) {
                 createMatRequestItems.push({
                     component_name: matComponent["component_name"],
                     category: "Component",
                     quantity_needed_for_request:
-                        matComponent["quantity_needed_for_request"] -
+                        matComponent["quantity_needed"] -
                         quantity_avail +
                         matComponent["reorder_qty"],
                     item_code: matComponent["item_code"],
+                    product_code: matComponent["product_code"],
+                    quantity_avail: matComponent["quantity_avail"],
                 });
             } else if (quantity_avail <= matComponent["reorder_level"]) {
                 console.log("hit reorder level");
@@ -508,10 +533,212 @@ function finalizer(arr_components) {
                     category: "Component",
                     quantity_needed_for_request: matComponent["reorder_qty"],
                     item_code: matComponent["item_code"],
+                    product_code: matComponent["product_code"],
+                    quantity_avail: matComponent["quantity_avail"],
                 });
             }
         }
     });
+    console.log(createMatRequestItems);
+    console.log(rawMaterialsOnly);
+    console.log(materialsInComponents);
+
+    // rawMaterialsOnly.forEach((rawMat) => {
+    //     let woe = {
+    //         item_code: rawMat.item_code,
+    //         transferred_qty: rawMat.quantity_avail,
+    //         status: "pending",
+    //         product_code: rawMat.product_code,
+    //     };
+    //     let obj = {};
+    //     let product_code = rawMat.product_code;
+    //     obj[product_code] = "";
+    //     workOrderProdElements.push(woe);
+    //     if (!workOrderProd.includes(obj)) {
+    //         workOrderProd.push(obj);
+    //     }
+    // });
+
+    // materialsInComponents.forEach((matComp) => {
+    //     let woe = {
+    //         item_code: matComp.item_code,
+    //         transferred_qty: matComp.quantity_avail,
+    //         status: "pending",
+    //         product_code: matComp.product_code,
+    //     };
+    //     let obj = {};
+    //     let product_code = matComp.product_code;
+    //     obj[product_code] = "";
+    //     workOrderCompElements.push(woe);
+    //     if (!workOrderComp.includes(obj)) {
+    //         workOrderComp.push(obj);
+    //     }
+    // });
+
+    // console.log("THIS WOCEL");
+    // console.log(workOrderCompElements);
+    // console.log(workOrderComp);
+    // console.log("THIS WOPEl");
+    // console.log(workOrderProdElements);
+    // console.log(workOrderProd);
+
+    // let pass_value;
+    // console.log("start test");
+
+    if (createMatRequestItems.length != 0) {
+        createMatRequestItems.forEach((MatReqItem) => {
+            let woe = {
+                item_code: MatReqItem.item_code,
+                transferred_qty: MatReqItem.avail,
+                status: "pending",
+                product_code: MatReqItem.product_code,
+            };
+            let obj = {};
+            let product_code = MatReqItem.product_code;
+            obj[product_code] = "";
+
+            if (MatReqItem.category === "Component") {
+                workOrderCompElements.push(woe);
+                let exist = workOrderComp.find(
+                    (woc) => Object.keys(woc)[0] === product_code
+                );
+                if (!exist) {
+                    workOrderComp.push(obj);
+                }
+            } else {
+                workOrderProdElements.push(woe);
+                let exist = workOrderProd.find(
+                    (wop) => Object.keys(wop)[0] === product_code
+                );
+                if (!exist) {
+                    workOrderProd.push(obj);
+                }
+            }
+        });
+
+        if (
+            createMatRequestItems.length !=
+            rawMaterialsOnly.length + materialsInComponents.length
+        ) {
+            rawMaterialsOnly.forEach((rawMat) => {
+                let exist = workOrderProdElements.find(
+                    (wopEl) =>
+                        wopEl.item_code == rawMat.item_code &&
+                        wopEl.product_code == rawMat.product_code
+                );
+                if (!exist) {
+                    let woe = {
+                        item_code: rawMat.item_code,
+                        transferred_qty: rawMat.quantity_avail,
+                        status: "pending",
+                        product_code: rawMat.product_code,
+                    };
+                    let obj = {};
+                    let product_code = rawMat.product_code;
+                    obj[product_code] = "";
+                    workOrderProdElements.push(woe);
+                    let exist2 = workOrderProd.find(
+                        (wop) => Object.keys(wop)[0] === product_code
+                    );
+                    if (!exist2) {
+                        workOrderProd.push(obj);
+                    }
+                }
+            });
+
+            materialsInComponents.forEach((matComp) => {
+                let exist = workOrderCompElements.find(
+                    (wocEl) =>
+                        wocEl.item_code == matComp.item_code &&
+                        wocEl.product_code == matComp.product_code
+                );
+                if (!exist) {
+                    let woe = {
+                        item_code: matComp.item_code,
+                        transferred_qty: matComp.quantity_avail,
+                        status: "pending",
+                        product_code: matComp.product_code,
+                    };
+                    let obj = {};
+                    let product_code = matComp.product_code;
+                    obj[product_code] = "";
+                    workOrderCompElements.push(woe);
+                    let exist2 = workOrderComp.find(
+                        (woc) => Object.keys(woc)[0] === product_code
+                    );
+                    if (!exist2) {
+                        workOrderComp.push(obj);
+                    }
+                }
+            });
+        }
+    } else {
+        rawMaterialsOnly.forEach((rawMat) => {
+            let woe = {
+                item_code: rawMat.item_code,
+                transferred_qty: rawMat.quantity_avail,
+                status: "pending",
+                product_code: rawMat.product_code,
+            };
+            workOrderProdElements.push(woe);
+        });
+
+        materialsInComponents.forEach((matComp) => {
+            let woe = {
+                item_code: matComp.item_code,
+                transferred_qty: matComp.quantity_avail,
+                status: "pending",
+                product_code: matComp.product_code,
+            };
+            workOrderCompElements.push(woe);
+        });
+    }
+    console.log("THIS WOCEL");
+    console.log(workOrderCompElements);
+    console.log(workOrderComp);
+    console.log("THIS WOPEl");
+    console.log(workOrderProdElements);
+    console.log(workOrderProd);
+
+    componentMaterials = [];
+
+    workOrderCompElements.forEach((workOrderCompElement) => {
+        let product_code = workOrderCompElement.product_code;
+        let obj = workOrderComp.find(
+            (workOrderCompProductObj) =>
+                product_code === Object.keys(workOrderCompProductObj)[0]
+        );
+        if (obj[product_code] != "") {
+            Object.values(obj)[0].push(workOrderCompElement);
+        } else {
+            obj[product_code] = [workOrderCompElement];
+            componentMaterials.push(obj);
+        }
+    });
+
+    productMaterials = [];
+
+    workOrderProdElements.forEach((workOrderProdElement, index) => {
+        let product_code = workOrderProdElement.product_code;
+
+        let obj = workOrderProd.find(
+            (workOrderProdProductObj) =>
+                product_code === Object.keys(workOrderProdProductObj)[0]
+        );
+        if (obj[product_code] != "") {
+            Object.values(obj)[0].push(workOrderProdElement);
+        } else {
+            obj[product_code] = [workOrderProdElement];
+            productMaterials.push(obj);
+        }
+    });
+
+    console.log("compmat");
+    console.log(componentMaterials);
+
+    console.log("prodmat");
+    console.log(productMaterials);
+
     console.log("Below is the data you need for Material Request");
     console.log(createMatRequestItems);
 }
@@ -533,6 +760,19 @@ function getReorderLevelAndQty(rawMaterial) {
     let data = "";
     $.ajax({
         url: "getReorderLevelAndQty/" + rawMaterial,
+        type: "get",
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+    });
+    return data;
+}
+
+function getStockData(rawMaterial) {
+    let data = "";
+    $.ajax({
+        url: "getStockData/" + rawMaterial,
         type: "get",
         async: false,
         success: function (response) {
@@ -743,7 +983,7 @@ function minusStocks(arr, materialsInComponents) {
     });
     materialsInComponents.forEach((element) => {
         products.push(element["item_code"]);
-        qty.push(element["quantity_needed_for_request"]);
+        qty.push(element["quantity_needed"]);
     });
 
     data = {};

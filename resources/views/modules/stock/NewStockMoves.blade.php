@@ -1,9 +1,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
       <div class="container-fluid">
-          <h2 class="navbar-brand" style="font-size: 35px;">New Stock Moves</h2>
-          
-            <h2 class="navbar-brand" style="font-size: 35px;">Transfer</h2>
+            <h2 class="navbar-brand" style="font-size: 35px;">Stock Moves Transfer</h2>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
@@ -12,15 +10,22 @@
                   <li class="nav-item dropdown li-bom">
                     </li>
                   <li class="nav-item li-bom">
-                      <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="">Cancel</button>
+                      <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadStockMoves()">Cancel</button>
                   </li>
-                  <li class="nav-item li-bom">
-                      <button class="btn btn-primary" type="submit" form="addStockMovesForm" onclick="" >Save</button>
-                  </li>
+
               </ul>
           </div>
       </div>
   </nav>
+  <div class="d-flex">
+    <div class="col-1">
+      <button class="btn btn-primary" id="confirmStockTransfer" type="submit" onclick="" >Submit</button>
+    </div>
+    <div class="col-1">
+      <button class="btn btn-primary" type="submit" form="addStockMovesForm" onclick="" >Save</button>
+    </div>
+  </div>
+
   <div class="alert alert-success alert-dismissible" id="new-stock-success" style="display:none;">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
   </div>
@@ -51,17 +56,17 @@
                 <div class="row">
                   <div class="col">
                     <label for="">Tracking ID</label>
-                    <input type="text" name='tracking_id' class="form-control" placeholder="Tracking ID" value="">
+                    <input type="text" name='tracking_id' id="tracking_id" class="form-control" placeholder="Tracking ID" value="">
                   </div>
                   <div class="col">
                     <label for="">Move Date</label>
-                    <input type="date" name='move_date' class="form-control" placeholder="Move Date" value="" required>
+                    <input type="date" name='move_date' id="move_date" class="form-control" placeholder="Move Date" value="" required>
                   </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                       <label for="">Stock Moves Type</label>
-                      <input type="text" name='stock_moves_type' class="form-control" placeholder="" value="Transfer" readonly>
+                      <input type="text" name='stock_moves_type' id="stock_moves_type" class="form-control" placeholder="" value="Transfer" readonly>
                     </div>
                 </div>
                 <div class="row">
@@ -80,7 +85,7 @@
                 <div class="row">
                     <div class="col-6">
                       <label for="">Employee ID</label>
-                      <input list="employees" name='employee_id' class="form-control" placeholder="Employee ID" value="" required>
+                      <input list="employees" id="employee_id" name='employee_id' class="form-control" placeholder="Employee ID" value="" required>
                       <datalist id="employees">
                           @foreach ($employees as $row)
                               <option value="{{ $row->employee_id }}"> {{ $row->last_name }}
@@ -104,7 +109,7 @@
                             </div>
                         </td>
                         <td>Item Code</td>
-                        <td>Quantity Transfered</td>
+                        <td>Quantity to Transfer</td>
                         <td>Consumable</td>
                         <td>Source Station</td>
                         <td>Target Station</td>
@@ -216,6 +221,7 @@
 <script>
   let items = []; 
   let itemsDel = [];
+  let sameSourceTargetStationBool = false;
   $("#mat_ordered_id").change(function(){
     if($("#mat_ordered_id").val().trim() === ''){
       $("#addDeleteButtons").show();
@@ -235,6 +241,37 @@
     }
   }
 
+  $("#confirmStockTransfer").on('click', function(e){
+    e.preventDefault();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    let tracking_id = $("#tracking_id").val();
+    var formData = new FormData($("#addStockMovesForm")[0]);
+    console.log("items");
+    console.log(items);
+    let item_code = JSON.stringify(items);
+    if(sameSourceTargetStationBool){
+      $('#new-stock-danger').show()
+      $('#new-stock-danger').html('Raw Material has the same Source and Target Station');
+      $('#new-stock-danger').delay(4000).hide(1);
+    }else{
+      $.ajax({
+            type:'POST',
+            url:"/confirmStockTransfer/"+tracking_id,
+            data: {item_code: item_code},
+            success: function(data) {
+                console.log(data);
+                $('#new-stock-success').show()
+                $('#new-stock-success').html('Successfully Transferred Stocks');
+                $('#new-stock-success').delay(4000).hide(1);
+            }
+        });
+    }
+  });
+
   $('#addStockMovesForm').on('submit', function(e){
     e.preventDefault();
     $.ajaxSetup({
@@ -242,64 +279,38 @@
             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
         }
     });
-    var formData = new FormData(this);
-    console.log('items');
-    console.log(items);
-    formData.append("item_code", JSON.stringify(items));
-    $.ajax({
-          type:'POST',
-          url:"/create-newstockmoves",
-          data: formData, 
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function(data) {
-              console.log(data);
-              $('#new-stock-success').show()
-              $('#new-stock-success').html('Successfully created a new Stock Move');
-              $('#new-stock-success').delay(4000).hide(1);
-              // itemsTable.append(
-              //     `<thead class="border-top border-bottom bg-light">
-              //   <tr class="text-muted">
-              //       <td>
-              //           <div class="form-check">
-              //               <input type="checkbox" class="form-check-input">
-              //           </div>
-              //       </td>
-              //       <td>Item Code</td>
-              //       <td>Quantity Transfered</td>
-              //       <td>Consumable</td>
-              //       <td>Source Station</td>
-              //       <td>Target Station</td>
-              //       <td >Item Condition</td>
-              //   </tr>
-              // </thead>`
-              //   );
-              // JSON.parse(data['mat_ordered'].items_list_received).forEach((item) => {
-              //   itemsTable.append(
-              //     `<tr><td>
-              //           <div class="form-check">
-              //               <input type="checkbox" class="form-check-input">
-              //           </div>
-              //       </td>
-              //       <td>` +item.item_code +`</td>
-              //     <td>` +item.qty_received +`</td>
-              //     <td>Consumable</td>
-              //     <td>Source_Station</td>
-              //     <td>`+data['station_name']+`</td>
-              //     <td>Item_Condition</td></tr>`
-              //   );
-              // });
-          },
-          error: function(data) {
+    // if(sameSourceTargetStationBool){
+    //   $('#new-stock-danger').show()
+    //   $('#new-stock-danger').html('Raw Material has the same Source and Target Station');
+    //   $('#new-stock-danger').delay(4000).hide(1);
+    // }else{
+      var formData = new FormData(this);
+      console.log('items');
+      console.log(items);
+      formData.append("item_code", JSON.stringify(items));
+      $.ajax({
+            type:'POST',
+            url:"/create-newstockmoves",
+            data: formData, 
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                console.log(data);
+                $('#new-stock-success').show()
+                $('#new-stock-success').html('Successfully created a new Stock Move');
+                $('#new-stock-success').delay(4000).hide(1);
+            },
+            error: function(data) {
 
-              $('#new-stock-danger').show()
-              $('#new-stock-danger').html('Material ordered already has a Stock Move');
-              $('#new-stock-danger').delay(4000).hide(1);
-              console.log("error");
-              console.log(data);
-          }
-      });
+                $('#new-stock-danger').show()
+                $('#new-stock-danger').html('Material ordered already has a Stock Move');
+                $('#new-stock-danger').delay(4000).hide(1);
+                console.log("error");
+                console.log(data);
+            }
+        });
+    // }
   });
 
   function onChangeRawMaterial(itemCode, el){
@@ -329,23 +340,42 @@
     console.log(items);
   }
 
+  function onChangeItemCondition(itemCondition, el){
+    let currentRow = $(el).closest('tr');
+    let itemCodeFound = currentRow.find('td:nth-child(2)').html();
+    items.forEach(item=>{
+      if(itemCodeFound === item.item_code){
+        item.item_condition = itemCondition;
+      }
+    });
+    console.log(items);
+  }
+
+  function onChangeSourceStation(sourceStation, el){
+    let currentRow = $(el).closest('tr');
+    let itemCodeFound = currentRow.find('td:nth-child(2)').html();
+    items.forEach(item=>{
+      if(itemCodeFound === item.item_code){
+        item.source_station = sourceStation;
+      }
+    });
+    sameSourceTargetStation();
+    console.log(items);
+  }
+
+  function sameSourceTargetStation(){
+    sameSourceTargetStationBool = false;
+    items.forEach(item=>{
+      if(item.source_station == item.target_station){
+        sameSourceTargetStationBool = true;
+        return sameSourceTargetStationBool;
+      }
+    });
+    return sameSourceTargetStationBool;
+  }
+
   $("#newStockAddRow").on("click", function(){
-    alert('add row');
     let itemsTable = $("#items");
-    
-    // var raw_materials = [
-    //   @foreach ($raw_materials as $row)
-    //       <option value="{{ $row->item_code }}"> {{ $row->item_code}}</option>
-    //   @endforeach
-    // ];
-    // let obj = { 'item_code': item.item_code, 
-    //             'qty_received': item.qty_received, 
-    //             'source_station': 'ex', 
-    //             'target_station': data['station_name'],
-    //             'consumable' : 'true',
-    //             'item_condition' : 'good',
-    //             'transfer_status' : 'pending',
-    //           }
     itemsTable.append(
         `<tr><td>
               <div class="form-check">
@@ -378,20 +408,11 @@
             type:'GET',
             url:"/showItemsNew/"+matOrderedId,
             success: function(data) {
+                $('#mat_ordered_id').val(matOrderedId);
                 console.log(data['mat_ordered']);
-                let items_list_received = JSON.parse(data['mat_ordered'].items_list_received);
-                items_list_received.forEach((item) => {
-                  let obj = { 'item_code': item.item_code, 
-                              'qty_received': item.qty_received, 
-                              'source_station': 'ex', 
-                              'target_station': data['station_name'],
-                              'consumable' : 'true',
-                              'item_condition' : 'good',
-                              'transfer_status' : 'pending',
-                            }
-                  items.push(obj);
-                });
-                JSON.parse(data['mat_ordered'].items_list_received).forEach((item) => {
+
+               
+                JSON.parse(data['mat_ordered'].items_list_received).forEach((item,index) => {
                   itemsTable.append(
                     `<tr><td>
                           <div class="form-check">
@@ -400,11 +421,31 @@
                       </td>
                       <td>` +item.item_code +`</td>
                     <td>` +item.qty_received +`</td>
-                    <td>Consumable</td>
-                    <td>Source_Station</td>
+                    <td>`+(data['consumable_data'][index] == 1 ? 'Yes' : 'No' )+`</td>
+                    <td><label for="source_station"></label>
+                      <select id="source_station" onchange="onChangeSourceStation(this.value, this)">
+                        @foreach ($stations as $station)
+                          <option value="{{ $station->station_name }}">{{ $station->station_name }}</option>
+                        @endforeach
+                      </select></td>
                     <td>`+data['station_name']+`</td>
-                    <td>Item_Condition</td></tr>`
+                    <td><label for="item_condition"></label>
+                      <select id="item_condition" onchange="onChangeItemCondition(this.value, this)">
+                        <option value="new">New</option>
+                        <option value="good">Good</option>
+                        <option value="damaged">Damaged</option>
+                      </select></td></tr>`
                   );
+                  let obj = { 'item_code': item.item_code, 
+                              'qty_received': item.qty_received, 
+                              'source_station': $('#source_station').val(), 
+                              'target_station': data['station_name'],
+                              'consumable' : (data['consumable_data'][index] == 1 ? 'Yes' : 'No' ),
+                              'item_condition' : 'New',
+                              'transfer_status' : 'pending',
+                            }
+                  items.push(obj);
+                  sameSourceTargetStation();
                 });
             },
             error: function(data) {
@@ -445,6 +486,37 @@
     });
 
   }
+
+  function viewStockTransferItems(id) {
+        alert('tite');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content'),
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: `/view-st-items/${id}`,
+            data: id,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                let table = $("#stockTransfer_itemList tbody");
+                $("#stockTransfer_itemList tbody tr").remove();
+                let items = JSON.parse(response);
+                items.forEach((item)=>{
+                      table.append(
+                        `
+                        <tr>
+                            <td>${item.item_code}</td>
+                            <td>${item.qty_received}</td>
+                        </tr>
+                        `
+                    );
+                })
+            }
+        });
+      }
 
   $('#deleteSel').on('click', function(e) {
         let tableControl= document.getElementById('items');

@@ -21,6 +21,7 @@ class WorkOrder extends Model
         'real_end_date',
         'product_code',
         'component_code',
+        'transferred_qty',
     ];
 
     /**
