@@ -34,23 +34,19 @@
 	<div class="modal-body">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-9">
+				<div class="col-lg-9 col-md-12">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-lg-12">
 							<div class="form-group">
 								<label for="fname">Tracking ID</label>
 								<input type="text" class="form-control" placeholder="JOB-SCH-.YYYY.-" value="{{ isset($jobsched) ? $jobsched->jobs_sched_id : "" }}" readonly>
 							</div>
 
 						</div>
-
-						<div class="col-6">
-							<!--empty-->
-						</div>
 						<div class="col-12">
 							<hr><br>
 						</div>
-						<div class="col-6">
+						<div class="col-lg-6 col-md-12">
 							<label for="workOrderJobSched">Work Order</label>
 							<div class="input-group">
 								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }} required>
@@ -78,7 +74,7 @@
 								</div>
 							</div> --}}
 						</div>
-						<div class="col-3 offset-2">
+						<div class="col-lg-3 col-md-12 offset-lg-2">
 							<div class="form-group">
 								<label for="jobStartDate">Start Date</label>
 								<input type="date" name="job_start_date" class="form-control" value="{{ isset($jobsched) ? $jobsched->start_date : null }}">
@@ -86,31 +82,27 @@
 						</div>
 
 
-						<div class="col-6">
+						<div class="col-lg-6 col-md-12">
 							<label for="productCode">Product/Component</label>
 							<div class="input-group">
 								<input type="text" id="js-product-code" class="form-control" value="{{ $item_name ?? "" }}" readonly placeholder="Product/Component Code & Name">
 							</div>
 						</div>
-						<div class="col-2">
+						<div class="col-lg-2 col-md-6">
 							<div class="form-group">
 								<label for="productQuantity">Quantity</label>
 								<input type="text" name="quantity_purchased" id="productQuantity" class="form-control" value="{{ $quantity_purchased ?? 0 }}" required>
 							</div>
 						</div>
 
-						<div class="col-3">
+						<div class="col-lg-3 col-md-6">
 							<div class="form-group">
 								<label for="job_start_time">Start Time</label>
 								<input type="time" name="job_start_time" id="job_start_time" class="form-control" value="{{ $jobsched->start_time ?? "00:00" }}" required>
 							</div>
 						</div>
 
-						<div class="col-12">
-							<!--empty-->
-						</div>
-
-						<div class="col-4">
+						<div class="col-lg-4">
 							<label for="employeeID">Employee ID</label>
 							<div class="input-group">
 								<select name="employee_id" id="js-emp-id-select" class="selectpicker">
@@ -184,19 +176,20 @@
 					<div class="table-responsive">
 						<table class="table table-sm table-condensed" id="operationsTable">
 							<thead>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">SEQUENCE NAME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OPERATION NAME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OPERATION TIME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PREDECESSOR</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">MACHINE CODE</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">WC TYPE</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OUTSOURCED</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PLANNED START</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PLANNED END</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL START</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL END</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">STATUS</td>
-								{{-- <td style="font-size:90%;font-weight:bold" class="text-nowrap">QTY FINISHED</td> --}}
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">SEQUENCE NAME</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">OPERATION NAME</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">RUNNING TIME</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">PREDECESSOR</td>
+								{{-- <td style="font-size:70%;font-weight:bold" class="text-nowrap">MACHINE CODE</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">WC TYPE</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">OUTSOURCED</td> --}}
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">PLANNED START</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">PLANNED END</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">REAL START</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">REAL END</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">STATUS</td>
+                                {{-- STATUS MUST BE MOVED TO THE modal within the jobsched_operation_row --}}
+								{{-- <td style="font-size:70%;font-weight:bold" class="text-nowrap">QTY FINISHED</td> --}}
 								<td>
 									<!--empty-->
 								</td>
