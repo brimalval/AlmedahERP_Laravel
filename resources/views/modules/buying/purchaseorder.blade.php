@@ -116,7 +116,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1; ?>
                         @foreach ($materials_purchased as $material)
                             <tr>
                                 <td scope="col">
@@ -125,13 +124,12 @@
                                 </td>
                                 <td scope="col">{{ $material->mp_status }}</td>
                                 <td scope="col">{{ $material->purchase_date }}</td>
-                                <td scope="col" id="totalPrice<?= $i ?>">{{ $material->total_cost }}</td>
+                                <td scope="col" id="totalPrice{{ $loop->index + 1 }}">{{ $material->total_cost }}</td>
                                 <!--
                                 <td scope="col">0</td>
                                 <td scope="col">0</td>
                                 -->
                             </tr>
-                        <?php ++$i; ?>
                         @endforeach
                     </tbody>
                 </table>
@@ -143,9 +141,9 @@
     <script type="text/javascript">
         $(document).ready(function() {
             for(let i=1; i<=$("#tbl-buying-purchaseorder tbody tr").length; i++) {
-                let price = parseFloat($("#totalPrice" + i).html());
-                //console.log($("#totalPrice" + i).html());
-                $("#totalPrice" + i).html("₱ " + numberWithCommas(price.toFixed(2)));
+                let price = parseFloat($(`#totalPrice${i}`).html());
+                //console.log($(`#totalPrice${i}`).html());
+                $(`#totalPrice${i}`).html("₱ " + numberWithCommas(price.toFixed(2)));
             }
             
         });

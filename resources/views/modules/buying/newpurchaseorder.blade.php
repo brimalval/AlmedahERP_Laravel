@@ -1,15 +1,10 @@
-<?php
-$today = date('Y-m-d');
-$i = 1;
-?>
-
 <script src="{{ asset('js/purchaseorder.js') }}"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
             <a href='javascript:onclick=loadPurchaseOrder();' class="fas fa-arrow-left back-button"><span></span></a>
-            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Order "Number"</h2>
+            <h2 class="navbar-brand" style="font-size: 35px;">New Purchase Order </h2>
         </h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,12 +91,17 @@ $i = 1;
     });
 </script>
 
+<div id="success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <div class="accordion" id="accordion">
     <div class="card">
         <div class="collapse show">
             <div class="card-body">
                 <form action="" id="" method="POST">
-                    @csrf
                     <div class="row">
                         <div class="col-6">
                             <label class=" text-nowrap align-middle">Series</label>
@@ -120,11 +120,9 @@ $i = 1;
                         </div>
                         <div class="col-6">
                             <label for="date">Date</label>
-                            <input type="date" readonly id="transDate" name="date"
-                                value="<?php echo $today; ?>"
-                                class="form-input form-control">
+                            <input type="date" readonly id="transDate" name="date" value="{{ now()->format("Y-m-d") }}" class="form-input form-control">
                             <br>
-                            <label for="reqdbydate">Reqd by Date</label>
+                            <label for="reqdbydate">Required by Date:</label>
                             <input type="date" name="reqdbydate" id="reqDate" class="form-input form-control">
                         </div>
                     </div>
@@ -146,12 +144,12 @@ $i = 1;
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label for="selectsuppadd">Select Supplier Address</label>
+                            <label for="suppAddress">Supplier Address</label>
                             <input type="text" id="suppAddress" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="contactperson">Contact Person</label>
-                            <input type="text" class="form-control">
+                            <label for="supplierContact">Contact Person</label>
+                            <input id="supplierContact" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="col">
@@ -199,37 +197,7 @@ $i = 1;
                             </tr>
                         </thead>
                         <tbody class="" id="itemTable-content">
-                            <td id="emptyRow" valign="top" colspan="7" class="dataTables_empty">No data available in table</td>
-                            <!--<tr id="item-1">
-                                <td>
-                                    <div class="form-check">
-                                        <input type="checkbox" name="item-chk" id="chk1" class="form-check-input">
-                                    </div>
-                                </td>
-                                <td class="text-black-50">
-                                    <input class="form-control" type="text" name="item1" id="item1"
-                                        onkeyup="fieldFunction(1);">
-                                </td>
-                                <td class="text-black-50">
-                                    <input class="form-control" type="text" name="itemName1" id="itemName1"
-                                        onkeyup="fieldFunction(1);">
-                                </td>
-                                <td class="text-black-50">
-                                    <input class="form-control" type="date" name="date1" id="date1">
-                                </td>
-                                <td class="text-black-50">
-                                    <input class="form-control" type="number" name="qty1" id="qty1" value="0" min="1"
-                                        onchange="calcPrice(1);">
-                                </td>
-                                <td class="text-black-50">
-                                    <input class="form-control" type="number" name="rate1" id="rate1" value="0" min="1"
-                                        onchange="calcPrice(1);">
-                                </td>
-                                <td class="text-black-50">
-                                    <input class="form-control" type="text" name="price1" id="price1" value="₱ 0.00"
-                                        readonly>
-                                </td>
-                            </tr>-->
+                            <td id="emptyRow" valign="top" colspan="6" class="dataTables_empty">No data available in table</td>
                         </tbody>
                         <tfoot>
                             <td colspan="7" rowspan="5">

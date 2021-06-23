@@ -12,12 +12,12 @@ if ($("#mp_status").length) {
 
 function onChangeFunction() {
     $("#mp_status").html('Not Yet Saved');
-    $("#submitOrder").html('Save');
-    $("#submitOrder").off('click', submitOrder);
+    $("#preSubmit").html('Save');
+    $("#preSubmit").off('click', submitOrder);
     //Re-bind event handler as submitOrder changes id
     //Yes, there may be a better way to do this, I just don't have the time lol
-    $("#submitOrder").click(saveOrder);
-    $("#submitOrder").attr('id', 'saveOrder');
+    $("#preSubmit").click(saveOrder);
+    $("#preSubmit").attr('id', 'saveOrder');
 }
 
 // Function for adding rows in the currency and price list
@@ -29,47 +29,38 @@ $("#rowBtn").on('click', function () {
         $("#emptyRow").remove();
     }
     tbl.append(`
-    <tr id="item-${nextRow}">
+    <tr id="item-${nextRow}" style="width: 100%;">
         <td>
             <div class="form-check">
                 <input type="checkbox" name="item-chk" id="chk${nextRow}" class="form-check-input" ${chk_status}>
             </div>
         </td>
         <td class="text-black-50">
-            <input class="form-control" type="text" name="item${nextRow}" id="item${nextRow}" onkeyup="fieldFunction(${nextRow});">
+            <input type="text" name="item${nextRow}" id="item${nextRow}" onkeyup="fieldFunction(${nextRow});">
         </td>
         <td class="text-black-50">
-            <input class="form-control" type="text" name="itemName${nextRow}" id="itemName${nextRow}" onkeyup="fieldFunction(1);">
+            <input type="text" name="itemName${nextRow}" id="itemName${nextRow}" onkeyup="fieldFunction(${nextRow});">
         </td>
         <td class="text-black-50">
-            <input class="form-control" type="date" name="date${nextRow}" id="date${nextRow}" value=${$("#reqDate").val()}>
+            <input type="date" name="date${nextRow}" id="date${nextRow}" value=${$("#reqDate").val()}>
         </td>
         <td class="text-black-50">
-            <input class="form-control" type="number" name="qty${nextRow}" id="qty${nextRow}" value="0" onchange="calcPrice(${nextRow});">
+            <input type="number" name="qty${nextRow}" id="qty${nextRow}" value="0" onchange="calcPrice(${nextRow});">
         </td>
         <td class="text-black-50">
-            <input class="form-control" type="number" name="rate${nextRow}" id="rate${nextRow}" value="0" onchange="calcPrice(${nextRow});">
+            <input type="number" name="rate${nextRow}" id="rate${nextRow}" value="0" onchange="calcPrice(${nextRow});">
         </td>
         <td class="text-black-50">
-            <input class="form-control" type="text" name="price${nextRow}" id="price${nextRow}" value="₱ 0.00" readonly>
+            <input type="text" name="price${nextRow}" id="price${nextRow}" value="₱ 0.00" readonly>
         </td>
     </tr> 
     `);
-
+    onChangeFunction();
     chkBoxFunction();
 });
 
 // Function for deleting rows in currency and price list
 $("#deleteRow").click(function () {
-    let tbl = $("#itemTable-content");
-    let nextRow = $("#itemTable tbody tr").length + 1;
-    //if (size == 1) {
-    //    $("#chk1").prop('checked', false);
-    //    $("#item1").val(null);
-    //    $("#qty1").val("0");
-    //    $("#rate1").val("0");
-    //    $("#price1").val("₱ 0.00");
-    //}
     if ($("#masterChk").is(":checked") || $('input[name="item-chk"]:checked').length == $("#itemTable tbody tr").length) {
         //When all table rows are removed, leave one new field 
         $("#itemTable tbody tr").remove();
@@ -130,6 +121,7 @@ $("#deleteRow").click(function () {
         item_codes = new_array;
     }
     chkBoxFunction();
+    onChangeFunction();
     $("#deleteRow").css('display', 'none');
     getQtyAndPrice();
 });
@@ -167,20 +159,16 @@ function submitOrder() {
     });
 
     let purchase_id = $("#purch_id").val();
-    if (confirm(`Permanently submit ${purchase_id}?`)) {
-        $.ajax({
-            url: `/update-status/${purchase_id}`,
-            type: 'POST',
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function () {
-                loadPurchaseOrder();
-            }
-        });
-    } else {
-        return;
-    }
+    $.ajax({
+        url: `/update-status/${purchase_id}`,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function () {
+            loadPurchaseOrder();
+        }
+    });
 }
 
 function viewQuotationItems(id) {
@@ -269,16 +257,22 @@ function loadQuotation(id) {
         contentType: false,
         processData: false,
         success: function (data) {
+            let supplier = data.supplier;
+            let sq_id = data.quotation.supp_quotation_id;
             $("#itemTable-content tr").remove();
             let tbl = $("#itemTable-content");
-            $("#sqID").val(data.quotation.supp_quotation_id);
+            $("#sqID").val(sq_id);
             $("#reqDate").val(data.req_date);
             let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
-            $("#hiddenSupplierField").val(data.supplier.supplier_id);
-            $("#supplierField").val(data.supplier.company_name);
-            $("#suppAddress").val(data.supplier.supplier_address);
+            $("#hiddenSupplierField").val(supplier.supplier_id);
+            $("#supplierField").val(supplier.company_name);
+            $("#suppAddress").val(supplier.supplier_address);
+            if(supplier.contact_name) {
+                $("#supplierContact").val(supplier.contact_name);
+            }
             for (let i = 1; i <= data.items.length; i++) {
-                let subtotal = parseFloat(data.items[i - 1].quantity_requested) * parseFloat(data.items[i - 1].rate);
+                let item = data.items[i - 1];
+                let subtotal = parseFloat(item.quantity_requested) * parseFloat(item.rate);
                 let price_string = numberWithCommas(subtotal.toFixed(2));
                 tbl.append(
                     `
@@ -287,19 +281,19 @@ function loadQuotation(id) {
                             <input type="checkbox" name="item-chk" id="chk${i}" ${chk_status}>
                         </td>
                         <td class="text-black-50">
-                            <span name="item${i}" id="item${i}">${data.items[i - 1].item_code}</span>
+                            <span name="item${i}" id="item${i}">${item.item_code}</span>
                         </td>
                         <td class="text-black-50">
-                            <span name="itemName${i}" id="itemName${i}">${data.items[i - 1].item.item_name}</span>
+                            <span name="itemName${i}" id="itemName${i}">${item.item.item_name}</span>
                         </td>
                         <td class="text-black-50">
                             <input type="date" name="date${i}" id="date${i}" value=${$("#reqDate").val()}>
                         </td>
                         <td class="text-black-50">
-                            <span name="qty${i}" id="qty${i}"> ${data.items[i - 1].quantity_requested} </span>
+                            <span name="qty${i}" id="qty${i}"> ${item.quantity_requested} </span>
                         </td>
                         <td class="text-black-50">
-                            <span name="rate${i}" id="rate${i}">${data.items[i - 1].rate} </span>
+                            <span name="rate${i}" id="rate${i}">${item.rate} </span>
                         </td>
                         <td class="text-black-50">
                             <span name="price${i}" id="price${i}">₱ ${price_string}</span>
@@ -307,39 +301,13 @@ function loadQuotation(id) {
                     </tr> 
                     `
                 );
-                /*tbl.append(`
-                <tr id="item-${i}">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" name="item-chk" id="chk${i}" class="form-check-input" ${chk_status}>
-                        </div>
-                    </td>
-                    <td class="text-black-50">
-                        <input class="form-control" type="text" name="item${i}" id="item${i}" value=${data.items[i - 1].item_code} onkeyup="fieldFunction(${i});">
-                    </td>
-                    <td class="text-black-50">
-                        <input class="form-control" type="text" name="itemName${i}" id="itemName${i}" value="${data.items[i - 1].item.item_name}" onkeyup="fieldFunction(${i});">
-                    </td>
-                    <td class="text-black-50">
-                        <input class="form-control" type="date" name="date${i}" id="date${i}" value=${$("#reqDate").val()}>
-                    </td>
-                    <td class="text-black-50">
-                        <input class="form-control" type="number" name="qty${i}" id="qty${i}" value=${data.items[i - 1].quantity_requested} onchange="calcPrice(${i});">
-                    </td>
-                    <td class="text-black-50">
-                        <input class="form-control" type="number" name="rate${i}" id="rate${i}" value=${data.items[i - 1].rate} onchange="calcPrice(${i});">
-                    </td>
-                    <td class="text-black-50">
-                        <input class="form-control" type="text" name="price${i}" id="price${i}" value="₱ ${price_string}" readonly>
-                    </td>
-                </tr> 
-                `);*/
             }
             let new_array = [];
             for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
                 new_array[i - 1] = $("#item" + i).val();
             }
             item_codes = new_array;
+            slideAlert(`${sq_id} loaded in Purchase Order.`, true);
             getQtyAndPrice();
             chkBoxFunction();
         }
@@ -347,6 +315,21 @@ function loadQuotation(id) {
 }
 
 $("#saveOrder").click(saveOrder);
+
+function slideAlert(message, flag) {
+    if (flag) {
+        $("#success_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#success_message").slideUp(500);
+        });
+        $("#success_message").html(message);
+    }
+    else {
+        $("#alert_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#alert_message").slideUp(500);
+        });
+        $("#alert_message").html(message);
+    }
+}
 
 function saveOrder() {
     $.ajaxSetup({
@@ -358,7 +341,7 @@ function saveOrder() {
     let transDate = new Date($("#transDate").val());
     let reqDate = new Date($("#reqDate").val());
     if (transDate > reqDate) {
-        alert('Order date is later than required date of materials!');
+        slideAlert('Order date is later than required date of materials!', false);
         return;
     }
 
@@ -368,21 +351,21 @@ function saveOrder() {
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
         reqDate = new Date($("#date" + i).val());
         if (transDate > reqDate) {
-            alert(`Transaction date is later than required date of ${$("#item" + i).val()}.`);
+            slideAlert(`Transaction date is later than required date of ${$("#item" + i).html()}.`, false);
             return;
         }
         if (parseInt($("#qty" + i).val()) == 0) {
-            alert('No quantity for material ' + $("#item" + i).html() + ' specified.');
+            slideAlert('No quantity for material ' + $("#item" + i).html() + ' specified.', false);
             return;
         }
         if (parseFloat($("#rate" + i).val()) == 0) {
-            alert('No rate for material ' + $("#item" + i).html() + ' specified.');
+            slideAlert('No rate for material ' + $("#item" + i).html() + ' specified.', false);
             return;
         }
         let price_string = $("#price" + i).html().replace("₱ ", '');
         purchased_mats[i] = {
             "item_code": $("#item" + i).html(),
-            "supplier_id": $("#supplierField").val(),
+            "supplier_id": $("#hiddenSupplierField").val(),
             "req_date": $("#date" + i).val(),
             "qty": parseInt($("#qty" + i).html()),
             "rate": parseFloat($("#rate" + i).html()),
@@ -391,6 +374,8 @@ function saveOrder() {
         ++materialCount;
     }
    
+    let materials_list = JSON.stringify(purchased_mats);
+
     if ($("#purch_id").val()) {
         form_data.append('purchase_id', $("#purch_id").val());
     }
@@ -398,7 +383,7 @@ function saveOrder() {
     form_data.append('sq_id', $("#sqID").val());
     form_data.append('purchase_date', $("#transDate").val());
     form_data.append('total_price', $(`#totalPrice`).val().replace("₱ ", '').replaceAll(',', ''));
-    form_data.set('materials_purchased', JSON.stringify(purchased_mats));
+    form_data.set('materials_purchased', materials_list);
 
     let url = !$("#mp_status").length ? '/create-order' : '/update-order';
     let purchase_id = '';
@@ -412,44 +397,35 @@ function saveOrder() {
         contentType: false,
         processData: false,
         success: function (data) {
-            console.log("Success");
-            //loadPurchaseOrder();
             purchase_id = data.purchase_id;
         }
     });
 
+
     //Only store these materials when creating purchase order
     if (!$("#purch_id").val()) {
-        for(let i=1; i<=materialCount; i++) {
-            let mp_material = new FormData();
-            mp_material.append('purchase_id', purchase_id);
-            mp_material.append('item_code', purchased_mats[i].item_code);
-            mp_material.append('qty', purchased_mats[i].qty);
-            mp_material.append('supplier_id', $("#hiddenSupplierField").val());
-            mp_material.append('required_date', purchased_mats[i].req_date);
-            mp_material.append('rate', purchased_mats[i].rate);
-            mp_material.append('subtotal',purchased_mats[i].subtotal);
-            $.ajax({
-                type: "POST",
-                url: '/store-mp-material',
-                data: mp_material,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    console.log("success");
-                    loadPurchaseOrder();
-                }
-            });
-        }
-    }
+        let materialData = new FormData();
+        materialData.append('materials_list', materials_list);
 
-    
+        $.ajax({
+            type: "POST",
+            url: `/store-mp-materials/${purchase_id}`,
+            data: materialData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                loadPurchaseOrder();
+            }
+        });
+    }
 
 }
 
 $(document).ready(function () {
     chkBoxFunction();
+
+    $("#mp_num").html(mp_number.toString());
 
     $('#supplierField').autocomplete({
         source: function (request, response) {

@@ -360,7 +360,7 @@ Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
-Route::post('/store-mp-material', [MaterialsPurchasedController::class, 'storeMaterial']);
+Route::post('/store-mp-materials/{purchase_id}', [MaterialsPurchasedController::class, 'storeMaterial']);
 Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
 
 /**PURCHASE RECEIPT ROUTES */
@@ -500,11 +500,6 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
-#Route::get('/supplier', [SupplierController::class, 'index']);
-#Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
-#Route::post('/create-supplier', [SupplierController::class, 'store']);
-#Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
-#Route::get('/search/{supplier_id}', [SupplierController::class, 'getBySuppID']);
 Route::get('/create-new-supplier', function () {
     return view('modules.buying.createnewsupplier');
 });
