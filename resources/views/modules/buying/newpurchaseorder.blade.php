@@ -91,10 +91,10 @@
     });
 </script>
 
-<div id="success_message" class="alert alert-success" style="display: none;">
+<div id="po_success_message" class="alert alert-success" style="display: none;">
 </div>
 
-<div id="alert_message" class="alert alert-danger" style="display: none;">
+<div id="po_alert_message" class="alert alert-danger" style="display: none;">
 </div>
 
 <div class="accordion" id="accordion">
@@ -122,7 +122,7 @@
                             <label for="date">Date</label>
                             <input type="date" readonly id="transDate" name="date" value="{{ now()->format("Y-m-d") }}" class="form-input form-control">
                             <br>
-                            <label for="reqdbydate">Required by Date:</label>
+                            <label for="reqdbydate">Required by Date</label>
                             <input type="date" name="reqdbydate" id="reqDate" class="form-input form-control">
                         </div>
                     </div>

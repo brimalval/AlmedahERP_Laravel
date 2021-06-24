@@ -6,7 +6,6 @@ if ($("#divMain").children().length == 0) {
 }
 //--> End of Dashboard js <--//
 
-var mp_number = 1;
 
 $(document).ready(function () {
     $("body").on("click", ".menu", function () {
@@ -513,7 +512,6 @@ function viewPurchaseOrder(id) {
 function openNewPurchaseOrder() {
     $(document).ready(function () {
         $("#contentPurchaseOrder").load("/openNewPurchaseOrder");
-        ++mp_number;
     });
 }
 

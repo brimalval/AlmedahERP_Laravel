@@ -4,56 +4,52 @@ var item_codes = [];
 // For editing purchase order
 if ($("#mp_status").length) {
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
-        item_codes[i - 1] = $("#item" + i).val();
+        item_codes[i - 1] = $("#item" + i).html();
         calcPrice(i);
     }
     getQtyAndPrice();
 }
 
 function onChangeFunction() {
-    $("#mp_status").html('Not Yet Saved');
-    $("#preSubmit").html('Save');
-    $("#preSubmit").off('click', submitOrder);
-    //Re-bind event handler as submitOrder changes id
-    //Yes, there may be a better way to do this, I just don't have the time lol
-    $("#preSubmit").click(saveOrder);
-    $("#preSubmit").attr('id', 'saveOrder');
+    $("#preSubmit").hide();
+    $("#saveOrder").show();
 }
 
 // Function for adding rows in the currency and price list
 $("#rowBtn").on('click', function () {
     let tbl = $("#itemTable-content");
-    let nextRow = $("#itemTable tbody tr").length + 1;
+    let nextRow = ($("#emptyRow").html()) ? 1 :("#itemTable tbody tr").length + 1;
     let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
     if($("#emptyRow").html()) {
         $("#emptyRow").remove();
     }
     tbl.append(`
-    <tr id="item-${nextRow}" style="width: 100%;">
+    <tr id="item-${nextRow}">
         <td>
             <div class="form-check">
-                <input type="checkbox" name="item-chk" id="chk${nextRow}" class="form-check-input" ${chk_status}>
+               <input type="checkbox" name="item-chk" id="chk${nextRow}" class="form-check-input" ${chk_status}>
             </div>
         </td>
         <td class="text-black-50">
             <input type="text" name="item${nextRow}" id="item${nextRow}" onkeyup="fieldFunction(${nextRow});">
         </td>
         <td class="text-black-50">
-            <input type="text" name="itemName${nextRow}" id="itemName${nextRow}" onkeyup="fieldFunction(${nextRow});">
+            <span name="itemName${nextRow}" id="itemName${nextRow}"></span>
         </td>
         <td class="text-black-50">
-            <input type="date" name="date${nextRow}" id="date${nextRow}" value=${$("#reqDate").val()}>
+            <input type="date" name="date${nextRow}"
+                id="date${nextRow}" value=${$("#reqDate").val()}>
         </td>
         <td class="text-black-50">
             <input type="number" name="qty${nextRow}" id="qty${nextRow}" value="0" onchange="calcPrice(${nextRow});">
         </td>
         <td class="text-black-50">
-            <input type="number" name="rate${nextRow}" id="rate${nextRow}" value="0" onchange="calcPrice(${nextRow});">
+        <input type="number" name="rate${nextRow}" id="rate${nextRow}" value="0" onchange="calcPrice(${nextRow});">
         </td>
         <td class="text-black-50">
-            <input type="text" name="price${nextRow}" id="price${nextRow}" value="₱ 0.00" readonly>
+        <input type="text" name="price${nextRow}" id="price${nextRow}" value="₱ 0.00" readonly>
         </td>
-    </tr> 
+    </tr>
     `);
     onChangeFunction();
     chkBoxFunction();
@@ -318,16 +314,16 @@ $("#saveOrder").click(saveOrder);
 
 function slideAlert(message, flag) {
     if (flag) {
-        $("#success_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#success_message").slideUp(500);
+        $("#po_success_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#po_success_message").slideUp(500);
         });
-        $("#success_message").html(message);
+        $("#po_success_message").html(message);
     }
     else {
-        $("#alert_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#alert_message").slideUp(500);
+        $("#po_alert_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#po_alert_message").slideUp(500);
         });
-        $("#alert_message").html(message);
+        $("#po_alert_message").html(message);
     }
 }
 
@@ -397,6 +393,7 @@ function saveOrder() {
         contentType: false,
         processData: false,
         success: function (data) {
+            slideAlert("Purchase Order successfully created!", true);
             purchase_id = data.purchase_id;
         }
     });
@@ -424,8 +421,6 @@ function saveOrder() {
 
 $(document).ready(function () {
     chkBoxFunction();
-
-    $("#mp_num").html(mp_number.toString());
 
     $('#supplierField').autocomplete({
         source: function (request, response) {
@@ -465,14 +460,20 @@ $(document).ready(function () {
 
 function getQtyAndPrice() {
     let price = 0, qty = 0;
+    let price_string = '';
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
         qty += !$("#qty" + i).html() ? 0 : parseInt($("#qty" + i).html());
-        price_string = isNaN($("#price" + i).html()) ? $("#price" + i).html().replace("₱ ", '') : $("#price" + i).html();
-        //console.log(price_string);
+        if ($("#mp_status").length) {
+            price_string = isNaN($("#price" + i).html()) ? $("#price" + i).html().replace("₱ ", '') : $("#price" + i).html();   
+        } else {
+            price_string = isNaN($("#price" + i).val()) ? $("#price" + i).val().replace("₱ ", '') : $("#price" + i).val();
+        }
+        console.log(price_string);
         let priceWOComma = price_string.replaceAll(',', '');
         price_num = parseFloat(priceWOComma);
         price += price_num;
     }
+    console.log(price);
     //$("#totalQty").val(qty);
     $("#totalPrice").val("₱ " + numberWithCommas(price.toFixed(2)));
 }
@@ -501,16 +502,17 @@ function numberWithCommas(x) {
 }
 
 function calcPrice(id) {
-    let qty = !$("#qty" + id).val() ? 0 : parseInt($("#qty" + id).val());
-    let rate = !$("#rate" + id).val() ? 0 : parseFloat($("#rate" + id).val());
+    let qty = !$("#qty" + id).html() ? 0 : parseInt($("#qty" + id).html());
+    let rate = !$("#rate" + id).html() ? 0 : parseFloat($("#rate" + id).html());
     let price = isNaN(qty * rate) ? 0 : qty * rate;
-    $("#price" + id).val("₱ " + numberWithCommas(price.toFixed(2)));
+    $("#price" + id).html("₱ " + numberWithCommas(price.toFixed(2)));
 
     getQtyAndPrice();
 }
 
 function fieldFunction(id, token = CSRF_TOKEN) {
-    let itemId = "#item" + id;
+    let itemId = `#item${id}`;
+    let nameId = `#itemName${id}`;
     $(document).ready(function () {
         $(itemId).autocomplete({
             source: function (request, response) {
@@ -523,9 +525,7 @@ function fieldFunction(id, token = CSRF_TOKEN) {
                         search: request.term
                     },
                     success: function (data) {
-                        //console.log(data);
                         response(data);
-                        //alert(data[0]['product_code']);
                     }
                 });
             },
@@ -538,6 +538,7 @@ function fieldFunction(id, token = CSRF_TOKEN) {
                 } else {
                     item_codes[id - 1] = item_code;
                     $(itemId).val(ui.item.item_code); // save selected name to input
+                    $(nameId).html(ui.item.item_name);
                 }
                 return false;
             }

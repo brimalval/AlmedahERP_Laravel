@@ -39,6 +39,7 @@
                     <li class="nav-item li-bom">
                         <button id="preSubmit" class="btn btn-primary" type="button" data-target="#npo_confirmModal"
                             data-toggle="modal">Submit</button>
+                        <button class="btn btn-primary" id="saveOrder" type="button" style="display: none;">Save</button>
                     </li>
                 </ul>
             </div>
@@ -109,7 +110,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">Permanently submit {{ $purchase_order->purchase_id }}?</div>
+                <div class="modal-body"><p>Permanently submit {{ $purchase_order->purchase_id }}?</p></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button class="btn btn-primary" id="submitOrder" data-dismiss="modal" type="button">Submit</button>
@@ -118,10 +119,10 @@
         </div>
     </div>
 
-    <div id="success_message" class="alert alert-success" style="display: none;">
+    <div id="po_success_message" class="alert alert-success" style="display: none;">
     </div>
 
-    <div id="alert_message" class="alert alert-danger" style="display: none;">
+    <div id="po_alert_message" class="alert alert-danger" style="display: none;">
     </div>
 @endif
 
@@ -152,7 +153,7 @@
                             <input type="date" readonly id="transDate" name="date"
                                 value="{{ $purchase_order->purchase_date }}" class="form-input form-control">
                             <br>
-                            <label for="reqdbydate">Required by Date:</label>
+                            <label for="reqdbydate">Required by Date</label>
                             <input readonly type="date" name="reqdbydate" id="reqDate" class="form-input form-control"
                                 value="{{ $req_date }}">
                         </div>

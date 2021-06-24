@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\MaterialsPurchasedMail;
+use App\Models\ManufacturingMaterials;
 use App\Models\MaterialPurchased;
 use App\Models\MPRecord;
+use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,7 +22,10 @@ class MaterialsPurchasedController extends Controller
     public function index()
     {
         $materials_purchased = MaterialPurchased::all();
-        return view('modules.buying.purchaseorder', ['materials_purchased' => $materials_purchased]);
+        $materials = ManufacturingMaterials::all();
+        $suppliers = Supplier::all();
+        return view('modules.buying.purchaseorder', ['materials_purchased' => $materials_purchased, 'materials' => $materials,
+                        'suppliers' => $suppliers]);
     }
 
     public function openOrderForm()
