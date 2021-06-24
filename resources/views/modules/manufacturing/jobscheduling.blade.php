@@ -1,13 +1,20 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Job Scheduling</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item li-bom">
-                    <a href="javascript:void(0)" onclick="loadJobschedhome()" class="btn btn-primary text-white" type="button">Refresh</a>
+                <li class="nav-item li-bom m-auto">
+                    <a href="javascript:void(0)" onclick="loadJobschedhome()" class="btn btn-primary text-white m-1"
+                        type="button">Refresh</a>
+                </li>
+                <li class="nav-item li-bom m-auto">
+                    <button style="background-color: #007bff;" class="btn btn-info btn m-1"
+                        onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');"
+                        style="float: left;">New</button>
                 </li>
                 <!-- <li class="nav-item dropdown li-bom">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -20,7 +27,6 @@
                 </li> -->
             </ul>
         </div>
-        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');" style="float: left;">New</button>
     </div>
 </nav>
         <table class="table table-bom border-bottom w-100" id="jobScheduleTable">
@@ -98,7 +104,6 @@
             $("#finBtn").css("display", "none");
         }
     }
-
     $(document).ready(function() {
         $("#SPBtn").css("display", "none");
         $("#startBtn").css("display", "none");
@@ -119,9 +124,7 @@
                 targets: [6, 13, 14, 15]
             }]
         });
-
     });
-
     function newTask() {
         gantt.createTask(); // It's buggy since it does not parse any data.
         // switch(gantt.getTask(gantt.getSelectedId()).parent){

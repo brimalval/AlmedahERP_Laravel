@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MaterialsPurchasedMail;
 use App\Models\MaterialPurchased;
 use App\Models\MPRecord;
 use App\Models\SuppliersQuotation;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -63,8 +65,6 @@ class MaterialsPurchasedController extends Controller
             $lastPurchase = MaterialPurchased::orderby('id', 'desc')->first();
             $nextId = ($lastPurchase) ? MaterialPurchased::orderby('id', 'desc')->first()->id + 1 : 1;
             //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
-
-            $to_append = strlen(strval($nextId));
 
             $purchase_id = "PUR-ORD-" . Carbon::now()->year . '-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
 
@@ -123,6 +123,9 @@ class MaterialsPurchasedController extends Controller
         try {
             $data = MaterialPurchased::where('purchase_id', $purchase_id)->first();
             $data->mp_status = "To Receive and Bill";
+            $supplier = $data->supplier_quotation->supplier;
+            $mail = new MaterialsPurchasedMail($supplier, $data, 1); 
+            Mail::to($supplier->supplier_email)->send($mail);
             $data->save();
         } catch (Exception $e) {
         }
@@ -143,24 +146,33 @@ class MaterialsPurchasedController extends Controller
         //get purchase receipt and delete pending orders record related to purchase receipt
         $p_receipt = $mp_record->receipt;
         if ($p_receipt != null) {
-            $order_record = $p_receipt->order_record;
-            if($order_record != null) $order_record->delete();
-            $p_invoice = $p_receipt->invoice;
-            if ($p_invoice != null) {
-                //get purchase invoice related to purchase receipt, and delete logs related to purchase invoice
-                $invoice_logs = $p_invoice->invoice_logs;
-                if($invoice_logs != null) {
-                    foreach ($invoice_logs as $invoice_log) {
-                        $invoice_log->delete();
+            if ($p_receipt->pr_status === 'Draft' || $p_receipt->noReceivedMaterials() == true) {
+                $order_record = $p_receipt->order_record;
+                if ($order_record != null) $order_record->delete();
+                $p_invoice = $p_receipt->invoice;
+                if ($p_invoice != null) {
+                    //get purchase invoice related to purchase receipt, and delete logs related to purchase invoice
+                    $invoice_logs = $p_invoice->invoice_logs;
+                    if ($invoice_logs != null) {
+                        foreach ($invoice_logs as $invoice_log) {
+                            $invoice_log->delete();
+                        }
                     }
+                    //delete invoice record
+                    $p_invoice->delete();
                 }
-                //delete invoice record
-                $p_invoice->delete();
+                //delete purchase receipt
+                $p_receipt->delete();
+            } else {
+                return ['error' => 'The purchase receipt connected to this purchase order is already currently receiving materials.'];
             }
-            //delete purchase receipt
-            $p_receipt->delete();
         }
-        //delete purchase order
-        $mp_record->delete();
+        //cancel purchase order
+        $mp_record->mp_status = 'Cancelled';
+        $mp_record->save();
+
+        $supplier = $mp_record->supplier_quotation->supplier;
+        $mail = new MaterialsPurchasedMail($supplier, $mp_record, 0); 
+        Mail::to($supplier->supplier_email)->send($mail);
     }
 }

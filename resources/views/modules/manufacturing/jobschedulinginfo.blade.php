@@ -34,23 +34,19 @@
 	<div class="modal-body">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-9">
+				<div class="col-lg-9 col-md-12">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-lg-12">
 							<div class="form-group">
 								<label for="fname">Tracking ID</label>
 								<input type="text" class="form-control" placeholder="JOB-SCH-.YYYY.-" value="{{ isset($jobsched) ? $jobsched->jobs_sched_id : "" }}" readonly>
 							</div>
 
 						</div>
-
-						<div class="col-6">
-							<!--empty-->
-						</div>
 						<div class="col-12">
 							<hr><br>
 						</div>
-						<div class="col-6">
+						<div class="col-lg-6 col-md-12">
 							<label for="workOrderJobSched">Work Order</label>
 							<div class="input-group">
 								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }} required @if (isset($jobsched) && $jobsched->js_status != "Draft") readonly @endif>
@@ -78,7 +74,7 @@
 								</div>
 							</div> --}}
 						</div>
-						<div class="col-3 offset-2">
+						<div class="col-lg-3 col-md-12 offset-lg-2">
 							<div class="form-group">
 								<label for="jobStartDate">Start Date</label>
 								<input type="date" name="job_start_date" class="form-control" value="{{ isset($jobsched) ? $jobsched->start_date : null }}">
@@ -86,31 +82,27 @@
 						</div>
 
 
-						<div class="col-6">
+						<div class="col-lg-6 col-md-12">
 							<label for="productCode">Product/Component</label>
 							<div class="input-group">
 								<input type="text" id="js-product-code" class="form-control" value="{{ $item_name ?? "" }}" readonly placeholder="Product/Component Code & Name">
 							</div>
 						</div>
-						<div class="col-2">
+						<div class="col-lg-2 col-md-6">
 							<div class="form-group">
 								<label for="productQuantity">Quantity</label>
 								<input type="text" name="quantity_purchased" id="productQuantity" class="form-control" value="{{ $quantity_purchased ?? 0 }}" required readonly>
 							</div>
 						</div>
 
-						<div class="col-3">
+						<div class="col-lg-3 col-md-6">
 							<div class="form-group">
 								<label for="job_start_time">Start Time</label>
 								<input type="time" name="job_start_time" id="job_start_time" class="form-control" value="{{ $jobsched->start_time ?? "00:00" }}" required>
 							</div>
 						</div>
 
-						<div class="col-12">
-							<!--empty-->
-						</div>
-
-						<div class="col-4">
+						<div class="col-lg-4">
 							<label for="employeeID">Employee ID</label>
 							<div class="input-group">
 								<select name="employee_id" id="js-emp-id-select" class="selectpicker">
@@ -184,28 +176,29 @@
 					<div class="table-responsive">
 						<table class="table table-sm table-condensed" id="operationsTable">
 							<thead>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">SEQUENCE NAME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OPERATION NAME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OPERATION TIME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PREDECESSOR</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">MACHINE CODE</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">WC TYPE</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OUTSOURCED</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PLANNED START</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PLANNED END</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL START</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL END</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">STATUS</td>
-								{{-- <td style="font-size:90%;font-weight:bold" class="text-nowrap">QTY FINISHED</td> --}}
-								<td>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">SEQUENCE NAME</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">OPERATION NAME</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">RUNNING TIME</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">PREDECESSOR</th>
+								{{-- <td style="font-size:70%;font-weight:bold" class="text-nowrap">MACHINE CODE</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">WC TYPE</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">OUTSOURCED</td> --}}
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">PLANNED START</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">PLANNED END</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">REAL START</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">REAL END</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">STATUS</th>
+                                {{-- STATUS MUST BE MOVED TO THE modal within the jobsched_operation_row --}}
+								{{-- <td style="font-size:70%;font-weight:bold" class="text-nowrap">QTY FINISHED</td> --}}
+								<th>
 									<!--empty-->
-								</td>
-								<td>
+								</th>
+								<th>
 									<!--empty-->
-								</td>
-								<td>
+								</th>
+								<th>
 									<!--empty-->
-								</td>
+								</th>
 							</thead>
 							<tbody>
 								{{-- index is used to identify sequence number --}}
@@ -266,7 +259,7 @@
 	</form>
 @endif
 
-@if (isset($jobsched) && ($jobsched->js_status == "Finished") || $jobsched->js_status == "In Progress")
+@if (isset($jobsched) && (($jobsched->js_status == "Finished") || $jobsched->js_status == "In Progress"))
 	<script>
 		gantt.clearAll();
 		gantt.load('{{ route('jobscheduling.gantt_ops', ['jobsched' => $jobsched->id]) }}');
@@ -286,7 +279,8 @@
         info:           false,
 		columnDefs: [{ 
 			orderable: false,
-		}]
+		}],
+		bSort: false,
 	});
 	function planJobSched(){
 		var fd = new FormData($('#js-plan-form')[0]);
@@ -579,6 +573,13 @@
 			}
 		});
 	}
+	function notStartedWarning() {
+		swal({
+			title: "Warning",
+			icon: "warning",
+			text: "Job not in progress!",
+		});
+	}
 	// $("#preFillBtn").click(function(){
 	// 	console.log("Pre fill inputs");	
 	// });
@@ -588,8 +589,7 @@
 	// and add them as rows
 	$('#js-work-order-select').off('change').change(function(){
 		let route = "{{ route('jobscheduling.getoperations', ['work_order'=>0]) }}".replace("/0/", "/" + $(this).val() + "/");
-		let tableBody = $('#operationsTable').children('tbody');
-		tableBody.html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
+		let tableBody = $('#operationsTable').DataTable();
 		console.log(route);
 		$.ajax({
 			type: 'GET',
@@ -599,85 +599,50 @@
 			cache: false,
 			success: function(data){
 				operations = data.operations;
-				tableBody.html('');
+				tableBody.clear();
 				$('#js-title').text(data.item_name);
 				$('#js-status').text('{{ $jobsched->js_status ?? 'Unsaved' }}');
 				data.operations.forEach((operation, index) => {
-					tableBody.append(`
-						<tr>
-							<td>
-								{{-- Sequence Name Value --}}
-								Sequence ${data.routingOperations[index].sequence_id}
-							</td>
-							<td>
-								{{-- Operation Name Value --}}
-								${operation.operation_name}
-								<input type="hidden" name="operation_id[]" value="${operation.operation_id}"> 
-							</td>
-							<td>
-								{{-- Operation Time Value --}}
-								${data.routingOperations[index].operation_time}
-								<input type="hidden" name="operation_time[]" value="${data.routingOperations[index].operation_time}">
-							</td>
-							<td>
-								{{-- Predecessor Value --}}
-								${(index > 0) ? data.operations[index - 1].operation_name : "N/A"}
-							</td>
-							<td>
-								{{-- Machine Code Value --}}
-								
-							</td>
-							<td>
-								{{-- WC_Type value --}}
-								${operation.wc_code}
-							</td>
-							<td class="d-flex align-items-center justify-content-center">
-								{{-- Outsourced Value --}}
-
-								<div class="form-check ">
-									<input type="checkbox" name="outsourced[]" class="form-check-input">
-								</div>
-
-
-							</td>
-							<td class="p-3">
-								{{-- Planned Start Value --}}
-								<input class="form-control form-control-sm" type="text" name="planned_start[]">
-							</td>
-							<td class="p-3">
-								{{-- Planned End Value --}}
-								<input class="form-control form-control-sm" type="text" name="planned_end[]">
-							</td>
-							<td class="p-3">
-								{{-- Real Start Value --}}
-								<input class="form-control form-control-sm" type="text" name="real_start[]">
-							</td>
-							<td class="p-3">
-								{{-- Real End Value --}}
-								<input class="form-control form-control-sm" type="text" name="real_end[]">
-							</td>
-							<td>
-								{{-- Status Value --}}
-
-							</td>
-							{{-- Action Buttons --}}
-							<td>
-								{{--<a href="#" onclick="return false;" class="operation-play-btn">
-									<i class="fas fa-play"></i>
-								</a>--}}
-							</td>
-							<td>
-								{{--<a href="#" onclick="return false;" class="operation-pause-btn">
-									<i class="fas fa-pause"></i>
-								</a>--}}
-							</td>
-							<td>
-								{{--<a href="#" onclick="return false;" class="operation-stop-btn">
-									<i class="fas fa-power-off"></i>
-								</a>--}}
-							</td>
-						</tr>
-					`);
+					tableBody.row.add([`
+						{{-- Sequence Name Value --}}
+						<a href="#" data-toggle="modal" data-target="#operationsDetails">
+							Sequence ${data.routingOperations[index].sequence_id}
+						</a>
+					`,`
+						{{-- Operation Name Value --}}
+						${operation.operation_name}
+						<input type="hidden" name="operation_id[]" value="${operation.operation_id}">
+					`,`
+						{{-- RUNNING TIME Value --}}
+						RUNNING TIME
+					`,`
+						{{-- Predecessor Value --}}
+						${(index > 0) ? data.operations[index - 1].operation_name : "N/A"}
+					`,`
+						{{-- Planned Start Value --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="planned_start[]" class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Planned End value --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="planned_end[]" class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Real Start Value --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="real_start[]" readonly class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Real End --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="real_end[]" readonly class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Status Value --}}
+						Not started
+					`,``,``,``
+				]).draw();
 				});
 				$('#js-product-code').val(data.item_name + " (" + data.item_code + ")");
 				$('#productQuantity').val(data.ordered_quantity);

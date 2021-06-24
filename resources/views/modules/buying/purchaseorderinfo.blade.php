@@ -43,7 +43,7 @@ $i = 1; ?>
                     </li>
                 </ul>
             </div>
-        @elseif($mp_status->status === 'To Receive and Bill')
+        @elseif($purchase_order->mp_status === 'To Receive and Bill')
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
@@ -117,7 +117,7 @@ $i = 1; ?>
                             <input type="text" id="sqID" hidden value="{{ $purchase_order->supp_quotation_id }}">
                             <label class=" text-nowrap align-middle" for="supplier">Supplier</label>
                             <input class="form-input form-control" readonly type="text" id="supplierField"
-                                name="supplier" value="{{ $supplier['company_name'] }}">
+                                name="supplier" value="{{ $supplier->company_name }}">
                         </div>
                         <div class="col-6">
                             <label for="date">Date</label>

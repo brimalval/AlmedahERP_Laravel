@@ -35,7 +35,6 @@
     <table id="table_routing" class="display">
         <thead>
             <tr>
-                <th>Routing ID</th>
                 <th>Routing Name</th>
                 <th>Date</th>
             </tr>
@@ -44,9 +43,8 @@
             @foreach ($routings as $routing)
                 <tr>
                     <td>
-                        <a href="javascript:onclick=EditRouting({{ $routing->id }});">{{ $routing->routing_id }}</a>
+                        <a href="javascript:onclick=EditRouting({{ $routing->id }});">{{ $routing->routing_name }}</a>
                     </td>
-                    <td>{{ $routing->routing_name }}</td>
                     <td>{{ $routing->created_at->toDateString() }}</td>
                 </tr>
             @endforeach

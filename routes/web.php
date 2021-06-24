@@ -30,6 +30,8 @@ use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
 
+use App\Http\Controllers\TestController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -602,3 +604,6 @@ Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
+
+Route::get('/test', [TestController::class, 'index']);
+Route::post('/test', [TestController::class, 'print']);
