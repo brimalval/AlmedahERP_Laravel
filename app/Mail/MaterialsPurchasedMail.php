@@ -32,7 +32,7 @@ class MaterialsPurchasedMail extends Mailable
             $this->message2 = "We hope that you can understand our decision.";
         } else {
             $this->message1 = "We would like to purchase the following materials:";
-            $this->message2 = "We hope that you will supply the materials on or before the required date.";
+            $this->message2 = "We will be expecting these materials on or before the required date.";
         }
     }
 
@@ -44,7 +44,7 @@ class MaterialsPurchasedMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.materialpurchased', [
-            'contact' => $this->supplier->contact_name ?? $this->supplier->company_name,
+            'contact' => $this->supplier->company_name ?? $this->supplier->contact_name,
             'material_data' => $this->mp_data->itemsPurchased(),
             'message1' => $this->message1,
             'message2' => $this->message2

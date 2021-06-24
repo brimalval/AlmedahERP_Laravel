@@ -7,6 +7,21 @@ $(document).ready(function () {
 
 $("#saveReceipt").click(saveReceipt);
 
+function slideAlert(message, flag) {
+    if (flag) {
+        $("#pr_success_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#pr_success_message").slideUp(500);
+        });
+        $("#pr_success_message").html(message);
+    }
+    else {
+        $("#pr_alert_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#pr_alert_message").slideUp(500);
+        });
+        $("#pr_alert_message").html(message);
+    }
+}
+
 function saveReceipt() {
     $.ajaxSetup({
         headers: {
@@ -44,6 +59,11 @@ function saveReceipt() {
         contentType: false,
         processData: false,
         success: function (response) {
+            if(!$("#receiptId").val()) {
+                slideAlert("Purchase Receipt created!", true);
+            } else {
+                slideAlert(`Updated receipt ${$("#receiptId").val()}`, true);
+            }
             loadPurchaseReceipt();
             if($("#contentPurchaseInvoice").length) {
                 loadPurchaseInvoice();
@@ -95,32 +115,25 @@ function submitReceipt() {
     });
 
     let receipt_id = $("#receiptId").val();
-    if (confirm(`Permanently submit ${receipt_id}?`)) {
-        $.ajax({
-            url: `/submit-receipt/${receipt_id}`,
-            type: "POST",
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                console.log(response);
-                loadPurchaseReceipt();
-                if($("#contentPendingOrders").length) {
-                    loadPendingOrders();
-                }
-            },
-        });
-    } else {
-        return;
-    }
+    $.ajax({
+        url: `/submit-receipt/${receipt_id}`,
+        type: "POST",
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            slideAlert(`Purchase Receipt ${receipt_id} submitted.`, true);
+            loadPurchaseReceipt();
+            if($("#contentPendingOrders").length) {
+                loadPendingOrders();
+            }
+        },
+    });
 }
 
 function onChangeFunction() {
-    $("#recStatus").html("Not Yet Saved");
-    $("#submitReceipt").html("Save");
-    $("#submitReceipt").off("click", submitReceipt);
-    $("#submitReceipt").click(saveReceipt);
-    $("#submitReceipt").attr("id", "saveReceipt");
+    $("#saveReceipt").show();
+    $("#openPRModal").hide();
 }
 
 $("#receiveMaterials").click(function () {
@@ -138,7 +151,7 @@ $("#receiveMaterials").click(function () {
                 parseInt($(`#qtyAcc${i}`).html()) ||
             parseInt($(`#qtyRec${i}`).val()) < 0
         ) {
-            alert(`Quantity for ${$(`#item_code${i}`).html()} is invalid.`);
+            slideAlert(`Quantity for ${$(`#item_code${i}`).html()} is invalid.`, false);
             return;
         }
         received_mats[i] = {
@@ -158,7 +171,7 @@ $("#receiveMaterials").click(function () {
         contentType: false,
         processData: false,
         success: function (response) {
-            console.log(response);
+            slideAlert("Record saved.", true);
             loadPurchaseReceipt();
             if($("#contentPurchaseOrder").length) {
                 loadPurchaseOrder();
