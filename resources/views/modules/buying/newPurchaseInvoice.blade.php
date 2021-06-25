@@ -26,6 +26,13 @@ $today = date('Y-m-d');
         </div>
     </div>
 </nav>
+
+<div id="pi_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="pi_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <div class="accordion" id="accordion">
     <div class="card">
         <div class="card-header" id="heading1">
@@ -103,7 +110,7 @@ $today = date('Y-m-d');
                             <label class=" text-nowrap align-middle">
                                 Contact Person
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required class="form-input form-control" id="piContact">
                         </div>
                     </div>
                     <div class="col">
