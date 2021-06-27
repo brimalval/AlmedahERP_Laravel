@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
+use App\Models\MaterialPurchased;
+use App\Models\RequestQuotationSuppliers;
 use Illuminate\Http\Request;
+
+use App\Models\Supplier;
+use App\Models\SuppliersQuotation;
 use Exception;
 use DB;
+
 
 class SupplierController extends Controller
 {
@@ -29,6 +34,7 @@ class SupplierController extends Controller
     public function create()
     {
         //
+        return view('modules.buying.createnewsupplier');
     }
 
     /**
@@ -68,21 +74,30 @@ class SupplierController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Supplier  $supplier
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Supplier $supplier)
+    public function show($id)
     {
         //
+        //DB::connection()->enableQueryLog();
+        $supplier = Supplier::find($id);
+        $counts = array();
+        $counts['sq_count'] = SuppliersQuotation::where('supplier_id', $supplier->supplier_id)->get()->count();
+        $counts['rq_count'] = RequestQuotationSuppliers::where('supplier_id', $supplier->supplier_id)->get()->count();
+        $counts['po_count'] = MaterialPurchased::where('items_list_purchased', 'LIKE', "%". $supplier->supplier_id ."%")
+                                ->where('mp_status', '=', 'To Receive and Bill')->get()->count();
+        //echo dd(DB::getQueryLog()); 
+        return view('modules.buying.supplierInfo', ['supplier' => $supplier, 'counts' => $counts]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Supplier  $supplier
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Supplier $supplier)
+    public function edit($id)
     {
         //
     }
@@ -91,10 +106,10 @@ class SupplierController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Supplier  $supplier
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Supplier $supplier)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -102,10 +117,10 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Supplier  $supplier
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Supplier $supplier)
+    public function destroy($id)
     {
         //
     }

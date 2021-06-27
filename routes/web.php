@@ -500,9 +500,6 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
-Route::get('/create-new-supplier', function () {
-    return view('modules.buying.createnewsupplier');
-});
 
 /*SUPPLIER GROUP*/
 Route::get('/newsuppliergroup', function() {
@@ -597,6 +594,3 @@ Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
-
-Route::get('/test', [TestController::class, 'index']);
-Route::post('/test', [TestController::class, 'print']);
