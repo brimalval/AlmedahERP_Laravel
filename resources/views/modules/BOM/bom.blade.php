@@ -37,7 +37,6 @@
     <table id="table_bom" class="display">
         <thead>
             <tr>
-                <th>BOM ID</th>
                 <th>BOM Name</th>
                 <th>Product/Component Code</th>
                 <th>Is Active</th>
@@ -47,7 +46,6 @@
         <tbody>
             @foreach ($boms as $bom)
                 <tr>
-                    <td>{{ $bom->bom_id }}</td>
                     <td>
                         <a href="javascript:onclick=loadBOM({{ $bom->bom_id }});">
                             {{ $bom->bom_name }}

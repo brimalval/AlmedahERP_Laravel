@@ -126,7 +126,7 @@
                             <select class="form-control" name="routingSelect" id="routingSelect">
                                 <option value="0">-No Routing Selected-</option>
                                 @foreach ($routings as $routing)
-                                    <option value="{{ $routing->routing_id }}">{{ $routing->routing_name }}</option>
+                                    <option value="{{ $routing->routing_id }}">{!! $routing->routing_name !!}</option>
                                 @endforeach
                                 <option value="newRouting">Create New Routing</option>
                             </select>

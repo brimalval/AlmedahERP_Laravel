@@ -187,6 +187,8 @@ Route::post('/delete-attribute/{id}', [ProductsController::class, 'delete_attrib
 Route::resource('/jobscheduling', JobSchedController::class);
 Route::get('/jobscheduling/{work_order}/get-operations', [JobSchedController::class, 'get_operations'])
        ->name('jobscheduling.getoperations');
+Route::get('/jobscheduling/{jobsched}/get-operations/gantt', [JobSchedController::class, 'get_operations_gantt'])->name('jobscheduling.gantt_ops');
+Route::put('/jobscheduling/{jobsched}/status/{status}', [JobSchedController::class, 'set_status'])->name('jobscheduling.setStatus');
 
 // Route for parts needed in a job scheduling entry
 Route::resource('/jobscheduling/part', PartsController::class);
@@ -194,9 +196,9 @@ Route::resource('/jobscheduling/part', PartsController::class);
 Route::resource('/jobscheduling/component', ComponentController::class);
 
 //Routes for pause play finish of operations
-Route::post('/startOperation' , [JobSchedController::class, 'startOperation']);
-Route::post('/pauseOperation' , [JobSchedController::class, 'pauseOperation']);
-Route::post('/finishOperation' , [JobSchedController::class, 'finishOperation']);
+Route::put('/jobscheduling/{jobsched}/startOperation' , [JobSchedController::class, 'startOperation'])->name('jobscheduling.op.start');
+Route::put('/jobscheduling/{jobsched}/pauseOperation' , [JobSchedController::class, 'pauseOperation'])->name('jobscheduling.op.pause');
+Route::put('/jobscheduling/{jobsched}/finishOperation' , [JobSchedController::class, 'finishOperation'])->name('jobscheduling.op.finish');
 
 /**MACHINES MANUAL ROUTES */
 Route::get('/machinemanual', [MachinesManualController::class , 'index']);
@@ -361,7 +363,7 @@ Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
-Route::post('/store-mp-material', [MaterialsPurchasedController::class, 'storeMaterial']);
+Route::post('/store-mp-materials/{purchase_id}', [MaterialsPurchasedController::class, 'storeMaterial']);
 Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
 
 /**PURCHASE RECEIPT ROUTES */
@@ -507,11 +509,6 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
-#Route::get('/supplier', [SupplierController::class, 'index']);
-#Route::get('/view-supplier/{id}', [SupplierController::class, 'get']);
-#Route::post('/create-supplier', [SupplierController::class, 'store']);
-#Route::post('/search-supplier', [SupplierController::class, 'searchSupplier']);
-#Route::get('/search/{supplier_id}', [SupplierController::class, 'getBySuppID']);
 Route::get('/create-new-supplier', function () {
     return view('modules.buying.createnewsupplier');
 });
@@ -609,3 +606,6 @@ Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
+
+Route::get('/test', [TestController::class, 'index']);
+Route::post('/test', [TestController::class, 'print']);

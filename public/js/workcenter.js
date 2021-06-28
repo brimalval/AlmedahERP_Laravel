@@ -46,6 +46,7 @@ $("#save_wc").click(function () {
         processData: false,
         success: function (response) {
             console.log("success");
+            loadnewRouting();
         }
     });
 });

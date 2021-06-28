@@ -37,30 +37,48 @@
     </div>
 </nav>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".selectpicker").selectpicker();
+    });
+</script>
+
 <div class="container">
     <div class="card my-2">
         <div class="card-header bg-light">
             <div class="row">
+                {{--
                 <div class="col-3">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Title">
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="form-group">
-                        <input type="text" id="buying-purchaseorder-filter-input" class="form-control"
-                            placeholder="Supplier Name">
-                    </div>
+                --}}
+                <div class="col-4">
+                    <select id="status-search" class="form-control selectpicker datatable-search">
+                        <option value="None" data-subtext="None" selected>Status</option>
+                        <option value="Draft" data-subtext="">Draft</option>
+                        <option value="To Receive" data-subtext="">To Receive</option>
+                        <option value="To Bill" data-subtext="">To Bill</option>
+                        <option value="To Receive and Bill" data-subtext="">To Receive and Bill</option>
+                        <option value="Cancelled" data-subtext="">Cancelled</option>
+                    </select>
                 </div>
-                <div class="col-3">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Raw Material Name">
-                    </div>
+                <div class="col-4">
+                    <select id="po-mat-search" class="form-control selectpicker datatable-search" data-live-search="true">
+                        <option value="None" data-subtext="None" selected>Search By Material...</option>
+                        @foreach ($materials as $material)
+                            <option value="{{ $material->item_code }}" data-subtext="{{ $material->item_name }}">{{ $material->item_code }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="col-3">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Grand Total">
-                    </div>
+                <div class="col-4">
+                    <select id="po-supplier-seach" class="form-control selectpicker datatable-search" data-live-search="true">
+                        <option value="None" data-subtext="None" selected>Search By Supplier...</option>
+                        @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->supplier_id }}" data-subtext="{{ $supplier->company_name }}">{{ $supplier->supplier_id }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <!--
                 <div class="col-2">
@@ -116,7 +134,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1; ?>
                         @foreach ($materials_purchased as $material)
                             <tr>
                                 <td scope="col">
@@ -125,13 +142,12 @@
                                 </td>
                                 <td scope="col">{{ $material->mp_status }}</td>
                                 <td scope="col">{{ $material->purchase_date }}</td>
-                                <td scope="col" id="totalPrice<?= $i ?>">{{ $material->total_cost }}</td>
+                                <td scope="col" id="totalPrice{{ $loop->index + 1 }}">{{ $material->total_cost }}</td>
                                 <!--
                                 <td scope="col">0</td>
                                 <td scope="col">0</td>
                                 -->
                             </tr>
-                        <?php ++$i; ?>
                         @endforeach
                     </tbody>
                 </table>
@@ -143,9 +159,9 @@
     <script type="text/javascript">
         $(document).ready(function() {
             for(let i=1; i<=$("#tbl-buying-purchaseorder tbody tr").length; i++) {
-                let price = parseFloat($("#totalPrice" + i).html());
-                //console.log($("#totalPrice" + i).html());
-                $("#totalPrice" + i).html("₱ " + numberWithCommas(price.toFixed(2)));
+                let price = parseFloat($(`#totalPrice${i}`).html());
+                //console.log($(`#totalPrice${i}`).html());
+                $(`#totalPrice${i}`).html("₱ " + numberWithCommas(price.toFixed(2)));
             }
             
         });
