@@ -573,6 +573,8 @@ class ProductsController extends Controller
             $mat_insufficient = self::squash($mat_insufficient);
 
             //Decided to ajax call mat request
+            $product->stock_unit += ($product->reorder_qty - $product->stock_unit);
+            $product->save();
         }
 
         return response()->json([
