@@ -33,6 +33,13 @@ $i = 1; ?>
         </div>
     </div>
 </nav>
+
+<div id="pi_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="pi_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <div class="accordion" id="accordion">
     <div class="card">
         @if ($invoice->pi_status == 'Draft')
@@ -111,7 +118,7 @@ $i = 1; ?>
                             <label class=" text-nowrap align-middle">
                                 Contact Person
                             </label>
-                            <input type="text" required class="form-input form-control" id="">
+                            <input type="text" required value="{{ $supplier->contact_name ?? '' }}" class="form-input form-control" id="piContact">
                         </div>
                     </div>
                     <div class="col">
@@ -152,21 +159,21 @@ $i = 1; ?>
                             </thead>
                             <tbody class="" id="itemsReceived">
                                 @foreach ($received_items as $item)
-                                    <tr id="row-<?= $i ?>">
+                                    <tr id="row-{{ $loop->index + 1 }}">
                                         <td class="text-black-50">
-                                            <span id="item_code<?= $i ?>">{{ $item['item']->item_code }}</span>
+                                            <span id="item_code{{ $loop->index + 1 }}">{{ $item['item']->item_code }}</span>
                                         </td>
                                         <td class="text-black-50">
-                                            <span id="item_name<?= $i ?>">{{ $item['item']->item_name }}</span>
+                                            <span id="item_name{{ $loop->index + 1 }}">{{ $item['item']->item_name }}</span>
                                         </td>
                                         <td class="text-black-50">
-                                            <span id="qtyAcc<?= $i ?>">{{ $item['qty'] }}</span>
+                                            <span id="qtyAcc{{ $loop->index + 1 }}">{{ $item['qty'] }}</span>
                                         </td> 
                                         <td class="text-black-50">
-                                            <span id="rateAcc<?= $i ?>">{{ $item['rate'] }}</span>
+                                            <span id="rateAcc{{ $loop->index + 1 }}">{{ $item['rate'] }}</span>
                                         </td> 
                                         <td class="text-black-50">
-                                            <span id="amtAcc<?= $i ?>">{{ $item['subtotal'] }}</span>
+                                            <span id="amtAcc{{ $loop->index + 1 }}">{{ $item['subtotal'] }}</span>
                                         </td> 
                                     </tr>
                                 @endforeach

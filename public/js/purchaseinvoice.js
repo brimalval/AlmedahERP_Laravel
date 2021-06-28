@@ -54,12 +54,12 @@ $("#payInvoice").click(function () {
     let formData = new FormData();
 
     if (!$("#payAmount").val()) {
-        alert('Please enter an amount before creating a record.');
+        slideAlert('Please enter an amount before creating a record.', false);
         return;
     }
 
     if($("#paymentMethod").val() === 'non') {
-        alert('Cannot create payment record without payment method!');
+        slideAlert('Cannot create payment record without payment method!', false);
         return;
     }
 
@@ -74,7 +74,7 @@ $("#payInvoice").click(function () {
                 msg = 'bank';
             else if (!$('#bankBranch').val())
                 msg = 'bank location';
-            alert(`Please provide the check's ${msg}.`);
+            slideAlert(`Please provide the check's ${msg}.`, false);
             return;
         } else {
             formData.append('account_no', $('#acctNo').val());
@@ -110,6 +110,21 @@ $("#payInvoice").click(function () {
     });
 });
 
+function slideAlert(message, flag) {
+    if (flag) {
+        $("#pi_success_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#pi_success_message").slideUp(500);
+        });
+        $("#pi_success_message").html(message);
+    }
+    else {
+        $("#pi_alert_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#pi_alert_message").slideUp(500);
+        });
+        $("#pi_alert_message").html(message);
+    }
+}
+
 function createInvoice() {
     $.ajaxSetup({
         headers: {
@@ -120,12 +135,12 @@ function createInvoice() {
     let formData = new FormData();
 
     if ($("#emptyRow").length) {
-        alert("Load a purchase receipt first.");
+        slideAlert("Load a purchase receipt first.", false);
         return;
     }
     
     if($("#paymentMode").val() === 'non') {
-        alert('Cannot create payment invoice without specifying payment mode!');
+        slideAlert('Cannot create payment invoice without specifying payment mode!', false);
         return;
     }
 
@@ -134,7 +149,7 @@ function createInvoice() {
     if($("#invoiceId").length) {
         formData.append("invoice_id", $("#invoiceId").val());
         url = `/update-invoice-record/${$("#invoiceId").val()}`
-    }
+    } 
 
     formData.append('receipt_id', $("#receiptId").val());
     formData.append('date_created', $("#npi_date").val());
@@ -213,9 +228,14 @@ function loadMaterials(id) {
         success: function (data) {
             //$('#orderId').val(data.purchase_id);
             //console.log($('#orderId').val());
+            let supplier = data.supplier;
             $("#receiptId").val(data.p_receipt_id);
-            $("#suppName").val(data.supplier.company_name);
-            $("#suppAdd").val(data.supplier.supplier_address);
+            slideAlert(`Purchase Receipt ${data.p_receipt_id} loaded.`, true);
+            $("#suppName").val(supplier.company_name);
+            if(supplier.contact_name) {
+                $("#piContact").val(supplier.contact_name);
+            }
+            $("#suppAdd").val(supplier.supplier_address);
             let table = $('#itemsReceived');
             $('#itemsReceived tr').remove();
             var items = data.ordered_mats;

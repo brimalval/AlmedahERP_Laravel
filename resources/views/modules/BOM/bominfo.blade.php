@@ -1,7 +1,3 @@
-<?php
-$op_index = 0;
-$mat_index = 0;
-?>
 <script src="{{ asset('js/bominfo.js') }}"></script>
 <script src="{{ asset('js/address.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
@@ -43,6 +39,12 @@ $mat_index = 0;
         </div>
     </div>
 </nav>
+
+<div id="bom_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="bom_alert_message" class="alert alert-danger" style="display: none;">
+</div>
 
 <div class="card">
     <div class="card-body ml-auto">
@@ -191,7 +193,7 @@ $mat_index = 0;
                         </thead>
                         <tbody class="" id="operations-input-rows">
                             @foreach ($routing_ops as $operation)
-                            <tr id="bomOperation-<?= $op_index ?>">
+                            <tr id="bomOperation-{{ $loop->index }}">
                                 <td class="text-center">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
@@ -221,9 +223,6 @@ $mat_index = 0;
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                 </td>
-                                @php
-                                ++$op_index;
-                                @endphp
                             @endforeach
                             </tr>
                         </tbody>
@@ -267,14 +266,14 @@ $mat_index = 0;
                         </thead>
                         <tbody class="" id="materials-input-rows">
                             @foreach ($rateList as $mat_data)
-                            <tr id="bomMaterial-<?= $mat_index ?>">
+                            <tr id="bomMaterial-{{ $loop->index }}">
                                 <td class="text-center">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                     </div>
                                 </td>
                                 <td id="mr-code-input" class="mr-code-input">
-                                    <input type="text" value="<?= $mat_index+1 ?>" readonly name="No" id="No" class="form-control">
+                                    <input type="text" value="{{ $loop->index + 1 }}" readonly name="No" id="No" class="form-control">
                                 </td>
                                 <td style="width: 10%;" class="mr-qty-input">
                                     <input type="text" value="{{ $mat_data->item_code }}" readonly name="ItemCode" id="ItemCode" class="form-control">
@@ -300,9 +299,6 @@ $mat_index = 0;
                                     </a>
                                 </td>
                             </tr>
-                            @php
-                                ++$mat_index;
-                            @endphp
                             @endforeach
                         </tbody>
                     </table>

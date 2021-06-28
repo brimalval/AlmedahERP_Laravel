@@ -31,6 +31,12 @@
     </div>
 </nav>
 
+<div id="bom_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="bom_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <div class="card">
     <div class="card-body ml-auto">
         <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenu2" data-toggle="dropdown"
@@ -53,7 +59,7 @@
             <div class="col-6">
                 <div class="form-group" id="product-select">
                     <label for="manprod">Item</label>
-                    <select class="form-control selectpicker" id="manprod">
+                    <select class="form-control selectpicker" data-live-search="true" id="manprod">
                         <option value="0">-No Product Selected-</option>
                         @foreach ($man_prods as $mp)
                             <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
@@ -62,7 +68,7 @@
                 </div>
                 <div class="form-group" id="component-select" hidden>
                     <label for="components">Component</label>
-                    <select class="form-control selectpicker" id="components">
+                    <select class="form-control selectpicker" data-live-search="true" id="components">
                         <option value="0">-No Component Selected-</option>
                         @foreach ($components as $component)
                             <option data-subtext="{{ $component->component_name }}" value="{{ $component->component_code }}">{{ $component->component_code }}</option>
@@ -123,12 +129,12 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="routing">Routing</label>
-                            <select class="form-control" name="routingSelect" id="routingSelect">
+                            <select class="form-control selectpicker" data-live-search="true" name="routingSelect" id="routingSelect">
                                 <option value="0">-No Routing Selected-</option>
                                 @foreach ($routings as $routing)
-                                    <option value="{{ $routing->routing_id }}">{!! $routing->routing_name !!}</option>
+                                    <option data-subtext="{{ $routing->routing_name }}" value="{{ $routing->routing_id }}">{{ $routing->routing_id }}</option>
                                 @endforeach
-                                <option value="newRouting">Create New Routing</option>
+                                <option data-subtext="Create a New Routing." value="newRouting">Create New Routing</option>
                             </select>
                         </div>
                     </div>
@@ -147,13 +153,12 @@
                                 <td class="text-center">Description</td>
                                 <td class="text-center">Operation Time</td>
                                 <td class="text-center">Operation Cost</td>
-                                <td></td>
+                                <td class="text-center">Actions</td>
                             </tr>
                         </thead>
                         <tbody class="" id="operations-input-rows">
                             <tr data-id="${nextID}">
                                 <td class="text-center">
-
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                     </div>

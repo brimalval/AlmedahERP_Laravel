@@ -87,13 +87,13 @@ function computeCosts() {
     var operations = $("#bom-operations tbody tr");
     for (let i = 0; i < operations.length; i++) {
         let operation = $(`#bomOperation-${i}`);
-        let op_indiv_cost = operation.find("#Operation_cost").val();
+        let op_indiv_cost = (operation.find("#Operation_cost").val()) ? operation.find("#Operation_cost").val() : 0;
         opCost += parseFloat(op_indiv_cost);
     }
     var materials = $("#bom-materials tbody tr");
     for (let i = 0; i < materials.length; i++) {
         let material = $(`#bomMaterial-${i}`);
-        let mat_indiv_cost = material.find("#Amount").val();
+        let mat_indiv_cost = (material.find("#Amount").val()) ? material.find("#Amount").val() : 0;
         materialCost += parseFloat(mat_indiv_cost);
     }
     var totalCost = parseFloat(opCost) + parseFloat(materialCost);
@@ -151,6 +151,21 @@ function showRoutingsForm() {
         );
     }
     $(`#tab${menu}`).tab("show");
+}
+
+function slideAlert(message, flag) {
+    if (flag) {
+        $("#bom_success_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#bom_success_message").slideUp(500);
+        });
+        $("#bom_success_message").html(message);
+    }
+    else {
+        $("#bom_alert_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#bom_alert_message").slideUp(500);
+        });
+        $("#bom_alert_message").html(message);
+    }
 }
 
 $("#is_component").change(function () {
@@ -381,11 +396,12 @@ $("#saveBomForm").submit(function () {
     });
 
     if ($("#manprod").val() == 0 && $("#components").val() == 0) {
-        alert('No product/component to make a BOM on.')
+        slideAlert('No product/component to make a BOM on.', false);
         return false;
     }
     if ($("#routingSelect").val() == 0) {
-        alert('No routing has been provided.')
+        slideAlert('No routing has been provided.', false);
+        window.scrollTo(0,0);
         return false;
     }
 
@@ -423,8 +439,7 @@ $("#saveBomForm").submit(function () {
         contentType: false,
         success: function (response) {
             if(response.message) {
-                console.log(response.message);
-                alert(response.message);
+                slideAlert(response.message, true);
             }
             loadBOMtable();
         }
