@@ -93,6 +93,7 @@ class MaterialsController extends Controller
             $data->reorder_qty = 50;
             ///////////
             $data->rm_status = $form_data['rm_status'];
+            $data->consumable = $form_data['consumable'] === "on" ? 1 : 0;
             $data->item_image = json_encode($imagePath);
             $data->save();
             return response()->json([
@@ -103,7 +104,7 @@ class MaterialsController extends Controller
                 'material' => $data,
             ]);
         } catch (Exception $e) {
-            return $e;
+            return $form_data['consumable'];
             // return response()->json([
             //     'status' => 'failed'
             // ]);

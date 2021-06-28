@@ -8,7 +8,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadStockMoves()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-primary menu" type="submit" onclick="" data-parent="stock" data-name="New Stock Moves">New</button>
@@ -18,16 +18,7 @@
     </div>
 </nav>
 <div class="container">
-    <div class="card my-2">
-        <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Tracking ID">
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="card my-2"> 
         <div class="card-body filter">
             <div class="row">
                 <div class=" ml-auto float-right">
@@ -38,42 +29,51 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bom border-bottom">
-            <thead class="border-top border-bottom bg-light">
-                <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
+
+        <table id="stockMovesTable" class="table table-striped table-bordered hover" style="width:100%">
+            <thead>
+                <tr>
                     <td>Tracking ID</td>
                     <td>Stock Moves Type</td>
-                    <td>Status</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>Materials Ordered ID</td>
+                    <td>Employee ID</td>
+                    <td>Move Date</td>
+                    <td>Actions</td>
                 </tr>
             </thead>
-            <tbody class="">
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Tracking ID ex</td>
-                    <td>Stock Moves Type ex(Transfer / Return)</td>
-                    <td>(Successfully Transfered then return items becomes available/Pending/approved)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><button class="btn btn-primary menu" type="submit" onclick="" data-parent="stock" data-name="Stock Moves Return">Return Items</button></td>
-                    <td><button class="btn btn-danger"  type="submit" onclick="">Remove</button></td>
-                </tr>
-              </tbody>
-        </table>
+            <tbody>
+                @foreach ($stockmoves as $row)
+                    <tr id="<?=$row["id"]?>">
+                        <td class="text-black-50"><?=$row["tracking_id"]?></td>
+                        <td class="text-black-50"><?=$row["stock_moves_type"]?></td>
+                        <td class="text-black-50"><?=$row["mat_ordered_id"]?></td>
+                        <td class="text-black-50"><?=$row["employee_id"]?></td>
+                        <td class="text-black-50"><?=$row["move_date"]?></td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
+                                    <li>
+                                        <button class="btn-sm btn-primary" type="submit" onclick="getStockData(this)">Return Items</button>
+                                    </li>
+                                    <li><button id="{{$row->employee_id}}" class="employee-edit-btn btn btn-warning btn-sm rounded-0" type="button">
+                                        <i class="fa fa-edit"></i> Edit</button>
+                                    </li>
+
+                                    <li>
+                                        <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>  
     </div>
     <div class="row">
         <div class="col-1 text-center">
@@ -87,3 +87,67 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#stockMovesTable').DataTable();
+    });
+
+    function getStockData(button){
+        let currentRow = $(button).closest("tr");
+        let trackingId = currentRow.find('td:eq(0)').text();
+        let stockMovesType = currentRow.find('td:eq(1)').text();
+        let matOrderedId = currentRow.find('td:eq(2)').text();
+        let employeeId = currentRow.find('td:eq(3)').text();
+        let moveDate = currentRow.find('td:eq(4)').text();
+        loadStockReturnInfo(trackingId, stockMovesType, matOrderedId, employeeId, moveDate);
+    }
+
+    function showItems(matOrderedId){
+        $("#itemsRet").empty();
+        let itemsTable = $("#itemsRet");
+        items = [];
+        $.ajax({
+                type:'GET',
+                url:"/showItems/"+matOrderedId,
+                success: function(data) {
+                    console.log(data['mat_ordered']);
+                    let items_list_received = JSON.parse(data['mat_ordered'].items_list_received);
+                    items_list_received.forEach((item) => {
+                    let obj = { 'item_code': item.item_code, 
+                                'qty_received': item.qty_received, 
+                                'source_station': 'ex', 
+                                'target_station': data['station_name'],
+                                'consumable' : 'true',
+                                'item_condition' : 'good',
+                                'transfer_status' : 'pending',
+                                }
+                    items.push(obj);
+                    });
+                    JSON.parse(data['mat_ordered'].items_list_received).forEach((item) => {
+                    itemsTable.append(
+                        `<tr><td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                        </td>
+                        <td>` +item.item_code +`</td>
+                        <td>` +item.qty_received +`</td>
+                        <td>Consumable</td>
+                        <td>Source_Station</td>
+                        <td>`+data['station_name']+`</td>
+                        <td>Item_Condition</td></tr>`
+                    );
+                    });
+                },
+                error: function(data) {
+                    console.log("error");
+                    console.log(data);
+                }
+            });
+  }
+
+    function stockMovesInfo(){
+
+    }
+</script>

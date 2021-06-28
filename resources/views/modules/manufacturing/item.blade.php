@@ -588,13 +588,14 @@
                         <script>
                             function changeSaleSupplyMethod(){
                                 var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
-                                if (salesSupplyMethod == "stock") {
+                                if (salesSupplyMethod == "Made to Stock") {
                                     document.getElementById("madeToStockFields").removeAttribute("hidden");
                                     document.getElementById("reorderLevel").setAttribute("required", "");
                                     document.getElementById("reorderQty").setAttribute("required", "");
                                 } else {
                                     document.getElementById("madeToStockFields").setAttribute("hidden", "");
                                     
+                                    document.getElementById("stock_unit").value = 0;
                                     document.getElementById("reorderLevel").removeAttribute("required");
                                     document.getElementById("reorderQty").removeAttribute("required");
                                 }
@@ -1033,7 +1034,6 @@
 
                     </tr>
                 </tbody>
-                
             </table>
             <script>
                 var reproduceTable;
@@ -1042,6 +1042,10 @@
                 } );
 
             </script>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="reorderAll" data-ids="" class="btn btn-primary" onclick="deleteRow(this, true)">Reorder All</button>
         </div>
         </div>
     </div>
@@ -1322,6 +1326,7 @@
             }
             formData.set('components', JSON.stringify(components));
             console.log('components'+components);
+            //Add product form
             $.ajax({
                 type: 'POST',
                 url: $('#product-form').attr('action'),
@@ -1415,6 +1420,7 @@
             type: 'GET',
             url:'/getLowOnStocks',
             success: function(data){
+                var idss= [];
                 reproduceTable.clear();
                 data['data'].forEach((row) => {
                     var quan = row['reorder_qty'] - row['stock_unit'];
@@ -1429,12 +1435,14 @@
                             </td>
                             `,`
                             <td>
-                                <p><button type="button"  class="btn btn-primary" onclick="reorder(`+row['id'] + `)"> Reorder</button></p>
+                                <p><button type="button" class="btn btn-primary" onclick="deleteRow(this, [`+row['id'] + `] , false)"> Reorder</button></p>
                             </td>
                         </tr>`
                     ]
                     ).draw(false);
+                    idss.push( row['id']);
                 });
+                document.getElementById('reorderAll').setAttribute('data-ids', idss);
             }
         })
     }
@@ -1486,15 +1494,73 @@
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                 }
         });
+        console.log("Checkers");
+        console.log(id);
+        console.log(typeof id);
         var data = {};
         data['id'] = id;
         $.ajax({
             type:'POST',
-            url: '/reorder',
+            url: '/reorderToStock',
             data: data,
             success: function(data){
-                
+                console.log("MATERIALS FOR MATREQ");
+                console.log(data);
+                var fd = new FormData();
+                data["mat_insufficient"].forEach(element => {
+                    fd.append('item_code[]', element.item_code);
+                    fd.append('quantity_requested[]', element.item_qty);
+                    fd.append('procurement_method[]', 'buy');
+                });
+                for (var pair of fd.entries()) {
+                    console.log(pair[0]+ ', ' + pair[1]); 
+                }
+                var requiredDate = new Date();
+                requiredDate.setDate(requiredDate.getDate() + 7);
+                var requiredYear = requiredDate.getFullYear();
+                var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
+                var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
+                var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
+                fd.append('required_date', formattedDate);
+                var currProd = "";
+                fd.append('purpose', 'Restock materials');
+                fd.append('mr_status', 'Draft');
+                fd.append('work_order_no', data);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "/materialrequest",
+                    data: fd, 
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        console.log(data);
+                    },
+                    error: function(data){
+                        console.log(data.message)
+                    }
+                });
             }
-        )};
+        });
+    }
+
+    function deleteRow(r, id, delA) {
+        if(delA === false){
+            reorder(id);
+            reproduceTable.row( $(r).parents('tr') ).remove().draw();
+            getLowOnStocks();
+        }else{
+            var x = document.getElementById("reorderAll").getAttribute('data-ids');
+            var array = JSON.parse("[" + x + "]");
+            reorder(array)
+            reproduceTable.clear().draw();
+            getLowOnStocks();
+            //@TODO Prob: Since stocks aren't added as soon as ordered
+        }
     }
 </script>
