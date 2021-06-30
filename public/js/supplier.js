@@ -3,8 +3,6 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 $(document).ready(function() {
     $("#supplierTbl").DataTable({
         "searching": false,
-        "paging": false,
-        "ordering": false,
         "info": false,
     });
 });

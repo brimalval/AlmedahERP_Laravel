@@ -85,9 +85,23 @@ class SupplierController extends Controller
         $counts = array();
         $counts['sq_count'] = SuppliersQuotation::where('supplier_id', $supplier->supplier_id)->get()->count();
         $counts['rq_count'] = RequestQuotationSuppliers::where('supplier_id', $supplier->supplier_id)->get()->count();
-        $counts['po_count'] = MaterialPurchased::where('items_list_purchased', 'LIKE', "%". $supplier->supplier_id ."%")
-                                ->where('mp_status', '=', 'To Receive and Bill')->get()->count();
-        //echo dd(DB::getQueryLog()); 
+        $mp = MaterialPurchased::where('items_list_purchased', 'LIKE', "%". $supplier->supplier_id ."%")
+                                ->where('mp_status', '=', 'To Receive and Bill')->get();
+        $counts['po_count'] = $mp->count();
+        $pr_count = 0;
+        $pi_count = 0;
+        foreach ($mp as $record) {
+            $pr = $record->receipt;
+            if($pr !== null) {
+                $pr_count++;
+                if($pr->invoice !== null) $pi_count++;
+            }
+        }
+        $counts['pr_count'] = $pr_count;
+        $counts['pi_count'] = $pi_count;
+
+        //echo dd(DB::getQueryLog());
+
         return view('modules.buying.supplierInfo', ['supplier' => $supplier, 'counts' => $counts]);
     }
 
