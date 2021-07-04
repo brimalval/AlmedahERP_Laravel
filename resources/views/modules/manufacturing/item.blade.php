@@ -1018,21 +1018,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <!-- product that needs to reproduce -->
-                            <p><button type="button" id="" class="btn" data-toggle="modal" data-target="#test">try to click me!</button></p>
-                        </td>
-                        <td>
-                            sammple
-                            <!-- needed quantity to reproduce-->
-                        </td>
-                        <td>
-                            <p><button type="button" id="" class="btn">try to click me!</button></p>
-                            <!-- needed quantity to reproduce-->
-                        </td>
-
-                    </tr>
+                   
                 </tbody>
             </table>
             <script>
