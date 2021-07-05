@@ -19,6 +19,13 @@
         </div>
     </div>
 </nav>
+
+<div id="s_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="s_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <div class="accordion" id="accordion">
     <form action="{{ route('supplier.store') }}" id="supplierForm" method="POST">
         <div class="card">
