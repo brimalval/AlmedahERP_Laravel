@@ -164,6 +164,17 @@
         $('#product_code').val(product['product_code']);
         $('#product_name').val(product['product_name']);
         $('#stock_unit').val(product['stock_unit']);
+        $('#manufacturing_date').val(product['manufacturing_date']);
+        $('#product_pulled_off_market').val(product['product_pulled_off_market']);
+        $('#saleSupplyMethod').val(product['sale_supply_method'])
+        
+        $('#reorderLevel').val(product['reorder_level']);
+        $('#reorderQty').val(product['reorder_qty']);
+        if(product['prototype'] == 1){
+            $('#prototype').prop('checked', true);
+        }else{
+            $('#prototype').prop('checked', false);
+        }
         $('.selectpicker').selectpicker('val', product['product_type']);
         $('#sales_price_wt').val(product['sales_price_wt']);
         $('.selectpicker1').selectpicker('val', product['unit']);
@@ -276,7 +287,7 @@
                     </script>
                 </div>
                 <div class="col text-right" style="padding-top:5px;">
-                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal">To Reproduce</button></p>
+                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal" onclick="getLowOnStocks()">To Reproduce</button></p>
                 </div>
                 
                 <table id="products-table" class="table table-striped table-bordered hover" style="width:100%">
@@ -308,12 +319,15 @@
                             <td class="font-weight-bold">{{ $product->product_name }}</td>
                             <td class="text-black-50">
                                 <!-- sales price data -->
+                                {{ $product->sales_price_wt }}
                             </td>
                             <td class="text-black-50">
                                 <!-- sales supply method -->
+                                {{ $product->sale_supply_method }}
                             </td>
                             <td class="text-black-50">
                                 <!-- stock quantity data -->
+                                {{ $product->stock_unit }}
                             </td>
 
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
@@ -557,30 +571,31 @@
                             </label>
                             <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
                                 <option selected disabled>Please Select</option>
-                                <option value="stock">Made to Stock</option>
-                                <option value="produce">To Produce</option>
+                                <option value="Made to Stock">Made to Stock</option>
+                                <option value="To Produce">To Produce</option>
                             </select>
                         </div>
                         <div class="form-group row" id="madeToStockFields" hidden>
                             <div class="col">
                                 <label for="reorderLevel">Minimum Order Quantity</label>
-                                <input type="text" name="reorderLevel" id="reorderLevel" class="form-control">
+                                <input type="number" name="reorderLevel" id="reorderLevel" class="form-control" placeholder="Ex. 100">
                             </div>
                             <div class="col">
                                 <label for="reorderQty">Maximum Order Quantity</label>
-                                <input type="text" name="reorderQty" id="reorderQty" class="form-control">
+                                <input type="number" name="reorderQty" id="reorderQty" class="form-control" placeholder="Ex. 100">
                             </div>
                         </div>
                         <script>
                             function changeSaleSupplyMethod(){
                                 var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
-                                if (salesSupplyMethod == "stock") {
+                                if (salesSupplyMethod == "Made to Stock") {
                                     document.getElementById("madeToStockFields").removeAttribute("hidden");
                                     document.getElementById("reorderLevel").setAttribute("required", "");
                                     document.getElementById("reorderQty").setAttribute("required", "");
                                 } else {
                                     document.getElementById("madeToStockFields").setAttribute("hidden", "");
                                     
+                                    document.getElementById("stock_unit").value = 0;
                                     document.getElementById("reorderLevel").removeAttribute("required");
                                     document.getElementById("reorderQty").removeAttribute("required");
                                 }
@@ -755,7 +770,7 @@
                             <textarea class="form-control" type="text" id="internal_description" name="internal_description" required></textarea>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" name="prototype" id="prototype" class="form-check-input">
+                            <input type="checkbox" name="prototype" id="prototype" class="form-check-input" value = 1>
                             <label for="prototype" class="form-check-label">Prototype</label>
                         </div>
                         <div class="modal-footer">
@@ -999,26 +1014,24 @@
                     <tr>
                         <th>Product</th>
                         <th>Quantity to Reproduce</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <!-- product that needs to reproduce -->
-                            <p><button type="button" id="" class="btn" data-toggle="modal" data-target="#test">try to click me!</button></p>
-                        </td>
-                        <td>
-                            sammple
-                            <!-- needed quantity to reproduce-->
-                        </td>
-                    </tr>
+                   
                 </tbody>
             </table>
             <script>
+                var reproduceTable;
                 $(document).ready(function() {
-                    $('#toReproduceTable').DataTable();
+                    reproduceTable = $('#toReproduceTable').DataTable();
                 } );
+
             </script>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="reorderAll" data-ids="" class="btn btn-primary" onclick="deleteRow(this, true)">Reorder All</button>
         </div>
         </div>
     </div>
@@ -1029,7 +1042,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Checking of Materials</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Materials of Product</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -1045,20 +1058,16 @@
                         <td>Category</td>
                         <td>Qty. Available</td>
                         <td>Qty. Needed</td>
-                        <td>Status</td>
                     </tr>
                 </thead>
-                <tbody class="components">
+                <tbody class="components" id="checkingOfMaterialsTable">
                     <!--Components Body -->
                     
                 </tbody>
                 
             </table>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+        
         </div>
     </div>
 </div>
@@ -1303,6 +1312,7 @@
             }
             formData.set('components', JSON.stringify(components));
             console.log('components'+components);
+            //Add product form
             $.ajax({
                 type: 'POST',
                 url: $('#product-form').attr('action'),
@@ -1325,13 +1335,11 @@
                             `,
                             `<span class="font-weight-bold">${data.product.product_code}</span>`,
                             `<span class="font-weight-bold">${data.product.product_name}</span>`,
-                            `<span class="dot-${(data.product.product_status == "Template") ? 'orange' : (data.product_status == "Variant") ? 'green' : 'blue'}"></span>
-                            ${data.product.product_status}`,
                             `<span class="text-black-50">
-                                ${data.product.product_type}
+                                ${data.product.sales_price_wt}
                             </span>`,
                             `<span class="text-black-50">
-                                ${data.product.unit}
+                                ${data.product.sale_supply_method}
                             </span>`,
                             `<span class="text-black-50">
                                 ${data.product.stock_unit}
@@ -1359,10 +1367,12 @@
                         $('#template_img').remove();
                         $('#attribute').selectpicker('refresh');
                     } else {
+                        console.log(data);
                         flashMessage('error', data.message);
                     }
                 },
                 error: function(data) {
+                    console.log(data);
                     flashMessage('error', data.message);
                 }
             });
@@ -1389,5 +1399,154 @@
         setTimeout(function(){
             $('#alert-message').html('');
         }, 4000);
+    }
+
+    function getLowOnStocks(){
+        $.ajax({
+            type: 'GET',
+            url:'/getLowOnStocks',
+            success: function(data){
+                var idss= [];
+                reproduceTable.clear();
+                data['data'].forEach((row) => {
+                    var quan = row['reorder_qty'] - row['stock_unit'];
+                    reproduceTable.row.add([
+                        `<tr>
+                            <td>
+                                <p><button type="button" id="" class="btn" data-toggle="modal" data-target="#test" onclick="getComponent(`+row['id'] + `)">` + row['product_code'] + `</button></p>
+                            </td>
+                            `,`
+                            <td>
+                                ` +quan+`
+                            </td>
+                            `,`
+                            <td>
+                                <p><button type="button" class="btn btn-primary" onclick="deleteRow(this, [`+row['id'] + `] , false)"> Reorder</button></p>
+                            </td>
+                        </tr>`
+                    ]
+                    ).draw(false);
+                    idss.push( row['id']);
+                });
+                document.getElementById('reorderAll').setAttribute('data-ids', idss);
+            }
+        })
+    }
+
+    function getComponent(id){
+        var data = {};
+        data['id'] = id;
+        $.ajax({
+            type:'GET',
+            url: '/getComponent',
+            data: data,
+            success: function(data){
+                console.log(data);
+                var materials = data['data'];
+                //@TODO might be buggy if materials/component was not passed or did not enter for loop
+                
+                $('#checkingOfMaterialsTable tr').remove();
+                materials.forEach((row) => {
+                $("#checkingOfMaterialsTable").append(
+                    `<tr>
+                        <td></td>
+
+                        <td>
+                            ` +row[2]+ `
+                        </td>
+
+                        <td>
+                            ` +row[1]+ `
+                        </td>
+
+                        <td>
+                            ` +row[3]+ `
+                        </td>
+
+                        <td>
+                            ` +row[0]+ `
+                        </td>
+
+                    </tr>`
+                );
+                });
+            }
+        })
+    }
+
+    function reorder(id){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        console.log("Checkers");
+        console.log(id);
+        console.log(typeof id);
+        var data = {};
+        data['id'] = id;
+        $.ajax({
+            type:'POST',
+            url: '/reorderToStock',
+            data: data,
+            success: function(data){
+                console.log("MATERIALS FOR MATREQ");
+                console.log(data);
+                var fd = new FormData();
+                data["mat_insufficient"].forEach(element => {
+                    fd.append('item_code[]', element.item_code);
+                    fd.append('quantity_requested[]', element.item_qty);
+                    fd.append('procurement_method[]', 'buy');
+                });
+                for (var pair of fd.entries()) {
+                    console.log(pair[0]+ ', ' + pair[1]); 
+                }
+                var requiredDate = new Date();
+                requiredDate.setDate(requiredDate.getDate() + 7);
+                var requiredYear = requiredDate.getFullYear();
+                var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
+                var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
+                var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
+                fd.append('required_date', formattedDate);
+                var currProd = "";
+                fd.append('purpose', 'Restock materials');
+                fd.append('mr_status', 'Draft');
+                fd.append('work_order_no', data);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "/materialrequest",
+                    data: fd, 
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        console.log(data);
+                    },
+                    error: function(data){
+                        console.log(data.message)
+                    }
+                });
+            }
+        });
+    }
+
+    function deleteRow(r, id, delA) {
+        if(delA === false){
+            reorder(id);
+            reproduceTable.row( $(r).parents('tr') ).remove().draw();
+            getLowOnStocks();
+        }else{
+            var x = document.getElementById("reorderAll").getAttribute('data-ids');
+            var array = JSON.parse("[" + x + "]");
+            reorder(array)
+            reproduceTable.clear().draw();
+            getLowOnStocks();
+            //@TODO Prob: Since stocks aren't added as soon as ordered
+        }
     }
 </script>

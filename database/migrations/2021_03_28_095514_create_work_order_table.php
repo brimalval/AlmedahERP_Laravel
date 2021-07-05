@@ -20,7 +20,7 @@ class CreateWorkOrderTable extends Migration
             //$table->string('mat_ordered_id')->nullable();
             //$table->foreign('mat_ordered_id')->references('mat_ordered_id')->on('materials_ordered');
             $table->unsignedBigInteger('sales_id');
-            $table->foreign('sales_id')->references('id')->on('salesOrder');
+            $table->foreign('sales_id')->references('id')->on('salesOrder')->nullable();
             $table->date('planned_start_date')->nullable();
             $table->date('planned_end_date')->nullable();
             $table->date('real_start_date')->nullable();

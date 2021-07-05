@@ -26,7 +26,7 @@ class SalesOrderController extends Controller
         $products = ManufacturingProducts::get();
 
         $salesorders = DB::table('salesorder')
-        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status', 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
         ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
@@ -105,7 +105,6 @@ class SalesOrderController extends Controller
             
             $data = new SalesOrder();
             $data->cost_price = $form_data['costPrice'];
-            $data->sale_supply_method = $form_data['saleSupplyMethod'];
 
 
             $data->transaction_date = $form_data['saleDate'];
@@ -241,15 +240,14 @@ class SalesOrderController extends Controller
                 $order->quantity_purchased = $row[1];
                 $order->save();
                 
-                if($form_data['saleSupplyMethod'] == "Produce"){
-                    $prod = ManufacturingProducts::where('product_code', $row[0])->first();
-                    if( $prod->stock_unit - $row[1] > 0){
-                        $prod->stock_unit = $prod->stock_unit - $row[1];
-                    }else{
-                        $prod->stock_unit = 0;
-                    }
-                    $prod->save();
+                
+                $prod = ManufacturingProducts::where('product_code', $row[0])->first();
+                if( $prod->stock_unit - $row[1] > 0){
+                    $prod->stock_unit = $prod->stock_unit - $row[1];
+                }else{
+                    $prod->stock_unit = 0;
                 }
+                $prod->save();
             }
 
             $work_order_ids = array();
@@ -440,7 +438,7 @@ class SalesOrderController extends Controller
 
     function refresh(){
         $salesorders = DB::table('salesorder')
-        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status','salesorder.sale_supply_method' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
         ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
@@ -533,7 +531,6 @@ class SalesOrderController extends Controller
     }
 
     function minusStocks(Request $request){
-        
         $products = $request->input('products');
         $qty = $request->input('qty');
 

@@ -15,7 +15,6 @@ class SalesOrder extends Model
     protected $fillable = [
         'customer_id',
         'cost_price',
-        'sale_supply_method',
         'transaction_date',
         'payment_mode',
         'payment_balance',
