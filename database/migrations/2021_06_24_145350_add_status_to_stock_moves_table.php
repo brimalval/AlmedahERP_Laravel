@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTransferredQtyToWorkOrder extends Migration
+class AddStatusToStockMovesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class AddTransferredQtyToWorkOrder extends Migration
      */
     public function up()
     {
-        // Schema::dropIfExists('work_order');
-        // Schema::table('work_order', function (Blueprint $table) {
-        //     $table->json('transferred_qty')->nullable();
-        // });
+        Schema::table('stock_moves', function (Blueprint $table) {
+            $table->string('status');
+        });
     }
 
     /**
@@ -26,8 +25,8 @@ class AddTransferredQtyToWorkOrder extends Migration
      */
     public function down()
     {
-        Schema::table('work_order', function (Blueprint $table) {
-            //
+        Schema::table('stock_moves', function (Blueprint $table) {
+            
         });
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTransferredQtyToWorkOrder extends Migration
+class UpdateSalesIdInWorkOrderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class AddTransferredQtyToWorkOrder extends Migration
      */
     public function up()
     {
-        // Schema::dropIfExists('work_order');
-        // Schema::table('work_order', function (Blueprint $table) {
-        //     $table->json('transferred_qty')->nullable();
-        // });
+        Schema::table('work_order', function (Blueprint $table) {
+            $table->unsignedBigInteger('sales_id')->nullable()->change();
+        });
     }
 
     /**

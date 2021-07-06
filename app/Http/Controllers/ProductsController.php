@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WorkOrder;
 use App\Models\ItemGroup;
 use App\Models\ManufacturingMaterials;
 use App\Models\UnitOfMeasurement;
@@ -10,8 +11,10 @@ use \App\Models\ManufacturingProducts;
 use \App\Models\ProductAttribute;
 use \App\Models\ProductVariantWithValue;
 use App\Models\MaterialCategory;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use DB;
+use \stdClass;
 use PhpOption\None;
 use Exception;
 use Throwable;
@@ -491,12 +494,143 @@ class ProductsController extends Controller
     public function reorder(Request $request){
         $product_id = $request->input('id');
         $product = ManufacturingProducts::where('id', $product_id)->first();
+        $quantity_to_reproduce = $request->input('quan');
+        $raw_materials = json_decode($product->materials, true);
+        $components = json_decode($product->components, true);
 
+        $raw_materials_needed = array();
+        $productMaterialsArray = array();
+        $componentMaterialsArray = array();
+        $productMaterials = array();
+        $componentMaterials = array();
+        foreach ($raw_materials as $raw_mat) {
+            $material = ManufacturingMaterials::where('id', $raw_mat['material_id'])->first();
+            $obj = new stdClass();
+            $obj->mat = $material->item_code;
+            $obj->needed = $raw_mat['material_qty']*$quantity_to_reproduce;
+            $obj->stock = $material->rm_quantity;
+            $obj->reorder_level = $material->reorder_level;
+            $obj->uom = $material->uom_id;
+            $obj->type = 'Product';
+            array_push($raw_materials_needed, $obj);
 
+            $obj = new stdClass();
+            $obj->item_code = $material->item_code;
+            if($material->rm_quantity >= $raw_mat['material_qty']*$quantity_to_reproduce){
+                $passvalue = $raw_mat['material_qty']*$quantity_to_reproduce; 
+            }else{
+                $passvalue = $material->rm_quantity;
+            }
+            $obj->transferred_qty = $passvalue;
+            $obj->status = 'pending';
+            array_push($productMaterialsArray, $obj);
+        }
+
+        foreach ($components as $comp) {
+            $component = Component::where('id', $comp['component_id'])->first();
+            $items = json_decode($component->item_code, true);
+            $component_qty = $comp['component_qty'];
+            $preComponentMaterialsArray = array();
+            foreach($items as $item){
+                $item_exists = false;
+                $material = ManufacturingMaterials::where('item_code', $item['item_code'])->first();
+                foreach($raw_materials_needed as $raw_needed){
+                    if($item['item_code'] == $raw_needed->mat){
+                        $item_exists = true;
+                        $add = $raw_needed->needed + $item['item_qty']*$quantity_to_reproduce*$component_qty;
+                        $raw_needed->needed = $add;
+                        break;
+                    }
+                }
+                if(!$item_exists){
+                    $obj = new stdClass();
+                    $obj->mat = $item['item_code'];
+                    $obj->needed = $item['item_qty']*$quantity_to_reproduce*$component_qty;
+                    $obj->stock = $material->rm_quantity;
+                    $obj->reorder_level = $material->reorder_level;
+                    $obj->uom = $material->uom_id;
+                    $obj->type = 'Component';
+                    array_push($raw_materials_needed, $obj);
+                }
+
+                $obj = new stdClass();
+                $obj->item_code = $material->item_code;
+                if($material->rm_quantity >= $raw_mat['material_qty']*$quantity_to_reproduce){
+                    $passvalue = $raw_mat['material_qty']*$quantity_to_reproduce; 
+                }else{
+                    $passvalue = $material->rm_quantity;
+                }
+                $obj->transferred_qty = $passvalue;
+                $obj->status = 'pending';
+                array_push($preComponentMaterialsArray, $obj);
+            }
+            array_push($componentMaterialsArray, $preComponentMaterialsArray);
+        }
+
+        $matRequests = array();
+        foreach($raw_materials_needed as $raw_needed){
+            if($raw_needed->needed >= $raw_needed->stock){
+                $obj = new stdClass();
+                $obj->item_code = $raw_needed->mat;
+                $obj->quantity_needed_for_request = $raw_needed->needed;
+                $obj->uom = $raw_needed->uom;
+                array_push($matRequests, $obj);
+            }
+        }
+
+        $productCode = $product->product_code;
+
+        $productObj = new stdClass();
+        $productObj->$productCode = $productMaterialsArray;
+        
         //@TODO Material Request and work order
+        $work_order_ids = array();
 
-        return response()->json([
-            'status' => 'success',
-        ]);
+        $work_order = new WorkOrder();
+        $work_order->product_code = $product->product_code;
+        $work_order->mat_ordered_id = null;
+        $work_order->sales_id = null;
+        $work_order->planned_start_date = null;
+        $work_order->planned_end_date = null;
+        $work_order->real_start_date = null;
+        $work_order->real_end_date = null;
+        $work_order->work_order_status = "Pending";
+        $work_order->work_order_no = "WOK";
+        $work_order->transferred_qty = json_encode($productObj);
+        $work_order->save();
+        $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+        $work_order->work_order_no = $won;
+        $work_order->save();
+        array_push($work_order_ids, $work_order->id);
+
+        foreach($components as $i=>$comp){
+            $component = Component::where('id', $comp['component_id'])->first();
+            $component_code = $component->component_code;
+            $component_name = $component->component_name;
+
+            $work_order = new WorkOrder();
+            $work_order->component_code = $component_code;
+            $work_order->mat_ordered_id = null;
+            $work_order->sales_id = null;
+            $work_order->planned_start_date = null;
+            $work_order->planned_end_date = null;
+            $work_order->real_start_date = null;
+            $work_order->real_end_date = null;
+            $work_order->work_order_status = "Pending";
+            $work_order->work_order_no = "WOK";
+
+            $componentObj = new stdClass();
+            $componentObj->$productCode = $componentMaterialsArray[$i];
+
+            $work_order->transferred_qty = json_encode($componentObj);
+            $work_order->save();
+            $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+            $work_order->work_order_no = $won;
+            $work_order->save();
+            array_push($work_order_ids, $work_order->id);
+        }
+
+        // return response($matRequests);
+        return response()->json(['productMaterials'=>$productObj, 'componentMaterials'=>$componentObj,  'matRequests'=>$matRequests, 'work_order_ids'=>json_encode($work_order_ids)]);
     }
 }

@@ -169,6 +169,7 @@ Route::post('/create-item-group', [ProductsController::class, 'add_item_group'])
 Route::post('/create-product-unit', [ProductsController::class, 'add_product_unit']);
 Route::get('/getLowOnStocks', [ProductsController::class, 'getLowOnStocks']);
 Route::get('/getComponent', [ProductsController::class, 'getComponent']);
+Route::post('/reorder', [ProductsController::class, 'reorder']);
 
 /**ITEM VARIANT ROUTES */
 Route::get('/openItemVariantSettings', function () {
@@ -440,7 +441,7 @@ Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 Route::post('/minusStocks' , [SalesOrderController::class, 'minusStocks']);
 Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
 Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
-Route::get('/getRawMaterialQuantity/{selected}', [SalesOrderController::class, 'getRawMaterialQuantity']);
+Route::get('/getRawMaterialQuantitySales/{selected}', [SalesOrderController::class, 'getRawMaterialQuantitySales']);
 Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
 Route::get('/getStockData/{selected}' , [SalesOrderController::class, 'getStockData']);
 Route::get('/loadProducts', [SalesOrderController::class, 'loadProducts']);
@@ -478,7 +479,10 @@ Route::post('/create-newstockmoves', [NewStockMovesController::class, 'store']);
 Route::post('/create-newstockmovesreturn', [StockMovesReturnController::class, 'store']);
 Route::get('/showItemsNew/{selected}', [NewStockMovesController::class, 'showItemsNew']);
 Route::get('/showItemsRet/{selected}', [NewStockMovesController::class, 'showItemsRet']);
+Route::get('/showItemCodeNew/{selected}/{selected2}', [NewStockMovesController::class, 'showItemCodeNew']);
 Route::get('/getStockTransfer/{selected}', [NewStockMovesController::class, 'getStockTransfer']);
+Route::get('/getRawMaterialQuantity/{selected}', [NewStockMovesController::class, 'getRawMaterialQuantity']);
+Route::post('/saveStockTransfer/{selected}', [NewStockMovesController::class, 'saveStockTransfer']);
 Route::post('/confirmStockTransfer/{selected}', [NewStockMovesController::class, 'confirmStockTransfer']);
 Route::get('/view-mo-items/{id}', [NewStockMovesController::class, 'view_items']);
 Route::get('/view-st-items/{id}', [StockMovesReturnController::class, 'view_items']);

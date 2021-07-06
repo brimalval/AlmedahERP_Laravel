@@ -160,16 +160,30 @@ function loadWorkOrder() {
     });
 }
 
+// transferred qty array and materials ordered array
+function getQtyFromMatOrdered(tqCode, moArray) {
+    if (moArray) {
+        let objFound = moArray.find((moObj) => moObj.item_code == tqCode);
+        if (objFound) return parseInt(objFound.qty_received);
+        else return 0;
+    }
+    return 0;
+}
+
 function loadWorkOrderInfo(
     workOrderDetails,
+    transferredQty,
     itemName,
-    salesOrderId,
+    salesOrderId = null,
     productCode,
     quantity
 ) {
     // let planned_dates = JSON.parse(dates);
     console.log(workOrderDetails);
     $("#requiredItems").html("");
+    transferred_qty = JSON.parse(transferredQty);
+    console.log("TQ");
+    console.log(transferred_qty[productCode]);
     materials_qty = JSON.parse(quantity);
     console.log("mat_qty");
     console.log(materials_qty);
@@ -220,130 +234,122 @@ function loadWorkOrderInfo(
                     workOrderDetails.planned_end_date
                 );
             }
-            $.ajax({
-                url:
-                    "/getRawMaterialsWork/" +
-                    itemName +
-                    "/" +
-                    salesOrderId +
-                    "/" +
-                    productCode,
-                type: "GET",
-                success: function (datas) {
-                    $("#quantityPurchased").attr(
-                        "value",
-                        datas["quantity_purchased"]
-                    );
-                    console.log("below are the datas");
-                    console.log(datas);
-                    for (let [index, rawMat] of JSON.parse(
-                        datas["item_code"]
-                    ).entries()) {
-                        let sequence = index + 1;
-                        let transferred_qty = undefined;
-                        let qty_from_stock;
-                        let required_qty =
-                            parseInt(datas["component_qty"]) *
-                            datas["quantity_purchased"] *
-                            parseInt(rawMat["item_qty"]);
-                        if (materials_qty) {
-                            transferred_qty = materials_qty[index];
-                        } else {
-                            qty_from_stock = datas["rm_quantity"][index];
-                        }
-                        if (
-                            transferred_qty === undefined &&
-                            qty_from_stock === null &&
-                            workOrderDetails.product_code !== null
-                        ) {
-                            transferred_qty = "n/a";
-                            materials_complete.push(true);
-                        } else if (
-                            transferred_qty === undefined &&
-                            qty_from_stock >= required_qty
-                        ) {
-                            materials_complete.push(true);
-                        } else if (
-                            transferred_qty === undefined &&
-                            qty_from_stock < required_qty
-                        ) {
-                            materials_complete.push(false);
-                        } else if (transferred_qty >= required_qty) {
-                            materials_complete.push(true);
-                        } else if (transferred_qty < required_qty) {
-                            qty_from_stock = datas["rm_quantity"][index];
-                            if (qty_from_stock >= required_qty) {
-                                materials_complete.push(true);
-                            } else {
-                                materials_complete.push(false);
-                            }
-                        }
-                        $("#requiredItems").append(
-                            `
-                        <tr>
-                          <td>
-                            <div class="row m-1">
-                              <div class="d-flex justify-content-start">
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input">
-                                </div>
-                                <label for="" class="ml-5">` +
-                                sequence +
-                                `</label>
-                              </div>
-                            </div>
-                          </td>
-                          <td>` +
-                                rawMat["item_code"] +
-                                `</td>
-                          <td>Test` +
-                                index +
-                                `</td>
-                          <td>` +
-                                required_qty +
-                                `</td>
-                          <td>` +
-                                (qty_from_stock ?? transferred_qty) +
-                                `</td>
-                          <td style="padding: 1%;" class="h-100">
-                            <div class="input-group mb-3">
-                              <select class="custom-select border-0" id="inputGroupSelect02">
-                                <option selected> </option>
-                                <option value="1"> </option>
-                                <option value="2"> </option>
-                                <option value="3"> </option>
-                              </select>
-                            </div>
-                          </td>
-                       </tr>`
-                        );
-                    }
-                    console.log("mat_complete" + materials_complete);
-                    if (materials_complete.includes(false)) {
-                        $("#startWorkOrder").prop("disabled", true);
-                    } else if (
-                        workOrderDetails.work_order_status == "Pending"
-                    ) {
-                        $.ajax({
-                            url:
-                                "/updateStatus/" +
-                                workOrderDetails.work_order_no,
-                            type: "get",
-                            success: function (data) {
-                                console.log(data);
-                                $("#startWorkOrder").prop("disabled", false);
-                                $("#componentStatus").text(
-                                    data.work_order_status
-                                );
-                            },
-                            error: function (request, error) {},
-                        });
-                    }
-                },
-                error: function (request, error) {
-                    alert("Request: " + JSON.stringify(request));
-                },
-            });
+            // $.ajax({
+            //     url:
+            //         "/getRawMaterialsWork/" +
+            //         itemName +
+            //         "/" +
+            //         salesOrderId +
+            //         "/" +
+            //         productCode,
+            //     type: "GET",
+            //     success: function (datas) {
+            //         $("#quantityPurchased").attr(
+            //             "value",
+            //             datas["quantity_purchased"]
+            //         );
+            //         console.log("below are the datas");
+            //         console.log(datas);
+            //         for (let [index, rawMat] of JSON.parse(
+            //             datas["item_code"]
+            //         ).entries()) {
+            //             let sequence = index + 1;
+            //             let required_qty =
+            //                 parseInt(datas["component_qty"]) *
+            //                 datas["quantity_purchased"] *
+            //                 parseInt(rawMat["item_qty"]);
+            //             let tq;
+
+            //             if (transferred_qty[productCode].length > index) {
+            //                 tq =
+            //                     transferred_qty[productCode][index]
+            //                         .quantity_avail +
+            //                     getQtyFromMatOrdered(
+            //                         transferred_qty[productCode][index]
+            //                             .item_code,
+            //                         materials_qty
+            //                     );
+
+            //                 if (
+            //                     transferred_qty[productCode][index]
+            //                         .quantity_avail >= required_qty
+            //                 ) {
+            //                     materials_complete.push(true);
+            //                 } else if (
+            //                     transferred_qty[productCode][index]
+            //                         .quantity_avail < required_qty
+            //                 ) {
+            //                     materials_complete.push(false);
+            //                 }
+            //             } else {
+            //                 tq = "n/a";
+            //             }
+            //             $("#requiredItems").append(
+            //                 `
+            //             <tr>
+            //               <td>
+            //                 <div class="row m-1">
+            //                   <div class="d-flex justify-content-start">
+            //                     <div class="form-check">
+            //                       <input type="checkbox" class="form-check-input">
+            //                     </div>
+            //                     <label for="" class="ml-5">` +
+            //                     sequence +
+            //                     `</label>
+            //                   </div>
+            //                 </div>
+            //               </td>
+            //               <td>` +
+            //                     rawMat["item_code"] +
+            //                     `</td>
+            //               <td>Test` +
+            //                     index +
+            //                     `</td>
+            //               <td>` +
+            //                     required_qty +
+            //                     `</td>
+            //               <td>` +
+            //                     tq +
+            //                     `</td>
+            //               <td style="padding: 1%;" class="h-100">
+            //                 <div class="input-group mb-3">
+            //                   <select class="custom-select border-0" id="inputGroupSelect02">
+            //                     <option selected> </option>
+            //                     <option value="1"> </option>
+            //                     <option value="2"> </option>
+            //                     <option value="3"> </option>
+            //                   </select>
+            //                 </div>
+            //               </td>
+            //            </tr>`
+            //             );
+            //         }
+            //         console.log("mat_complete" + materials_complete);
+            //         if (materials_complete.includes(false)) {
+            //             $("#startWorkOrder").prop("disabled", true);
+            //         } else if (
+            //             workOrderDetails.work_order_status == "Pending"
+            //         ) {
+            //             $.ajax({
+            //                 url:
+            //                     "/updateStatus/" +
+            //                     workOrderDetails.work_order_no,
+            //                 type: "get",
+            //                 success: function (data) {
+            //                     console.log(data);
+            //                     $("#startWorkOrder").prop("disabled", false);
+            //                     $("#componentStatus").text(
+            //                         data.work_order_status
+            //                     );
+            //                 },
+            //                 error: function (request, error) {},
+            //             });
+            //         }
+            //     },
+            //     error: function (request, error) {
+            //         alert("Request: " + JSON.stringify(request));
+            //     },
+            // });
             console.log(materials_complete);
         });
     });
@@ -565,25 +571,38 @@ function loadStockEntry() {
     });
 }
 
-function loadNewStockMoves(transferId) {
-    $.ajax({
-        type: "GET",
-        url: `/getStockTransfer/${transferId}`,
-        data: transferId,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            $("#contentStockMoves").load("/newstockmoves", function () {
-                console.log(data);
-                $("#tracking_id").attr("disabled", true);
-                $("#tracking_id").val(data["stock_transfer"].tracking_id);
-                $("#move_date").val(data["stock_transfer"].move_date);
-                $("#mat_ordered_id").val(data["stock_moves"].mat_ordered_id);
-                $("#employee_id").val(data["stock_moves"].employee_id);
-                showItemsNew(data["stock_moves"].mat_ordered_id);
-            });
-        },
-    });
+function loadNewStockMoves(transferId = null) {
+    if (transferId == null) {
+        $("#contentStockMoves").load("/newstockmoves", function () {
+            $("#saveStockTransferCreate").show();
+            // $("#saveStockTransfer").show();
+            // $("#confirmStockTransfer").show();
+        });
+    } else {
+        $.ajax({
+            type: "GET",
+            url: `/getStockTransfer/${transferId}`,
+            data: transferId,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#contentStockMoves").load("/newstockmoves", function () {
+                    console.log(data);
+                    $("#tracking_id").attr("disabled", true);
+                    $("#tracking_id").val(data["stock_transfer"].tracking_id);
+                    $("#move_date").val(data["stock_transfer"].move_date);
+                    $("#mat_ordered_id").val(
+                        data["stock_moves"].mat_ordered_id
+                    );
+                    $("#employee_id").val(data["stock_moves"].employee_id);
+                    showItemCodeNew(
+                        data["stock_moves"].mat_ordered_id,
+                        data["stock_transfer"].tracking_id
+                    );
+                });
+            },
+        });
+    }
 }
 
 function loadStockMoves() {
@@ -591,6 +610,11 @@ function loadStockMoves() {
         $("#contentStockMoves").load("/stockmoves");
     });
 }
+
+let items;
+let itemsDel;
+let materialsInComponentsItem = [];
+let rawMaterialsOnlyItem = [];
 
 function loadStockReturn() {
     // $(document).ready(function () {
@@ -606,7 +630,8 @@ function loadStockReturnInfo(
     stockMovesType,
     matOrdered,
     employeeId,
-    moveDate
+    moveDate,
+    status
 ) {
     $("#contentStockMoves").load("/returnitems", function () {
         $("#tracking_id_ret").val(trackingId);
@@ -614,8 +639,11 @@ function loadStockReturnInfo(
         $("#mat_ordered_id_ret").val(matOrdered);
         $("#employee_id_ret").val(employeeId);
         $("#move_date_ret").val(moveDate);
+        if (status == "Successfully Returned") {
+            $("#saveRet").css("display", "none");
+        }
         if (stockMovesType === "Return") {
-            $("#saveCancelButtons").hide().css("visibility", "hidden");
+            // $("#saveCancelButtons").hide().css("visibility", "hidden");
             $("#backButton").css("display", "block");
         }
         showItemsRet(trackingId);
@@ -656,8 +684,8 @@ function viewStockTransferItems(id) {
         success: function (response) {
             let table = $("#stockTransfer_itemList tbody");
             $("#stockTransfer_itemList tbody tr").remove();
-            let items = JSON.parse(response);
-            items.forEach((item) => {
+            let itemsR = JSON.parse(response);
+            itemsR.forEach((item) => {
                 table.append(
                     `
                     <tr>

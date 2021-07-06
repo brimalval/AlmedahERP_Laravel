@@ -355,7 +355,7 @@ function finalizer(arr_components) {
             componentsOnly.push({ component_name: component[0] });
             let materials_needed = JSON.parse(arr_components[index][4]);
             // console.log("materials_needed");
-            // console.log(materials_needed);
+
             materials_needed.forEach((el) => {
                 let reorder_data = getReorderLevelAndQty(el["item_name"]);
                 let stock_data = getRawMaterialQuantity(el["item_name"]);
@@ -396,6 +396,7 @@ function finalizer(arr_components) {
                     category: component[1],
                     quantity_needed_for_request:
                         component[2] - component[3] + component[5],
+                    quantity_avail: component[3],
                     item_code: component[4],
                     product_code: component[7],
                     quantity_avail: component[3],
@@ -411,9 +412,9 @@ function finalizer(arr_components) {
                 category: component[1],
                 quantity_needed_for_request:
                     component[2] - component[3] + component[5],
+                quantity_avail: component[3],
                 item_code: component[4],
                 product_code: component[7],
-                quantity_avail: component[3],
             });
         } else if (component[3] >= component[2]) {
             status = "Available";
@@ -424,6 +425,7 @@ function finalizer(arr_components) {
                     component_name: component[0],
                     category: component[1],
                     quantity_needed_for_request: component[5],
+                    quantity_avail: component[3],
                     item_code: component[4],
                     product_code: component[7],
                     quantity_avail: component[3],
@@ -501,9 +503,9 @@ function finalizer(arr_components) {
                         component_name: rawMatFound["component_name"],
                         category: rawMatFound["category"],
                         quantity_needed_for_request: rawMaterialsNeeded,
+                        quantity_avail: RawMatFound["quantity_avail"],
                         item_code: rawMatFound["item_code"],
                         product_code: rawMatFound["product_code"],
-                        quantity_avail: RawMatFound["quantity_avail"],
                     });
                 } else {
                     matItemExists["quantity_needed_for_request"] +=
@@ -522,9 +524,9 @@ function finalizer(arr_components) {
                         matComponent["quantity_needed"] -
                         quantity_avail +
                         matComponent["reorder_qty"],
+                    quantity_avail: matComponent["quantity_avail"],
                     item_code: matComponent["item_code"],
                     product_code: matComponent["product_code"],
-                    quantity_avail: matComponent["quantity_avail"],
                 });
             } else if (quantity_avail <= matComponent["reorder_level"]) {
                 console.log("hit reorder level");
@@ -532,9 +534,9 @@ function finalizer(arr_components) {
                     component_name: matComponent["component_name"],
                     category: "Component",
                     quantity_needed_for_request: matComponent["reorder_qty"],
+                    quantity_avail: matComponent["quantity_avail"],
                     item_code: matComponent["item_code"],
                     product_code: matComponent["product_code"],
-                    quantity_avail: matComponent["quantity_avail"],
                 });
             }
         }
@@ -543,53 +545,12 @@ function finalizer(arr_components) {
     console.log(rawMaterialsOnly);
     console.log(materialsInComponents);
 
-    // rawMaterialsOnly.forEach((rawMat) => {
-    //     let woe = {
-    //         item_code: rawMat.item_code,
-    //         transferred_qty: rawMat.quantity_avail,
-    //         status: "pending",
-    //         product_code: rawMat.product_code,
-    //     };
-    //     let obj = {};
-    //     let product_code = rawMat.product_code;
-    //     obj[product_code] = "";
-    //     workOrderProdElements.push(woe);
-    //     if (!workOrderProd.includes(obj)) {
-    //         workOrderProd.push(obj);
-    //     }
-    // });
-
-    // materialsInComponents.forEach((matComp) => {
-    //     let woe = {
-    //         item_code: matComp.item_code,
-    //         transferred_qty: matComp.quantity_avail,
-    //         status: "pending",
-    //         product_code: matComp.product_code,
-    //     };
-    //     let obj = {};
-    //     let product_code = matComp.product_code;
-    //     obj[product_code] = "";
-    //     workOrderCompElements.push(woe);
-    //     if (!workOrderComp.includes(obj)) {
-    //         workOrderComp.push(obj);
-    //     }
-    // });
-
-    // console.log("THIS WOCEL");
-    // console.log(workOrderCompElements);
-    // console.log(workOrderComp);
-    // console.log("THIS WOPEl");
-    // console.log(workOrderProdElements);
-    // console.log(workOrderProd);
-
-    // let pass_value;
-    // console.log("start test");
-
     if (createMatRequestItems.length != 0) {
         createMatRequestItems.forEach((MatReqItem) => {
             let woe = {
                 item_code: MatReqItem.item_code,
-                transferred_qty: MatReqItem.avail,
+                transferred_qty: MatReqItem.quantity_needed_for_request,
+                quantity_avail: MatReqItem.quantity_avail,
                 status: "pending",
                 product_code: MatReqItem.product_code,
             };
@@ -630,6 +591,7 @@ function finalizer(arr_components) {
                     let woe = {
                         item_code: rawMat.item_code,
                         transferred_qty: rawMat.quantity_avail,
+                        quantity_avail: rawMat.quantity_avail,
                         status: "pending",
                         product_code: rawMat.product_code,
                     };
@@ -656,6 +618,7 @@ function finalizer(arr_components) {
                     let woe = {
                         item_code: matComp.item_code,
                         transferred_qty: matComp.quantity_avail,
+                        quantity_avail: matComp.quantity_avail,
                         status: "pending",
                         product_code: matComp.product_code,
                     };
@@ -677,6 +640,7 @@ function finalizer(arr_components) {
             let woe = {
                 item_code: rawMat.item_code,
                 transferred_qty: rawMat.quantity_avail,
+                quantity_avail: rawMat.quantity_avail,
                 status: "pending",
                 product_code: rawMat.product_code,
             };
@@ -687,6 +651,7 @@ function finalizer(arr_components) {
             let woe = {
                 item_code: matComp.item_code,
                 transferred_qty: matComp.quantity_avail,
+                quantity_avail: matComp.quantity_avail,
                 status: "pending",
                 product_code: matComp.product_code,
             };
@@ -746,7 +711,7 @@ function finalizer(arr_components) {
 function getRawMaterialQuantity(rawMaterial) {
     let data = "";
     $.ajax({
-        url: "getRawMaterialQuantity/" + rawMaterial,
+        url: "getRawMaterialQuantitySales/" + rawMaterial,
         type: "get",
         async: false,
         success: function (response) {

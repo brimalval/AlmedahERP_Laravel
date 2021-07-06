@@ -1,23 +1,20 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
-        <h2 class="navbar-brand" style="font-size: 35px;">Stock Moves</h2>
-          <h2 class="navbar-brand" style="font-size: 35px;">Return</h2>
+        <h2 class="navbar-brand" style="font-size: 35px;">Stock Return</h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#saveCancelButtons" aria-controls="saveCancelButtons" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="saveCancelButtons">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown li-bom">
-                  </li>
-                <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadStockMoves()">Cancel</button>
+                  <li class="nav-item li-bom">
+                    <button class="btn btn-primary" type="submit" form="addStockMovesReturnForm" id="saveRet">Save</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-primary" type="submit" form="addStockMovesReturnForm" id="saveRet">Save</button>
+                  <button class="btn btn-refresh ml-auto" style="background-color: #d9dbdb" id="backButton" type="submit" onclick="loadStockMoves()">Back</button>
                 </li>
             </ul>
         </div>
-        <button class="btn btn-refresh ml-auto" id="backButton" style="background-color: #d9dbdb; display:none" type="submit" onclick="loadStockMoves()">Back</button>
+        
     </div>
 </nav>
 <div class="alert alert-success alert-dismissible" id="ret-stock-success" style="display:none;">
@@ -274,7 +271,7 @@
       $(document).ready(function() {
       var tableControl= document.getElementById('itemsTrans');
       // var arrayOfValues = [];
-      let itemsTable = $("#itemsToBeRet");
+      let itemsTable = $("#itemsRet");
       let changed = false;
       
       function showMessage(){
@@ -330,8 +327,8 @@
                       'item_code':itemCode, 
                       'qty_transferred': qtyToReturn, 
                       'consumable': itemTrans.consumable, 
-                      'source_station': itemTrans.source_station, 
-                      'target_station': itemTrans.target_station, 
+                      'source_station': itemTrans.target_station, 
+                      'target_station': itemTrans.source_station, 
                       'item_condition': itemTrans.item_condition,
                       'remarks': itemTrans.remarks
                     }
@@ -354,10 +351,6 @@
 
           showMessage();
 
-          console.log('before');
-          console.log(itemsRet);
-          console.log(itemsTrans);
-
           itemsRet.forEach((ArrItem)=>{
             itemsTrans.forEach((item, index)=>{ 
               if(ArrItem.item_code === item.item_code){
@@ -367,11 +360,8 @@
               }
             });
           });  
-          
-          console.log('after');
-          console.log(itemsRet);
-          console.log(itemsTrans);
-
+          console.log('pass');
+          console.log(passValueArray);
           if(changed){
             formData.append("item_code", JSON.stringify(itemsRet));
             formData.append("stockTransferItemsUpdated", JSON.stringify(itemsTrans));
@@ -396,7 +386,7 @@
                   console.log(data);
               }
             });
-
+            itemsTable.empty();
             itemsRet.forEach((item) => {
               itemsTable.append(
                 `<tr><td>

@@ -1249,6 +1249,7 @@
     
 </script>
 <script>
+
     // General function for closing modals & resetting the respective select element
     function closeSelectPickerModal(selectPicker, modal){
         if(selectPicker.selectpicker && modal.modal){
@@ -1390,8 +1391,12 @@
             type: 'GET',
             url:'/getLowOnStocks',
             success: function(data){
+                
+                console.log(materialsInComponentsItem);
                 reproduceTable.clear();
                 data['data'].forEach((row) => {
+                   
+
                     var quan = row['reorder_qty'] - row['stock_unit'];
                     reproduceTable.row.add([
                         `<tr>
@@ -1404,7 +1409,7 @@
                             </td>
                             `,`
                             <td>
-                                <p><button type="button"  class="btn btn-primary" onclick="reorder(`+row['id'] + `)"> Reorder</button></p>
+                                <p><button type="button"  class="btn btn-primary" onclick="reorder(`+row['id']+`,`+quan+`)"> Reorder</button></p>
                             </td>
                         </tr>`
                     ]
@@ -1448,7 +1453,8 @@
             }
         })
     }
-    function reorder(id){
+    function reorder(id, quan){
+        alert(quan);
         $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -1456,13 +1462,52 @@
         });
         var data = {};
         data['id'] = id;
+        data['quan'] = quan;
         $.ajax({
             type:'POST',
             url: '/reorder',
             data: data,
             success: function(data){
-                console.log(data);
+                console.log(data['productMaterials']);
+                console.log(data['componentMaterials']);
+                var fd = new FormData();
+                data['matRequests'].forEach(element => {
+                    fd.append('item_code[]', element.item_code);
+                    fd.append('quantity_requested[]', element.quantity_needed_for_request);
+                    fd.append('procurement_method[]', 'buy');
+                });
+                var requiredDate = new Date();
+                requiredDate.setDate(requiredDate.getDate() + 7);
+                var requiredYear = requiredDate.getFullYear();
+                var requiredDay = (requiredDate.getDate() < 10) ? "0" + requiredDate.getDate() : requiredDate.getDate();
+                var requiredMonth = (requiredDate.getMonth()+1 < 10) ? "0" + (requiredDate.getMonth() + 1) : requiredDate.getMonth() + 1;
+                var formattedDate = requiredYear + "-" + requiredMonth + "-" + requiredDay;
+                fd.append('required_date', formattedDate);
+                // var currProd = $('#saleProductCode').val();
+                fd.append('purpose', 'Replenishing required materials');
+                fd.append('mr_status', 'Draft');
+                fd.append('work_order_no', data['work_order_ids']);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "/materialrequest",
+                    data: fd, 
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        console.log(data);
+                    },
+                    error: function(data){
+                        console.log(data.message)
+                    }
+                });
             }
         });
+
     }
 </script>

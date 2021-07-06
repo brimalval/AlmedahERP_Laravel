@@ -270,7 +270,7 @@ class SalesOrderController extends Controller
                 $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
                 $work_order->save();
-                //array_push($work_order_ids, $work_order->id);
+                array_push($work_order_ids, $work_order->id);
             }
 
             foreach($new_component as $i=>$c){
@@ -296,7 +296,7 @@ class SalesOrderController extends Controller
             }
 
             //return "Sucess";
-            return response(json_encode($componentMaterials));
+            return response(json_encode($work_order_ids));
             // return response($work_order->id);
 
         }catch(Exception $e){
@@ -304,7 +304,7 @@ class SalesOrderController extends Controller
         }
     }
 
-    function getRawMaterialQuantity($raw_material){
+    function getRawMaterialQuantitySales($raw_material){
         $raw_material = ManufacturingMaterials::where('item_name', $raw_material)->first();
         $raw_material_qty = $raw_material->rm_quantity;
         return response($raw_material_qty);
