@@ -11,7 +11,6 @@ use \App\Models\ManufacturingProducts;
 use \App\Models\ProductAttribute;
 use \App\Models\ProductVariantWithValue;
 use App\Models\MaterialCategory;
-use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 use DB;
 use \stdClass;
