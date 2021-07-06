@@ -251,8 +251,9 @@ class SalesOrderController extends Controller
             }
 
             $work_order_ids = array();
-
-            foreach ($cart as $row){ 
+            $componentMaterials = json_decode($request->input("componentMaterials"), true);
+            $productMaterials = json_decode($request->input("productMaterials"), true);
+            foreach ($cart as $i=>$row){ 
 
                 $work_order = new WorkOrder();
                 $work_order->product_code = $row[0];
@@ -264,14 +265,15 @@ class SalesOrderController extends Controller
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
                 $work_order->work_order_no = "WOK";
+                $work_order->transferred_qty = json_encode($productMaterials[$i]);
                 $work_order->save();
                 $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
                 $work_order->save();
-                //array_push($work_order_ids, $work_order->id);
+                array_push($work_order_ids, $work_order->id);
             }
 
-            foreach($new_component as $c){
+            foreach($new_component as $i=>$c){
                 $component_name = $c['component_name'];
                 $component = Component::where('component_name', "=", $component_name)->first();
                 $component_code = $component->component_code;
@@ -285,6 +287,7 @@ class SalesOrderController extends Controller
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
                 $work_order->work_order_no = "WOK";
+                $work_order->transferred_qty = json_encode($componentMaterials[$i]);
                 $work_order->save();
                 $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
@@ -301,7 +304,7 @@ class SalesOrderController extends Controller
         }
     }
 
-    function getRawMaterialQuantity($raw_material){
+    function getRawMaterialQuantitySales($raw_material){
         $raw_material = ManufacturingMaterials::where('item_name', $raw_material)->first();
         $raw_material_qty = $raw_material->rm_quantity;
         return response($raw_material_qty);
@@ -476,7 +479,8 @@ class SalesOrderController extends Controller
                     $raw_material_quantity, 
                     "item_code" => $raw_material_code,
                     "reorder_qty" => $raw_material_reorder_qty,
-                    "reorder_level" => $raw_material_reorder_level
+                    "reorder_level" => $raw_material_reorder_level,
+                    "product_code" => $product->product_code,
                 ]);
             }
 
@@ -488,7 +492,7 @@ class SalesOrderController extends Controller
                 $raw_material_name = $raw_material->component_name;
                 $raw_material_quantity = 0;
                 $raw_materials_needed = $raw_material->item_code;
-                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
+                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed, "product_code" => $product->product_code]);
             }
             
         }

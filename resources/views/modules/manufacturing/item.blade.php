@@ -67,7 +67,6 @@
             materialList.push(id);
         }
     }
-
     function addComponent(id, qty=""){
         console.log(id);
          if (componentList.indexOf(id) !== -1) {
@@ -220,7 +219,6 @@
                         flashMessage('error', data.message);
                     });
                 }
-
             },
             error: function(data) {
                 console.log("error");
@@ -509,7 +507,6 @@
                                     $("#product_selected").hide();
                                 }
                             });
-
                             $("#procurement_method").change(function() {
                                 if ($(this).val() == "produce" || $(this).val() == "buy and produce") {
                                     $("#made-to-selected").show();
@@ -555,12 +552,10 @@
                             function readURL1(input) {
                                 if (input.files && input.files[0]) {
                                     var reader = new FileReader();
-
                                     reader.onload = function(e) {
                                         $('#img_tmp')
                                             .attr('src', e.target.result)
                                     };
-
                                     reader.readAsDataURL(input.files[0]);
                                 }
                             }
@@ -664,7 +659,6 @@
                             <script type="text/javascript">
                                 attributeList = ""
                                 attributeList = (typeof attributeList != 'undefined' && attributeList instanceof Array) ? attributeList : []
-
                                 $(document).ready(function() {
                                     $('.selectpicker2').selectpicker();
                                     $('#attribute').on('change', function() {
@@ -675,7 +669,6 @@
                                             console.log('chosen');
                                         }
                                     });
-
                                     $('#add-attribute-modal').on('shown.bs.modal', function() {
                                         $(document).off('focusin.modal');
                                     });
@@ -822,7 +815,6 @@
                         // });
                     });
                 }
-
             },
             error: function(data) {}
         });
@@ -882,22 +874,17 @@
                         $('.selectpicker').selectpicker('refresh');
                         $('.selectpicker').selectpicker('val', item_group);
                         $('#item_group').val('');
-
                         $('#create-product-form').modal('show');
-
                         $('#create-product-form').on('shown.bs.modal', function() {
                             $('#product_type').focus();
                             $(document).off('focusin.modal');
                             $('.modal').css('overflow-y', 'auto');
                         });
-
-
                     } else {
                         $(document).ready(function() {
                             flashMessage('error', data.message);
                         });
                     }
-
                 },
                 error: function(data) {
                     console.log("error");
@@ -968,23 +955,17 @@
                         $('.selectpicker1').selectpicker('refresh');
                         $('.selectpicker1').selectpicker('val', unit_name);
                         $('#unit_name').val('');
-
-
                         $('#create-product-form').modal('show');
                         $('#create-product-form').on('shown.bs.modal', function() {
                             $(document).off('focusin.modal');
                             $('#unit').focus();
                             $('.modal').css('overflow-y', 'auto');
                         });
-
-
-
                     } else {
                         $(document).ready(function() {
                             flashMessage('error', data.message);
                         });
                     }
-
                 },
                 error: function(data) {
                     console.log("error");
@@ -1020,6 +1001,7 @@
                 <tbody>
                    
                 </tbody>
+                
             </table>
             <script>
                 var reproduceTable;
@@ -1126,14 +1108,12 @@
                         $('.selectpicker2').selectpicker('refresh');
                         $('.selectpicker2').selectpicker('val', attribute_name);
                         $('#attribute').selectpicker('refresh');
-
                         $('#create-product-form').modal('show');
                         $('#create-product-form').on('shown.bs.modal', function() {
                             $(document).off('focusin.modal');
                             $('#attribute').focus();
                             $('.modal').css('overflow-y', 'auto');
                         });
-
                         if (attributeList.indexOf(attribute_name) !== -1) {
                             alert("Value exists!");
                         } else {
@@ -1141,14 +1121,11 @@
                             $('#attributes_div').append('<span class="attb-badge-'+attribute_name+' badge badge-success m-1 p-1">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
                             $('.modal').css('overflow-y', 'auto');
                         }
-
-
                     } else {
                         $(document).ready(function() {
                             flashMessage('error', data.message);
                         });
                     }
-
                 },
                 error: function(data) {
                     console.log("error");
@@ -1263,6 +1240,7 @@
     
 </script>
 <script>
+
     // General function for closing modals & resetting the respective select element
     function closeSelectPickerModal(selectPicker, modal){
         if(selectPicker.selectpicker && modal.modal){
@@ -1379,7 +1357,6 @@
             return false;
         }));
     });
-
     function flashMessage(status, message=null){
         if(status == 'success'){
             $('#alert-message').html(`
@@ -1400,7 +1377,6 @@
             $('#alert-message').html('');
         }, 4000);
     }
-
     function getLowOnStocks(){
         $.ajax({
             type: 'GET',

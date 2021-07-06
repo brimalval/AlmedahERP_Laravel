@@ -1,9 +1,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
       <div class="container-fluid">
-          <h2 class="navbar-brand" style="font-size: 35px;">New Stock Moves</h2>
-          
-            <h2 class="navbar-brand" style="font-size: 35px;">Transfer</h2>
+            <h2 class="navbar-brand" style="font-size: 35px;">Stock Transfer</h2>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
@@ -12,15 +10,25 @@
                   <li class="nav-item dropdown li-bom">
                     </li>
                   <li class="nav-item li-bom">
-                      <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="">Cancel</button>
+                      <button class="btn btn-primary" style="display:none" id="saveStockTransferCreate" form="addStockMovesForm">Save</button>
                   </li>
                   <li class="nav-item li-bom">
-                      <button class="btn btn-primary" type="submit" form="addStockMovesForm" onclick="" >Save</button>
+                      <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadStockMoves()">Back</button>
                   </li>
+
               </ul>
           </div>
       </div>
   </nav>
+  <div class="d-flex">
+    <div class="col-1">
+      <button class="btn btn-primary" style="display: none" id="saveStockTransfer">Save</button>
+    </div>
+    <div class="col-1">
+      <button class="btn btn-primary" style="display: none" id="confirmStockTransfer" type="submit" onclick="" >Submit</button>
+    </div>
+  </div>
+
   <div class="alert alert-success alert-dismissible" id="new-stock-success" style="display:none;">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
   </div>
@@ -51,17 +59,17 @@
                 <div class="row">
                   <div class="col">
                     <label for="">Tracking ID</label>
-                    <input type="text" name='tracking_id' class="form-control" placeholder="Tracking ID" value="">
+                    <input type="text" name='tracking_id' id="tracking_id" class="form-control" placeholder="Tracking ID" value="">
                   </div>
                   <div class="col">
                     <label for="">Move Date</label>
-                    <input type="date" name='move_date' class="form-control" placeholder="Move Date" value="" required>
+                    <input type="date" name='move_date' id="move_date" class="form-control" placeholder="Move Date" value="" required>
                   </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                       <label for="">Stock Moves Type</label>
-                      <input type="text" name='stock_moves_type' class="form-control" placeholder="" value="Transfer" readonly>
+                      <input type="text" name='stock_moves_type' id="stock_moves_type" class="form-control" placeholder="" value="Transfer" readonly>
                     </div>
                 </div>
                 <div class="row">
@@ -80,7 +88,7 @@
                 <div class="row">
                     <div class="col-6">
                       <label for="">Employee ID</label>
-                      <input list="employees" name='employee_id' class="form-control" placeholder="Employee ID" value="" required>
+                      <input list="employees" id="employee_id" name='employee_id' class="form-control" placeholder="Employee ID" value="" required>
                       <datalist id="employees">
                           @foreach ($employees as $row)
                               <option value="{{ $row->employee_id }}"> {{ $row->last_name }}
@@ -104,7 +112,7 @@
                             </div>
                         </td>
                         <td>Item Code</td>
-                        <td>Quantity Transfered</td>
+                        <td>Quantity to Transfer</td>
                         <td>Consumable</td>
                         <td>Source Station</td>
                         <td>Target Station</td>
@@ -214,8 +222,8 @@
 </div>
 
 <script>
-  let items = []; 
-  let itemsDel = [];
+  items = []; 
+  itemsDel = [];
   $("#mat_ordered_id").change(function(){
     if($("#mat_ordered_id").val().trim() === ''){
       $("#addDeleteButtons").show();
@@ -235,6 +243,64 @@
     }
   }
 
+  $("#saveStockTransfer").on('click', function(e){
+    let tracking_id = $("#tracking_id").val();
+    console.log("itemsbelow");
+    console.log(items);
+    let item_code = JSON.stringify(items);
+    let employee_id = $("#employee_id").val();
+    let move_date = $('#move_date').val();
+    e.preventDefault();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+            type:'POST',
+            url:"/saveStockTransfer/"+tracking_id,
+            data: {item_code: item_code, employee_id: employee_id, move_date: move_date},
+            success: function(data) {
+                console.log(data);
+                $('#new-stock-success').show()
+                $('#new-stock-success').html('Successfully Updated Stock Transfer');
+                $('#new-stock-success').delay(4000).hide(1);
+            }
+        });
+  });
+
+  $("#confirmStockTransfer").on('click', function(e){
+    e.preventDefault();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    let tracking_id = $("#tracking_id").val();
+    console.log("items");
+    console.log(items);
+    let item_code = JSON.stringify(items);
+    let employee_id = $("#employee_id").val();
+    let move_date = $('#move_date').val();
+    if(sameSourceTargetStation()){
+      $('#new-stock-danger').show()
+      $('#new-stock-danger').html('Raw Material has the same Source and Target Station');
+      $('#new-stock-danger').delay(4000).hide(1);
+    }else{
+      $.ajax({
+            type:'POST',
+            url:"/confirmStockTransfer/"+tracking_id,
+            data: {item_code: item_code, employee_id: employee_id, move_date: move_date},
+            success: function(data) {
+                console.log(data);
+                $('#new-stock-success').show()
+                $('#new-stock-success').html('Successfully Transferred Stocks');
+                $('#new-stock-success').delay(4000).hide(1);
+            }
+        });
+    }
+  });
+
   $('#addStockMovesForm').on('submit', function(e){
     e.preventDefault();
     $.ajaxSetup({
@@ -242,76 +308,41 @@
             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
         }
     });
-    var formData = new FormData(this);
-    console.log('items');
-    console.log(items);
-    formData.append("item_code", JSON.stringify(items));
-    $.ajax({
-          type:'POST',
-          url:"/create-newstockmoves",
-          data: formData, 
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function(data) {
-              console.log(data);
-              $('#new-stock-success').show()
-              $('#new-stock-success').html('Successfully created a new Stock Move');
-              $('#new-stock-success').delay(4000).hide(1);
-              // itemsTable.append(
-              //     `<thead class="border-top border-bottom bg-light">
-              //   <tr class="text-muted">
-              //       <td>
-              //           <div class="form-check">
-              //               <input type="checkbox" class="form-check-input">
-              //           </div>
-              //       </td>
-              //       <td>Item Code</td>
-              //       <td>Quantity Transfered</td>
-              //       <td>Consumable</td>
-              //       <td>Source Station</td>
-              //       <td>Target Station</td>
-              //       <td >Item Condition</td>
-              //   </tr>
-              // </thead>`
-              //   );
-              // JSON.parse(data['mat_ordered'].items_list_received).forEach((item) => {
-              //   itemsTable.append(
-              //     `<tr><td>
-              //           <div class="form-check">
-              //               <input type="checkbox" class="form-check-input">
-              //           </div>
-              //       </td>
-              //       <td>` +item.item_code +`</td>
-              //     <td>` +item.qty_received +`</td>
-              //     <td>Consumable</td>
-              //     <td>Source_Station</td>
-              //     <td>`+data['station_name']+`</td>
-              //     <td>Item_Condition</td></tr>`
-              //   );
-              // });
-          },
-          error: function(data) {
 
-              $('#new-stock-danger').show()
-              $('#new-stock-danger').html('Material ordered already has a Stock Move');
-              $('#new-stock-danger').delay(4000).hide(1);
-              console.log("error");
-              console.log(data);
-          }
-      });
+      var formData = new FormData(this);
+      console.log('items');
+      console.log(items);
+      formData.append("item_code", JSON.stringify(items));
+      $.ajax({
+            type:'POST',
+            url:"/create-newstockmoves",
+            data: formData, 
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                console.log(data);
+                $('#new-stock-success').show()
+                $('#new-stock-success').html('Successfully saved Stock Move');
+                $('#new-stock-success').delay(4000).hide(1);
+            },
+            error: function(data) {
+
+                $('#new-stock-danger').show()
+                $('#new-stock-danger').html('Material ordered already has a Stock Move');
+                $('#new-stock-danger').delay(4000).hide(1);
+                console.log("error");
+                console.log(data);
+            }
+        });
+    // }
   });
 
-  function onChangeRawMaterial(itemCode, el){
+  function onChangeRawMaterial(itemCode, el, pobj){
+    console.log(JSON.parse(pobj).consumable);
+    let currentRow = $(el).closest('tr');
     let item_exists = false;
-    let obj = { 'item_code': itemCode, 
-                'qty_received': 'test', 
-                'source_station': 'test', 
-                'target_station': 'test',
-                'consumable' : 'true',
-                'item_condition' : 'good',
-                'transfer_status' : 'pending',
-              }
+    let pass_obj = JSON.parse(pobj);
     items.forEach(item=>{
       if(item.item_code === itemCode){
         item_exists = true;
@@ -322,53 +353,301 @@
       }
     });
     if(!item_exists){
-      items.push(obj);
       $(el).attr('readonly', true);
       $("#mat_ordered_id").attr('readonly', true);
+      $.ajax({
+          type:'GET',
+          url:"/getRawMaterialQuantity/"+itemCode,
+          success: function(data) {
+              currentRow.find('td:nth-child(3) input').val(data);
+              currentRow.find('td:nth-child(3) input').attr('max', data);
+              for (const key in pass_obj) {
+                if(key == 'item_code'){
+                  pass_obj[key] = itemCode;
+                }else if(key == 'qty_received'){
+                  pass_obj[key] = data;
+                }else{
+                  pass_obj[key] = pass_obj[key];
+                }
+              }
+              items.push(pass_obj);
+          }
+      });
     }
     console.log(items);
   }
 
+  function onChangeItemCondition(itemCondition, el){
+    let currentRow = $(el).closest('tr');
+    let itemCodeFound = currentRow.find('td:nth-child(2)').html();
+    let dependent = false;
+    items.forEach(item=>{
+      if(itemCodeFound === item.item_code){
+        item.item_condition = itemCondition;
+        dependent = true;
+      }
+    });
+    if(!dependent){
+      let itemCodeFound = currentRow.find('td:nth-child(2) input').val();
+      items.forEach(item=>{
+        if(itemCodeFound === item.item_code){
+          item.item_condition = itemCondition;
+        }
+      });
+    }
+    console.log(items);
+  }
+
+  function onChangeConsumable(itemConsumable, el){
+    let currentRow = $(el).closest('tr');
+    let itemCodeFound = currentRow.find('td:nth-child(2)').html();
+    let dependent = false;
+    items.forEach(item=>{
+      if(itemCodeFound === item.item_code){
+        item.consumable = itemConsumable;
+        dependent = true;
+      }
+      
+    });
+    if(!dependent){
+        let itemCodeFound = currentRow.find('td:nth-child(2) input').val();
+        items.forEach(item=>{
+          if(itemCodeFound === item.item_code){
+            item.consumable = itemConsumable;
+          }
+        });
+      }
+    console.log(items);
+  }
+
+  function onChangeQuantity(quantity, el){
+    let currentRow = $(el).closest('tr');
+    let itemCodeFound = currentRow.find('td:nth-child(2)').html();
+    let dependent = false;
+    items.forEach(item=>{
+      if(itemCodeFound === item.item_code){
+        item.qty_received = quantity;
+        dependent = true;
+      }
+    });
+    if(!dependent){
+        let itemCodeFound = currentRow.find('td:nth-child(2) input').val();
+        items.forEach(item=>{
+          if(itemCodeFound === item.item_code){
+            item.qty_received = quantity;
+          }
+        });
+      }
+    console.log(items);
+  }
+
+  function onChangeTargetStation(targetStation, el){
+    let currentRow = $(el).closest('tr');
+    let itemCodeFound = currentRow.find('td:nth-child(2)').html();
+    let dependent = false;
+    items.forEach(item=>{
+      if(itemCodeFound === item.item_code){
+        item.target_station = targetStation;
+        dependent = true;
+      }
+    });
+    if(!dependent){
+        let itemCodeFound = currentRow.find('td:nth-child(2) input').val();
+        items.forEach(item=>{
+          if(itemCodeFound === item.item_code){
+            item.target_station = targetStation;
+          }
+        });
+      }
+    console.log(items);
+  }
+
+  function onChangeSourceStation(sourceStation, el){
+    let currentRow = $(el).closest('tr');
+    let itemCodeFound = currentRow.find('td:nth-child(2)').html();
+    let dependent = false;
+    items.forEach(item=>{
+      if(itemCodeFound === item.item_code){
+        item.source_station = sourceStation;
+        dependent = true;
+      }
+    });
+    if(!dependent){
+        let itemCodeFound = currentRow.find('td:nth-child(2) input').val();
+        items.forEach(item=>{
+          if(itemCodeFound === item.item_code){
+            item.source_station = sourceStation;
+          }
+        });
+      }
+    sameSourceTargetStation();
+    console.log(items);
+  }
+
+  function sameSourceTargetStation(){
+    items.forEach(item=>{
+      if(item.source_station == item.target_station){
+        return true;
+      }
+    });
+    return false;
+  }
+
   $("#newStockAddRow").on("click", function(){
-    alert('add row');
     let itemsTable = $("#items");
-    
-    // var raw_materials = [
-    //   @foreach ($raw_materials as $row)
-    //       <option value="{{ $row->item_code }}"> {{ $row->item_code}}</option>
-    //   @endforeach
-    // ];
-    // let obj = { 'item_code': item.item_code, 
-    //             'qty_received': item.qty_received, 
-    //             'source_station': 'ex', 
-    //             'target_station': data['station_name'],
-    //             'consumable' : 'true',
-    //             'item_condition' : 'good',
-    //             'transfer_status' : 'pending',
-    //           }
     itemsTable.append(
         `<tr><td>
               <div class="form-check">
                   <input type="checkbox" class="form-check-input">
               </div>
           </td>
-          <td><input list="new_raw_materials" onchange="onChangeRawMaterial(this.value, this)"  class="form-control" required>
+          <td><input list="new_raw_materials" class="form-control" id="" onchange="onChangeRawMaterial(this.value, this, this.id)" required>
             <datalist id="new_raw_materials">
                 @foreach ($raw_materials as $row)
                       <option value="{{ $row->item_code }}"> {{ $row->item_code}}</option>
                 @endforeach
                 <option value=" + Add new">
             </datalist></td>
-        <td>Qty Received</td>
-        <td>Consumable</td>
-        <td>Source_Station</td>
-        <td>Target Station</td>
-        <td>Item_Condition</td></tr>`
+        <td><input type="number" class="form-control" onchange="onChangeQuantity(this.value, this)" min=1></td>
+        <td><select id="" onchange="onChangeConsumable(this.value, this)">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+          </select></td>
+        <td><select id="" onchange="onChangeSourceStation(this.value, this)">
+          @foreach ($stations as $i=>$station)
+            <option value="{{ $station->station_name }}"> {{ $station->station_name }} </option>
+          @endforeach
+        </select></td>
+        <td><select id="" onchange="onChangeTargetStation(this.value, this)">
+          @foreach ($stations as $i=>$station)
+            <option value="{{ $station->station_name }}"> {{ $station->station_name }} </option>
+          @endforeach
+        </select></td>
+        <td><select id="item_condition" onchange="onChangeItemCondition(this.value, this)">
+          @foreach ($conditions as $i=>$condition)
+            <option value="{{ $condition }}">{{ $condition }}</option>
+          @endforeach
+        </select></td></tr>`
     );
-    // items.add
+    
+    let currentRow = $("#items").find("tr").last();;
+    let obj; 
+    let itemCode = currentRow.find('td:nth-child(2) input').val();
+    let qtyReceived = currentRow.find('td:nth-child(3) input').val();
+    let consumable = currentRow.find('td:nth-child(4) select').val();
+    let sourceStation = currentRow.find('td:nth-child(5) select').val();
+    let targetStation = currentRow.find('td:nth-child(6) select').val();
+    let itemCondition = currentRow.find('td:nth-child(7) select').val();
+    obj = {
+            'item_code':itemCode, 
+            'qty_received': qtyReceived, 
+            'consumable': consumable, 
+            'source_station': sourceStation, 
+            'target_station': targetStation, 
+            'item_condition': itemCondition
+          }
+    currentRow.find('td:nth-child(2) input').attr('id', JSON.stringify(obj));
+    // items.push(obj);
     $("#emptyMat").hide();
+    console.log(items);
   });
 
+  function showItemCodeNew(matOrderedId, trackingId){
+    $("#items").empty();
+    let itemsTable = $("#items");
+    items = [];
+    $.ajax({
+            type:'GET',
+            url:"/showItemCodeNew/"+matOrderedId+'/'+trackingId,
+            success: function(data) {
+                $('#mat_ordered_id').val(matOrderedId);
+                if(data['transfer_status'] == 'Successfully Transferred'){
+                  $('#confirmStockTransfer').hide();
+                  $('#saveStockTransfer').hide();
+                  $('#saveStockTransferCreate').hide();
+                }else{
+                  $('#saveStockTransfer').show();
+                  $('#confirmStockTransfer').show();
+                  $('#saveStockTransferCreate').hide();
+                }
+                let stations = data['stations'];
+                let conditions = ['New', 'Good', 'Damaged'];
+                let selectedArrayForStations = [];
+                let selectedArrayForConditions = [];
+                console.log(stations);
+    
+                JSON.parse(data['item_code']).forEach((item,index) => {
+                  console.log('items');
+                  console.log(item);
+                  let valuesForStations = [];
+                  let valuesForConditions = [];
+                  stations.forEach(station=>{
+                    if(item.target_station == station.station_name){
+                      valuesForStations.push('selected');
+                    }else{
+                      valuesForStations.push('');
+                    }
+                  });
+                  conditions.forEach(condition=>{
+                    if(item.item_condition == condition){
+                      valuesForConditions.push('selected');
+                    }else{
+                      valuesForConditions.push('');
+                    }
+                  });
+                  selectedArrayForStations.push(valuesForStations);
+                  selectedArrayForConditions.push(valuesForConditions);
+                });
+                
+                console.log('stations');
+                console.log(selectedArrayForStations);
+
+                JSON.parse(data['item_code']).forEach((item,index) => {
+
+                  itemsTable.append(
+                    `<tr><td>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input">
+                          </div>
+                      </td>
+                      <td>` +item.item_code +`</td>
+                    <td>` +item.qty_received +`</td>
+                    <td>`+item.consumable+`</td>
+                    <td>`+item.source_station+`</td>
+                    <td><label for="target_station"></label>
+                      <select id="target_station" onchange="onChangeTargetStation(this.value, this)">
+                        @foreach ($stations as $i=>$station)
+                          <option value="{{ $station->station_name }}" `+selectedArrayForStations[index][`{{$i}}`]+`> {{ $station->station_name }} </option>
+                        @endforeach
+                      </select></td>
+                    <td><label for="item_condition"></label>
+                      <select id="item_condition" onchange="onChangeItemCondition(this.value, this)">
+                        @foreach ($conditions as $i=>$condition)
+                          <option value="{{ $condition }}" `+selectedArrayForConditions[index][`{{$i}}`]+`>{{ $condition }}</option>
+                        @endforeach
+                      </select></td></tr>`
+                  );
+                  let obj = { 'item_code': item.item_code, 
+                              'qty_received': item.qty_received, 
+                              'source_station': item.source_station, 
+                              'target_station': item.target_station,
+                              'consumable' : item.consumable,
+                              'item_condition' : item.item_condition,
+                              'transfer_status' : item.transfer_status,
+                            }
+                  items.push(obj);
+                  sameSourceTargetStation();
+                });
+                console.log('item_code');
+                console.log(items);
+            },
+            error: function(data) {
+                console.log("error");
+                console.log(data);
+            }
+        });
+        $("#emptyMat").hide();
+  }
 
   function showItemsNew(matOrderedId){
     $("#items").empty();
@@ -378,20 +657,11 @@
             type:'GET',
             url:"/showItemsNew/"+matOrderedId,
             success: function(data) {
+                $('#mat_ordered_id').val(matOrderedId);
                 console.log(data['mat_ordered']);
-                let items_list_received = JSON.parse(data['mat_ordered'].items_list_received);
-                items_list_received.forEach((item) => {
-                  let obj = { 'item_code': item.item_code, 
-                              'qty_received': item.qty_received, 
-                              'source_station': 'ex', 
-                              'target_station': data['station_name'],
-                              'consumable' : 'true',
-                              'item_condition' : 'good',
-                              'transfer_status' : 'pending',
-                            }
-                  items.push(obj);
-                });
-                JSON.parse(data['mat_ordered'].items_list_received).forEach((item) => {
+
+               
+                JSON.parse(data['mat_ordered'].items_list_received).forEach((item,index) => {
                   itemsTable.append(
                     `<tr><td>
                           <div class="form-check">
@@ -400,11 +670,31 @@
                       </td>
                       <td>` +item.item_code +`</td>
                     <td>` +item.qty_received +`</td>
-                    <td>Consumable</td>
-                    <td>Source_Station</td>
+                    <td>`+(data['consumable_data'][index] == 1 ? 'Yes' : 'No' )+`</td>
                     <td>`+data['station_name']+`</td>
-                    <td>Item_Condition</td></tr>`
+                    <td><label for="target_station"></label>
+                      <select id="target_station" onchange="onChangeTargetStation(this.value, this)">
+                        @foreach ($stations as $station)
+                          <option value="{{ $station->station_name }}">{{ $station->station_name }}</option>
+                        @endforeach
+                      </select></td>
+                    <td><label for="item_condition"></label>
+                      <select id="item_condition" onchange="onChangeItemCondition(this.value, this)">
+                        <option value="new">New</option>
+                        <option value="good">Good</option>
+                        <option value="damaged">Damaged</option>
+                      </select></td></tr>`
                   );
+                  let obj = { 'item_code': item.item_code, 
+                              'qty_received': item.qty_received, 
+                              'source_station': data['station_name'], 
+                              'target_station': $('#target_station').val(),
+                              'consumable' : (data['consumable_data'][index] == 1 ? 'Yes' : 'No' ),
+                              'item_condition' : 'New',
+                              'transfer_status' : 'pending',
+                            }
+                  items.push(obj);
+                  sameSourceTargetStation();
                 });
             },
             error: function(data) {
@@ -430,8 +720,8 @@
         success: function (response) {
             let table = $("#matOrder_itemList tbody");
             $("#matOrder_itemList tbody tr").remove();
-            let items = JSON.parse(response);
-            items.forEach((item)=>{
+            let itemsR = JSON.parse(response);
+            itemsR.forEach((item)=>{
                   table.append(
                     `
                     <tr>
@@ -445,6 +735,37 @@
     });
 
   }
+
+  function viewStockTransferItems(id) {
+        alert('tite');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content'),
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: `/view-st-items/${id}`,
+            data: id,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                let table = $("#stockTransfer_itemList tbody");
+                $("#stockTransfer_itemList tbody tr").remove();
+                let itemsR = JSON.parse(response);
+                itemsR.forEach((item)=>{
+                      table.append(
+                        `
+                        <tr>
+                            <td>${item.item_code}</td>
+                            <td>${item.qty_received}</td>
+                        </tr>
+                        `
+                    );
+                })
+            }
+        });
+      }
 
   $('#deleteSel').on('click', function(e) {
         let tableControl= document.getElementById('items');

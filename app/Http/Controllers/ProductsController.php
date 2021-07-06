@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WorkOrder;
 use App\Models\ItemGroup;
 use App\Models\ManufacturingMaterials;
 use App\Models\UnitOfMeasurement;
@@ -13,6 +14,7 @@ use App\Models\MaterialCategory;
 use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 use DB;
+use \stdClass;
 use PhpOption\None;
 use Exception;
 use Throwable;

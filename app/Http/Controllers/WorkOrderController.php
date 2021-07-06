@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Exception;
+use \stdClass;
 
 class WorkOrderController extends Controller
 {
@@ -29,6 +30,7 @@ class WorkOrderController extends Controller
         $items_qty = array();
         for ($p = 0; $p < count($sales_ids); $p++) {
             $work_order = WorkOrder::where('sales_id', $sales_ids[$p])->first();
+            $work_order_count = WorkOrder::where('sales_id', $sales_ids[$p])->count();
             // $work_order_no = $work_order->work_order_no;
             // $material_request = MaterialRequest::where('work_order_no', $work_order_no)->first();
             // if($material_request){
@@ -36,19 +38,24 @@ class WorkOrderController extends Controller
             //     $planned_end = $material_request->required_date->toDateString();
             //     array_push($planned_dates, [$planned_start, $planned_end]);
             // }
-            if($work_order->mat_ordered_id){
-                $mat_ordered_id = $work_order->mat_ordered_id;
-                $material_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
-                $items_list_received = $material_ordered->items_list();
-                if($items_list_received){
-                    foreach($items_list_received as $item){
-                        array_push($items_qty, $item['qty_received']);
-                    }   
-                }else{
-                    $items_qty = [];
+            for($i = 0; $i < $work_order_count; $i++){
+                $items_qty = [];
+                if($work_order->mat_ordered_id){
+                    $mat_ordered_id = $work_order->mat_ordered_id;
+                    $material_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
+                    $items_list_received = $material_ordered->items_list();
+                    if($items_list_received){
+                        foreach($items_list_received as $item){
+                            $obj = new stdClass(); 
+                            $obj->item_code = $item['item_code'];
+                            $obj->qty_received = $item['qty_received'];
+                            array_push($items_qty, $obj);
+                        }   
+                    }else{
+                        $items_qty = [];
+                    }
+                    array_push($quantity, $items_qty);
                 }
-                array_push($quantity, $items_qty);
-
             }
             $ordered_product = ordered_products::where('sales_id', $sales_ids[$p])->get();
             $status = $work_order->work_order_status;

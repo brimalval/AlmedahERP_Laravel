@@ -83,16 +83,11 @@
                     </td>
                     <td class="text-black-50">{{ $work_order->work_order_no }}</td>
                     
-                    <td><a href="#" onclick='workOrderInfo({{ $work_order }}, `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id }}`, `{{ $items[$index] }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
-                    <td class="text-black-50">{{ $items[$index] }}</td>
+                    <td><a href="#" onclick='loadWorkOrderInfo({{ $work_order }}, `{{ $work_order->transferred_qty }}`,  `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id ?? null }}`, `{{ $items[$index] ?? null }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
+                    <td class="text-black-50">{{ $items[$index] ?? null }}</td>
                     <td>{{ $work_order->work_order_status }}</td>
-                    {{-- @else
-                        <td> {{ $components[$index] }} </a></td>
-                        <td>{{ $work_order->work_order_status }}</td>
-                        <td class="text-black-50"> </td>
-                    @endif --}}
-                    <td><!--<input type="checkbox">-->{{ $work_order->sales_id }}</td>
-                    <td><small><!--<input type="checkbox">-->{{ Carbon\Carbon::parse($work_order->created_at)->diffForHumans(null, false, true) }}</small></td>
+                    <td>{{ $work_order->sales_id ?? null }}</td>
+                    <td><small>{{ Carbon\Carbon::parse($work_order->created_at)->diffForHumans(null, false, true) }}</small></td>
                 </tr>
             @endforeach
             </tbody>
@@ -110,10 +105,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function workOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity){
-        loadWorkOrderInfo(workOrderDetails, itemName, salesOrderId, productCode, quantity);
-    }
-
-</script>

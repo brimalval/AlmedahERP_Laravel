@@ -737,7 +737,6 @@
         var materialsInComponents;
         var mat_insufficient = false;
     });
-
     $("#gotoworkorder").click(function(){
         console.log("Clicked");
         $("#hiddenworkorder").click();
@@ -804,7 +803,6 @@
             error: function(data) {
                 console.log("error");
                 console.log(data);
-
                 $('#view_notif').text('');
                 $('#view_notif').html(
                     '<li>' + data.responseJSON["message"] + '</li>'
@@ -824,6 +822,8 @@
         console.log(currentCart);
         formData.append("cart", currentCart);
         formData.append("component", JSON.stringify(componentsOnly));
+        formData.append("componentMaterials", JSON.stringify(componentMaterials));
+        formData.append("productMaterials", JSON.stringify(productMaterials));
         $.ajax({
             type: 'POST',
             url: "/createsalesorder",
@@ -890,7 +890,6 @@
             error: function(data) {
                 console.log("error");
                 console.log(data);
-
                 $('#notif').text('');
                 $('#notif').html(
                     '<li>' + data.responseJSON["message"] + '</li>'
@@ -932,7 +931,6 @@
                    ]).draw(false);
                 });
                 formReset();
-
             }
         });
     }
@@ -951,7 +949,6 @@
         $('#notif').text('');
         $('#view_notif').text('');
     }
-
     function loadProducts(){
         $.ajax({
             type: "GET",
@@ -968,7 +965,6 @@
                     );
                 })
                 
-
             },
             error: function (response, error) {
                 // alert("Request: " + JSON.stringify(request));

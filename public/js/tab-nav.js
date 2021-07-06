@@ -162,16 +162,30 @@ function loadWorkOrder() {
     });
 }
 
+// transferred qty array and materials ordered array
+function getQtyFromMatOrdered(tqCode, moArray) {
+    if (moArray) {
+        let objFound = moArray.find((moObj) => moObj.item_code == tqCode);
+        if (objFound) return parseInt(objFound.qty_received);
+        else return 0;
+    }
+    return 0;
+}
+
 function loadWorkOrderInfo(
     workOrderDetails,
+    transferredQty,
     itemName,
-    salesOrderId,
+    salesOrderId = null,
     productCode,
     quantity
 ) {
     // let planned_dates = JSON.parse(dates);
     console.log(workOrderDetails);
     $("#requiredItems").html("");
+    transferred_qty = JSON.parse(transferredQty);
+    console.log("TQ");
+    console.log(transferred_qty[productCode]);
     materials_qty = JSON.parse(quantity);
     console.log("mat_qty");
     console.log(materials_qty);
@@ -222,130 +236,122 @@ function loadWorkOrderInfo(
                     workOrderDetails.planned_end_date
                 );
             }
-            $.ajax({
-                url:
-                    "/getRawMaterialsWork/" +
-                    itemName +
-                    "/" +
-                    salesOrderId +
-                    "/" +
-                    productCode,
-                type: "GET",
-                success: function (datas) {
-                    $("#quantityPurchased").attr(
-                        "value",
-                        datas["quantity_purchased"]
-                    );
-                    console.log("below are the datas");
-                    console.log(datas);
-                    for (let [index, rawMat] of JSON.parse(
-                        datas["item_code"]
-                    ).entries()) {
-                        let sequence = index + 1;
-                        let transferred_qty = undefined;
-                        let qty_from_stock;
-                        let required_qty =
-                            parseInt(datas["component_qty"]) *
-                            datas["quantity_purchased"] *
-                            parseInt(rawMat["item_qty"]);
-                        if (materials_qty) {
-                            transferred_qty = materials_qty[index];
-                        } else {
-                            qty_from_stock = datas["rm_quantity"][index];
-                        }
-                        if (
-                            transferred_qty === undefined &&
-                            qty_from_stock === null &&
-                            workOrderDetails.product_code !== null
-                        ) {
-                            transferred_qty = "n/a";
-                            materials_complete.push(true);
-                        } else if (
-                            transferred_qty === undefined &&
-                            qty_from_stock >= required_qty
-                        ) {
-                            materials_complete.push(true);
-                        } else if (
-                            transferred_qty === undefined &&
-                            qty_from_stock < required_qty
-                        ) {
-                            materials_complete.push(false);
-                        } else if (transferred_qty >= required_qty) {
-                            materials_complete.push(true);
-                        } else if (transferred_qty < required_qty) {
-                            qty_from_stock = datas["rm_quantity"][index];
-                            if (qty_from_stock >= required_qty) {
-                                materials_complete.push(true);
-                            } else {
-                                materials_complete.push(false);
-                            }
-                        }
-                        $("#requiredItems").append(
-                            `
-                        <tr>
-                          <td>
-                            <div class="row m-1">
-                              <div class="d-flex justify-content-start">
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input">
-                                </div>
-                                <label for="" class="ml-5">` +
-                                sequence +
-                                `</label>
-                              </div>
-                            </div>
-                          </td>
-                          <td>` +
-                                rawMat["item_code"] +
-                                `</td>
-                          <td>Test` +
-                                index +
-                                `</td>
-                          <td>` +
-                                required_qty +
-                                `</td>
-                          <td>` +
-                                (qty_from_stock ?? transferred_qty) +
-                                `</td>
-                          <td style="padding: 1%;" class="h-100">
-                            <div class="input-group mb-3">
-                              <select class="custom-select border-0" id="inputGroupSelect02">
-                                <option selected> </option>
-                                <option value="1"> </option>
-                                <option value="2"> </option>
-                                <option value="3"> </option>
-                              </select>
-                            </div>
-                          </td>
-                       </tr>`
-                        );
-                    }
-                    console.log("mat_complete" + materials_complete);
-                    if (materials_complete.includes(false)) {
-                        $("#startWorkOrder").prop("disabled", true);
-                    } else if (
-                        workOrderDetails.work_order_status == "Pending"
-                    ) {
-                        $.ajax({
-                            url:
-                                "/updateStatus/" +
-                                workOrderDetails.work_order_no,
-                            type: "get",
-                            success: function (data) {
-                                console.log(data);
-                                $("#startWorkOrder").prop("disabled", false);
-                                $("#componentStatus").text(
-                                    data.work_order_status
-                                );
-                            },
-                            error: function (request, error) {},
-                        });
-                    }
-                },
-                error: function (request, error) {
-                    alert("Request: " + JSON.stringify(request));
-                },
-            });
+            // $.ajax({
+            //     url:
+            //         "/getRawMaterialsWork/" +
+            //         itemName +
+            //         "/" +
+            //         salesOrderId +
+            //         "/" +
+            //         productCode,
+            //     type: "GET",
+            //     success: function (datas) {
+            //         $("#quantityPurchased").attr(
+            //             "value",
+            //             datas["quantity_purchased"]
+            //         );
+            //         console.log("below are the datas");
+            //         console.log(datas);
+            //         for (let [index, rawMat] of JSON.parse(
+            //             datas["item_code"]
+            //         ).entries()) {
+            //             let sequence = index + 1;
+            //             let required_qty =
+            //                 parseInt(datas["component_qty"]) *
+            //                 datas["quantity_purchased"] *
+            //                 parseInt(rawMat["item_qty"]);
+            //             let tq;
+
+            //             if (transferred_qty[productCode].length > index) {
+            //                 tq =
+            //                     transferred_qty[productCode][index]
+            //                         .quantity_avail +
+            //                     getQtyFromMatOrdered(
+            //                         transferred_qty[productCode][index]
+            //                             .item_code,
+            //                         materials_qty
+            //                     );
+
+            //                 if (
+            //                     transferred_qty[productCode][index]
+            //                         .quantity_avail >= required_qty
+            //                 ) {
+            //                     materials_complete.push(true);
+            //                 } else if (
+            //                     transferred_qty[productCode][index]
+            //                         .quantity_avail < required_qty
+            //                 ) {
+            //                     materials_complete.push(false);
+            //                 }
+            //             } else {
+            //                 tq = "n/a";
+            //             }
+            //             $("#requiredItems").append(
+            //                 `
+            //             <tr>
+            //               <td>
+            //                 <div class="row m-1">
+            //                   <div class="d-flex justify-content-start">
+            //                     <div class="form-check">
+            //                       <input type="checkbox" class="form-check-input">
+            //                     </div>
+            //                     <label for="" class="ml-5">` +
+            //                     sequence +
+            //                     `</label>
+            //                   </div>
+            //                 </div>
+            //               </td>
+            //               <td>` +
+            //                     rawMat["item_code"] +
+            //                     `</td>
+            //               <td>Test` +
+            //                     index +
+            //                     `</td>
+            //               <td>` +
+            //                     required_qty +
+            //                     `</td>
+            //               <td>` +
+            //                     tq +
+            //                     `</td>
+            //               <td style="padding: 1%;" class="h-100">
+            //                 <div class="input-group mb-3">
+            //                   <select class="custom-select border-0" id="inputGroupSelect02">
+            //                     <option selected> </option>
+            //                     <option value="1"> </option>
+            //                     <option value="2"> </option>
+            //                     <option value="3"> </option>
+            //                   </select>
+            //                 </div>
+            //               </td>
+            //            </tr>`
+            //             );
+            //         }
+            //         console.log("mat_complete" + materials_complete);
+            //         if (materials_complete.includes(false)) {
+            //             $("#startWorkOrder").prop("disabled", true);
+            //         } else if (
+            //             workOrderDetails.work_order_status == "Pending"
+            //         ) {
+            //             $.ajax({
+            //                 url:
+            //                     "/updateStatus/" +
+            //                     workOrderDetails.work_order_no,
+            //                 type: "get",
+            //                 success: function (data) {
+            //                     console.log(data);
+            //                     $("#startWorkOrder").prop("disabled", false);
+            //                     $("#componentStatus").text(
+            //                         data.work_order_status
+            //                     );
+            //                 },
+            //                 error: function (request, error) {},
+            //             });
+            //         }
+            //     },
+            //     error: function (request, error) {
+            //         alert("Request: " + JSON.stringify(request));
+            //     },
+            // });
             console.log(materials_complete);
         });
     });
@@ -575,11 +581,50 @@ function loadStockEntry() {
     });
 }
 
+function loadNewStockMoves(transferId = null) {
+    if (transferId == null) {
+        $("#contentStockMoves").load("/newstockmoves", function () {
+            $("#saveStockTransferCreate").show();
+            // $("#saveStockTransfer").show();
+            // $("#confirmStockTransfer").show();
+        });
+    } else {
+        $.ajax({
+            type: "GET",
+            url: `/getStockTransfer/${transferId}`,
+            data: transferId,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#contentStockMoves").load("/newstockmoves", function () {
+                    console.log(data);
+                    $("#tracking_id").attr("disabled", true);
+                    $("#tracking_id").val(data["stock_transfer"].tracking_id);
+                    $("#move_date").val(data["stock_transfer"].move_date);
+                    $("#mat_ordered_id").val(
+                        data["stock_moves"].mat_ordered_id
+                    );
+                    $("#employee_id").val(data["stock_moves"].employee_id);
+                    showItemCodeNew(
+                        data["stock_moves"].mat_ordered_id,
+                        data["stock_transfer"].tracking_id
+                    );
+                });
+            },
+        });
+    }
+}
+
 function loadStockMoves() {
     $(document).ready(function () {
         $("#contentStockMoves").load("/stockmoves");
     });
 }
+
+let items;
+let itemsDel;
+let materialsInComponentsItem = [];
+let rawMaterialsOnlyItem = [];
 
 function loadStockReturn() {
     // $(document).ready(function () {
@@ -595,7 +640,8 @@ function loadStockReturnInfo(
     stockMovesType,
     matOrdered,
     employeeId,
-    moveDate
+    moveDate,
+    status
 ) {
     $("#contentStockMoves").load("/returnitems", function () {
         $("#tracking_id_ret").val(trackingId);
@@ -603,12 +649,103 @@ function loadStockReturnInfo(
         $("#mat_ordered_id_ret").val(matOrdered);
         $("#employee_id_ret").val(employeeId);
         $("#move_date_ret").val(moveDate);
+        if (status == "Successfully Returned") {
+            $("#saveRet").css("display", "none");
+        }
         if (stockMovesType === "Return") {
-            $("#saveCancelButtons").hide().css("visibility", "hidden");
+            // $("#saveCancelButtons").hide().css("visibility", "hidden");
             $("#backButton").css("display", "block");
         }
         showItemsRet(trackingId);
     });
+}
+
+function onChangeItemTransQty(itemTransQty, el) {
+    let currentRow = $(el).closest("tr");
+    let itemCodeFound = currentRow.find("td:nth-child(2)").html();
+    // console.log("before pass_val");
+    // console.log(itemsTransPassValue);
+    // console.log("before real_val");
+    // console.log(itemsTrans);
+    passValueArray.forEach((itemPV) => {
+        if (itemCodeFound === itemPV.item_code) {
+            itemPV.qty_received = itemTransQty;
+        }
+    });
+
+    console.log("pass_val");
+    console.log(passValueArray);
+    console.log("real_val");
+    console.log(itemsTrans);
+}
+
+function viewStockTransferItems(id) {
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr("content"),
+        },
+    });
+    $.ajax({
+        type: "GET",
+        url: `/view-st-items/${id}`,
+        data: id,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            let table = $("#stockTransfer_itemList tbody");
+            $("#stockTransfer_itemList tbody tr").remove();
+            let itemsR = JSON.parse(response);
+            itemsR.forEach((item) => {
+                table.append(
+                    `
+                    <tr>
+                        <td>${item.item_code}</td>
+                        <td>${item.qty_received}</td>
+                    </tr>
+                    `
+                );
+            });
+        },
+    });
+}
+
+function markAsReturn(e) {
+    let currentRow = $(e).closest("tr");
+    let attr = currentRow
+        .find("td:nth-child(1) .form-check .checkbox")
+        .is(":checked");
+    currentRow
+        .find("td:nth-child(9) .btn")
+        .attr("disabled", attr ? false : true);
+}
+
+function writeRemark(el) {
+    $("#remarks").modal("toggle");
+    let currentRow = $(el).closest("tr");
+    let itemCodeFound = currentRow.find("td:nth-child(2)").html();
+    console.log(itemsRet);
+    itemsRet.forEach((itemRet) => {
+        if (itemCodeFound == itemRet.item_code) {
+            console.log(itemRet.remarks);
+            $("#remarkText").val(function (text) {
+                return itemRet.remarks;
+            });
+        }
+    });
+    $("#itemCodeRemark").text(itemCodeFound);
+}
+
+function submitRemark() {
+    $("#remarks").modal("toggle");
+    let text = $("#remarkText").val();
+    let itemCode = $("#itemCodeRemark").text();
+    passValueArray.forEach((passValueObj) => {
+        if (passValueObj.item_code == itemCode) {
+            passValueObj["remarks"] = text;
+        }
+    });
+    console.log("new");
+    console.log(passValueArray);
 }
 
 function showItemsRet(trackingId) {
@@ -616,33 +753,55 @@ function showItemsRet(trackingId) {
     let itemsTransTable = $("#itemsTrans");
     let itemsRetTable = $("#itemsRet");
     itemsTrans = [];
+    passValueArray = [];
     itemsRet = [];
     itemsTransCurrent = [];
     $.ajax({
         type: "GET",
         url: "/showItemsRet/" + trackingId,
         success: function (data) {
+            let qty_checker = [];
+            JSON.parse(data["items_list_received"]).forEach((item) => {
+                qty_checker.push(item.qty_received);
+            });
+            console.log(qty_checker);
             if (data["return_date"]) {
                 $("#return_date_ret").val(data["return_date"]);
             }
             let items_list_received = JSON.parse(data["transfer"]);
-            items_list_received.forEach((item) => {
+            items_list_received.forEach((item, index) => {
                 let obj = {
                     item_code: item.item_code,
                     qty_received: item.qty_received,
-                    source_station: "ex",
+                    qty_checker: qty_checker[index],
+                    source_station: item.source_station,
                     target_station: item.target_station,
-                    consumable: "true",
-                    item_condition: "good",
-                    transfer_status: "pending",
+                    consumable: item.consumable,
+                    item_condition: item.item_condition,
+                    transfer_status: item.transfer_status,
                 };
                 itemsTrans.push(obj);
             });
+            itemsTrans.forEach((item) => {
+                let obj = {
+                    item_code: item.item_code,
+                    qty_received: item.qty_received,
+                    qty_checker: item.qty_received,
+                    source_station: item.source_station,
+                    target_station: item.target_station,
+                    consumable: item.consumable,
+                    item_condition: item.item_condition,
+                    transfer_status: item.transfer_status,
+                };
+                passValueArray.push(obj);
+            });
+            console.log(passValueArray);
+            console.log(itemsTrans);
             JSON.parse(data["transfer"]).forEach((item) => {
                 itemsTransTable.append(
                     `<tr><td>
                           <div class="form-check">
-                              <input type="checkbox" class="form-check-input">
+                              <input type="checkbox" class="checkbox form-check-input" onchange="markAsReturn(this)">
                           </div>
                       </td>
                       <td>` +
@@ -651,12 +810,27 @@ function showItemsRet(trackingId) {
                     <td>` +
                         item.qty_received +
                         `</td>
-                    <td>Consumable</td>
-                    <td>Source_Station</td>
+                    <td><input type="number" onchange="onChangeItemTransQty(this.value, this)" class="form-control w-75" max=` +
+                        item.qty_received +
+                        ` value=` +
+                        item.qty_received +
+                        `></td>
+                    <td>` +
+                        item.consumable +
+                        `</td>
+                    <td>` +
+                        item.source_station +
+                        `</td>
                     <td>` +
                         item.target_station +
                         `</td>
-                    <td>Item_Condition</td></tr>`
+                    <td>` +
+                        item.item_condition +
+                        `</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="writeRemark(this)" disabled>Write</button>
+                    </td></tr>
+                    `
                 );
             });
 
@@ -667,11 +841,12 @@ function showItemsRet(trackingId) {
                     let obj = {
                         item_code: item.item_code,
                         qty_transferred: item.qty_transferred,
-                        source_station: "ex",
+                        source_station: item.source_station,
                         target_station: item.target_station,
-                        consumable: "true",
-                        item_condition: "good",
-                        transfer_status: "pending",
+                        consumable: item.consumable,
+                        item_condition: item.item_condition,
+                        transfer_status: item.transfer_status,
+                        remarks: item.remarks,
                     };
                     itemsRet.push(obj);
                 });
@@ -688,12 +863,18 @@ function showItemsRet(trackingId) {
                         <td>` +
                             item.qty_transferred +
                             `</td>
-                        <td>Consumable</td>
-                        <td>Source_Station</td>
+                        <td>` +
+                            item.consumable +
+                            `</td>
+                        <td>` +
+                            item.source_station +
+                            `</td>
                         <td>` +
                             item.target_station +
                             `</td>
-                        <td>Item_Condition</td></tr>`
+                        <td>` +
+                            item.item_condition +
+                            `</td></tr>`
                     );
                 });
             }
