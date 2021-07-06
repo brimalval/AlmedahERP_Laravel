@@ -1511,7 +1511,7 @@
                 var currProd = "";
                 fd.append('purpose', 'Restock materials');
                 fd.append('mr_status', 'Draft');
-                fd.append('work_order_no', data);
+                fd.append('work_order_no', data['work_order_id']);
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')

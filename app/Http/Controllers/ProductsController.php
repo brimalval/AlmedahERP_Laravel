@@ -499,6 +499,7 @@ class ProductsController extends Controller
         foreach ($product_id as $key) {
             $product = ManufacturingProducts::where('id', $product_id)->first();
             $quantityToReproduce = $product->reorder_qty - $product->stock_unit;
+            
 
             //Work Order for products
             $work_order = new WorkOrder();
@@ -522,19 +523,23 @@ class ProductsController extends Controller
             foreach ($components as $component) {
                 $item_id = $component['component_id'];
                 $item_qty = $component['component_qty'] * $quantityToReproduce;
-                $material = ManufacturingMaterials::where('id', $item_id)->first();
-                if($material->stock_quantity < $item_qty){
-                    array_push($mat_insufficient, [
-                    "item_id" => $item_id,
-                    "item_qty" =>  $item_qty - $material->stock_quantity,
-                    "item_code" => $material->item_code
-                    ]);
-                    $material->stock_quantity = 0;
-                }else{
-                    $material->stock_quantity = $item_qty - $material->stock_quantity;
-                }
-                $material->save();
+                $com = Component::where('id', $component['component_id'])->first();
+                $jcom = json_decode($com->item_code, true);
 
+                foreach ($jcom as $matcom) {
+                    $material = ManufacturingMaterials::where('item_code', $matcom['item_code'])->first();
+                    if($material->stock_quantity < $item_qty * $matcom['item_qty']){
+                        array_push($mat_insufficient, [
+                        "item_id" => $item_id,
+                        "item_qty" =>  ($item_qty * $matcom['item_qty']) - $material->stock_quantity,
+                        "item_code" => $material->item_code
+                        ]);
+                        $material->stock_quantity = 0;
+                    }else{
+                        $material->stock_quantity =  $material->stock_quantity - ($item_qty * $matcom['item_qty']);
+                    }
+                    $material->save();
+                }
                 //Work Order for component
                 $mainComponent = Component::where('id', "=", $item_id)->first();
                 $work_order = new WorkOrder();
@@ -569,7 +574,7 @@ class ProductsController extends Controller
                 }
                 $mat->save();
             }
-
+            
             $mat_insufficient = self::squash($mat_insufficient);
 
             //Decided to ajax call mat request
@@ -580,7 +585,8 @@ class ProductsController extends Controller
         return response()->json([
             'status' => 'success',
             'productId' => $product_id,
-            'mat_insufficient' => $mat_insufficient
+            'mat_insufficient' => $mat_insufficient,
+            'work_order_id' => $work_order->id
         ]);
     }
 
