@@ -521,6 +521,7 @@ class ProductsController extends Controller
             }else{
                 $passvalue = $material->rm_quantity;
             }
+            $obj->required_qty = $raw_mat['material_qty']*$quantity_to_reproduce;
             $obj->transferred_qty = $passvalue;
             $obj->status = 'pending';
             array_push($productMaterialsArray, $obj);
@@ -560,6 +561,7 @@ class ProductsController extends Controller
                 }else{
                     $passvalue = $material->rm_quantity;
                 }
+                $obj->required_qty = $raw_mat['material_qty']*$quantity_to_reproduce;
                 $obj->transferred_qty = $passvalue;
                 $obj->status = 'pending';
                 array_push($preComponentMaterialsArray, $obj);

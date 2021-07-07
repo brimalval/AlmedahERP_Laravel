@@ -1,4 +1,4 @@
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+var CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
 /**
  * $.ajaxSetup({
         headers: {
@@ -8,9 +8,9 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
  */
 
 $(document).ready(function () {
-    $('#table_operations').DataTable();
-    $('#table_materials').DataTable();
-    $('#table_costing').DataTable();
+    $("#table_operations").DataTable();
+    $("#table_materials").DataTable();
+    $("#table_costing").DataTable();
 
     amountChanger();
 });
@@ -18,22 +18,22 @@ $(document).ready(function () {
 function amountChanger() {
     $("input[name='Rate']").each(function () {
         $(this).change(function () {
-            let master = $(this).parent('td').parent();
-            let qty = parseInt(master.find('#Quantity').val());
+            let master = $(this).parent("td").parent();
+            let qty = parseInt(master.find("#Quantity").val());
             let newAmount = parseFloat($(this).val()) * qty;
-            master.find('#Amount').val(newAmount);
-        })
+            master.find("#Amount").val(newAmount);
+        });
     });
 }
 
 $("#routingSelect").change(function () {
-    if ($(this).val() === 'newRouting') {
+    if ($(this).val() === "newRouting") {
         showRoutingsForm();
         $(this).val(0);
     } else {
         var routing_code = $(this).val();
         $("#bom-operations tbody tr").remove();
-        var table = $('#bom-operations tbody');
+        var table = $("#bom-operations tbody");
         $.ajax({
             type: "GET",
             url: `/get-routing-ops/${routing_code}`,
@@ -74,7 +74,7 @@ $("#routingSelect").change(function () {
                     );
                 }
                 computeCosts();
-            }
+            },
         });
     }
 });
@@ -102,7 +102,7 @@ function computeCosts() {
 
 /**Experimental function from back-end*/
 function showRoutingsForm() {
-    let menu = 'NewRouting';
+    let menu = "NewRouting";
     if (!$(`#tab${menu}`).length) {
         $("#tabs").append(
             `<li class="nav-item menu-item">
@@ -127,9 +127,7 @@ function showRoutingsForm() {
             "/" + $link.toLowerCase(),
             function (responseTxt, statusTxt, xhr) {
                 if (statusTxt == "error") {
-                    console.log(
-                        "Error: " + xhr.status + ": " + xhr.statusText
-                    );
+                    console.log("Error: " + xhr.status + ": " + xhr.statusText);
                     console.log($parent);
                     $(`#content${menu}`).load(
                         "/" + $link.toLowerCase(),
@@ -137,9 +135,9 @@ function showRoutingsForm() {
                             if (statusTxt == "error")
                                 alert(
                                     "Error: " +
-                                    xhr.status +
-                                    ": " +
-                                    xhr.statusText
+                                        xhr.status +
+                                        ": " +
+                                        xhr.statusText
                                 );
                         }
                     );
@@ -152,14 +150,13 @@ function showRoutingsForm() {
 }
 
 $("#is_component").change(function () {
-    if ($(this).prop('checked') == true) {
-        $("#component-select").prop('hidden', false);
-        $("#product-select").prop('hidden', true);
+    if ($(this).prop("checked") == true) {
+        $("#component-select").prop("hidden", false);
+        $("#product-select").prop("hidden", true);
         $("#manprod").val(0);
-
     } else {
-        $("#component-select").prop('hidden', true);
-        $("#product-select").prop('hidden', false);
+        $("#component-select").prop("hidden", true);
+        $("#product-select").prop("hidden", false);
         $("#components").val(0);
     }
     $("#item_content").css("display", "none");
@@ -173,10 +170,10 @@ $("#manprod, #components").change(function () {
         $("#item_content").css("display", "none");
         $(`#Item_name`).val(null);
         $(`#Item_UOM`).val(null);
-    }
-    else {
+    } else {
         $("#item_content").css("display", "block");
-        if ($(this).attr("id") === 'components') $("#selected-uom").css('display', 'none');
+        if ($(this).attr("id") === "components")
+            $("#selected-uom").css("display", "none");
     }
 });
 
@@ -195,8 +192,11 @@ $("#components").change(function () {
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
             for (let i = 0; i < materials.length; i++) {
-                let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
-                let is_readonly = (materials[i].product_rates.rate == 1) ? '' : 'readonly';
+                let subtotal =
+                    parseFloat(materials[i].product_rates.rate) *
+                    parseFloat(materials[i].qty);
+                let is_readonly =
+                    materials[i].product_rates.rate == 1 ? "" : "readonly";
                 table.append(
                     `
                     <tr id="bomMaterial-${i}">
@@ -205,15 +205,25 @@ $("#components").change(function () {
                                 <input type="checkbox" class="form-check-input">
                             </div>
                         </td>
-                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i + 1}" readonly
+                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${
+                            i + 1
+                        }" readonly
                                 name="No" id="No" class="form-control"></td>
-                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${materials[i].product_rates.item.item_code}" readonly
+                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${
+                            materials[i].product_rates.item.item_code
+                        }" readonly
                                 name="ItemCode" id="ItemCode" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].qty}" readonly name="Quantity"
+                        <td class="mr-unit-input"><input type="text" value="${
+                            materials[i].qty
+                        }" readonly name="Quantity"
                                 id="Quantity" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.uom.item_uom}" readonly name="UOM" id="UOM"
+                        <td class="mr-unit-input"><input type="text" value="${
+                            materials[i].product_rates.uom.item_uom
+                        }" readonly name="UOM" id="UOM"
                                 class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" ${is_readonly} name="Rate" id="Rate"
+                        <td class="mr-unit-input"><input type="text" value="${
+                            materials[i].product_rates.rate
+                        }" ${is_readonly} name="Rate" id="Rate"
                                 class="form-control"></td>
                         <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"
                                 class="form-control"></td>
@@ -228,14 +238,15 @@ $("#components").change(function () {
                         </td>
                     </tr>
                     `
-                )
+                );
             }
             computeCosts();
             amountChanger();
-        }, error: function (response) {
+        },
+        error: function (response) {
             console.log(response);
-        }
-    })
+        },
+    });
 });
 
 $(`#manprod`).change(function () {
@@ -247,6 +258,7 @@ $(`#manprod`).change(function () {
         url: `/get-product/${prod_code}`,
         data: prod_code,
         success: function (response) {
+            console.log(response);
             let product = response.product;
             $(`#Item_name`).val(product.product_name);
             $(`#Item_UOM`).val(product.unit);
@@ -254,8 +266,11 @@ $(`#manprod`).change(function () {
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
             for (let i = 0; i < materials.length; i++) {
-                let subtotal = parseFloat(materials[i].product_rates.rate) * parseFloat(materials[i].qty);
-                let is_readonly = (materials[i].product_rates.rate == 1) ? '' : 'readonly';
+                let subtotal =
+                    parseFloat(materials[i].product_rates.rate) *
+                    parseFloat(materials[i].qty);
+                let is_readonly =
+                    materials[i].product_rates.rate == 1 ? "" : "readonly";
                 table.append(
                     `
                     <tr id="bomMaterial-${i}">
@@ -264,15 +279,25 @@ $(`#manprod`).change(function () {
                                 <input type="checkbox" class="form-check-input">
                             </div>
                         </td>
-                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${i + 1}" readonly
+                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${
+                            i + 1
+                        }" readonly
                                 name="No" id="No" class="form-control"></td>
-                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${materials[i].product_rates.item.item_code}" readonly
+                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${
+                            materials[i].product_rates.item.item_code
+                        }" readonly
                                 name="ItemCode" id="ItemCode" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].qty}" readonly name="Quantity"
+                        <td class="mr-unit-input"><input type="text" value="${
+                            materials[i].qty
+                        }" readonly name="Quantity"
                                 id="Quantity" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.uom.item_uom}" readonly name="UOM" id="UOM"
+                        <td class="mr-unit-input"><input type="text" value="${
+                            materials[i].product_rates.uom.item_uom
+                        }" readonly name="UOM" id="UOM"
                                 class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${materials[i].product_rates.rate}" ${is_readonly} name="Rate" id="Rate"
+                        <td class="mr-unit-input"><input type="text" value="${
+                            materials[i].product_rates.rate
+                        }" ${is_readonly} name="Rate" id="Rate"
                                 class="form-control"></td>
                         <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"
                                 class="form-control"></td>
@@ -287,23 +312,24 @@ $(`#manprod`).change(function () {
                         </td>
                     </tr>
                     `
-                )
+                );
             }
             computeCosts();
             amountChanger();
-        }, error: function (response) {
+        },
+        error: function (response) {
             console.log(response);
-        }
+        },
     });
 });
 
 function addRowoperations() {
-    if ($('#no-data')[0]) {
-        deleteItemRow($('#no-data').parents('tr'));
+    if ($("#no-data")[0]) {
+        deleteItemRow($("#no-data").parents("tr"));
     }
-    let lastRow = $('#operations-input-rows tr:last');
-    let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
-    $('#operations-input-rows').append(
+    let lastRow = $("#operations-input-rows tr:last");
+    let nextID = lastRow.length != 0 ? lastRow.data("id") + 1 : 0;
+    $("#operations-input-rows").append(
         `<tr data-id="${nextID}">
         <td class="text-center">
 
@@ -325,20 +351,30 @@ function addRowoperations() {
                 <i class="fa fa-trash" aria-hidden="true"></i>
             </a>
         </td>
-    </tr>`);
-    $('#selects select[data-id="item_code"]').clone().appendTo(`#items-tbl tr:last .mr-code-input`).selectpicker();
-    $('#selects select[data-id="station_id"]').clone().appendTo(`#items-tbl tr:last .mr-target-input`).selectpicker();
-    $('#selects select[data-id="uom_id"]').clone().appendTo(`#items-tbl tr:last .mr-unit-input`).selectpicker();
+    </tr>`
+    );
+    $('#selects select[data-id="item_code"]')
+        .clone()
+        .appendTo(`#items-tbl tr:last .mr-code-input`)
+        .selectpicker();
+    $('#selects select[data-id="station_id"]')
+        .clone()
+        .appendTo(`#items-tbl tr:last .mr-target-input`)
+        .selectpicker();
+    $('#selects select[data-id="uom_id"]')
+        .clone()
+        .appendTo(`#items-tbl tr:last .mr-unit-input`)
+        .selectpicker();
     $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
 
 function addRowmaterials() {
-    if ($('#no-data')[0]) {
-        deleteItemRow($('#no-data').parents('tr'));
+    if ($("#no-data")[0]) {
+        deleteItemRow($("#no-data").parents("tr"));
     }
-    let lastRow = $('#materials-input-rows tr:last');
-    let nextID = (lastRow.length != 0) ? lastRow.data('id') + 1 : 0;
-    $('#materials-input-rows').append(
+    let lastRow = $("#materials-input-rows tr:last");
+    let nextID = lastRow.length != 0 ? lastRow.data("id") + 1 : 0;
+    $("#materials-input-rows").append(
         `                <tr data-id="${nextID}">
     <td class="text-center">
 
@@ -360,10 +396,20 @@ function addRowmaterials() {
             <i class="fa fa-trash" aria-hidden="true"></i>
         </a>
     </td>
-</tr>`);
-    $('#selects select[data-id="item_code"]').clone().appendTo(`#items-tbl tr:last .mr-code-input`).selectpicker();
-    $('#selects select[data-id="station_id"]').clone().appendTo(`#items-tbl tr:last .mr-target-input`).selectpicker();
-    $('#selects select[data-id="uom_id"]').clone().appendTo(`#items-tbl tr:last .mr-unit-input`).selectpicker();
+</tr>`
+    );
+    $('#selects select[data-id="item_code"]')
+        .clone()
+        .appendTo(`#items-tbl tr:last .mr-code-input`)
+        .selectpicker();
+    $('#selects select[data-id="station_id"]')
+        .clone()
+        .appendTo(`#items-tbl tr:last .mr-target-input`)
+        .selectpicker();
+    $('#selects select[data-id="uom_id"]')
+        .clone()
+        .appendTo(`#items-tbl tr:last .mr-unit-input`)
+        .selectpicker();
     $('#items-tbl tr:last select[name="procurement_method[]"]').selectpicker();
 }
 
@@ -374,62 +420,65 @@ $("#saveBom").click(function () {
 $("#saveBomForm").submit(function () {
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': CSRF_TOKEN,
-        }
+            "X-CSRF-TOKEN": CSRF_TOKEN,
+        },
     });
 
     if ($("#manprod").val() == 0 && $("#components").val() == 0) {
-        alert('No product/component to make a BOM on.')
+        alert("No product/component to make a BOM on.");
         return false;
     }
     if ($("#routingSelect").val() == 0) {
-        alert('No routing has been provided.')
+        alert("No routing has been provided.");
         return false;
     }
 
     let bomData = new FormData(this);
-    let isActive = $("#Is_active").prop('checked') ? 1 : 0;
-    let isDefault = $("#default").prop('checked') ? 1 : 0;
+    let isActive = $("#Is_active").prop("checked") ? 1 : 0;
+    let isDefault = $("#default").prop("checked") ? 1 : 0;
     let productsAndRates = {};
 
     for (let i = 0; i < $("#bom-materials tbody tr").length; i++) {
         let material = $(`#bomMaterial-${i}`);
         productsAndRates[i] = {
-            'item_code': material.find("#ItemCode").val(),
-            'qty': parseInt(material.find("#Quantity").val()),
-            'rate': parseFloat(material.find("#Rate").val()),
-        }
+            item_code: material.find("#ItemCode").val(),
+            qty: parseInt(material.find("#Quantity").val()),
+            rate: parseFloat(material.find("#Rate").val()),
+        };
     }
 
-    let name = $("#is_component").prop('checked') ? 'component_code' : 'product_code';
-    let value = $("#is_component").prop('checked') ? $("#components").val() : $("#manprod").val();
+    let name = $("#is_component").prop("checked")
+        ? "component_code"
+        : "product_code";
+    let value = $("#is_component").prop("checked")
+        ? $("#components").val()
+        : $("#manprod").val();
 
     bomData.append(name, value);
-    bomData.append('routing_id', $("#routingSelect").val());
-    bomData.append('is_active', isActive);
-    bomData.append('is_default', isDefault);
-    bomData.append('rm_cost', parseFloat($("#totalMatCost").val()));
-    bomData.append('total_cost', parseFloat($("#totalBOMCost").val()));
-    bomData.append('rm_rates', JSON.stringify(productsAndRates));
+    bomData.append("routing_id", $("#routingSelect").val());
+    bomData.append("is_active", isActive);
+    bomData.append("is_default", isDefault);
+    bomData.append("rm_cost", parseFloat($("#totalMatCost").val()));
+    bomData.append("total_cost", parseFloat($("#totalBOMCost").val()));
+    bomData.append("rm_rates", JSON.stringify(productsAndRates));
 
     $.ajax({
         type: "POST",
-        url: $(this).attr('action'),
+        url: $(this).attr("action"),
         data: bomData,
         cache: false,
         processData: false,
         contentType: false,
         success: function (response) {
-            if(response.message) {
+            if (response.message) {
                 console.log(response.message);
                 alert(response.message);
             }
             loadBOMtable();
-        }
+        },
     });
     return false;
 });
-
 
 $("#bomDelete").click(function () {
     $("#deleteBOM").submit();
@@ -438,18 +487,18 @@ $("#bomDelete").click(function () {
 $("#deleteBOM").submit(function () {
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': CSRF_TOKEN,
-        }
+            "X-CSRF-TOKEN": CSRF_TOKEN,
+        },
     });
     $.ajax({
         type: "DELETE",
-        url: $(this).attr('action'),
+        url: $(this).attr("action"),
         cache: false,
         contentType: false,
         processData: false,
         success: function (response) {
             loadBOMtable();
-        }
+        },
     });
     return false;
 });

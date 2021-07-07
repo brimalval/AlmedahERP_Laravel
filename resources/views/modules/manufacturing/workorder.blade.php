@@ -83,8 +83,8 @@
                     </td>
                     <td class="text-black-50">{{ $work_order->work_order_no }}</td>
                     
-                    <td><a href="#" onclick='loadWorkOrderInfo({{ $work_order }}, `{{ $work_order->transferred_qty }}`,  `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id ?? null }}`, `{{ $items[$index] ?? null }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
-                    <td class="text-black-50">{{ $items[$index] ?? null }}</td>
+                    <td><a href="#" onclick='@if($work_order->sales_id) loadWorkOrderInfo({{ $work_order }}, `{{ $work_order->transferred_qty }}`,  `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id ?? null }}`, `{{ $items[$index] ?? null }}`, `{{ json_encode($quantity[$index] ?? null) }}`) @else loadWorkOrderInfoWithoutSales({{ $work_order }}) @endif'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
+                    <td class="text-black-50">{{ $items[$index] }}</td>
                     <td>{{ $work_order->work_order_status }}</td>
                     <td>{{ $work_order->sales_id ?? null }}</td>
                     <td><small>{{ Carbon\Carbon::parse($work_order->created_at)->diffForHumans(null, false, true) }}</small></td>
