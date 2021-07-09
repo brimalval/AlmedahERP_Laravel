@@ -184,7 +184,9 @@ function getQuantityFromMatOrdered(work_order_no) {
     return dataToReturn;
 }
 function loadWorkOrderInfoWithoutSales(workOrderDetails) {
+    let percentage_array = [];
     let materials_complete = [];
+    let item_complete = [];
     let transferred_qty = JSON.parse(workOrderDetails.transferred_qty);
     let productCode = Object.keys(
         JSON.parse(workOrderDetails.transferred_qty)
@@ -222,7 +224,12 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                 "value",
                 Object.keys(JSON.parse(workOrderDetails.transferred_qty))[0]
             );
-
+            $("#quantityPurchased").attr(
+                "value",
+                Object.values(
+                    JSON.parse(workOrderDetails.transferred_qty)
+                )[0][0].quantity_purchased
+            );
             if (workOrderDetails.product_code) {
                 $.ajax({
                     url:
@@ -232,7 +239,6 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                         "Product",
                     type: "get",
                     success: function (data) {
-                        alert(data);
                         $("#bomNumber").val(data);
                     },
                     error: function (request, error) {},
@@ -246,7 +252,6 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                         "Component",
                     type: "get",
                     success: function (data) {
-                        alert(data);
                         $("#bomNumber").val(data);
                     },
                     error: function (request, error) {},
@@ -281,7 +286,6 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                 let sequence = index + 1;
                 let required_qty = el.required_qty;
                 let tq;
-
                 if (transferred_qty[productCode].length > index) {
                     tq =
                         transferred_qty[productCode][index].transferred_qty +
@@ -295,24 +299,29 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                         required_qty
                     ) {
                         materials_complete.push(true);
+                        percentage_array.push(100);
+                        item_complete.push("");
                     } else if (
                         transferred_qty[productCode][index].transferred_qty <
                         required_qty
                     ) {
                         materials_complete.push(false);
+                        percentage_array.push(
+                            required_qty /
+                                transferred_qty[productCode][index]
+                                    .transferred_qty
+                        );
                     }
                 } else {
                     tq = "n/a";
                 }
+
                 $("#requiredItems").append(
                     `
                 <tr>
                   <td>
                     <div class="row m-1">
                       <div class="d-flex justify-content-start">
-                        <div class="form-check">
-                          <input type="checkbox" class="form-check-input">
-                        </div>
                         <label for="" class="ml-5">` +
                         sequence +
                         `</label>
@@ -331,19 +340,18 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                   <td>` +
                         tq +
                         `</td>
-                  <td style="padding: 1%;" class="h-100">
-                    <div class="input-group mb-3">
-                      <select class="custom-select border-0" id="inputGroupSelect02">
-                        <option selected> </option>
-                        <option value="1"> </option>
-                        <option value="2"> </option>
-                        <option value="3"> </option>
-                      </select>
-                    </div>
-                  </td>
+                  
                </tr>`
                 );
             });
+            let percentage = 0;
+            percentage_array.forEach((el) => {
+                percentage += el;
+            });
+            percentage /= 2;
+            $("#progressWorkOrder").css("width", percentage + "%");
+            let item_complete_count = item_complete.length;
+            $("#itemReadyWorkOrder").text(item_complete_count + " Items Ready");
 
             console.log("mat_complete" + materials_complete);
 
@@ -360,8 +368,12 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                         type: "get",
                         success: function (data) {
                             console.log(data);
-                            $("#startWorkOrder").prop("disabled", false);
-                            $("#componentStatus").text(data.work_order_status);
+                            if (data.work_order_status == "Completed") {
+                                $("#startWorkOrder").prop("disabled", false);
+                                $("#componentStatus").text(
+                                    data.work_order_status
+                                );
+                            }
                         },
                         error: function (request, error) {},
                     });
@@ -394,6 +406,8 @@ function loadWorkOrderInfo(
     productCode,
     quantity
 ) {
+    let percentage_array = [];
+    let item_complete = [];
     // let planned_dates = JSON.parse(dates);
     console.log(workOrderDetails);
     $("#requiredItems").html("");
@@ -460,7 +474,6 @@ function loadWorkOrderInfo(
                         "Product",
                     type: "get",
                     success: function (data) {
-                        alert(data);
                         $("#bomNumber").val(data);
                     },
                     error: function (request, error) {},
@@ -474,7 +487,6 @@ function loadWorkOrderInfo(
                         "Component",
                     type: "get",
                     success: function (data) {
-                        alert(data);
                         $("#bomNumber").val(data);
                     },
                     error: function (request, error) {},
@@ -521,24 +533,29 @@ function loadWorkOrderInfo(
                                     .quantity_avail >= required_qty
                             ) {
                                 materials_complete.push(true);
+                                percentage_array.push(100);
+                                item_complete.push("");
                             } else if (
                                 transferred_qty[productCode][index]
                                     .quantity_avail < required_qty
                             ) {
                                 materials_complete.push(false);
+                                percentage_array.push(
+                                    required_qty /
+                                        transferred_qty[productCode][index]
+                                            .quantity_avail
+                                );
                             }
                         } else {
                             tq = "n/a";
                         }
+
                         $("#requiredItems").append(
                             `
                         <tr>
                           <td>
                             <div class="row m-1">
                               <div class="d-flex justify-content-start">
-                                <div class="form-check">
-                                  <input type="checkbox" class="form-check-input">
-                                </div>
                                 <label for="" class="ml-5">` +
                                 sequence +
                                 `</label>
@@ -557,19 +574,20 @@ function loadWorkOrderInfo(
                           <td>` +
                                 tq +
                                 `</td>
-                          <td style="padding: 1%;" class="h-100">
-                            <div class="input-group mb-3">
-                              <select class="custom-select border-0" id="inputGroupSelect02">
-                                <option selected> </option>
-                                <option value="1"> </option>
-                                <option value="2"> </option>
-                                <option value="3"> </option>
-                              </select>
-                            </div>
-                          </td>
                        </tr>`
                         );
                     }
+
+                    let percentage = 0;
+                    percentage_array.forEach((el) => {
+                        percentage += el;
+                    });
+                    percentage /= 2;
+                    $("#progressWorkOrder").css("width", percentage + "%");
+                    let item_complete_count = item_complete.length;
+                    $("#itemReadyWorkOrder").text(
+                        item_complete_count + " Items Produced"
+                    );
                     console.log("mat_complete" + materials_complete);
 
                     if (workOrderDetails.product_code) {

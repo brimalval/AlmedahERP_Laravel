@@ -103,11 +103,11 @@
 		<div id="work-dashboard" class="collapse show">
 			<div class="card-body">
 				<div class="progress">
-					<div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width:1%">
+					<div class="progress-bar" id="progressWorkOrder" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100">
 						<span class="sr-only"></span>
 					</div>
 				</div>
-				<p class="text-muted">0 Items Produced</p>
+				<p class="text-muted" id="itemReadyWorkOrder">0 Items Ready</p>
 				<br>
 				{{-- <div class="group-link">
 					<a class="link" href="#">Pick List<span class="badge text-muted"> </span><span class="badge bg-danger badge-pill text-light"></span><i class="fas fa-plus ml-1 mt-2"> </i></a><br>
@@ -201,29 +201,13 @@
 					<thead class="border-top border-bottom bg-light">
 						<tr class="text-muted">
 							<td>
-								<div class="row m-1">
-									<div class="d-flex justify-content-start">
-										<div class="form-check">
-											<input type="checkbox" class="form-check-input">
-										</div>
-										<label for="" class="ml-5"></label>
-									</div>
-								</div>
+
 							</td>
 							<td>Item Code</td>
 							<td>Source Warehouse</td>
 							<td>Required Qty</td>
 							<td>Transferred Qty</td>
-							<td style="padding: 1%;" class="h-100">
-								<div class="input-group mb-3">
-									<select class="custom-select border-0" id="inputGroupSelect02">
-										<option selected> </option>
-										<option value="1"> </option>
-										<option value="2"> </option>
-										<option value="3"> </option>
-									</select>
-								</div>
-							</td>
+				
 						</tr>
 					</thead>
 					{{-- dynamically changed through JS --}}
