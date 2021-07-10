@@ -31,12 +31,19 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#preDeleteSupp">Delete</button>
+                </li>
+                <li class="nav-item li-bom">
+                    <button class="btn btn-primary" type="button" id="updateSupplierBtn">Save</button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+<div id="s_success_message" class="alert alert-success" style="display: none;">
+</div>
+<div id="s_alert_message" class="alert alert-danger" style="display: none;">
+</div>
 <div class="card">
     <div class="card-body">
         <div class="btn-group">
@@ -90,7 +97,68 @@
         </div>
         <div id="description" class="collapse" aria-labelledby="heading2">
             <div class="card-body">
-                @include('modules.buying.newsupplier.name_and_type')
+                <form action="{{ route('supplier.update', ['supplier' => $supplier->id]) }}" method="POST"
+                    id="updateSupplierForm">
+                    @csrf
+                    @method('PATCH')
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="supplier_name">Company Name</label>
+                            <input type="text" id="supplier_name" name="supplier_name" class="form-control"
+                                value="{{ $supplier['company_name'] }}">
+                            <br>
+                            <label for="supplier_contact">Contact Person</label>
+                            <input type="text" name="supplier_contact" id="supplier_contact" class="form-control"
+                                value="{{ $supplier['contact_name'] }}">
+                            <br>
+                            <label for="supplier_phone">Contact No.</label>
+                            <input min="1" type="number" id="supplier_phone" name="supplier_phone"
+                                value="{{ $supplier['phone_number'] }}" class="form-control" placeholder="+63">
+                        </div>
+                        <div class="col-6">
+                            <label for="supplier_group">Supplier Group</label>
+                            <select name="supplier_group" id="supplier_group" class="form-control">
+                                <option value="{{ $supplier['supplier_group'] }}" selected hidden>
+                                    {{ $supplier['supplier_group'] }}</option>
+                                <option value="Raw Materials">Raw Materials</option>
+                                <option value="Electrical">Electrical</option>
+                                <option value="Hardware">Hardware</option>
+                            </select>
+                            <br>
+                            <label for="supplier_email">E-mail Address</label>
+                            <input type="email" id="supplier_email" name="supplier_email" class="form-control"
+                                value="{{ $supplier['supplier_email'] }}">
+                            <br>
+                            <label for="supplier_address">Physical Address</label>
+                            <input type="text" id="supplier_address" name="supplier_address" class="form-control"
+                                value="{{ $supplier['supplier_address'] }}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="preDeleteSupp" aria-labelledby="preDeleteSupp" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Warning!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete this supplier?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{{ route('supplier.destroy', ['supplier' => $supplier->id]) }}" id="deleteSuppForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger" type="button" data-dismiss="modal" id="deleteSupplier">Delete</button>
+                </form>
             </div>
         </div>
     </div>
