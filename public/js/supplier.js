@@ -7,7 +7,7 @@ $(document).ready(function() {
     });
 });
 
-$("#supplierForm").submit(function () {
+$("#supplierForm, #updateSupplierForm").submit(function () {
     
     $.ajaxSetup({
         headers: {
@@ -16,10 +16,13 @@ $("#supplierForm").submit(function () {
     });
 
     var formData = new FormData(this);
+    if(!$("#supplier_contact").val()) {
+        formData.delete('supplier_contact');
+    }
     var flag = true;
 
     if(
-        !$("#supplier_name").val() || !$("#supplier_contact").val() || !$("#supplier_phone").val() ||
+        !$("#supplier_name").val() || !$("#supplier_phone").val() ||
         $("#supplier_group").val() === 'n/o' || !$("#supplier_email").val() || !$("#supplier_address").val()
     ) {
         slideAlert("Please make sure that all the appropriate information has been provided.", false);
@@ -39,9 +42,6 @@ $("#supplierForm").submit(function () {
             contentType: false,
             processData: false,
             success: function(data) {
-                for (var pair of formData.entries()) {
-                    console.log(pair[0] + ', ' + pair[1]);
-                }
                 loadSupplier();
             }
         });
@@ -66,6 +66,29 @@ function slideAlert(message, flag) {
     }
 }
 
-$("#saveBtn").click(function() {
-    $("#supplierForm").submit();
+$("#deleteSuppForm").submit(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN
+        }
+    });
+    $.ajax({
+        type: "DELETE",
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            loadSupplier();
+        }
+    });
+    return false;
+});
+
+$("#deleteSupplier").click(function () { 
+    $("#deleteSuppForm").submit();
+});
+
+$("#saveBtn, #updateSupplierBtn").click(function() {
+    $("#supplierForm, #updateSupplierForm").submit();
 });

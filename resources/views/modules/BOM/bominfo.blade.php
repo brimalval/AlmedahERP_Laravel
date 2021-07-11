@@ -122,7 +122,7 @@
             </div>
             <div class="col-6"></div>
             <div class="col-6">
-                <div class="form-check">
+                <div class="form-check" hidden>
                     <input class="form-check-input" type="checkbox" value="" id="is_component" 
                     @if ($bom->component_code != null)
                         checked
