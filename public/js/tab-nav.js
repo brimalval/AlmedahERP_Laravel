@@ -996,7 +996,6 @@ function loadnewworkcenter() {
         $("#contentRouting").load("/workcenter");
     });
 }
-
 function loadnewRouting() {
     $(document).ready(function () {
         $("#contentRouting").load("/newrouting");
