@@ -24,7 +24,7 @@ function addRowbomOperation(){
         </div>
         </td>
         <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}"  name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
-        <td style="width: 10%;" class="mr-qty-input">
+        <td style="width: 10%;" class="mr-qty-input"><input type="text" value=""  name="operation" id="" class="form-control" disabled>
         </td>
         <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control" disabled></td>
         <td  class="mr-unit-input col-3">
