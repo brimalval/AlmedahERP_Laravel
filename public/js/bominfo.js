@@ -8,10 +8,6 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
  */
 
 $(document).ready(function () {
-    $('#table_operations').DataTable();
-    $('#table_materials').DataTable();
-    $('#table_costing').DataTable();
-
     amountChanger();
 });
 
