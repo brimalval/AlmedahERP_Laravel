@@ -442,6 +442,7 @@ Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 
 Route::post('/minusStocks' , [SalesOrderController::class, 'minusStocks']);
 Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
+Route::get('/returnProductComponentMaterials', [SalesOrderController::class, 'returnProductComponentMaterials']);
 Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
 Route::get('/getRawMaterialQuantitySales/{selected}', [SalesOrderController::class, 'getRawMaterialQuantitySales']);
 Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
@@ -585,8 +586,12 @@ Route::get('/loadWorkOrderInfo', function () {
     return view('modules.manufacturing.workordersubModules.workorder_info');
 });
 Route::get('/getRawMaterialsWork/{selected}/{sales_id}/{product_code}', [WorkOrderController::class, 'getRawMaterials']);
+Route::get('/getRawMaterialsWorkWithoutSales/{selected}', [WorkOrderController::class, 'getRawMaterialsSales']);
 Route::get('/startWorkOrder/{work_order_no}', [WorkOrderController::class, 'startWorkOrder']);
 Route::get('/updateStatus/{work_order_no}', [WorkOrderController::class, 'updateStatus']);
+Route::get('/getBomId/{selected}/{text}', [WorkOrderController::class, 'getBomId']);
+Route::get('/getQtyFromMatOrdered/{work_order_no}', [WorkOrderController::class, 'getQtyFromMatOrdered']);
+Route::get('/checkUpdateStatus/{work_order_no}/{product_code}', [WorkOrderController::class, 'checkUpdateStatus']);
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**WAREHOUSE ROUTES */

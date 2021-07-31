@@ -27,45 +27,12 @@
 </nav>
 
 <div class="container">
-    <div class="card my-2">
-        <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Name">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Item">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body filter">
-            <div class="row">
-                <div class="float-left">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Add Filter
-                    </button>
-                </div>
-                <div class=" ml-auto float-right">
-                    <span class="text-muted ">Last Modified On</span>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <table class="table table-bom border-bottom">
+    <div class="card my-2" style="padding: 40px 50px;">
+
+        <table id="workorderTable" class="table table-striped table-bordered hover my-4" style="width:100%">
             <thead class="border-top border-bottom bg-light">
                 <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Work Order No</td>
+                    <td style="padding-left: 40px;">Work Order No</td>
                     <td>Item to Manufacture</td>
                     <td>For Product?</td>
                     <td>Status</td>
@@ -76,15 +43,10 @@
             <tbody class="">
             @foreach($work_orders as $index => $work_order)
                 <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td class="text-black-50">{{ $work_order->work_order_no }}</td>
+                    <td class="text-black-50" style="padding-left: 40px;">{{ $work_order->work_order_no }}</td>
                     
-                    <td><a href="#" onclick='loadWorkOrderInfo({{ $work_order }}, `{{ $work_order->transferred_qty }}`,  `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id ?? null }}`, `{{ $items[$index] ?? null }}`, `{{ json_encode($quantity[$index] ?? null) }}`)'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
-                    <td class="text-black-50">{{ $items[$index] ?? null }}</td>
+                    <td><a href="#" onclick='@if($work_order->sales_id) loadWorkOrderInfo({{ $work_order }}, `{{ $work_order->transferred_qty }}`,  `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id ?? null }}`, `{{ $items[$index] ?? null }}`, `{{ json_encode($quantity[$index] ?? null) }}`) @else loadWorkOrderInfoWithoutSales({{ $work_order }}) @endif'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
+                    <td class="text-black-50">{{ $items[$index] }}</td>
                     <td>{{ $work_order->work_order_status }}</td>
                     <td>{{ $work_order->sales_id ?? null }}</td>
                     <td><small>{{ Carbon\Carbon::parse($work_order->created_at)->diffForHumans(null, false, true) }}</small></td>
@@ -93,15 +55,19 @@
             </tbody>
         </table>
     </div>
-    <div class="row">
-        <div class="col-1 text-center">
-            <button type="submit" class=""> <span class="fas fa-chevron-left"></span></button>
-        </div>
-        <div class="col-1 text-center">
-            <p>4 of 4</p>
-        </div>
-        <div class="col-1 text-center">
-            <button type="submit" class=""> <span class="fas fa-chevron-right"></span></button>
-        </div>
-    </div>
+   
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#workorderTable').dataTable({
+            columnDefs: [{
+                orderable: false,
+                targets: 0
+            }],
+            order: [
+                [1, 'asc']
+            ]
+        });
+    });
+</script>

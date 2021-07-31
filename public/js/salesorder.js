@@ -545,167 +545,69 @@ function finalizer(arr_components) {
     console.log(rawMaterialsOnly);
     console.log(materialsInComponents);
 
-    if (createMatRequestItems.length != 0) {
-        createMatRequestItems.forEach((MatReqItem) => {
-            let woe = {
-                item_code: MatReqItem.item_code,
-                transferred_qty: MatReqItem.quantity_needed_for_request,
-                quantity_avail: MatReqItem.quantity_avail,
-                status: "pending",
-                product_code: MatReqItem.product_code,
-            };
-            let obj = {};
-            let product_code = MatReqItem.product_code;
-            obj[product_code] = "";
+    $.ajax({
+        url: "/returnProductComponentMaterials/",
+        type: "GET",
+        data: {
+            cmri: JSON.stringify(createMatRequestItems),
+            rmo: JSON.stringify(rawMaterialsOnly),
+            mic: JSON.stringify(materialsInComponents),
+            woce: JSON.stringify(workOrderCompElements),
+            woc: JSON.stringify(workOrderComp),
+            wope: JSON.stringify(workOrderProdElements),
+            wop: JSON.stringify(workOrderProd),
+        },
+        success: function (data) {
+            workOrderCompElements = data["workOrderCompElements"];
+            workOrderProdElements = data["workOrderProdElements"];
+            workOrderComp = data["workOrderComp"];
+            workOrderProd = data["workOrderProd"];
+            componentMaterials = [];
 
-            if (MatReqItem.category === "Component") {
-                workOrderCompElements.push(woe);
-                let exist = workOrderComp.find(
-                    (woc) => Object.keys(woc)[0] === product_code
+            workOrderCompElements.forEach((workOrderCompElement) => {
+                let product_code = workOrderCompElement.product_code;
+                let obj = workOrderComp.find(
+                    (workOrderCompProductObj) =>
+                        product_code === Object.keys(workOrderCompProductObj)[0]
                 );
-                if (!exist) {
-                    workOrderComp.push(obj);
-                }
-            } else {
-                workOrderProdElements.push(woe);
-                let exist = workOrderProd.find(
-                    (wop) => Object.keys(wop)[0] === product_code
-                );
-                if (!exist) {
-                    workOrderProd.push(obj);
-                }
-            }
-        });
-
-        if (
-            createMatRequestItems.length !=
-            rawMaterialsOnly.length + materialsInComponents.length
-        ) {
-            rawMaterialsOnly.forEach((rawMat) => {
-                let exist = workOrderProdElements.find(
-                    (wopEl) =>
-                        wopEl.item_code == rawMat.item_code &&
-                        wopEl.product_code == rawMat.product_code
-                );
-                if (!exist) {
-                    let woe = {
-                        item_code: rawMat.item_code,
-                        transferred_qty: rawMat.quantity_avail,
-                        quantity_avail: rawMat.quantity_avail,
-                        status: "pending",
-                        product_code: rawMat.product_code,
-                    };
-                    let obj = {};
-                    let product_code = rawMat.product_code;
-                    obj[product_code] = "";
-                    workOrderProdElements.push(woe);
-                    let exist2 = workOrderProd.find(
-                        (wop) => Object.keys(wop)[0] === product_code
-                    );
-                    if (!exist2) {
-                        workOrderProd.push(obj);
-                    }
+                if (obj[product_code] != "") {
+                    Object.values(obj)[0].push(workOrderCompElement);
+                } else {
+                    obj[product_code] = [workOrderCompElement];
+                    componentMaterials.push(obj);
                 }
             });
 
-            materialsInComponents.forEach((matComp) => {
-                let exist = workOrderCompElements.find(
-                    (wocEl) =>
-                        wocEl.item_code == matComp.item_code &&
-                        wocEl.product_code == matComp.product_code
+            productMaterials = [];
+
+            workOrderProdElements.forEach((workOrderProdElement, index) => {
+                let product_code = workOrderProdElement.product_code;
+
+                let obj = workOrderProd.find(
+                    (workOrderProdProductObj) =>
+                        product_code === Object.keys(workOrderProdProductObj)[0]
                 );
-                if (!exist) {
-                    let woe = {
-                        item_code: matComp.item_code,
-                        transferred_qty: matComp.quantity_avail,
-                        quantity_avail: matComp.quantity_avail,
-                        status: "pending",
-                        product_code: matComp.product_code,
-                    };
-                    let obj = {};
-                    let product_code = matComp.product_code;
-                    obj[product_code] = "";
-                    workOrderCompElements.push(woe);
-                    let exist2 = workOrderComp.find(
-                        (woc) => Object.keys(woc)[0] === product_code
-                    );
-                    if (!exist2) {
-                        workOrderComp.push(obj);
-                    }
+                if (obj[product_code] != "") {
+                    Object.values(obj)[0].push(workOrderProdElement);
+                } else {
+                    obj[product_code] = [workOrderProdElement];
+                    productMaterials.push(obj);
                 }
             });
-        }
-    } else {
-        rawMaterialsOnly.forEach((rawMat) => {
-            let woe = {
-                item_code: rawMat.item_code,
-                transferred_qty: rawMat.quantity_avail,
-                quantity_avail: rawMat.quantity_avail,
-                status: "pending",
-                product_code: rawMat.product_code,
-            };
-            workOrderProdElements.push(woe);
-        });
 
-        materialsInComponents.forEach((matComp) => {
-            let woe = {
-                item_code: matComp.item_code,
-                transferred_qty: matComp.quantity_avail,
-                quantity_avail: matComp.quantity_avail,
-                status: "pending",
-                product_code: matComp.product_code,
-            };
-            workOrderCompElements.push(woe);
-        });
-    }
-    console.log("THIS WOCEL");
-    console.log(workOrderCompElements);
-    console.log(workOrderComp);
-    console.log("THIS WOPEl");
-    console.log(workOrderProdElements);
-    console.log(workOrderProd);
+            console.log("compmat");
+            console.log(componentMaterials);
 
-    componentMaterials = [];
+            console.log("prodmat");
+            console.log(productMaterials);
 
-    workOrderCompElements.forEach((workOrderCompElement) => {
-        let product_code = workOrderCompElement.product_code;
-        let obj = workOrderComp.find(
-            (workOrderCompProductObj) =>
-                product_code === Object.keys(workOrderCompProductObj)[0]
-        );
-        if (obj[product_code] != "") {
-            Object.values(obj)[0].push(workOrderCompElement);
-        } else {
-            obj[product_code] = [workOrderCompElement];
-            componentMaterials.push(obj);
-        }
+            console.log("Below is the data you need for Material Request");
+            console.log(createMatRequestItems);
+        },
+        error: function (response, error) {
+            // alert("Request: " + JSON.stringify(request));
+        },
     });
-
-    productMaterials = [];
-
-    workOrderProdElements.forEach((workOrderProdElement, index) => {
-        let product_code = workOrderProdElement.product_code;
-
-        let obj = workOrderProd.find(
-            (workOrderProdProductObj) =>
-                product_code === Object.keys(workOrderProdProductObj)[0]
-        );
-        if (obj[product_code] != "") {
-            Object.values(obj)[0].push(workOrderProdElement);
-        } else {
-            obj[product_code] = [workOrderProdElement];
-            productMaterials.push(obj);
-        }
-    });
-
-    console.log("compmat");
-    console.log(componentMaterials);
-
-    console.log("prodmat");
-    console.log(productMaterials);
-
-    console.log("Below is the data you need for Material Request");
-    console.log(createMatRequestItems);
 }
 
 function getRawMaterialQuantity(rawMaterial) {

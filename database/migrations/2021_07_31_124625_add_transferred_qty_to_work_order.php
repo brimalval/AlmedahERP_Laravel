@@ -13,10 +13,9 @@ class AddTransferredQtyToWorkOrder extends Migration
      */
     public function up()
     {
-        // Schema::dropIfExists('work_order');
-        // Schema::table('work_order', function (Blueprint $table) {
-        //     $table->json('transferred_qty')->nullable();
-        // });
+        Schema::table('work_order', function (Blueprint $table) {
+            $table->json('transferred_qty')->nullable();
+        });
     }
 
     /**

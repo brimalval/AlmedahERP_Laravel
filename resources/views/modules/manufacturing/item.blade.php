@@ -1397,7 +1397,7 @@
                             </td>
                             `,`
                             <td>
-                                <p><button type="button" class="btn btn-primary" onclick="deleteRow(this, [`+row['id'] + `] , false)"> Reorder</button></p>
+                                <p><button type="button" class="btn btn-primary" onclick="deleteRow(this, [`+row['id'] + `] , `+quan+`, false)"> Reorder</button></p>
                             </td>
                         </tr>`
                     ]
@@ -1450,7 +1450,7 @@
         })
     }
 
-    function reorder(id){
+    function reorder(id, quan){
         $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -1461,6 +1461,7 @@
         console.log(typeof id);
         var data = {};
         data['id'] = id;
+        data['quan'] = quan;
         $.ajax({
             type:'POST',
             url: '/reorderToStock',
@@ -1469,7 +1470,7 @@
                 console.log("MATERIALS FOR MATREQ");
                 console.log(data);
                 var fd = new FormData();
-                data["mat_insufficient"].forEach(element => {
+                data["matRequests"].forEach(element => {
                     fd.append('item_code[]', element.item_code);
                     fd.append('quantity_requested[]', element.item_qty);
                     fd.append('procurement_method[]', 'buy');
@@ -1487,7 +1488,7 @@
                 var currProd = "";
                 fd.append('purpose', 'Restock materials');
                 fd.append('mr_status', 'Draft');
-                fd.append('work_order_no', data['work_order_id']);
+                fd.append('work_order_no', data['work_order_ids']);
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -1511,15 +1512,15 @@
         });
     }
 
-    function deleteRow(r, id, delA) {
+    function deleteRow(r, id, quan, delA) {
         if(delA === false){
-            reorder(id);
+            reorder(id, quan);
             reproduceTable.row( $(r).parents('tr') ).remove().draw();
             getLowOnStocks();
         }else{
             var x = document.getElementById("reorderAll").getAttribute('data-ids');
             var array = JSON.parse("[" + x + "]");
-            reorder(array)
+            reorder(array);
             reproduceTable.clear().draw();
             getLowOnStocks();
             //@TODO Prob: Since stocks aren't added as soon as ordered
