@@ -39,7 +39,8 @@ $i = 1;
                             onclick="loadPurchaseReceipt();">Cancel</button>
                     </li>
                     <li class="nav-item li-bom">
-                        <button type="button" id="openPRModal" class="btn btn-primary" data-toggle="modal" data-target="#preSubmitPR">
+                        <button type="button" id="openPRModal" class="btn btn-primary" 
+                        >
                             Submit
                         </button>
                         <button type="button" id="saveReceipt" class="btn btn-primary" style="display: none">
@@ -64,7 +65,7 @@ $i = 1;
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
+          <h5 class="modal-title">Receipt Submission</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

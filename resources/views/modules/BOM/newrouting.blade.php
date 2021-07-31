@@ -138,14 +138,18 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Edit Routing</h5>
+                    
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
+                    
                 </div>
                 <div class="modal-body">
                     <div>
                         <div class="row">
+
                             <div class="col-12">
+                                
                                 <table class="table border-bottom table-hover table-bordered" id="operations">
                                     <thead class="border-top border-bottom bg-light">
                                         <tr class="text-muted">
@@ -186,10 +190,28 @@
                                                     id="hour_rate" class="form-control"></td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </table> 
+                   
+<div class="btn-group">
+  <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    New Operation / Work Center
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+    <a class="dropdown-item" type="button" data-toggle="modal" data-target="#operation_modal">
+    New Operation
+    </a>
+    </li>
+    <li>
+    <a class="dropdown-item" type="button" type="submit" data-dismiss="modal" onclick="loadnewworkcenter();">
+     New Work Center
+     </a>
+    </li>
+  </ul>
+</div>                         
                             </div>
                         </div>
-
+                        
 
                     </div>
                 </div>
@@ -211,6 +233,7 @@
                 <button type="button" class="close" data-dismiss="modal" id="operationCross" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                
             </div>
             <div class="modal-body">
                 <div>

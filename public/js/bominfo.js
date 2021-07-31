@@ -8,10 +8,6 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
  */
 
 $(document).ready(function () {
-    $('#table_operations').DataTable();
-    $('#table_materials').DataTable();
-    $('#table_costing').DataTable();
-
     amountChanger();
 });
 
@@ -169,16 +165,20 @@ function slideAlert(message, flag) {
 }
 
 $("#is_component").change(function () {
+    var other; 
     if ($(this).prop('checked') == true) {
         $("#component-select").prop('hidden', false);
         $("#product-select").prop('hidden', true);
-        $("#manprod").val(0);
+        other = "#manprod";
 
     } else {
         $("#component-select").prop('hidden', true);
         $("#product-select").prop('hidden', false);
-        $("#components").val(0);
+        other = "#components";
     }
+    $(other).val(0);
+    $("#bom-materials tbody tr").remove();
+    $(other).selectpicker('refresh');
     $("#item_content").css("display", "none");
     $(`#Item_name`).val(null);
     $(`#Item_UOM`).val(null);
@@ -194,6 +194,7 @@ $("#manprod, #components").change(function () {
     else {
         $("#item_content").css("display", "block");
         if ($(this).attr("id") === 'components') $("#selected-uom").css('display', 'none');
+        else $("#selected-uom").show();
     }
 });
 
