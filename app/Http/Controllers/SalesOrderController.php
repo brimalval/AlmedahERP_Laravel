@@ -18,7 +18,6 @@ use Illuminate\Support\Carbon;
 use DB;
 use \stdClass;
 use Exception;
-use \stdClass;
 class SalesOrderController extends Controller
 {
     //
