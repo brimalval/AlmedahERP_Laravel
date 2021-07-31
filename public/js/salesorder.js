@@ -300,13 +300,6 @@ function rawMaterials() {
     data["products"] = products;
     data["qty"] = qty;
 
-    for (let index = 0; index < filter.length; index++) {
-        products[index] = filter[index][0];
-        qty[index] = filter[index][1];
-    }
-    data["products"] = products;
-    data["qty"] = qty;
-
     // if (products.length == 0 || qty.length == 0) {
     //     $(".components tr").remove();
     // } else {

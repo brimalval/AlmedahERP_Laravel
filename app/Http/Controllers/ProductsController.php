@@ -491,6 +491,108 @@ class ProductsController extends Controller
         return -1;
     }
 
+    // public function reorder(Request $request){
+    //     //Is an array to save lines of code
+    //     //Array is received here containing all product_id of products to be reproduced
+    //     $product_id = $request->input('id');
+    //     $mat_insufficient = [];
+
+    //     $work_order_ids = array();
+    //     foreach ($product_id as $key) {
+    //         $product = ManufacturingProducts::where('id', $product_id)->first();
+    //         $quantityToReproduce = $product->reorder_qty - $product->stock_unit;
+            
+            
+    //         //Work Order for products
+    //         $work_order = new WorkOrder();
+    //         $work_order->product_code = $product->product_code;
+    //         $work_order->mat_ordered_id = null;
+    //         $work_order->sales_id = null;
+    //         $work_order->planned_start_date = null;
+    //         $work_order->planned_end_date = null;
+    //         $work_order->real_start_date = null;
+    //         $work_order->real_end_date = null;
+    //         $work_order->work_order_status = "Pending";
+    //         $work_order->work_order_no = "WOK";
+    //         $work_order->save();
+    //         $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+    //         $work_order->work_order_no = $won;
+    //         $work_order->save();
+    //         array_push($work_order_ids, $work_order->id);
+    //         $components = json_decode($product->components, true);
+    //         $materials = json_decode($product->materials, true);
+
+    //         foreach ($components as $component) {
+    //             $item_id = $component['component_id'];
+    //             $item_qty = $component['component_qty'] * $quantityToReproduce;
+    //             $com = Component::where('id', $component['component_id'])->first();
+    //             $jcom = json_decode($com->item_code, true);
+
+    //             foreach ($jcom as $matcom) {
+    //                 $material = ManufacturingMaterials::where('item_code', $matcom['item_code'])->first();
+    //                 if($material->stock_quantity < $item_qty * $matcom['item_qty']){
+    //                     array_push($mat_insufficient, [
+    //                     "item_id" => $item_id,
+    //                     "item_qty" =>  ($item_qty * $matcom['item_qty']) - $material->stock_quantity,
+    //                     "item_code" => $material->item_code
+    //                     ]);
+    //                     $material->stock_quantity = 0;
+    //                 }else{
+    //                     $material->stock_quantity =  $material->stock_quantity - ($item_qty * $matcom['item_qty']);
+    //                 }
+    //                 $material->save();
+    //             }
+    //             //Work Order for component
+    //             $mainComponent = Component::where('id', "=", $item_id)->first();
+    //             $work_order = new WorkOrder();
+    //             $work_order->component_code = $mainComponent->component_code;
+    //             $work_order->mat_ordered_id = null;
+    //             $work_order->sales_id = null;
+    //             $work_order->planned_start_date = null;
+    //             $work_order->planned_end_date = null;
+    //             $work_order->real_start_date = null;
+    //             $work_order->real_end_date = null;
+    //             $work_order->work_order_status = "Pending";
+    //             $work_order->work_order_no = "WOK";
+    //             $work_order->save();
+    //             $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
+    //             $work_order->work_order_no = $won;
+    //             $work_order->save();
+    //             array_push($work_order_ids, $work_order->id);
+    //         }
+
+    //         foreach ($materials as $material) {
+    //             $material_id = $material['material_id'];
+    //             $material_qty = $material['material_qty'] * $quantityToReproduce;
+    //             $mat = ManufacturingMaterials::where('id', $material_id)->first();
+    //             if($mat->stock_quantity < $material_qty){
+    //                 array_push($mat_insufficient, [
+    //                 "item_id" => $material_id,
+    //                 "item_qty" =>  $material_qty - $mat->stock_quantity ,
+    //                 "item_code" => $mat->item_code
+    //                 ]);
+    //                 $mat->stock_quantity = 0;
+    //             }else{
+    //                 $mat->stock_quantity = $material_qty - $mat->stock_quantity;
+    //             }
+    //             $mat->save();
+    //         }
+            
+    //         $mat_insufficient = self::squash($mat_insufficient);
+
+    //         //Decided to ajax call mat request
+    //         $product->stock_unit += ($product->reorder_qty - $product->stock_unit);
+    //         $product->save();
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'productId' => $product_id,
+    //         'mat_insufficient' => $mat_insufficient,
+    //         'work_order_id' => json_encode($work_order_ids)
+    //     ]);
+    // }
+
     public function reorder(Request $request){
         $product_id = $request->input('id');
         $product = ManufacturingProducts::where('id', $product_id)->first();
@@ -503,8 +605,10 @@ class ProductsController extends Controller
         $componentMaterialsArray = array();
         $productMaterials = array();
         $componentMaterials = array();
+    
         foreach ($raw_materials as $raw_mat) {
             $material = ManufacturingMaterials::where('id', $raw_mat['material_id'])->first();
+
             $obj = new stdClass();
             $obj->mat = $material->item_code;
             $obj->needed = $raw_mat['material_qty']*$quantity_to_reproduce;
@@ -635,6 +739,25 @@ class ProductsController extends Controller
         }
 
         // return response($matRequests);
-        return response()->json(['productMaterials'=>$productObj, 'componentMaterials'=>$componentObj,  'matRequests'=>$matRequests, 'work_order_ids'=>json_encode($work_order_ids)]);
+        return response()->json(['matRequests'=>$matRequests, 'work_order_ids'=>json_encode($work_order_ids)]);
+    }
+
+
+    //Squashes materials
+    function squash($arr){
+        $newArr = [];
+        $keys = [];
+        for ($i=0; $i < count($arr); $i++) { 
+            if(in_array($arr[$i]['item_code'] ,  $keys)){
+                $newArr[array_search('item_code', $keys)]['item_qty'] +=  $arr[$i]['item_qty'];
+            }else{
+                array_push($keys, $arr[$i]['item_code']);
+                array_push($newArr, [
+                    "item_code" => $arr[$i]['item_code'],
+                    "item_qty" =>  $arr[$i]['item_qty'] ,
+                ]);
+            }
+        }
+        return $newArr;
     }
 }
