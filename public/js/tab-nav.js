@@ -6,6 +6,7 @@ if ($("#divMain").children().length == 0) {
 }
 //--> End of Dashboard js <--//
 
+
 $(document).ready(function () {
     $("body").on("click", ".menu", function () {
         if (!$("#tabs").length) {
@@ -136,6 +137,7 @@ function openBlueprint() {
         $("#contentBOM").load("/openBlueprint");
     });
 }
+
 function openInventoryInfo() {
     $(document).ready(function () {
         $("#contentInventory").load("/openInventoryInfo");
@@ -656,6 +658,7 @@ function loadReportsBuilder() {
         $("#contentReportsBuilder").load("/reportsbuilder");
     });
 }
+
 function loadReportsBuilderShowReport() {
     $(document).ready(function () {
         $("#contentReportsBuilder").load("/loadReportsBuilderShowReport");
@@ -687,6 +690,7 @@ function loadManufacturingWorkstation() {
         $("#contentWorkstation").load("/workstation");
     });
 }
+
 function openManufacturingWorkstationForm() {
     $(document).ready(function () {
         $("#contentWorkstation").load("/openManufacturingWorkstationForm");
@@ -698,6 +702,7 @@ function loadManufacturingRouting() {
         $("#contentRouting").load("/routing");
     });
 }
+
 function openManufacturingRoutingForm() {
     $(document).ready(function () {
         $("#contentRouting").load("/newrouting");
@@ -710,6 +715,7 @@ function loadProjectsTimesheet() {
         $("#contentTimesheet").load("/loadProjectsTimesheet");
     });
 }
+
 function openManufacturingTimesheetForm() {
     $(document).ready(function () {
         $("#contentTimesheet").load("/openManufacturingTimesheetForm");
@@ -732,6 +738,7 @@ function loadManufacturingItemPrice() {
         $("#contentItemPrice").load("/itemprice");
     });
 }
+
 function openManufacturingItemPriceForm() {
     $(document).ready(function () {
         $("#contentItemPrice").load("/openManufacturingItemPriceForm");
@@ -743,11 +750,13 @@ function loadBuyingRequestForQuotation() {
         $("#contentRequestforQuotation").load("/requestforquotation");
     });
 }
+
 function openBuyingRequestForQuotationForm() {
     $(document).ready(function () {
         $("#contentRequestforQuotation").load("/new-quotation");
     });
 }
+
 function viewBuyingRequestForQuotationForm() {
     $(document).ready(function () {
         $("#contentRequestforQuotation").load("/view-quotation");
@@ -762,13 +771,13 @@ function loadSupplier() {
 
 function openSupplierInfo(id) {
     $(document).ready(function () {
-        $("#contentSupplier").load(`/view-supplier/${id}`);
+        $("#contentSupplier").load(`/supplier/${id}`);
     });
 }
 
 function openSupplierForm() {
     $(document).ready(function () {
-        $("#contentSupplier").load(`/create-new-supplier`);
+        $("#contentSupplier").load(`/supplier/create`);
     });
 }
 
@@ -783,6 +792,7 @@ function loadSalesOrder() {
         $("#contentSalesOrder").load("/salesorder");
     });
 }
+
 function openNewSaleOrder(x) {
     $(document).ready(function () {
         $("#contentSalesOrder").load("/openNewSaleOrder");
@@ -1463,7 +1473,6 @@ function loadnewworkcenter() {
         $("#contentRouting").load("/workcenter");
     });
 }
-
 function loadnewRouting() {
     $(document).ready(function () {
         $("#contentRouting").load("/newrouting");

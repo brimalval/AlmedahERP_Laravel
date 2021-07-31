@@ -3,13 +3,11 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 $(document).ready(function() {
     $("#supplierTbl").DataTable({
         "searching": false,
-        "paging": false,
-        "ordering": false,
         "info": false,
     });
 });
 
-$("#supplierForm").submit(function () {
+$("#supplierForm, #updateSupplierForm").submit(function () {
     
     $.ajaxSetup({
         headers: {
@@ -18,18 +16,21 @@ $("#supplierForm").submit(function () {
     });
 
     var formData = new FormData(this);
+    if(!$("#supplier_contact").val()) {
+        formData.delete('supplier_contact');
+    }
     var flag = true;
 
     if(
-        !$("#supplier_name").val() || !$("#supplier_contact").val() || !$("#supplier_phone").val() ||
+        !$("#supplier_name").val() || !$("#supplier_phone").val() ||
         $("#supplier_group").val() === 'n/o' || !$("#supplier_email").val() || !$("#supplier_address").val()
     ) {
-        alert("Please make sure that all the appropriate information has been provided.");
+        slideAlert("Please make sure that all the appropriate information has been provided.", false);
         flag = false;
     }
 
     if($("#supplier_phone").val().length != 11) {
-        alert("Contact number is not of appropriate length.");
+        slideAlert("Contact number is not of appropriate length.", false);
         flag = false;
     }    
 
@@ -41,9 +42,6 @@ $("#supplierForm").submit(function () {
             contentType: false,
             processData: false,
             success: function(data) {
-                for (var pair of formData.entries()) {
-                    console.log(pair[0] + ', ' + pair[1]);
-                }
                 loadSupplier();
             }
         });
@@ -53,6 +51,44 @@ $("#supplierForm").submit(function () {
 
 });
 
-$("#saveBtn").click(function() {
-    $("#supplierForm").submit();
+function slideAlert(message, flag) {
+    if (flag) {
+        $("#s_success_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#s_success_message").slideUp(500);
+        });
+        $("#s_success_message").html(message);
+    }
+    else {
+        $("#s_alert_message").fadeTo(3500, 500).slideUp(500, function(){
+            $("#s_alert_message").slideUp(500);
+        });
+        $("#s_alert_message").html(message);
+    }
+}
+
+$("#deleteSuppForm").submit(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN
+        }
+    });
+    $.ajax({
+        type: "DELETE",
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            loadSupplier();
+        }
+    });
+    return false;
+});
+
+$("#deleteSupplier").click(function () { 
+    $("#deleteSuppForm").submit();
+});
+
+$("#saveBtn, #updateSupplierBtn").click(function() {
+    $("#supplierForm, #updateSupplierForm").submit();
 });

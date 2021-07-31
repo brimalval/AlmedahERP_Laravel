@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MaterialsPurchasedMail;
+use App\Models\ManufacturingMaterials;
 use App\Models\MaterialPurchased;
 use App\Models\MPRecord;
+use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -18,31 +22,30 @@ class MaterialsPurchasedController extends Controller
     public function index()
     {
         $materials_purchased = MaterialPurchased::all();
-        return view('modules.buying.purchaseorder', ['materials_purchased' => $materials_purchased]);
+        $materials = ManufacturingMaterials::all();
+        $suppliers = Supplier::all();
+        return view('modules.buying.purchaseorder', ['materials_purchased' => $materials_purchased, 'materials' => $materials,
+                        'suppliers' => $suppliers]);
     }
 
     public function openOrderForm()
     {
-        $supplier_quotations = SuppliersQuotation::all();
-        return view('modules.buying.newpurchaseorder', ['supplier_quotations' => $supplier_quotations]);
+        return view('modules.buying.newpurchaseorder', ['supplier_quotations' => SuppliersQuotation::all()]);
     }
 
     public function view($index)
     {
         $purchase_order = MaterialPurchased::find($index);
-        //$material_requests = MaterialRequest::all();
-        $quotation_supplier = $purchase_order->supplier_quotation->supplier;
-        $supplier_quotations = SuppliersQuotation::all();
+        $r_quotation = $purchase_order->supplier_quotation->req_quotation;
         $items_purchased = $purchase_order->itemsPurchased();
-        $req_date = $items_purchased[0]['req_date'];
         return view(
             'modules.buying.purchaseorderinfo',
             [
                 'purchase_order' => $purchase_order,
-                'supplier_quotations' => $supplier_quotations,
+                'supplier_quotations' => SuppliersQuotation::all(),
                 'items_purchased' => $items_purchased,
-                'req_date' => $req_date,
-                'supplier' => $quotation_supplier
+                'req_date' => ($r_quotation != null) ? $r_quotation->material_request->required_date : $items_purchased[0]['req_date'],
+                'supplier' => $purchase_order->supplier_quotation->supplier
             ]
         );
     }
@@ -81,19 +84,24 @@ class MaterialsPurchasedController extends Controller
         }
     }
 
-    public function storeMaterial(Request $request)
+    public function storeMaterial(Request $request, $purchase_id)
     {
+
         try {
-            $mp_record = new MPRecord();
-            $form_data = $request->input();
-            $mp_record->purchase_id = $form_data['purchase_id'];
-            $mp_record->item_code = $form_data['item_code'];
-            $mp_record->qty = $form_data['qty'];
-            $mp_record->supplier_id = $form_data['supplier_id'];
-            $mp_record->required_date = $form_data['required_date'];
-            $mp_record->rate = $form_data['rate'];
-            $mp_record->subtotal = $form_data['subtotal'];
-            $mp_record->save();
+            $materials_list = $request->input();
+            $item_list = json_decode($materials_list['materials_list']);
+            foreach ($item_list as $item) {
+                # code...
+                $mp_material = new MPRecord();
+                $mp_material->purchase_id = $purchase_id;
+                $mp_material->item_code = $item->item_code;
+                $mp_material->qty = $item->qty;
+                $mp_material->supplier_id = $item->supplier_id;
+                $mp_material->required_date = $item->req_date;
+                $mp_material->rate = $item->rate;
+                $mp_material->subtotal = $item->subtotal;
+                $mp_material->save();
+            }
         } catch (Exception $e) {
             return $e;
         }
@@ -121,6 +129,9 @@ class MaterialsPurchasedController extends Controller
         try {
             $data = MaterialPurchased::where('purchase_id', $purchase_id)->first();
             $data->mp_status = "To Receive and Bill";
+            $supplier = $data->supplier_quotation->supplier;
+            $mail = new MaterialsPurchasedMail($supplier, $data, 1); 
+            Mail::to($supplier->supplier_email)->send($mail);
             $data->save();
         } catch (Exception $e) {
         }
@@ -132,14 +143,14 @@ class MaterialsPurchasedController extends Controller
      */
     public function deleteOrder($purchase_id)
     {
-        $mp_record = MaterialPurchased::where('purchase_id', $purchase_id)->first();
+        $mp_material = MaterialPurchased::where('purchase_id', $purchase_id)->first();
         //delete all records with same purchase_id 
-        $material_records = $mp_record->materialRecords;
+        $material_records = $mp_material->materialRecords;
         foreach ($material_records as $material) {
             $material->delete();
         }
         //get purchase receipt and delete pending orders record related to purchase receipt
-        $p_receipt = $mp_record->receipt;
+        $p_receipt = $mp_material->receipt;
         if ($p_receipt != null) {
             if ($p_receipt->pr_status === 'Draft' || $p_receipt->noReceivedMaterials() == true) {
                 $order_record = $p_receipt->order_record;
@@ -163,7 +174,11 @@ class MaterialsPurchasedController extends Controller
             }
         }
         //cancel purchase order
-        $mp_record->mp_status = 'Cancelled';
-        $mp_record->save();
+        $mp_material->mp_status = 'Cancelled';
+        $mp_material->save();
+
+        $supplier = $mp_material->supplier_quotation->supplier;
+        $mail = new MaterialsPurchasedMail($supplier, $mp_material, 0); 
+        Mail::to($supplier->supplier_email)->send($mail);
     }
 }

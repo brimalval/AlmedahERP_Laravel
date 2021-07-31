@@ -50,7 +50,7 @@
             <tr id="op{{ $operation->id }}">
                 <td>{{ $operation->operation_id }}</td>
                 <td>{{ $operation->operation_name }}</td>
-                <td>{{ $operation->wc_code }}</td>
+                <td>{{ $operation->wc_label }}</td>
                 <td>
                     <a id="" class="btn" href="javascript:onclick=editoperation({{ $operation->id }});" role="button">
                         <i class="fa fa-edit" aria-hidden="true"></i>

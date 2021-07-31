@@ -8,10 +8,6 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
  */
 
 $(document).ready(function () {
-    $("#table_operations").DataTable();
-    $("#table_materials").DataTable();
-    $("#table_costing").DataTable();
-
     amountChanger();
 });
 
@@ -41,6 +37,8 @@ $("#routingSelect").change(function () {
             success: function (response) {
                 let operations = response.operations;
                 for (let i = 0; i < operations.length; i++) {
+                    let description = operations[i].operation.description;
+                    let desc_clean = description.replace(/(<([^>]+)>)/gi, "");
                     table.append(
                         `
                         <tr id="bomOperation-${i}">
@@ -53,7 +51,7 @@ $("#routingSelect").change(function () {
                                         name="Operation_name" id="Operation_name" class="form-control"></td>
                                 <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${operations[i].operation.wc_code}" readonly
                                         name="D_workcenter" id="D_workcenter" class="form-control"></td>
-                                <td class="mr-unit-input"><input type="text" value="${operations[i].operation.description}" readonly name="Desc" id="Desc"
+                                <td class="mr-unit-input"><input type="text" value="${desc_clean}" readonly name="Desc" id="Desc"
                                         class="form-control"></td>
                                 <td class="mr-unit-input"><input type="text" value="${operations[i].operation_time}" readonly name="Operation_Time"
                                         id="Operation_Time" class="form-control"></td>
@@ -85,13 +83,17 @@ function computeCosts() {
     var operations = $("#bom-operations tbody tr");
     for (let i = 0; i < operations.length; i++) {
         let operation = $(`#bomOperation-${i}`);
-        let op_indiv_cost = operation.find("#Operation_cost").val();
+        let op_indiv_cost = operation.find("#Operation_cost").val()
+            ? operation.find("#Operation_cost").val()
+            : 0;
         opCost += parseFloat(op_indiv_cost);
     }
     var materials = $("#bom-materials tbody tr");
     for (let i = 0; i < materials.length; i++) {
         let material = $(`#bomMaterial-${i}`);
-        let mat_indiv_cost = material.find("#Amount").val();
+        let mat_indiv_cost = material.find("#Amount").val()
+            ? material.find("#Amount").val()
+            : 0;
         materialCost += parseFloat(mat_indiv_cost);
     }
     var totalCost = parseFloat(opCost) + parseFloat(materialCost);
@@ -149,16 +151,38 @@ function showRoutingsForm() {
     $(`#tab${menu}`).tab("show");
 }
 
+function slideAlert(message, flag) {
+    if (flag) {
+        $("#bom_success_message")
+            .fadeTo(3500, 500)
+            .slideUp(500, function () {
+                $("#bom_success_message").slideUp(500);
+            });
+        $("#bom_success_message").html(message);
+    } else {
+        $("#bom_alert_message")
+            .fadeTo(3500, 500)
+            .slideUp(500, function () {
+                $("#bom_alert_message").slideUp(500);
+            });
+        $("#bom_alert_message").html(message);
+    }
+}
+
 $("#is_component").change(function () {
+    var other;
     if ($(this).prop("checked") == true) {
         $("#component-select").prop("hidden", false);
         $("#product-select").prop("hidden", true);
-        $("#manprod").val(0);
+        other = "#manprod";
     } else {
         $("#component-select").prop("hidden", true);
         $("#product-select").prop("hidden", false);
-        $("#components").val(0);
+        other = "#components";
     }
+    $(other).val(0);
+    $("#bom-materials tbody tr").remove();
+    $(other).selectpicker("refresh");
     $("#item_content").css("display", "none");
     $(`#Item_name`).val(null);
     $(`#Item_UOM`).val(null);
@@ -174,6 +198,7 @@ $("#manprod, #components").change(function () {
         $("#item_content").css("display", "block");
         if ($(this).attr("id") === "components")
             $("#selected-uom").css("display", "none");
+        else $("#selected-uom").show();
     }
 });
 
@@ -425,11 +450,12 @@ $("#saveBomForm").submit(function () {
     });
 
     if ($("#manprod").val() == 0 && $("#components").val() == 0) {
-        alert("No product/component to make a BOM on.");
+        slideAlert("No product/component to make a BOM on.", false);
         return false;
     }
     if ($("#routingSelect").val() == 0) {
-        alert("No routing has been provided.");
+        slideAlert("No routing has been provided.", false);
+        window.scrollTo(0, 0);
         return false;
     }
 
@@ -471,8 +497,7 @@ $("#saveBomForm").submit(function () {
         contentType: false,
         success: function (response) {
             if (response.message) {
-                console.log(response.message);
-                alert(response.message);
+                slideAlert(response.message, true);
             }
             loadBOMtable();
         },

@@ -11,13 +11,14 @@ use \App\Models\ManufacturingProducts;
 use \App\Models\ProductAttribute;
 use \App\Models\ProductVariantWithValue;
 use App\Models\MaterialCategory;
-use Illuminate\Support\Carbon;
+use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 use DB;
 use \stdClass;
 use PhpOption\None;
 use Exception;
 use Throwable;
+use Carbon\Carbon;
 
 class ProductsController extends Controller
 {

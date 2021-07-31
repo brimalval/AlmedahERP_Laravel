@@ -19,7 +19,7 @@ $today = date('Y-m-d');
                         onclick="loadPurchaseReceipt();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button type="button" id="saveReceipt" class="btn btn-primary" data-target="#saveSale">
+                    <button type="button" id="saveReceipt" class="btn btn-primary">
                         Save
                     </button>
                 </li>
@@ -27,6 +27,14 @@ $today = date('Y-m-d');
         </div>
     </div>
 </nav>
+
+<div id="pr_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="pr_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
+
 <div class="accordion" id="accordion">
     <div class="card">
         <div class="card-header" id="heading1">
@@ -70,26 +78,6 @@ $today = date('Y-m-d');
                             </label>
                             <input type="date" required class="form-input form-control" id="npr_date" readonly value=<?php echo $today;?>>
                             <br>
-                            <!--
-                            <label class=" text-nowrap align-middle">
-                                Posting Time
-                            </label>
-                            <input type="text" required class="form-input form-control" id="npr_postingT" disabled>
-                            <br>
-                        
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="npr_editpdt">
-                                #More concise form of enableDisable function from front-end
-                                <script type="text/javascript">
-                                    $("#npr_editpdt").change(function () { 
-                                        let bEnable = $(this).prop('checked');
-                                        $('#npr_date').prop('disabled', !bEnable);
-                                        $('#npr_postingT').prop('disabled', !bEnable);
-                                    });
-                                </script>
-                            </div>
-                        
-                            <label for="" class="form-check-label ml-4">Edit Posting Date and Time</label>-->
                         </div>
                     </div>
                 </form>

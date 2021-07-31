@@ -15,8 +15,8 @@ $i = 1;
         $('#receiveQty').val(total_qty);
         $('#receivePrice').val(total_price);
     });
-
 </script>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand tab-list-title">
@@ -39,14 +39,18 @@ $i = 1;
                             onclick="loadPurchaseReceipt();">Cancel</button>
                     </li>
                     <li class="nav-item li-bom">
-                        <button type="button" id="submitReceipt" class="btn btn-primary" data-target="#saveSale">
+                        <button type="button" id="openPRModal" class="btn btn-primary" 
+                        >
                             Submit
+                        </button>
+                        <button type="button" id="saveReceipt" class="btn btn-primary" style="display: none">
+                            Save
                         </button>
                     </li>
 
                 @else
                     <li class="nav-item li-bom">
-                        <button type="button" id="receiveMaterials" class="btn btn-primary" data-target="#saveSale">
+                        <button type="button" id="receiveMaterials" class="btn btn-primary">
                             Save Record
                         </button>
                     </li>
@@ -55,6 +59,35 @@ $i = 1;
         </div>
     </div>
 </nav>
+
+@if ($receipt->pr_status === 'Draft')
+<div class="modal fade" tabindex="-1" role="dialog" id="preSubmitPR" aria-labelledby="preSubmitPR" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Receipt Submission</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Permanently submit {{ $receipt->p_receipt_id }}?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="submitReceipt" class="btn btn-primary" data-dismiss="modal">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+@endif
+
+<div id="pr_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="pr_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <div class="accordion" id="accordion">
     <div class="card">
         @if ($receipt->pr_status === 'Draft')

@@ -24,13 +24,13 @@ function addRowbomOperation(){
         </div>
         </td>
         <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}"  name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
-        <td style="width: 10%;" class="mr-qty-input">
-            <input type="text" value=""  name="operation" id="operation${nextID}" class="form-control" list="operations_list" onchange="operationSearch(${nextID});">
+        <td style="width: 10%;" class="mr-qty-input"><input type="text" value=""  name="operation" id="" class="form-control" disabled>
         </td>
-        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control"></td>
-        <td class="mr-unit-input"><input type="text" value=""  name="description" id="description${nextID}" class="form-control"></td>
-        <td class="mr-unit-input"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control"></td>
-        <td class="mr-unit-input"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>
+        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control" disabled></td>
+        <td  class="mr-unit-input col-3">
+        <textarea class="form-control" id="description${nextID}"  name="description" rows="2" disabled></textarea></td>
+        <td class="mr-unit-input col-2"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control"></td>
+        <td class="mr-unit-input col-1"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>
         <td>
             <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                 <i class="fa fa-edit" aria-hidden="true"></i>
@@ -41,6 +41,13 @@ function addRowbomOperation(){
         </td>
     </tr>`
     );
+    $('select[name="operation"]')
+        .eq(0)
+        .clone()
+        .attr('id', `operation${nextID}`)
+        .attr('onchange', `operationSearch(${nextID})`)
+        .appendTo(`#newrouting-input-rows tr:last .mr-qty-input`)
+        .selectpicker();
 }
 
 $("#closeOpModal, #operationCross").click(clearOperationFields);
@@ -145,14 +152,18 @@ $("#operationForm").submit(function () {
         processData: false,
         success: function (response) {
             clearOperationFields();
-            let dl = $("#operations_list");
-            $("#operations_list option").remove();
+            let operation_elem = $(".operation");
+            let dl = operation_elem.find("select");
+            dl.find("option").remove();
             let operations = response.operations;
             for(let i = 0; i < operations.length; i++) {
                 dl.append(
-                    `<option value="${operations[i].operation_id}">${operations[i].operation_name}</option>`
+                    `<option data-subtext="${operations[i].operation_id}" value="${operations[i].operation_id}">
+                        ${operations[i].operation_name}
+                    </option>`
                 );
             }
+            $('.selectpicker').selectpicker('refresh');
         }
     });
     return false;
@@ -167,16 +178,18 @@ function operationSearch(id) {
         data: field.val(),
         success: function (response) {
             let operation = response.operation;
+            let description = operation.description;
+            let desc_clean = description.replace( /(<([^>]+)>)/ig, '');
             $(`#workcenter${id}`).val(operation.wc_code);
-            $(`#description${id}`).val(operation.description);
+            $(`#description${id}`).val(desc_clean);
         }
     });
 }
 
 
 $(document).ready(function() {
-    $('.summernote').summernote({
-        height: 200
+    $('.summernote').summernote('code', '')({
+        height: 300,
     });
     $('#myTimeline').verticalTimeline({
         startLeft: false,

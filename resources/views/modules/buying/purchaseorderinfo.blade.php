@@ -1,5 +1,3 @@
-<?php
-$i = 1; ?>
 <script src="{{ asset('js/purchaseorder.js') }}"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
@@ -39,18 +37,20 @@ $i = 1; ?>
                         </ul>
                     </li>
                     <li class="nav-item li-bom">
-                        <button class="btn btn-primary" id="submitOrder" type="button">Submit</button>
+                        <button id="preSubmit" class="btn btn-primary" type="button" data-target="#npo_confirmModal"
+                            data-toggle="modal">Submit</button>
+                        <button class="btn btn-primary" id="saveOrder" type="button" style="display: none;">Save</button>
                     </li>
                 </ul>
             </div>
         @elseif($purchase_order->mp_status === 'To Receive and Bill')
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item li-bom">
-                    <button class="btn btn-danger" id="cancelOrder" type="button">Cancel</button>
-                </li>
-            </ul>
-        </div>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item li-bom">
+                        <button class="btn btn-danger" id="cancelOrder" type="button">Cancel</button>
+                    </li>
+                </ul>
+            </div>
         @endif
     </div>
 </nav>
@@ -81,7 +81,8 @@ $i = 1; ?>
                                 <td class="text-bold">{{ $quotation->supp_quotation_id }}</td>
                                 <td>{{ $quotation->supplier_id }}</td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
-                                    data-toggle="modal" data-target="#npo_itemListView" onclick="viewQuotationItems({{$quotation->id}})">View</button></td>
+                                        data-toggle="modal" data-target="#npo_itemListView"
+                                        onclick="viewQuotationItems({{ $quotation->id }})">View</button></td>
                                 <td class="text-bold text-center"><button type="button" class="btn-sm btn-primary"
                                         data-dismiss="modal"
                                         onclick="loadQuotation({{ $quotation->id }})">Select</button></td>
@@ -96,6 +97,34 @@ $i = 1; ?>
         </div>
     </div>
 </div>
+
+@if ($purchase_order->mp_status === 'Draft')
+    {{-- Modal for confirmation --}}
+    <div class="modal fade" id="npo_confirmModal" tabindex="-1" role="dialog" aria-labelledby="npo_confirmModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirm Submission</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"><p>Permanently submit {{ $purchase_order->purchase_id }}?</p></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" id="submitOrder" data-dismiss="modal" type="button">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="po_success_message" class="alert alert-success" style="display: none;">
+    </div>
+
+    <div id="po_alert_message" class="alert alert-danger" style="display: none;">
+    </div>
+@endif
 
 <div class="accordion" id="accordion">
     <div class="card">
@@ -117,14 +146,14 @@ $i = 1; ?>
                             <input type="text" id="sqID" hidden value="{{ $purchase_order->supp_quotation_id }}">
                             <label class=" text-nowrap align-middle" for="supplier">Supplier</label>
                             <input class="form-input form-control" readonly type="text" id="supplierField"
-                                name="supplier" value="{{ $supplier['company_name'] }}">
+                                name="supplier" value="{{ $supplier->company_name }}">
                         </div>
                         <div class="col-6">
                             <label for="date">Date</label>
                             <input type="date" readonly id="transDate" name="date"
                                 value="{{ $purchase_order->purchase_date }}" class="form-input form-control">
                             <br>
-                            <label for="reqdbydate">Reqd by Date</label>
+                            <label for="reqdbydate">Required by Date</label>
                             <input readonly type="date" name="reqdbydate" id="reqDate" class="form-input form-control"
                                 value="{{ $req_date }}">
                         </div>
@@ -147,13 +176,14 @@ $i = 1; ?>
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label for="selectsuppadd">Select Supplier Address</label>
-                            <input type="text" value="{{ $supplier['supplier_address'] }}" id="suppAddress"
+                            <label for="suppAddress">Supplier Address</label>
+                            <input type="text" value="{{ $supplier->supplier_address }}" id="suppAddress"
                                 class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="contactperson">Contact Person</label>
-                            <input type="text" class="form-control">
+                            <label for="supplierContact">Contact Person</label>
+                            <input type="text" class="form-control" id="supplierContact"
+                                value="{{ $supplier->contact_name ?? '' }}">
                         </div>
                     </div>
                     <div class="col">
@@ -202,41 +232,46 @@ $i = 1; ?>
                         </thead>
                         <tbody class="" id="itemTable-content">
                             @foreach ($items_purchased as $item)
-                                <tr id="item-<?= $i ?>">
+                                <tr id="item-{{ $loop->index + 1 }}">
                                     <td>
-                                        <input type="checkbox" name="item-chk" id="chk<?= $i ?>" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
+                                        <input type="checkbox" name="item-chk" id="chk{{ $loop->index + 1 }}" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
                                     </td>
                                     <td class="text-black-50">
-                                        <span type="text" name="item<?= $i ?>" id="item<?= $i ?>">{{ $item['item']->item_code }}</span>
+                                        <span type="text" name="item{{ $loop->index + 1 }}"
+                                            id="item{{ $loop->index + 1 }}">{{ $item['item']->item_code }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <span name="itemName<?= $i ?>" id="itemName<?= $i ?>">{{ $item['item']->item_name }}</span>
+                                        <span name="itemName{{ $loop->index + 1 }}"
+                                            id="itemName{{ $loop->index + 1 }}">{{ $item['item']->item_name }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <input type="date" name="date<?= $i ?>" id="date<?= $i ?>" value="{{ $item['req_date'] }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
+                                        <input type="date" name="date{{ $loop->index + 1 }}"
+                                            id="date{{ $loop->index + 1 }}" value="{{ $item['req_date'] }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
                                     </td>
                                     <td class="text-black-50">
-                                        <span name="qty<?= $i ?>" id="qty<?= $i ?>">{{ $item['qty'] }}</span>
+                                        <span name="qty{{ $loop->index + 1 }}"
+                                            id="qty{{ $loop->index + 1 }}">{{ $item['qty'] }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <span name="rate<?= $i ?>" id="rate<?= $i ?>">{{ $item['rate'] }}</span>
+                                        <span name="rate{{ $loop->index + 1 }}"
+                                            id="rate{{ $loop->index + 1 }}">{{ $item['rate'] }}</span>
                                     </td>
                                     <td class="text-black-50">
-                                        <span name="price<?= $i ?>" id="price<?= $i ?>">₱ {{ $item['subtotal'] }}</span>
+                                        <span name="price{{ $loop->index + 1 }}" id="price{{ $loop->index + 1 }}">₱
+                                            {{ $item['subtotal'] }}</span>
                                     </td>
                                 </tr>
-                        <?php ++$i; ?>
-                        @endforeach
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <td colspan="7" rowspan="5">
                                 @if ($purchase_order->mp_status === 'Draft')
-                                <button type="button" id="multBtn" style="background-color: #007bff;">Add
-                                    Multiple</button>
-                                <button type="button" id="rowBtn" style="background-color: #007bff;">Add
-                                    Row</button>
-                                <button type="button" id="deleteRow"
-                                    style="background-color: red; display:none;">Delete</button>
+                                    <button type="button" id="multBtn" style="background-color: #007bff;">Add
+                                        Multiple</button>
+                                    <button type="button" id="rowBtn" style="background-color: #007bff;">Add
+                                        Row</button>
+                                    <button type="button" id="deleteRow"
+                                        style="background-color: red; display:none;">Delete</button>
                             </td>
                         </tfoot>
                         @endif
@@ -283,7 +318,8 @@ $i = 1; ?>
                     <div class="col-6">
                         <div class="form-group">
                             <label>Status</label>
-                            <input type="text" readonly value="{{ $purchase_order->mp_status }}" class="form-control form-input">
+                            <input type="text" readonly value="{{ $purchase_order->mp_status }}"
+                                class="form-control form-input">
                         </div>
                     </div>
                     <div class="col-6">
@@ -297,13 +333,13 @@ $i = 1; ?>
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#suppQuotationTable").DataTable();
         $("#itemTable").DataTable({
-            "searching" : false,
-            "paging" : false,
-            "ordering" : false,
-            "info" : false,
+            "searching": false,
+            "paging": false,
+            "ordering": false,
+            "info": false,
         });
     });
 </script>

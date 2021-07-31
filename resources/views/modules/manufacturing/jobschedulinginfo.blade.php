@@ -17,7 +17,7 @@
 				<!-- If a jobsched variable was not given or is a draft, that means we're trying to create/update something -->
 				@if (!isset($jobsched) || $jobsched->js_status == "Draft")
 					<li class="nav-item li-bom">
-						<button class="btn btn-primary" type="button" onclick="$('#js-form').submit();">Save</button>
+						<button class="btn btn-primary" type="button" id="js-save-btn" onclick="$('#js-form').submit();">Save</button>
 					</li>
 				@endif
 			</ul>
@@ -34,26 +34,22 @@
 	<div class="modal-body">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-9">
+				<div class="col-lg-9 col-md-12">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-lg-12">
 							<div class="form-group">
 								<label for="fname">Tracking ID</label>
 								<input type="text" class="form-control" placeholder="JOB-SCH-.YYYY.-" value="{{ isset($jobsched) ? $jobsched->jobs_sched_id : "" }}" readonly>
 							</div>
 
 						</div>
-
-						<div class="col-6">
-							<!--empty-->
-						</div>
 						<div class="col-12">
 							<hr><br>
 						</div>
-						<div class="col-6">
+						<div class="col-lg-6 col-md-12">
 							<label for="workOrderJobSched">Work Order</label>
 							<div class="input-group">
-								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }} required>
+								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }} required @if (isset($jobsched) && $jobsched->js_status != "Draft") readonly @endif>
 									<option value="none" selected disabled>
 										Select a work order
 									</option>
@@ -78,7 +74,7 @@
 								</div>
 							</div> --}}
 						</div>
-						<div class="col-3 offset-2">
+						<div class="col-lg-3 col-md-12 offset-lg-2">
 							<div class="form-group">
 								<label for="jobStartDate">Start Date</label>
 								<input type="date" name="job_start_date" class="form-control" value="{{ isset($jobsched) ? $jobsched->start_date : null }}">
@@ -86,31 +82,27 @@
 						</div>
 
 
-						<div class="col-6">
+						<div class="col-lg-6 col-md-12">
 							<label for="productCode">Product/Component</label>
 							<div class="input-group">
 								<input type="text" id="js-product-code" class="form-control" value="{{ $item_name ?? "" }}" readonly placeholder="Product/Component Code & Name">
 							</div>
 						</div>
-						<div class="col-2">
+						<div class="col-lg-2 col-md-6">
 							<div class="form-group">
 								<label for="productQuantity">Quantity</label>
-								<input type="text" name="quantity_purchased" id="productQuantity" class="form-control" value="{{ $quantity_purchased ?? 0 }}" required>
+								<input type="text" name="quantity_purchased" id="productQuantity" class="form-control" value="{{ $quantity_purchased ?? 0 }}" required readonly>
 							</div>
 						</div>
 
-						<div class="col-3">
+						<div class="col-lg-3 col-md-6">
 							<div class="form-group">
 								<label for="job_start_time">Start Time</label>
 								<input type="time" name="job_start_time" id="job_start_time" class="form-control" value="{{ $jobsched->start_time ?? "00:00" }}" required>
 							</div>
 						</div>
 
-						<div class="col-12">
-							<!--empty-->
-						</div>
-
-						<div class="col-4">
+						<div class="col-lg-4">
 							<label for="employeeID">Employee ID</label>
 							<div class="input-group">
 								<select name="employee_id" id="js-emp-id-select" class="selectpicker">
@@ -150,19 +142,30 @@
 								<h3>Actions</h3>
 							</div>
 							<div class="col-12">
-									<button class="btn btn-sm btn-primary form-control my-1" onclick="planJobSched()"
-										id="planBtn">Plan</button>
+								<button class="btn btn-sm btn-primary form-control my-1" onclick="planJobSched(); return false;"
+									id="planBtn">Plan</button>
 							</div>
 						@endif
-						<div class="col-12">
-							<button class="btn btn-sm btn-primary form-control my-1" id="startBtn">Start</button>
-						</div>
-						<div class="col-12">
-							<button class="btn btn-sm btn-primary form-control my-1" id="SPBtn">Pause/Resume</button>
-						</div>
-						<div class="col-12">
-							<button class="btn btn-sm btn-primary form-control my-1" id="finBtn">Finish</button>
-						</div>
+						@if (isset($jobsched))
+							<div class="col-12">
+								<button class="btn btn-sm btn-primary form-control my-1" onclick="startJobSched(); return false;" id="startBtn">Start</button>
+							</div>
+							<div class="col-12">
+								<button class="btn btn-sm btn-primary form-control my-1" id="SPBtn">Pause/Resume</button>
+							</div>
+							<div class="col-12">
+								<button class="btn btn-sm btn-primary form-control my-1" id="finBtn">Finish</button>
+							</div>
+							{{-- Hide the buttons if the jobsched does not have "planned" status yet --}}
+							@if($jobsched->js_status != "Planned")
+								<script>
+									$("#SPBtn").css("display","none");
+									$("#startBtn").css("display","none");
+									$("#SPBtn").css("display","none");
+									$("#finBtn").css("display","none");
+								</script>
+							@endif
+						@endif
 					</div>
 				</div>
 
@@ -173,28 +176,29 @@
 					<div class="table-responsive">
 						<table class="table table-sm table-condensed" id="operationsTable">
 							<thead>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">SEQUENCE NAME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OPERATION NAME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OPERATION TIME</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PREDECESSOR</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">MACHINE CODE</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">WC TYPE</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">OUTSOURCED</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PLANNED START</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">PLANNED END</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL START</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">REAL END</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">STATUS</td>
-								<td style="font-size:90%;font-weight:bold" class="text-nowrap">QTY FINISHED</td>
-								<td>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">SEQUENCE NAME</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">OPERATION NAME</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">RUNNING TIME</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">PREDECESSOR</th>
+								{{-- <td style="font-size:70%;font-weight:bold" class="text-nowrap">MACHINE CODE</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">WC TYPE</td>
+								<td style="font-size:70%;font-weight:bold" class="text-nowrap">OUTSOURCED</td> --}}
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">PLANNED START</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">PLANNED END</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">REAL START</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">REAL END</th>
+								<th style="font-size:70%;font-weight:bold" class="text-nowrap">STATUS</th>
+                                {{-- STATUS MUST BE MOVED TO THE modal within the jobsched_operation_row --}}
+								{{-- <td style="font-size:70%;font-weight:bold" class="text-nowrap">QTY FINISHED</td> --}}
+								<th>
 									<!--empty-->
-								</td>
-								<td>
+								</th>
+								<th>
 									<!--empty-->
-								</td>
-								<td>
+								</th>
+								<th>
 									<!--empty-->
-								</td>
+								</th>
 							</thead>
 							<tbody>
 								{{-- index is used to identify sequence number --}}
@@ -210,6 +214,15 @@
 								@endif
 							</tbody>
 						</table>
+						{{-- Show the gantt chart only if one exists (currently updating one) & status is planned --}}
+						@if(isset($jobsched))
+							<div id="gantt_here" style='width:1000px; height:680px;'></div>
+							@if ($jobsched->js_status != "Finished" && $jobsched->js_status != "Planned")
+								<script>
+									$('#gantt_here').css('display', 'none');
+								</script>
+							@endif
+						@endif
 					</div>
 				</div>
 			</div>
@@ -217,13 +230,43 @@
 	</div>
 </form>
 
+{{-- Forms for updating a jobsched --}}
+@if(isset($jobsched))
+	<form action="{{ route('jobscheduling.setStatus', ['jobsched'=>$jobsched->id, 'status'=>'plan']) }}" id="js-plan-form">
+		@csrf
+		@method('PUT')
+	</form>
+
+	<form action="{{ route('jobscheduling.setStatus', ['jobsched'=>$jobsched->id, 'status'=>'start']) }}" id="js-start-form">
+		@csrf
+		@method('PUT')
+	</form>
+	<form action="{{ route('jobscheduling.setStatus', ['jobsched'=>$jobsched->id, 'status'=>'pause']) }}" id="js-pause-form">
+		@csrf
+		@method('PUT')
+	</form>
+	<form action="{{ route('jobscheduling.op.start', ['jobsched'=>$jobsched->id]) }}" id="op-start-form">
+		@csrf
+		@method('PUT')
+	</form>
+	<form action="{{ route('jobscheduling.op.pause', ['jobsched'=>$jobsched->id]) }}" id="op-pause-form">
+		@csrf
+		@method('PUT')
+	</form>
+	<form action="{{ route('jobscheduling.op.finish', ['jobsched'=>$jobsched->id]) }}" id="op-finish-form">
+		@csrf
+		@method('PUT')
+	</form>
+@endif
+
+@if (isset($jobsched) && (($jobsched->js_status == "Finished") || $jobsched->js_status == "In Progress"))
+	<script>
+		gantt.clearAll();
+		gantt.load('{{ route('jobscheduling.gantt_ops', ['jobsched' => $jobsched->id]) }}');
+	</script>
+@endif
+
 <script>
-	$( document ).ready(function() {
-		$("#SPBtn").css("display","none");
-		$("#startBtn").css("display","none");
-		$("#SPBtn").css("display","none");
-		$("#finBtn").css("display","none");
-	});
 	$('#operationsTable').DataTable( {
 		responsive: true,
 		deferRender:    true,
@@ -235,24 +278,307 @@
         paging:         false,
         info:           false,
 		columnDefs: [{ 
-			orderable: false, targets: [6,13,14,15] 
-		}]
+			orderable: false,
+		}],
+		bSort: false,
 	});
 	function planJobSched(){
+		var fd = new FormData($('#js-plan-form')[0]);
+		$.ajax({
+			type: 'POST',
+			url: $('#js-plan-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				swal({
+					title: "Updated info",
+					text: `Set ${data.jobsched.jobs_sched_id} status to "planned".`,
+					icon: "info",
+				});
+				$("#SPBtn").css("display","inline");
+				$("#startBtn").css("display","inline");
+				$("#SPBtn").css("display","inline");
+				$("#finBtn").css("display","inline");
+				$("#planBtn").css("display","none");
+				$('#js-status').text('Planned');
+				// Remove the save button
+				$('#js-save-btn').remove();
+				// Disable changes on planned start & end
+				$("input[name='planned_start[]']").each(function() {
+					$(this).attr('readonly', true);
+				});
+				$("input[name='planned_end[]']").each(function() {
+					$(this).attr('readonly', true);
+				});
+			console.log(data);
+			// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
 		// Temporary condition to check if the current job has been planned, to hide or display the start and pause buttons
-		if(!$("#SPBtn").is(':visible')){
-			$("#SPBtn").css("display","inline");
-			$("#startBtn").css("display","inline");
-			$("#SPBtn").css("display","inline");
-			$("#finBtn").css("display","inline");
-			$("#planBtn").css("display","none");
-		}
-		else{
-			$("#SPBtn").css("display","none");
-			$("#startBtn").css("display","none");
-			$("#SPBtn").css("display","none");
-			$("#finBtn").css("display","none");
-		}
+		// if(!$("#SPBtn").is(':visible')){
+		// 	$("#SPBtn").css("display","inline");
+		// 	$("#startBtn").css("display","inline");
+		// 	$("#SPBtn").css("display","inline");
+		// 	$("#finBtn").css("display","inline");
+		// 	$("#planBtn").css("display","none");
+		// }
+		// else{
+		// 	$("#SPBtn").css("display","none");
+		// 	$("#startBtn").css("display","none");
+		// 	$("#SPBtn").css("display","none");
+		// 	$("#finBtn").css("display","none");
+		// }
+	}
+
+	function pauseJobSched() {
+		var fd = new FormData($('#js-pause-form')[0]);
+		$.ajax({
+			type: 'POST',
+			url: $('#js-pause-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				swal({
+					title: "Updated info",
+					text: `Set ${data.jobsched.jobs_sched_id} status to "paused".`,
+					icon: "info",
+				});
+				$("#startBtn").attr("disabled", true);
+				$('#js-status').text('In Progress');
+				$('.operation-play-btn').each(function(){
+					$(this).attr('onclick', 'startOperation(this); return false;');
+				});
+				$('.operation-stop-btn').each(function(){
+					$(this).attr('onclick', 'finishOperation(this); return false;');
+				});
+				$('.operation-pause-btn').each(function(){
+					$(this).attr('onclick', 'pauseOperation(this); return false;');
+				});
+			console.log(data);
+			// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " ";
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+	function startJobSched() {
+		var fd = new FormData($('#js-start-form')[0]);
+		$.ajax({
+			type: 'POST',
+			url: $('#js-start-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				swal({
+					title: "Updated info",
+					text: `Set ${data.jobsched.jobs_sched_id} status to "in progress".`,
+					icon: "info",
+				});
+				$("#startBtn").attr("disabled", true);
+				$('#js-status').text('In Progress');
+				$('.operation-play-btn').each(function(){
+					$(this).attr('onclick', 'startOperation(this); return false;');
+				});
+				$('.operation-stop-btn').each(function(){
+					$(this).attr('onclick', 'finishOperation(this); return false;');
+				});
+				$('.operation-pause-btn').each(function(){
+					$(this).attr('onclick', 'pauseOperation(this); return false;');
+				});
+			console.log(data);
+			// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " ";
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+
+	function startOperation(element) {
+		let row = $(element).parents('tr');
+		var operation_id = $(row).find('input[name="operation_id[]"]');
+		console.log(operation_id.val());
+		var real_start = $(row).find('input[name="real_start[]"]');
+		var status = $(row).find('.js-status-td');
+		var fd = new FormData($('#op-start-form')[0]);
+		fd.append('operation_id', operation_id.val());
+		$.ajax({
+			type: 'POST',
+			url: $('#op-start-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				real_start.val(data.currDate);
+				$(status).text('In Progress');
+				console.log(data);
+				// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+
+	function finishOperation(element) {
+		let row = $(element).parents('tr');
+		var operation_id = $(row).find('input[name="operation_id[]"]');
+		var status = $(row).find('.js-status-td');
+		var real_end = $(row).find('input[name="real_end[]"]');
+		var fd = new FormData($('#op-finish-form')[0]);
+		fd.append('operation_id', operation_id.val());
+		$.ajax({
+			type: 'POST',
+			url: $('#op-finish-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				real_end.val(data.currDate);
+				$(status).text("Finished");
+				console.log(data.currDate);
+				if(data.allFinished) {
+					$('#js-status').text("Finished");
+				}
+				// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+
+	function pauseOperation(element) {
+		let row = $(element).parents('tr');
+		var operation_id = $(row).find('input[name="operation_id[]"]');
+		var status = $(row).find('.js-status-td');
+		var fd = new FormData($('#op-pause-form')[0]);
+		fd.append('operation_id', operation_id.val());
+		$.ajax({
+			type: 'POST',
+			url: $('#op-pause-form').attr('action'),
+			data: fd,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(data){
+				console.log(data);
+				$(status).text('Paused');
+				// loadIntoPage(element, data.redirect);
+			},
+			error: function(data){
+			var errorString = "";
+			let obj = data.responseJSON.errors;
+			// The response JSON from the controller sends back a message bag whose properties are
+			// iterable through JS. The error messages list inherits other properties from base objects
+			// and the if statement checks if the properties being iterated through are unique to the object.
+			for (var prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				errorString += obj[prop] + " "; 
+				}
+			}
+			swal({
+				title: "Error",
+				text: `An error has occurred. ${errorString}`,
+				icon: "error",
+			});
+			console.log(data.responseJSON);
+			}
+		});
+	}
+	function notStartedWarning() {
+		swal({
+			title: "Warning",
+			icon: "warning",
+			text: "Job not in progress!",
+		});
 	}
 	// $("#preFillBtn").click(function(){
 	// 	console.log("Pre fill inputs");	
@@ -263,8 +589,7 @@
 	// and add them as rows
 	$('#js-work-order-select').off('change').change(function(){
 		let route = "{{ route('jobscheduling.getoperations', ['work_order'=>0]) }}".replace("/0/", "/" + $(this).val() + "/");
-		let tableBody = $('#operationsTable').children('tbody');
-		tableBody.html('<i class="fa fa-spinner fa-5x text-center p-5" aria-hidden="true"></i>');
+		let tableBody = $('#operationsTable').DataTable();
 		console.log(route);
 		$.ajax({
 			type: 'GET',
@@ -274,89 +599,50 @@
 			cache: false,
 			success: function(data){
 				operations = data.operations;
-				tableBody.html('');
+				tableBody.clear();
 				$('#js-title').text(data.item_name);
 				$('#js-status').text('{{ $jobsched->js_status ?? 'Unsaved' }}');
 				data.operations.forEach((operation, index) => {
-					tableBody.append(`
-						<tr>
-							<td>
-								{{-- Sequence Name Value --}}
-								Sequence ${data.routingOperations[index].sequence_id}
-							</td>
-							<td>
-								{{-- Operation Name Value --}}
-								${operation.operation_name}
-								<input type="hidden" name="operation_id[]" value="${operation.operation_id}"> 
-							</td>
-							<td>
-								{{-- Operation Time Value --}}
-								${data.routingOperations[index].operation_time}
-								<input type="hidden" name="operation_time[]" value="${data.routingOperations[index].operation_time}">
-							</td>
-							<td>
-								{{-- Predecessor Value --}}
-								${(index > 0) ? data.operations[index - 1].operation_name : "N/A"}
-							</td>
-							<td>
-								{{-- Machine Code Value --}}
-								
-							</td>
-							<td>
-								{{-- WC_Type value --}}
-								${operation.wc_code}
-							</td>
-							<td class="d-flex align-items-center justify-content-center">
-								{{-- Outsourced Value --}}
-
-								<div class="form-check ">
-									<input type="checkbox" class="form-check-input">
-								</div>
-
-
-							</td>
-							<td class="p-3">
-								{{-- Planned Start Value --}}
-								<input class="form-control form-control-sm" type="text" name="planned_start[]">
-							</td>
-							<td class="p-3">
-								{{-- Planned End Value --}}
-								<input class="form-control form-control-sm" type="text" name="planned_end[]">
-							</td>
-							<td class="p-3">
-								{{-- Real Start Value --}}
-								<input class="form-control form-control-sm" type="text" name="real_start[]">
-							</td>
-							<td class="p-3">
-								{{-- Real End Value --}}
-								<input class="form-control form-control-sm" type="text" name="real_end[]">
-							</td>
-							<td>
-								{{-- Status Value --}}
-
-							</td>
-							<td>
-								{{-- Quantity Finished --}}
-
-							</td>
-							{{-- Action Buttons --}}
-							<td>
-								<a href="#" onclick="return false;" class="operation-play-btn">
-									<i class="fas fa-play"></i>
-								</a>
-							</td>
-							<td>
-								<a href="#" onclick="return false;" class="operation-pause-btn">
-									<i class="fas fa-pause"></i>
-								</a>
-							</td>
-							<td>
-								<a href="#" onclick="return false;" class="operation-stop-btn">
-									<i class="fas fa-power-off"></i>
-								</a>
-							</td>
-						</tr>
-					`);
+					tableBody.row.add([`
+						{{-- Sequence Name Value --}}
+						<a href="#" data-toggle="modal" data-target="#operationsDetails">
+							Sequence ${data.routingOperations[index].sequence_id}
+						</a>
+					`,`
+						{{-- Operation Name Value --}}
+						${operation.operation_name}
+						<input type="hidden" name="operation_id[]" value="${operation.operation_id}">
+					`,`
+						{{-- RUNNING TIME Value --}}
+						RUNNING TIME
+					`,`
+						{{-- Predecessor Value --}}
+						${(index > 0) ? data.operations[index - 1].operation_name : "N/A"}
+					`,`
+						{{-- Planned Start Value --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="planned_start[]" class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Planned End value --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="planned_end[]" class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Real Start Value --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="real_start[]" readonly class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Real End --}}
+						<div class="d-flex justify-content-center">
+							<input type="datetime-local" name="real_end[]" readonly class="datePickers" style="width: 130px">
+						</div>
+					`,`
+						{{-- Status Value --}}
+						Not started
+					`,``,``,``
+				]).draw();
 				});
 				$('#js-product-code').val(data.item_name + " (" + data.item_code + ")");
 				$('#productQuantity').val(data.ordered_quantity);
