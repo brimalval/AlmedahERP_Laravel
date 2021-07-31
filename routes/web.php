@@ -607,8 +607,11 @@ Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail')
 Route::post('/generate_sample_chart',                           [ChartController::class, 'generate_sample_chart']);
 Route::post('/generate_reports_sales',                          [ChartController::class, 'generate_reports_sales']);
 Route::post('/generate_report_trends',                          [ChartController::class, 'generate_report_trends']);
-Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
-Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
 Route::post('/generate_reports_delivery',                       [ChartController::class, 'generate_reports_delivery']);
 Route::post('/export',                                          [ChartController::class, 'export']);
 Route::post('/generate_reports_fast_move',                      [ChartController::class, 'generate_reports_fast_move']);
+
+
+Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
+Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
+Route::get('/generate_reports_stock_monitoring',                [ChartController::class, 'generate_reports_stock_monitoring']);
