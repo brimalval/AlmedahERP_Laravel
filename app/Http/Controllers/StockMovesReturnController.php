@@ -10,7 +10,10 @@ class StockMovesReturnController extends Controller
 {
     public function index()
     {
-        return view('modules.stock.stockmovesreturn');
+        $stock_transfer = StockTransfer::get();
+        $stock_moves = StockMoves::get();
+        // $stock_moves = StockMoves::where('tracking_id', $stock_transfer->tracking_id)->first();
+        return view('modules.stock.stockmovesreturn', ['stock_transfer' => $stock_transfer, 'stock_moves'=> $stock_moves]);
     }
 
     public function store(Request $request){
@@ -31,17 +34,22 @@ class StockMovesReturnController extends Controller
                 $stockMovesReturn->return_status = 'PENDING';
                 $stockMovesReturn->save();
 
-                $stockMoves = StockMoves::where('tracking_id', $stockMovesReturn->tracking_id)->first();
-                $worked = '';
-                $stockMovesTransfer = StockTransfer::where('tracking_id', $stockMovesReturn->tracking_id)->first();
-                if(empty(json_decode(request('stockTransferItemsUpdated'), true))){
-                    $stockMoves->update(['stock_moves_type' => 'Return']);
-                    $worked = 'worked';
-                }
+                $stockMoves = StockMoves::where('tracking_id', request('tracking_id'))->first();
+                $stockMovesTransfer = StockTransfer::where('tracking_id', request('tracking_id'))->first();
                 $stockMovesTransfer->update(['item_code' => request('stockTransferItemsUpdated')]);
-                return response($worked);
+                if(count(json_decode($stockMovesTransfer->item_code, true)) == 0){
+                    $stockMoves->update(['stock_moves_type' => 'Return', 'status'=> 'Successfully Returned']);
+                }else{
+                    $stockMoves->update(['stock_moves_type' => 'Return', 'status'=> 'Pending (Return)']);
+                }     
+                return response(count(json_decode($stockMovesTransfer->item_code, true)));
         } catch (Exception $e) {
             return $e;
         }
+    }
+
+    public function view_items($id) {
+        $stock_transfer = StockTransfer::find($id);
+        return response($stock_transfer->item_code);
     }
 }

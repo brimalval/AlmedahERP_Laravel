@@ -11,14 +11,14 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadStockMoves()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-primary menu" type="submit" onclick="" data-parent="stock" data-name="New Stock Moves">New</button>
+                    <button class="btn btn-primary" type="submit" onclick="loadNewStockMoves(null)">New</button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 <div class="container">
-    <div class="card my-2"> 
+    <div class="card my-2 p-4"> 
         <div class="card-body filter">
             <div class="row">
                 <div class=" ml-auto float-right">
@@ -38,35 +38,30 @@
                     <td>Materials Ordered ID</td>
                     <td>Employee ID</td>
                     <td>Move Date</td>
+                    <td>Status</td>
                     <td>Actions</td>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($stockmoves as $row)
                     <tr id="<?=$row["id"]?>">
-                        <td class="text-black-50"><?=$row["tracking_id"]?></td>
+                        <td class="text-black-50"><a href="javascript:loadNewStockMoves(`<?=$row["tracking_id"]?>`)"><?=$row["tracking_id"]?></a></td>
                         <td class="text-black-50"><?=$row["stock_moves_type"]?></td>
                         <td class="text-black-50"><?=$row["mat_ordered_id"]?></td>
                         <td class="text-black-50"><?=$row["employee_id"]?></td>
                         <td class="text-black-50"><?=$row["move_date"]?></td>
+                        <td class="text-black-50"><?=$row["status"]?></td>
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
                                     Actions
                                 </button>
                                 <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-                                    <li>
-                                        <button class="btn-sm btn-primary" type="submit" onclick="getStockData(this)">Return Items</button>
-                                    </li>
-                                    <li><button id="{{$row->employee_id}}" class="employee-edit-btn btn btn-warning btn-sm rounded-0" type="button">
-                                        <i class="fa fa-edit"></i> Edit</button>
-                                    </li>
-
-                                    <li>
-                                        <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
-                                            <i class="fa fa-trash"></i> Delete
-                                        </button>
-                                    </li>
+                                    @if($row["status"] == 'Successfully Transferred' || $row["status"] == 'Pending (Return)' || $row["status"] == 'Successfully Returned')
+                                        <li id="returnItemsList">
+                                            <button class="btn-sm btn-primary" type="submit" onclick="getStockData(this)">Return Items</button>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </td>
@@ -100,7 +95,8 @@
         let matOrderedId = currentRow.find('td:eq(2)').text();
         let employeeId = currentRow.find('td:eq(3)').text();
         let moveDate = currentRow.find('td:eq(4)').text();
-        loadStockReturnInfo(trackingId, stockMovesType, matOrderedId, employeeId, moveDate);
+        let status = currentRow.find('td:eq(5)').text();
+        loadStockReturnInfo(trackingId, stockMovesType, matOrderedId, employeeId, moveDate, status);
     }
 
     function showItems(matOrderedId){

@@ -6,6 +6,7 @@ use App\Models\ManufacturingProducts;
 use App\Models\ManufacturingMaterials;
 use App\Models\WorkOrder;
 use App\Models\Component;
+use App\Models\BillOfMaterials;
 use App\Models\ordered_products;
 use App\Models\MaterialPurchased;
 use App\Models\MaterialRequest;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Exception;
+use \stdClass;
 
 class WorkOrderController extends Controller
 {
@@ -29,6 +31,7 @@ class WorkOrderController extends Controller
         $items_qty = array();
         for ($p = 0; $p < count($sales_ids); $p++) {
             $work_order = WorkOrder::where('sales_id', $sales_ids[$p])->first();
+            $work_order_count = WorkOrder::where('sales_id', $sales_ids[$p])->count();
             // $work_order_no = $work_order->work_order_no;
             // $material_request = MaterialRequest::where('work_order_no', $work_order_no)->first();
             // if($material_request){
@@ -36,37 +39,67 @@ class WorkOrderController extends Controller
             //     $planned_end = $material_request->required_date->toDateString();
             //     array_push($planned_dates, [$planned_start, $planned_end]);
             // }
-            if($work_order->mat_ordered_id){
-                $mat_ordered_id = $work_order->mat_ordered_id;
-                $material_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
-                $items_list_received = $material_ordered->items_list();
-                if($items_list_received){
-                    foreach($items_list_received as $item){
-                        array_push($items_qty, $item['qty_received']);
-                    }   
-                }else{
-                    $items_qty = [];
+            for($i = 0; $i < $work_order_count; $i++){
+                $items_qty = [];
+                if($work_order->mat_ordered_id){
+                    $mat_ordered_id = $work_order->mat_ordered_id;
+                    $material_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
+                    $items_list_received = $material_ordered->items_list();
+                    if($items_list_received){
+                        foreach($items_list_received as $item){
+                            $obj = new stdClass(); 
+                            $obj->item_code = $item['item_code'];
+                            $obj->qty_received = $item['qty_received'];
+                            array_push($items_qty, $obj);
+                        }   
+                    }else{
+                        $items_qty = [];
+                    }
+                    array_push($quantity, $items_qty);
                 }
-                array_push($quantity, $items_qty);
-
+                $product_code = key(json_decode($work_order->transferred_qty, true));
+                array_push($items, $product_code);
             }
             $ordered_product = ordered_products::where('sales_id', $sales_ids[$p])->get();
             $status = $work_order->work_order_status;
             foreach($ordered_product as $o ){
                 $product_code = $o->product_code;
-                array_push($items, $product_code);
                 $product = ManufacturingProducts::where('product_code', $product_code)->first();
                 $prod_components = $product->components;
                 $components_list = json_decode($prod_components, true);
                 foreach($components_list as $i){
                     $component = Component::where('id', $i['component_id'])->first();
                     array_push($components, array('component_code'=>$component->component_code, 'status'=>$status, 'type'=>'item'));
-                    array_push($items, $product_code);
                 }
                 array_push($components, array('component_code'=>$product->product_code, 'status'=>$status, 'type'=>'item'));
             }
         }
         return view('modules.manufacturing.workorder', ['work_orders' => $work_orders, 'components' => $components, 'items' => $items, 'quantity' => $quantity]);
+    }
+
+    function getQtyFromMatOrdered($work_order_no){
+        $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+        $mat_ordered_id = $work_order->mat_ordered_id;
+        $material_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
+
+        $items_qty = [];
+        if($work_order->mat_ordered_id){
+            $mat_ordered_id = $work_order->mat_ordered_id;
+            $material_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
+            $items_list_received = $material_ordered->items_list();
+            if($items_list_received){
+                foreach($items_list_received as $item){
+                    $obj = new stdClass(); 
+                    $obj->item_code = $item['item_code'];
+                    $obj->qty_received = $item['qty_received'];
+                    array_push($items_qty, $obj);
+                }   
+            }else{
+                $items_qty = [];
+            }
+        }
+
+        return response(json_encode($items_qty, true));
     }
 
     function getRawMaterials($selected, $sales_id, $product_code){
@@ -125,6 +158,11 @@ class WorkOrderController extends Controller
         }
     }
 
+    // function getRawMaterialsSales($work_order_no){
+    //     $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+    //     return response($work_order_no);
+    // }
+
     function onDateChange($work_order_no, $planned_date, $date){
         $work_order = WorkOrder::where('work_order_no', $work_order_no)->update([
             $planned_date => $date,
@@ -138,6 +176,36 @@ class WorkOrderController extends Controller
             'work_order_status' => 'Completed',
         ]);
         $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+        return response($work_order);
+    }
+
+    function getBomId($code, $text){
+        if($text == 'Product'){
+            $bom = BillOfMaterials::where('product_code', $code)->first();
+            return response($bom->bom_id ?? 'Not Available');
+        }else{
+            $bom = BillOfMaterials::where('component_code', $code)->first();
+            return response($bom->bom_id ?? 'Not Available');
+        }
+    }
+
+    function checkUpdateStatus($work_order_no, $product_code){
+        $completed = array();
+        $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+        $created_at = $work_order->created_at;
+        $work_orders = WorkOrder::where('created_at', $created_at)->whereNotNull('component_code')->get();
+        
+        foreach($work_orders as $work_order){
+            if(key(json_decode($work_order->transferred_qty, true)) == $product_code){
+                array_push($completed, $work_order->work_order_status);
+            }
+        }
+        if(!(in_array("Pending", $completed))){
+            $work_order = WorkOrder::where('work_order_no', $work_order_no)->update([
+                'work_order_status' => 'Completed',
+            ]);
+            $work_order = WorkOrder::where('work_order_no', $work_order_no)->first();
+        }
         return response($work_order);
     }
 

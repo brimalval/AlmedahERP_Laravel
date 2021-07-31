@@ -121,9 +121,9 @@ class PurchaseReceiptController extends Controller
             $work_order_no = $mat_request->work_order_no;
 
             foreach(json_decode($work_order_no, true) as $w){
-                $work_order = WorkOrder::where('work_order_no', $w)->first();
+                $work_order = WorkOrder::where('id', $w)->first();
                 if(empty($work_order->mat_ordered_id)){
-                    WorkOrder::where('work_order_no', $w)->update(['mat_ordered_id' => $mo_id]);
+                    WorkOrder::where('id', $w)->update(['mat_ordered_id' => $mo_id]);
                 }
             }
             return response($work_order_no);
