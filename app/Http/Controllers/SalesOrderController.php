@@ -352,6 +352,7 @@ class SalesOrderController extends Controller
             }
 
             if(count($createMatRequestItems) != count($rawMaterialsOnly) + count($materialsInComponents)){
+                $workOrderProdElements = json_decode(json_encode($workOrderProdElements), true);
                 foreach($rawMaterialsOnly as $rawMat){
                     $exist = false;
                     foreach($workOrderProdElements as $wopEl){
@@ -359,7 +360,7 @@ class SalesOrderController extends Controller
                             $exist = true;
                         }
                     }
-                    if(!exist){
+                    if(!$exist){
                         $woe = new stdClass();
                         $woe->item_code = $rawMat['item_code'];
                         $woe->transferred_qty = $rawMat['quantity_avail'];
