@@ -32,6 +32,7 @@ class MaterialsOrdered extends Model
                     $items_list_received,
                     array(
                         'material' => ManufacturingMaterials::where('item_code', $item['item']->item_code)->first(),
+                        'item_code' => $items[$i]['item_code'],
                         'qty_received' => $items[$i]['qty_received'],
                         'qty_ordered' =>  $item['qty'],
                         'curr_progress' => intval(($items[$i]['qty_received']/$item['qty'])*100)

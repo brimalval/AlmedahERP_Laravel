@@ -16,6 +16,7 @@ class StockMoves extends Model
         'stock_moves_type',
         'mat_ordered_id',
         'move_date',
-        'employee_id'
+        'employee_id',
+        'status'
     ]; 
 }

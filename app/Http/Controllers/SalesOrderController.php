@@ -16,6 +16,7 @@ use App\Models\MaterialRequest;
 use App\Models\ordered_products;
 use Illuminate\Support\Carbon;
 use DB;
+use \stdClass;
 use Exception;
 class SalesOrderController extends Controller
 {
@@ -251,8 +252,9 @@ class SalesOrderController extends Controller
             }
 
             $work_order_ids = array();
-
-            foreach ($cart as $row){ 
+            $componentMaterials = json_decode($request->input("componentMaterials"), true);
+            $productMaterials = json_decode($request->input("productMaterials"), true);
+            foreach ($cart as $i=>$row){ 
 
                 $work_order = new WorkOrder();
                 $work_order->product_code = $row[0];
@@ -264,14 +266,15 @@ class SalesOrderController extends Controller
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
                 $work_order->work_order_no = "WOK";
+                $work_order->transferred_qty = json_encode($productMaterials[$i]);
                 $work_order->save();
                 $won = "WOR-PR-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
                 $work_order->save();
-                //array_push($work_order_ids, $work_order->id);
+                array_push($work_order_ids, $work_order->id);
             }
 
-            foreach($new_component as $c){
+            foreach($new_component as $i=>$c){
                 $component_name = $c['component_name'];
                 $component = Component::where('component_name', "=", $component_name)->first();
                 $component_code = $component->component_code;
@@ -285,6 +288,7 @@ class SalesOrderController extends Controller
                 $work_order->real_end_date = null;
                 $work_order->work_order_status = "Pending";
                 $work_order->work_order_no = "WOK";
+                $work_order->transferred_qty = json_encode($componentMaterials[$i]);
                 $work_order->save();
                 $won = "WOR-CO-".Carbon::now()->year."-".str_pad($work_order->id, 5, '0', STR_PAD_LEFT);
                 $work_order->work_order_no = $won;
@@ -301,7 +305,145 @@ class SalesOrderController extends Controller
         }
     }
 
-    function getRawMaterialQuantity($raw_material){
+    function returnProductComponentMaterials(Request $request){
+        $createMatRequestItems = json_decode($request->input("cmri"), true);
+        $rawMaterialsOnly = json_decode($request->input("rmo"), true);
+        $materialsInComponents = json_decode($request->input("mic"), true);
+        $workOrderCompElements = json_decode($request->input("woce"), true);
+        $workOrderComp = json_decode($request->input("woc"), true);
+        $workOrderProdElements = json_decode($request->input("wope"), true);
+        $workOrderProd = json_decode($request->input("wop"), true);
+        if(count($createMatRequestItems) != 0){
+            foreach($createMatRequestItems as $matReqItem){
+                $woe = new stdClass();
+                $woe->item_code = $matReqItem['item_code'];
+                $woe->transferred_qty = $matReqItem['quantity_needed_for_request'];
+                $woe->quantity_avail = $matReqItem['quantity_avail'];
+                $woe->status = 'Pending';
+                $woe->product_code = $matReqItem['product_code'];
+
+                $obj = new stdClass();
+                $product_code = $matReqItem['product_code'];
+                $obj->$product_code = '';
+                
+                if($matReqItem['category'] === 'Component'){
+                    array_push($workOrderCompElements, $woe);
+                    $exist = false;
+                    foreach($workOrderComp as $wocEl){
+                        if(key($wocEl) === $product_code){
+                            $exist = true;
+                        }
+                    }
+                    if(!$exist){
+                        array_push($workOrderComp, $obj);
+                    }
+                }else{
+                    array_push($workOrderProdElements, $woe);
+                    $exist = false;
+                    foreach($workOrderProd as $wopEl){
+                        if(key($wopEl) === $product_code){
+                            $exist = true;
+                        }
+                    }
+                    if(!$exist){
+                        array_push($workOrderProd, $obj);
+                    }
+                }
+            }
+
+            if(count($createMatRequestItems) != count($rawMaterialsOnly) + count($materialsInComponents)){
+                $workOrderProdElements = json_decode(json_encode($workOrderProdElements), true);
+                foreach($rawMaterialsOnly as $rawMat){
+                    $exist = false;
+                    foreach($workOrderProdElements as $wopEl){
+                        if($wopEl['item_code'] == $rawMat['item_code'] && $wopEl['product_code'] == $rawMat['product_code']){
+                            $exist = true;
+                        }
+                    }
+                    if(!$exist){
+                        $woe = new stdClass();
+                        $woe->item_code = $rawMat['item_code'];
+                        $woe->transferred_qty = $rawMat['quantity_avail'];
+                        $woe->quantity_avail = $rawMat['quantity_avail'];
+                        $woe->status = "pending";
+                        $woe->product_code = $rawMat['product_code'];
+                        $obj = new stdClass();
+                        $product_code = $rawMat['product_code'];
+                        $obj->$product_code = "";
+                        array_push($workOrderProdElements, $woe);
+                        $exist2 = false;
+                        foreach($workOrderProdElements as $wopeEl){
+                            if(key($wopeEl) === $product_code){
+                                $exist2 = true;
+                            } 
+                        }
+                        if(!$exist2){
+                            array_push($workOrderProd, $obj);
+                        }
+                    }
+                }
+
+                foreach($materialsInComponents as $matComp){
+                    $exist = false;
+                    foreach($workOrderCompElements as $wocEl){
+                        if($wocEl['item_code'] == $matComp['item_code'] && $wocEl['product_code'] == $matComp['product_code']){
+                            $exist = true;
+                        }
+                    }
+                    if(!$exist){
+                        $woe = new stdClass();
+                        $woe->item_code = $matComp['item_code'];
+                        $woe->transferred_qty = $matComp['quantity_avail'];
+                        $woe->quantity_avail = $matComp['quantity_avail'];
+                        $woe->status = "pending";
+                        $woe->product_code = $matComp['product_code'];
+                        $obj = new stdClass();
+                        $product_code = $matComp['product_code'];
+                        $obj->$product_code = "";
+                        array_push($workOrderCompElements, $woe);
+                        $exist2 = false;
+                        foreach($workOrderCompElements as $woceEl){
+                            if(key($woceEl) === $product_code){
+                                $exist2 = true;
+                            } 
+                        }
+                        if(!$exist2){
+                            array_push($workOrderComp, $obj);
+                        }
+                    }
+                }
+
+
+            }
+
+        }else{
+            foreach($rawMaterialsOnly as $rawMat){
+                $woe = new stdClass();
+                $woe->item_code = $rawMat['item_code'];
+                $woe->transferred_qty = $rawMat['quantity_avail'];
+                $woe->quantity_avail = $rawMat['quantity_avail'];
+                $woe->status = "pending";
+                $woe->product_code = $rawMat['product_code'];
+                array_push($workOrderProdElements, $woe);
+            }
+
+            foreach($materialsInComponents as $matComp){
+                $woe = new stdClass();
+                $woe->item_code = $matComp['item_code'];
+                $woe->transferred_qty = $matComp['quantity_avail'];
+                $woe->quantity_avail = $matComp['quantity_avail'];
+                $woe->status = "pending";
+                $woe->product_code = $matComp['product_code'];
+                array_push($workOrderCompElements, $woe);
+            }
+        }
+
+    
+        return response()->json(['workOrderComp'=>$workOrderComp, 'workOrderProd'=>$workOrderProd, 
+                                 'workOrderCompElements'=>$workOrderCompElements, 'workOrderProdElements'=>$workOrderProdElements]);
+    }
+
+    function getRawMaterialQuantitySales($raw_material){
         $raw_material = ManufacturingMaterials::where('item_name', $raw_material)->first();
         $raw_material_qty = $raw_material->rm_quantity;
         return response($raw_material_qty);
@@ -476,7 +618,8 @@ class SalesOrderController extends Controller
                     $raw_material_quantity, 
                     "item_code" => $raw_material_code,
                     "reorder_qty" => $raw_material_reorder_qty,
-                    "reorder_level" => $raw_material_reorder_level
+                    "reorder_level" => $raw_material_reorder_level,
+                    "product_code" => $product->product_code,
                 ]);
             }
 
@@ -488,7 +631,7 @@ class SalesOrderController extends Controller
                 $raw_material_name = $raw_material->component_name;
                 $raw_material_quantity = 0;
                 $raw_materials_needed = $raw_material->item_code;
-                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed]);
+                array_push($components, [$component_qty * $qty[$i], $raw_material_category, $raw_material_name, $raw_material_quantity, $raw_materials_needed, "product_code" => $product->product_code]);
             }
             
         }

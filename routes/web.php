@@ -29,7 +29,7 @@ use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
-
+use App\Http\Controllers\ChartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -441,10 +441,11 @@ Route::get('/refresh', [SalesOrderController::class, 'refresh']);
 
 Route::post('/minusStocks' , [SalesOrderController::class, 'minusStocks']);
 Route::get('/getRawMaterials/{selected}', [SalesOrderController::class, 'getRawMaterials']);
-Route::get('/getComponents/{selected}', [SalesOrderController::class, 'getComponents']);
+Route::get('/returnProductComponentMaterials', [SalesOrderController::class, 'returnProductComponentMaterials']);
 Route::get('/getCompo', [SalesOrderController::class, 'getCompo']);
-Route::get('/getRawMaterialQuantity/{selected}', [SalesOrderController::class, 'getRawMaterialQuantity']);
+Route::get('/getRawMaterialQuantitySales/{selected}', [SalesOrderController::class, 'getRawMaterialQuantitySales']);
 Route::get('/getReorderLevelAndQty/{selected}' , [SalesOrderController::class, 'getReorderLevelAndQty']);
+Route::get('/getStockData/{selected}' , [SalesOrderController::class, 'getStockData']);
 Route::get('/loadProducts', [SalesOrderController::class, 'loadProducts']);
 
 /**SALES INVOICE ROUTES */
@@ -480,7 +481,13 @@ Route::post('/create-newstockmoves', [NewStockMovesController::class, 'store']);
 Route::post('/create-newstockmovesreturn', [StockMovesReturnController::class, 'store']);
 Route::get('/showItemsNew/{selected}', [NewStockMovesController::class, 'showItemsNew']);
 Route::get('/showItemsRet/{selected}', [NewStockMovesController::class, 'showItemsRet']);
+Route::get('/showItemCodeNew/{selected}/{selected2}', [NewStockMovesController::class, 'showItemCodeNew']);
+Route::get('/getStockTransfer/{selected}', [NewStockMovesController::class, 'getStockTransfer']);
+Route::get('/getRawMaterialQuantity/{selected}', [NewStockMovesController::class, 'getRawMaterialQuantity']);
+Route::post('/saveStockTransfer/{selected}', [NewStockMovesController::class, 'saveStockTransfer']);
+Route::post('/confirmStockTransfer/{selected}', [NewStockMovesController::class, 'confirmStockTransfer']);
 Route::get('/view-mo-items/{id}', [NewStockMovesController::class, 'view_items']);
+Route::get('/view-st-items/{id}', [StockMovesReturnController::class, 'view_items']);
 Route::get('/returnitems', [StockMovesReturnController::class, 'index']);
 
 
@@ -578,8 +585,12 @@ Route::get('/loadWorkOrderInfo', function () {
     return view('modules.manufacturing.workordersubModules.workorder_info');
 });
 Route::get('/getRawMaterialsWork/{selected}/{sales_id}/{product_code}', [WorkOrderController::class, 'getRawMaterials']);
+Route::get('/getRawMaterialsWorkWithoutSales/{selected}', [WorkOrderController::class, 'getRawMaterialsSales']);
 Route::get('/startWorkOrder/{work_order_no}', [WorkOrderController::class, 'startWorkOrder']);
 Route::get('/updateStatus/{work_order_no}', [WorkOrderController::class, 'updateStatus']);
+Route::get('/getBomId/{selected}/{text}', [WorkOrderController::class, 'getBomId']);
+Route::get('/getQtyFromMatOrdered/{work_order_no}', [WorkOrderController::class, 'getQtyFromMatOrdered']);
+Route::get('/checkUpdateStatus/{work_order_no}/{product_code}', [WorkOrderController::class, 'checkUpdateStatus']);
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**WAREHOUSE ROUTES */
@@ -602,3 +613,13 @@ Route::post('/create-station', [StationController::class, 'store']);
 
 Route::get('/debug', [DebugController::class, 'index']);
 Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail');
+
+// FOR CHART
+Route::post('/generate_sample_chart',                           [ChartController::class, 'generate_sample_chart']);
+Route::post('/generate_reports_sales',                          [ChartController::class, 'generate_reports_sales']);
+Route::post('/generate_report_trends',                          [ChartController::class, 'generate_report_trends']);
+Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
+Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
+Route::post('/generate_reports_delivery',                       [ChartController::class, 'generate_reports_delivery']);
+Route::post('/export',                                          [ChartController::class, 'export']);
+Route::post('/generate_reports_fast_move',                      [ChartController::class, 'generate_reports_fast_move']);
