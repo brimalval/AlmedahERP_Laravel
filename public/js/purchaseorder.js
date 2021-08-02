@@ -292,7 +292,7 @@ function loadQuotation(id) {
                             <span name="rate${i}" id="rate${i}">${item.rate} </span>
                         </td>
                         <td class="text-black-50">
-                            <span name="price${i}" id="price${i}">₱ ${price_string}</span>
+                            ₱ <span name="price${i}" id="price${i}">${price_string}</span>
                         </td>
                     </tr> 
                     `
@@ -463,11 +463,7 @@ function getQtyAndPrice() {
     let price_string = '';
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
         qty += !$("#qty" + i).html() ? 0 : parseInt($("#qty" + i).html());
-        if ($("#mp_status").length) {
-            price_string = isNaN($("#price" + i).html()) ? $("#price" + i).html().replace("₱ ", '') : $("#price" + i).html();   
-        } else {
-            price_string = isNaN($("#price" + i).val()) ? $("#price" + i).val().replace("₱ ", '') : $("#price" + i).val();
-        }
+        price_string = $(`#price${i}`).html();
         console.log(price_string);
         let priceWOComma = price_string.replaceAll(',', '');
         price_num = parseFloat(priceWOComma);

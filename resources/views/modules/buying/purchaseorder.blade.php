@@ -37,12 +37,6 @@
     </div>
 </nav>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(".selectpicker").selectpicker();
-    });
-</script>
-
 <div class="container">
     <div class="card my-2">
         <div class="card-header bg-light">
@@ -55,7 +49,7 @@
                 </div>
                 --}}
                 <div class="col-4">
-                    <select id="status-search" class="form-control selectpicker datatable-search">
+                    <select id="status-search" class="form-control selectpicker po-datatable-search">
                         <option value="None" data-subtext="None" selected>Status</option>
                         <option value="Draft" data-subtext="">Draft</option>
                         <option value="To Receive" data-subtext="">To Receive</option>
@@ -65,7 +59,7 @@
                     </select>
                 </div>
                 <div class="col-4">
-                    <select id="po-mat-search" class="form-control selectpicker datatable-search" data-live-search="true">
+                    <select id="po-mat-search" class="form-control selectpicker po-datatable-search" data-live-search="true">
                         <option value="None" data-subtext="None" selected>Search By Material...</option>
                         @foreach ($materials as $material)
                             <option value="{{ $material->item_code }}" data-subtext="{{ $material->item_name }}">{{ $material->item_code }}</option>
@@ -73,7 +67,7 @@
                     </select>
                 </div>
                 <div class="col-4">
-                    <select id="po-supplier-seach" class="form-control selectpicker datatable-search" data-live-search="true">
+                    <select id="po-supplier-search" class="form-control selectpicker po-datatable-search" data-live-search="true">
                         <option value="None" data-subtext="None" selected>Search By Supplier...</option>
                         @foreach ($suppliers as $supplier)
                             <option value="{{ $supplier->supplier_id }}" data-subtext="{{ $supplier->company_name }}">{{ $supplier->supplier_id }}</option>
@@ -143,10 +137,6 @@
                                 <td scope="col">{{ $material->mp_status }}</td>
                                 <td scope="col">{{ $material->purchase_date }}</td>
                                 <td scope="col" id="totalPrice{{ $loop->index + 1 }}">{{ $material->total_cost }}</td>
-                                <!--
-                                <td scope="col">0</td>
-                                <td scope="col">0</td>
-                                -->
                             </tr>
                         @endforeach
                     </tbody>
@@ -164,14 +154,68 @@
                 $(`#totalPrice${i}`).html("₱ " + numberWithCommas(price.toFixed(2)));
             }
             
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+        $(".selectpicker").selectpicker();
+        $(".po-datatable-search").change(function(e) {
+                if($(this).val() === 'None')
+                    loadPurchaseOrder();
+                else {
+                    let url = '/po-by-';
+                    console.log($(this).attr('id'));
+                    switch ($(this).attr('id')) {
+                        case 'status-search':
+                            url = url + 'status'
+                            break;
+                        case 'po-mat-search':
+                            url = url + 'item'
+                            break;
+                        case 'po-supplier-search':
+                            url = url + 'supplier'            
+                            break;
+                    }
+                    url = url + `/${$(this).val()}`;
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: $(this).val(),
+                        contentType: false,
+                        processData: false,
+                        success: function(data) {
+                            var tbl = $("#tbl-buying-purchaseorder").DataTable();
+                            tbl.rows('tr').remove();
+                            var items = data.items;
+                            if(items.length > 0) {
+                                for(let i=1; i<=items.length; i++) {
+                                    var item = items[i-1];
+                                    console.log(item)
+                                    let price_string = numberWithCommas(item.total_cost.toFixed(2));
+                                    tbl.row.add([
+                                        `<a href="javascript:onclick=viewPurchaseOrder(${item.id})">${item.purchase_id}</a>`,
+                                        item.mp_status,
+                                        item.purchase_date,
+                                        `₱ ${price_string}`
+                                    ]);
+                                    console.log('True');
+                                }
+                            }
+                            tbl.draw();
+                        }
+                    });
+                    e.stopImmediatePropagation();
+                }
+            });
         });
     
         /**From internet function */
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         }
-    </script>
 
+        function filter_po_table(url, data) {
+
+        }
+    </script>
     <script type="text/javascript">
         $(document).ready(function() {
             var oTable = $('#tbl-buying-purchaseorder').dataTable({

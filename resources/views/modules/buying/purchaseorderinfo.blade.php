@@ -216,76 +216,78 @@
                     </div>
                 </div>
                 <div class="row">
-                    <table class="table border-bottom table-hover table-bordered" id="itemTable" style="width: 100%;">
-                        <thead class="border-top border-bottom bg-light">
-                            <tr class="text-muted">
-                                <th>
-                                    <input type="checkbox" id="masterChk" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
-                                </th>
-                                <th>Item Code</th>
-                                <th>Item Name</th>
-                                <th>Reqd By Date</th>
-                                <th>Quantity</th>
-                                <th>Rate</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody class="" id="itemTable-content">
-                            @foreach ($items_purchased as $item)
-                                <tr id="item-{{ $loop->index + 1 }}">
-                                    <td>
-                                        <input type="checkbox" name="item-chk" id="chk{{ $loop->index + 1 }}" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
-                                    </td>
-                                    <td class="text-black-50">
-                                        <span type="text" name="item{{ $loop->index + 1 }}"
-                                            id="item{{ $loop->index + 1 }}">{{ $item['item']->item_code }}</span>
-                                    </td>
-                                    <td class="text-black-50">
-                                        <span name="itemName{{ $loop->index + 1 }}"
-                                            id="itemName{{ $loop->index + 1 }}">{{ $item['item']->item_name }}</span>
-                                    </td>
-                                    <td class="text-black-50">
-                                        <input type="date" name="date{{ $loop->index + 1 }}"
-                                            id="date{{ $loop->index + 1 }}" value="{{ $item['req_date'] }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
-                                    </td>
-                                    <td class="text-black-50">
-                                        <span name="qty{{ $loop->index + 1 }}"
-                                            id="qty{{ $loop->index + 1 }}">{{ $item['qty'] }}</span>
-                                    </td>
-                                    <td class="text-black-50">
-                                        <span name="rate{{ $loop->index + 1 }}"
-                                            id="rate{{ $loop->index + 1 }}">{{ $item['rate'] }}</span>
-                                    </td>
-                                    <td class="text-black-50">
-                                        <span name="price{{ $loop->index + 1 }}" id="price{{ $loop->index + 1 }}">₱
-                                            {{ $item['subtotal'] }}</span>
-                                    </td>
+                    <div class="col">
+                        <table class="table border-bottom table-hover table-bordered" id="itemTable" style="width: 100%;">
+                            <thead class="border-top border-bottom bg-light">
+                                <tr class="text-muted">
+                                    <th>
+                                        <input type="checkbox" id="masterChk" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
+                                    </th>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Reqd By Date</th>
+                                    <th>Quantity</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <td colspan="7" rowspan="5">
-                                @if ($purchase_order->mp_status === 'Draft')
-                                    <button type="button" id="multBtn" style="background-color: #007bff;">Add
-                                        Multiple</button>
-                                    <button type="button" id="rowBtn" style="background-color: #007bff;">Add
-                                        Row</button>
-                                    <button type="button" id="deleteRow"
-                                        style="background-color: red; display:none;">Delete</button>
-                            </td>
-                        </tfoot>
-                        @endif
-                        <style>
-                            #multBtn,
-                            #rowBtn,
-                            #deleteRow {
-                                border-radius: 4px;
-                                padding: 5px;
-                                color: white;
-                            }
-
-                        </style>
-                    </table>
+                            </thead>
+                            <tbody class="" id="itemTable-content">
+                                @foreach ($items_purchased as $item)
+                                    <tr id="item-{{ $loop->index + 1 }}">
+                                        <td>
+                                            <input type="checkbox" name="item-chk" id="chk{{ $loop->index + 1 }}" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <span type="text" name="item{{ $loop->index + 1 }}"
+                                                id="item{{ $loop->index + 1 }}">{{ $item['item']->item_code }}</span>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <span name="itemName{{ $loop->index + 1 }}"
+                                                id="itemName{{ $loop->index + 1 }}">{{ $item['item']->item_name }}</span>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <input type="date" name="date{{ $loop->index + 1 }}"
+                                                id="date{{ $loop->index + 1 }}" value="{{ $item['req_date'] }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <span name="qty{{ $loop->index + 1 }}"
+                                                id="qty{{ $loop->index + 1 }}">{{ $item['qty'] }}</span>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <span name="rate{{ $loop->index + 1 }}"
+                                                id="rate{{ $loop->index + 1 }}">{{ $item['rate'] }}</span>
+                                        </td>
+                                        <td class="text-black-50">
+                                            <span name="price{{ $loop->index + 1 }}" id="price{{ $loop->index + 1 }}">₱
+                                                {{ $item['subtotal'] }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <td colspan="7" rowspan="5">
+                                    @if ($purchase_order->mp_status === 'Draft')
+                                        <button type="button" id="multBtn" style="background-color: #007bff;">Add
+                                            Multiple</button>
+                                        <button type="button" id="rowBtn" style="background-color: #007bff;">Add
+                                            Row</button>
+                                        <button type="button" id="deleteRow"
+                                            style="background-color: red; display:none;">Delete</button>
+                                </td>
+                            </tfoot>
+                            @endif
+                            <style>
+                                #multBtn,
+                                #rowBtn,
+                                #deleteRow {
+                                    border-radius: 4px;
+                                    padding: 5px;
+                                    color: white;
+                                }
+    
+                            </style>
+                        </table>
+                    </div>
                     <hr>
                     <br>
                     <div class="col-6">
