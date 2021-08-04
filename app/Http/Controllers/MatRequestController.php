@@ -8,10 +8,13 @@ use App\Models\MaterialRequest;
 use App\Models\RequestedRawMat;
 use App\Models\Station;
 use App\Models\MaterialUOM;
+use App\Models\NotificationLog;
+
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+
 
 class MatRequestController extends Controller
 {
@@ -81,6 +84,7 @@ class MatRequestController extends Controller
             $matRequest->save();
             $matRequest->request_id = $id_copy = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
             $matRequest->save();
+
             for($i=0; $i<sizeof(request('item_code')); $i++){
                 $requestItem = new RequestedRawMat();
                 $requestItem->request_id = $matRequest->request_id;
@@ -92,6 +96,15 @@ class MatRequestController extends Controller
                 $requestItem->save();
             }
 
+            /*Creating Notif*/
+            $notif = new NotificationLog();
+            $notif->description = "New Created Material Request for " . $matRequest->request_id;
+            $notif->model_id = $matRequest->id;
+            $notif->model_name = "MaterialRequest";
+            $notif->save();
+
+
+
 
             return response()->json([
                 'status' => 'success',
@@ -100,6 +113,8 @@ class MatRequestController extends Controller
                 'raw_mats_with_qty' => $matRequest->rawMats,
                 'redirect' => route('materialrequest.index'),
             ]);
+
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
