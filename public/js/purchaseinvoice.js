@@ -9,10 +9,14 @@ $(document).ready(function () {
         $("#installmentGrp").attr('hidden', true);
     }
     var amount = 0;
-    if($("#emptyPILog").length) {
-        amount = parseFloat($("#priceToPay").val()) / 4;        
+    if ($("#paymentMode").val() !== 'Cash') {
+        if($("#emptyPILog").length) {
+            amount = parseFloat($("#priceToPay").val()) / 4;        
+        } else {
+            amount = parseFloat($("#priceToPay").val()) / parseFloat($("#installmentType").val());     
+        }
     } else {
-        amount = parseFloat($("#priceToPay").val()) / parseFloat($("#installmentType").val());     
+        amount = parseFloat($("#payAmount").val());
     }
     $("#payAmount").val(amount.toFixed(2));
 });
@@ -196,18 +200,16 @@ function updateInvoiceStatus() {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
     });
-    if (confirm(`Permanently submit ${$("#invoiceId").val()}?`)) {
-        $.ajax({
-            type: "POST",
-            url: `/update-invoice-status/${$("#invoiceId").val()}`,
-            data: $("#invoiceId").val(),
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                loadPurchaseInvoice();
-            }
-        });
-    }
+    $.ajax({
+        type: "POST",
+        url: `/update-invoice-status/${$("#invoiceId").val()}`,
+        data: $("#invoiceId").val(),
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            loadPurchaseInvoice();
+        }
+    });
 }
 
 function loadMaterials(id) {

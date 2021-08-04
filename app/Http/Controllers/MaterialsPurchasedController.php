@@ -51,8 +51,23 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
+    public function getAll() {
+        $order_data = MaterialPurchased::all();
+        return response()->json(['items' => $order_data]);
+    }
+
     public function getByStatus($status) {
         $order_data = MaterialPurchased::where('mp_status', $status)->get();
+        return response()->json(['items' => $order_data]);
+    }
+
+    public function getByMaterial($item_code) {
+        $order_data = MaterialPurchased::where('items_list_purchased', 'LIKE', '%'.$item_code.'%')->get();
+        return response()->json(['items' => $order_data]);
+    }
+
+    public function getBySupplier($supplier_id) {
+        $order_data = MaterialPurchased::where('items_list_purchased', 'LIKE', '%'.$supplier_id.'%')->get();
         return response()->json(['items' => $order_data]);
     }
 
