@@ -762,13 +762,13 @@ function loadSupplier() {
 
 function openSupplierInfo(id) {
     $(document).ready(function () {
-        $("#contentSupplier").load(`/view-supplier/${id}`);
+        $("#contentSupplier").load(`/supplier/${id}`);
     });
 }
 
 function openSupplierForm() {
     $(document).ready(function () {
-        $("#contentSupplier").load(`/create-new-supplier`);
+        $("#contentSupplier").load(`/supplier/create`);
     });
 }
 

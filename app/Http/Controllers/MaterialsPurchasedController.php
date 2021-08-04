@@ -38,16 +38,37 @@ class MaterialsPurchasedController extends Controller
         $purchase_order = MaterialPurchased::find($index);
         $r_quotation = $purchase_order->supplier_quotation->req_quotation;
         $items_purchased = $purchase_order->itemsPurchased();
+        $req_date = ($r_quotation != null) ? $r_quotation->material_request->required_date : $items_purchased[0]['req_date'];
         return view(
             'modules.buying.purchaseorderinfo',
             [
                 'purchase_order' => $purchase_order,
                 'supplier_quotations' => SuppliersQuotation::all(),
                 'items_purchased' => $items_purchased,
-                'req_date' => ($r_quotation != null) ? $r_quotation->material_request->required_date : $items_purchased[0]['req_date'],
+                'req_date' => date_format($req_date, "Y-m-d"),
                 'supplier' => $purchase_order->supplier_quotation->supplier
             ]
         );
+    }
+
+    public function getAll() {
+        $order_data = MaterialPurchased::all();
+        return response()->json(['items' => $order_data]);
+    }
+
+    public function getByStatus($status) {
+        $order_data = MaterialPurchased::where('mp_status', $status)->get();
+        return response()->json(['items' => $order_data]);
+    }
+
+    public function getByMaterial($item_code) {
+        $order_data = MaterialPurchased::where('items_list_purchased', 'LIKE', '%'.$item_code.'%')->get();
+        return response()->json(['items' => $order_data]);
+    }
+
+    public function getBySupplier($supplier_id) {
+        $order_data = MaterialPurchased::where('items_list_purchased', 'LIKE', '%'.$supplier_id.'%')->get();
+        return response()->json(['items' => $order_data]);
     }
 
     public function view_items($id)
@@ -145,10 +166,8 @@ class MaterialsPurchasedController extends Controller
     {
         $mp_material = MaterialPurchased::where('purchase_id', $purchase_id)->first();
         //delete all records with same purchase_id 
-        $material_records = $mp_material->materialRecords;
-        foreach ($material_records as $material) {
-            $material->delete();
-        }
+        $mp_records = MPRecord::where('purchase_id', $purchase_id)->get();
+        if($mp_records != null) $mp_records->delete();
         //get purchase receipt and delete pending orders record related to purchase receipt
         $p_receipt = $mp_material->receipt;
         if ($p_receipt != null) {

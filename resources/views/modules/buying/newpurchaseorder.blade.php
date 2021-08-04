@@ -182,55 +182,54 @@
                     </div>
                 </div>
                 <div class="row">
-                    <table class="table border-bottom table-hover table-bordered" id="itemTable">
-                        <thead class="border-top border-bottom bg-light">
-                            <tr class="text-muted">
-                                <th>
-                                    <input type="checkbox" id="masterChk">
-                                </th>
-                                <th>Item Code</th>
-                                <th>Item Name</th>
-                                <th>Reqd By Date</th>
-                                <th>Quantity</th>
-                                <th>Rate</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody class="" id="itemTable-content">
-                            <td id="emptyRow" valign="top" colspan="6" class="dataTables_empty">No data available in table</td>
-                        </tbody>
-                        <tfoot>
-                            <td colspan="7" rowspan="5">
-                                <button type="button" id="multBtn" style="background-color: #007bff;">Add
-                                    Multiple</button>
-                                <button type="button" id="rowBtn" style="background-color: #007bff;">Add
-                                    Row</button>
-                                <button type="button" id="deleteRow"
-                                    style="background-color: red; display:none;">Delete</button>
-                            </td>
-                        </tfoot>
-                        <style>
-                            #multBtn,
-                            #rowBtn,
-                            #deleteRow {
-                                border-radius: 4px;
-                                padding: 5px;
-                                color: white;
-                            }
-
-                        </style>
-                    </table>
-                    <br>
+                    <div class="col">
+                        <table class="table border-bottom table-hover table-bordered" id="itemTable">
+                            <thead class="border-top border-bottom bg-light">
+                                <tr class="text-muted">
+                                    <th>
+                                        <input type="checkbox" id="masterChk">
+                                    </th>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Reqd By Date</th>
+                                    <th>Quantity</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="" id="itemTable-content">
+                                <td id="emptyRow" valign="top" colspan="7" class="dataTables_empty">No data available in table</td>
+                            </tbody>
+                            <tfoot>
+                                <td colspan="7" rowspan="3">
+                                    <button type="button" id="multBtn" style="background-color: #007bff;">Add
+                                        Multiple</button>
+                                    <button type="button" id="rowBtn" style="background-color: #007bff;">Add
+                                        Row</button>
+                                    <button type="button" id="deleteRow"
+                                        style="background-color: red; display:none;">Delete</button>
+                                </td>
+                            </tfoot>
+                            <style>
+                                #multBtn,
+                                #rowBtn,
+                                #deleteRow {
+                                    border-radius: 4px;
+                                    padding: 5px;
+                                    color: white;
+                                }
+    
+                            </style>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
                     <div class="col-6">
-                        <br>
                         <div class="form-group">
                             <label for="totalphp">Total (PHP)</label>
                             <input type="text" class="form-control" id="totalPrice" value="₱ 0.00" readonly>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                        </div>
+                        </div>  
                     </div>
                 </div>
             </div>

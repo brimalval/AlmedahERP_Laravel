@@ -59,10 +59,9 @@
                                         <option value="3"> Sales Order Trends</option>
                                         <option value="4"> Purchase Order Report</option>
                                         <option value="5"> Purchase order and Sales Order Report</option>
-                                        <option value="6"> Missing Reports</option>
+                                        <option value="6"> Stock & Suppliers Report</option>
                                         <option value="7"> Delivery Reports</option>
                                         <option value="8"> Fast Moving Products</option>
-                                
                                     </select>
                                 </div>
                                 

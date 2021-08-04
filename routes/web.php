@@ -364,6 +364,10 @@ Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class
 Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
 Route::post('/store-mp-materials/{purchase_id}', [MaterialsPurchasedController::class, 'storeMaterial']);
 Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
+Route::get('/po-all', [MaterialPurchasedController::class, 'getAll']);
+Route::get('/po-by-status/{status}', [MaterialsPurchasedController::class, 'getByStatus']);
+Route::get('/po-by-item/{item_code}', [MaterialsPurchasedController::class, 'getByMaterial']);
+Route::get('/po-by-supplier/{supplier_id}', [MaterialsPurchasedController::class, 'getBySupplier']);
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
@@ -618,8 +622,11 @@ Route::get('/debug/email', [DebugController::class, 'show'])->name('debug.mail')
 Route::post('/generate_sample_chart',                           [ChartController::class, 'generate_sample_chart']);
 Route::post('/generate_reports_sales',                          [ChartController::class, 'generate_reports_sales']);
 Route::post('/generate_report_trends',                          [ChartController::class, 'generate_report_trends']);
-Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
-Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
 Route::post('/generate_reports_delivery',                       [ChartController::class, 'generate_reports_delivery']);
 Route::post('/export',                                          [ChartController::class, 'export']);
 Route::post('/generate_reports_fast_move',                      [ChartController::class, 'generate_reports_fast_move']);
+
+
+Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
+Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
+Route::get('/generate_reports_stock_monitoring',                [ChartController::class, 'generate_reports_stock_monitoring']);
