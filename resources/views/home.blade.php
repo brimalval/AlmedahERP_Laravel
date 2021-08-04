@@ -1,8 +1,17 @@
 @extends('layouts.app')
 @section('content')
+<style>
+.badge-counter{
+    color:white;
+}
+</style>
 
-    <!-- Bootstrap NavBar -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- Bootstrap NavBar
     <nav class="navbar navbar-expand-md navbar-dark navbar-bg">
+
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
             data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -12,41 +21,224 @@
             <img src="images/Banner_Logo_1-3.jpg"
                 style="box-shadow: 0 4px 8px 0 rgba(247, 244, 227, 1), 0 0px 20px 0 rgba(247, 244, 227, 1); height:40px;">
         </a>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#top"">Menu1 <span class=" sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#top"">Menu2</a>
-                    </li>
-                    <li class=" nav-item">
-                        <a class="nav-link" href="#top">Menu3</a>
-                </li>
-                <!-- This menu is hidden in bigger devices with d-sm-none.
-                    The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  -->
-                <li class="nav-item dropdown d-sm-block d-md-none">
-                    <a class="nav-link dropdown-toggle" href="#" id="smallerscreenmenu" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false"> Menu </a>
-                </li><!-- Smaller devices menu END -->
-            </ul>
-        </div>
-    </nav><!-- NavBar END -->
+    </nav>
+    NavBar END -->
+
+
+        <nav class="navbar navbar-expand navbar-light topbar mb-2 static-top py-5" style="z-index:3; box-shadow: 0 0.15rem 1.75rem 0 rgb(58 59 69 / 15%) !important;">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Brand -->
+                    <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <a class="navbar-brand" href="#">
+                            <img src="images/company_logo.png"
+                                style="width:450px">
+                        </a>                        
+                    </div>
+
+                    <!-- Topbar Search -->
+                    <div
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input id="search_menu" type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+                                <span class="badge badge-danger badge-counter">7</span>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Message Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div class="font-weight-bold">
+                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
+                                            problem I've been having.</div>
+                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
+                                        <div class="status-indicator"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">I have the photos that you ordered last month, how
+                                            would you like them sent to you?</div>
+                                        <div class="small text-gray-500">Jae Chun · 1d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
+                                        <div class="status-indicator bg-warning"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">Last month's report looks great, I am very happy with
+                                            the progress so far, keep up the good work!</div>
+                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
+                                            told me that people say this to all dogs, even if they aren't good...</div>
+                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <img class="img-profile rounded-circle" src="images/male.png" style="height: 2rem;width: 2rem;vertical-align: middle; border-style: none;">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                                    
+
+
+
     <!-- Bootstrap row -->
-    <div class="row" id="body-row">
+    <div class="row mb-1" id="body-row">
         <!-- Sidebar -->
-        <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+        <div id="sidebar-container" class="sidebar-expanded d-none d-md-block" >
             <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
             <!-- Bootstrap List Group -->
             <ul class="list-group">
                 <!-- Separator with title -->
-                <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+                <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed" style="border-radius:0">
                     <small>MAIN MENU</small>
                 </li>
                 <!-- /END Separator -->
                 <!-- Collapse Button -->
                 <a href="#top" data-toggle="sidebar-colapse"
-                    class="bg-dark bevel list-group-item list-group-item-action d-flex align-items-center">
+                    class="bg-dark  list-group-item list-group-item-action d-flex align-items-center">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span id="collapse-icon" class="fa fa-2x mr-3"></span>
                         <span id="collapse-text" class="menu-collapsed">Collapse</span>
@@ -55,7 +247,7 @@
                 <!-- End of Collapse Button -->
                 <!-- Menu with submenu -->
                 <!-- Dashboard -->
-                <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-dark bevel">
+                <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-dark ">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-columns fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Dashboard</span>
@@ -65,7 +257,7 @@
                 <!-- End of dashboard -->
                 <!-- Menu Item Messages -->
                 <a href="#submenuMessages" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action flex-column align-items-start">
+                    class="bg-dark  list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-envelope-o fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller">Messaging</span>
@@ -106,7 +298,7 @@
                 <!-- End of Submenu Messages content -->
                 <!-- Menu Item Manufacturing -->
                 <a href="#submenuManufacturing" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-cogs fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Manufacturing</span>
@@ -196,7 +388,7 @@
                 <!-- End of Submenu Manufacturing content -->
                 <!-- Menu Item Buying -->
                 <a href="#submenuBuying" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action flex-column align-items-start">
+                    class="bg-dark  list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-shopping-cart fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Buying</span>
@@ -238,7 +430,7 @@
                 <!-- End of Submenu Buying content -->
                 <!-- Menu Item Accounting -->
                 <a href="#submenuAccounting" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-calculator fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Accounting</span>
@@ -267,7 +459,7 @@
                 <!-- End of Submenu Accounting content -->
                 <!-- Menu Item Selling -->
                 <a href="#submenuSelling" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-calendar fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Selling</span>
@@ -296,7 +488,7 @@
                 <!-- End of Submenu Item Selling -->
                 <!-- Menu Item Product Releasing -->
                 <a href="#submenuProductReleasing" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-shipping-fast fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller">Product Releasing</span>
@@ -314,7 +506,7 @@
                 <!-- End of Submenu Item Product Releasing -->
                 <!-- Menu Item Stock -->
                 <a href="#submenuStock" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-boxes fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Stock</span>
@@ -348,7 +540,7 @@
                 <!-- End of Submenu Item Stock -->
                 <!-- Menu Item CRM -->
                 <a href="#submenuCRM" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-users fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">CRM</span>
@@ -380,7 +572,7 @@
                 <!-- End of Submenu Item CRM -->
                 <!-- Menu Item REPORTS -->
                 <a href="#submenuREPORTS" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-users fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Reports</span>
@@ -397,7 +589,7 @@
                 <!-- End of Submenu Item REPORTS -->
                 <!-- Menu Item Quality -->
                 <a href="#submenuQuality" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-check-square fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Quality</span>
@@ -423,7 +615,7 @@
                 <!-- End of Submenu Item Quality -->
                 <!-- Menu Item HR -->
                 <a href="#submenuHR" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-project-diagram fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">HR</span>
@@ -452,7 +644,7 @@
                 <!-- End of Submenu Item HR -->
                 <!-- Menu Item Projects -->
                 <a href="#submenuProjects" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-server fa-fw mr-3 menu"></span>
                         <span class="menu-collapsed align-middle smaller menu">Projects</span>
@@ -481,7 +673,7 @@
                 <!-- End of Submenu Item Projects -->
                 <!-- Menu Item Retail -->
                 <a href="#submenuRetail" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-search-dollar fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Retail</span>
@@ -501,7 +693,7 @@
                 <!-- End of Submenu Item Retail -->
                 <!-- Menu Item Sales -->
                 <a href="#submenuSales" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-chart-line fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Sales</span>
@@ -602,7 +794,7 @@
                 <!-- End of Submenu Item Sales -->
                 <!-- Menu Item Purchases -->
                 <a href="#submenuPurchases" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-shopping-cart fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Purchases</span>
@@ -688,7 +880,7 @@
                 <!-- End of Submenu Item Purchases -->
                 <!-- Menu Item Job Costing -->
                 <a href="#submenuJobCosting" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-list-alt fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Job Costing</span>
@@ -698,7 +890,7 @@
                 <!-- End of Menu Item Job Costing -->
                 <!-- Menu Item Invoicing Project -->
                 <a href="#submenuInvoicingProject" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-server fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Invoicing Project</span>
@@ -707,7 +899,7 @@
                 <!-- End of Menu Item Invoicing Project -->
                 <!-- Menu Item Invoicing -->
                 <a href="#submenuInvoicing" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-file-alt fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Invoicing</span>
@@ -717,7 +909,7 @@
                 <!-- End of Menu Item Invoicing -->
                 <!-- Menu Item Cash Management -->
                 <a href="#submenuCashManagement" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-money-bill fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Cash Management</span>
@@ -727,7 +919,7 @@
                 <!-- End of Menu Item Cash Management -->
                 <!-- Menu Item Stock Management -->
                 <a href="#submenuStockManagement" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-cubes fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Stock Management</span>
@@ -738,7 +930,7 @@
                 <!-- End of Menu Item Stock Management -->
                 <!-- Menu Item Application Config -->
                 <a href="#submenuApplicationConfig" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-cog fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Application Config</span>
@@ -748,7 +940,7 @@
                 <!-- End of Menu Item Application Config -->
                 <!-- Menu Item Administration -->
                 <a href="#submenuAdministration" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action">
+                    class="bg-dark  list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-wrench fa-fw mr-3"></span>
                         <span class="menu-collapsed align-middle smaller menu">Administration</span>
@@ -758,7 +950,7 @@
 
                 <!-- End of Menu Item Administration -->
                 <a href="#submenunewUI" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark bevel list-group-item list-group-item-action flex-column align-items-start">
+                    class="bg-dark  list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="menu-collapsed align-middle smaller">NEW USER INTERFACE</span>
                         <span class="submenu-icon ml-auto"></span>
@@ -811,6 +1003,60 @@
     </div>
     <!-- body-row END -->
 
+
+            <footer class="sticky-footer text-light" style="background:#14213D">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Almedah Food Machineries, Corp.</span>
+                    </div>
+                </div>
+            </footer>
+
     <script src="{{ asset('js/side-nav.js') }}"></script>
     <script src="{{ asset('js/tab-nav.js') }}"></script>
+    <script>
+
+        
+  $( function() {
+    var menu_list = [
+        "Dashboard",
+        "Inbox" ,
+        "Important" ,
+        "Archived" ,
+        "Mailing List" ,
+        "My Mailing List" ,
+        "Manufacturing" ,
+        "Bom" ,
+        "Operations" ,
+        "Machine Manual" ,
+        "Production" ,
+        "Customer" ,
+        "Production Plan" ,
+        "Workstation" ,
+        "Routing" ,
+        "Inventory" ,
+        "Item" ,
+        "Component" ,
+        "Item Attribute" ,
+        "Item Price" ,
+        "Buying" ,
+        "Material Request" ,
+        "Purchase Order" ,
+        "Pending Orders" ,
+        "Purchase Invoice" ,
+        "Purchase Receipt" ,
+        "Request for Quotation" ,
+        "Supplier Quotation"];
+        $( "#search_menu" ).autocomplete({
+        source: menu_list,
+        select: function( event, ui ) {
+            //console.log(ui);
+            $("#divMain").load("/" + ui.item.value.toLowerCase().replace(/\s/g, ''));
+        }
+        });
+    } );
+
+
+
+    </script>
 @endsection

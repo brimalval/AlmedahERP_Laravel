@@ -52,3 +52,6 @@
 <!-- Font-Family-->
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+
+<!-- SB Admin 2 Style-->
+<link href="{{ asset('css/sb-admin-2.css') }}" rel="stylesheet">
