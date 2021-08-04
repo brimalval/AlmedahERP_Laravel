@@ -1,8 +1,8 @@
 //--> start of Dashboard js <--//
-if ($("#divMain").children().length == 0) {
-    $(document).ready(function () {
-        $("#divMain").load("/dashboard");
-    });
+if(sessionStorage.getItem("route")){
+    $("#divMain").load(sessionStorage.getItem("route"));
+}else{
+    $("#divMain").load("/dashboard");  
 }
 //--> End of Dashboard js <--//
 
@@ -65,9 +65,14 @@ $(document).ready(function () {
                                             xhr.statusText
                                     );
                             }
+
                         );
                     }
-                    //console.log("/" + $link.toLowerCase());
+                    
+                    //Save Route
+                    sessionStorage.setItem("route", "/" + $link.toLowerCase());
+                    
+
                 }
             );
             $(`#tab${menu}`).tab("show");
