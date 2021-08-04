@@ -191,7 +191,63 @@
                 </div>
                 <br>
             </div>
+           
         </div>
+        
+        <div class="row">
+        
+             <div class="col-6">
+                <div class="form-group">
+                    <label for="Production_Capacity">Production Capacity</label>
+                    <input type="text" name="Production_Capacity" id="Production_Capacity" value=""
+                        class="form-control">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="Electricity_Cost">Electricity Cost</label>
+
+                    <input type="text" name="Electricity_Cost" id="Electricity_Cost" value=""
+                        class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+        
+        <div class="col-6">
+           <div class="form-group">
+               <label for="Consumable_Cost">Consumable Cost</label>
+               <input type="text" name="Consumable_Cost" id="Consumable_Cost" value=""
+                   class="form-control">
+           </div>
+       </div>
+       <div class="col-6">
+           <div class="form-group">
+               <label for="Rent_Cost">Rent Cost</label>
+
+               <input type="text" name="Rent_Cost" id="Rent_Cost" value=""
+                   class="form-control">
+           </div>
+       </div>
+       </div>   
+       <div class="row">
+        
+        <div class="col-6">
+           <div class="form-group">
+               <label for="Wages">Wages</label>
+               <input type="text" name="Wages" id="Wages" value=""
+                   class="form-control">
+           </div>
+       </div>
+       <div class="col-6">
+           <div class="form-group">
+               <label for="Hour_rate">Hour Rate</label>
+
+               <input type="text" name="Hour_rate" id="Hour_rate" value=""
+                   class="form-control" disabled>
+           </div>
+       </div>
+   </div>                 
         {{-- </form> --}}
     </div>
     <br>

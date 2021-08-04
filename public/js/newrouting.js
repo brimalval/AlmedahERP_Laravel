@@ -29,7 +29,7 @@ function addRowbomOperation(){
         <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control" disabled></td>
         <td  class="mr-unit-input col-3">
         <textarea class="form-control" id="description${nextID}"  name="description" rows="2" disabled></textarea></td>
-        <td class="mr-unit-input col-2"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control"></td>
+        <td class="mr-unit-input col-2"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control" disabled></td>
         <td class="mr-unit-input col-1"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>
         <td>
             <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
