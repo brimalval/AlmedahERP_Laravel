@@ -48,7 +48,7 @@
                 </div> --}}
                 <div class="col-4">
                     <select id="status-search" class="form-control selectpicker po-datatable-search">
-                        <option value="None" data-subtext="None" selected>Status</option>
+                        <option value="None" data-subtext="None" selected>Search By Status...</option>
                         <option value="Draft" data-subtext="">Draft</option>
                         <option value="To Receive" data-subtext="">To Receive</option>
                         <option value="To Bill" data-subtext="">To Bill</option>
@@ -178,8 +178,9 @@
                             url = url + 'supplier'
                             break;
                     }
+                    url = url + `/${$(this).val()}`;
                 }
-                url = url + `/${$(this).val()}`;
+                if (url === '/po-by-/') return;
                 console.log(url);
                 $.ajax({
                     type: 'GET',
