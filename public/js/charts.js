@@ -447,7 +447,70 @@ var chart = new function () {
     });
     
 }
-
+    //stock monitoring
+    //suupliers and stock
+    this.generate_reports_stock_monitoring = function (item) {
+        var filter_type = $('#date-filter-option option:selected').val();
+        var date_from = '';
+        var date_to= '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date;
+    
+        if (filter_type == 'yearly'){
+            date_from = $('#date-from').val();
+            if (date_from == ''){
+                date_from == temp_date.getFullYear();
+            }
+    
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
+        }
+        else if (filter_type == 'monthly'){
+            date_from = $('#date-from').val();
+    
+            if (date_from == ''){
+                date_from = (temp_date.getMonth() + 1) + '/01/' + temp_date.getFullYear();
+            }
+    
+            temp_date_from = date_from.split('/');
+            date_from      = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date      = new Date(date_from);
+            //date_to        = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to        = temp_date_from[0] + '/01/' + temp_date_from[1];
+        }
+    
+    
+      
+      
+        var item_filter = $('#item-filter-option option:selected').val();
+      
+    
+        $.ajax({
+            url         : '/generate_reports_stock_monitoring',  
+            type        : 'GET',
+            data        : {"item_filter"     :   item_filter,
+                            date_from        : date_from, 
+                            filter_type      : filter_type,
+                            date_to          : date_to},
+            success     : function(item_filter) {
+                    console.log("Value added " + item_filter );
+                  }
+    
+        })
+        
+        .done(function(response){
+            $('#chart-sample').html(response);
+            $('.selectpicker').selectpicker();
+            $('#mp_charts_table').DataTable();
+        })
+        .fail(function(){
+    
+        });
+    
+        
+    }
+    
     this.generate_reports_delivery = function () {
 
         var filter_type = $('#date-filter-option option:selected').val();
