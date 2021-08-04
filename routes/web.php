@@ -33,6 +33,8 @@ use App\Http\Controllers\ChartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
+use App\Http\Controllers\NotificationLogsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +59,10 @@ Route::get('/dashboard', function () {
 Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
+
+/*NOTIFICATION ROUTES */
+Route::get('/notification', [NotificationLogsController::class, 'get_notifications'])->name('get_notifications');
+
 
 /*ADDRESS ROUTES */
 Route::get('/address', function() {
