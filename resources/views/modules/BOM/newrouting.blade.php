@@ -101,7 +101,7 @@
                             disabled></textarea>
                     </td>
                     <td class="mr-unit-input col-2"><input type="number" min="0" value="" name="hour_rate"
-                            id="hour_rate1" class="form-control"></td>
+                            id="hour_rate1" class="form-control" disabled></td>
                     <td class="mr-unit-input col-1"><input type="number" value="" name="operation_time"
                             id="operation_time1" class="form-control"></td>
                     <td>
@@ -187,7 +187,7 @@
                                             <td class="mr-unit-input"><input type="text" value="" name="operating_cost"
                                                     id="operating_cost" class="form-control"></td>
                                             <td class="mr-unit-input"><input type="text" value="" name="hour_rate"
-                                                    id="hour_rate" class="form-control"></td>
+                                                    id="hour_rate" class="form-control" disabled></td>
                                         </tr>
                                     </tbody>
                                 </table> 
