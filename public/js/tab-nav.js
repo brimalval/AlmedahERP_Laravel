@@ -1,8 +1,13 @@
 //--> start of Dashboard js <--//
-if ($("#divMain").children().length == 0) {
-    $(document).ready(function () {
-        $("#divMain").load("/dashboard");
-    });
+//if ($("#divMain").children().length == 0) {
+//    $(document).ready(function () {
+//        $("#divMain").load("/dashboard");
+//    });
+//}
+if (sessionStorage.getItem("route")) {
+    $("#divMain").load(sessionStorage.getItem("route"));
+} else {
+    $("#divMain").load("/dashboard");
 }
 //--> End of Dashboard js <--//
 
@@ -60,14 +65,15 @@ $(document).ready(function () {
                                 if (statusTxt == "error")
                                     alert(
                                         "Error: " +
-                                            xhr.status +
-                                            ": " +
-                                            xhr.statusText
+                                        xhr.status +
+                                        ": " +
+                                        xhr.statusText
                                     );
                             }
                         );
                     }
                     //console.log("/" + $link.toLowerCase());
+                    sessionStorage.setItem("route", "/" + $link.toLowerCase());
                 }
             );
             $(`#tab${menu}`).tab("show");
@@ -179,7 +185,7 @@ function getQuantityFromMatOrdered(work_order_no) {
         success: function (data) {
             dataToReturn = JSON.parse(data);
         },
-        error: function (request, error) {},
+        error: function (request, error) { },
     });
     return dataToReturn;
 }
@@ -241,7 +247,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) {},
+                    error: function (request, error) { },
                 });
             } else {
                 $.ajax({
@@ -254,7 +260,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) {},
+                    error: function (request, error) { },
                 });
             }
 
@@ -308,8 +314,8 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                         materials_complete.push(false);
                         percentage_array.push(
                             required_qty /
-                                transferred_qty[productCode][index]
-                                    .transferred_qty
+                            transferred_qty[productCode][index]
+                                .transferred_qty
                         );
                     }
                 } else {
@@ -323,23 +329,23 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                     <div class="row m-1">
                       <div class="d-flex justify-content-start">
                         <label for="" class="ml-5">` +
-                        sequence +
-                        `</label>
+                    sequence +
+                    `</label>
                       </div>
                     </div>
                   </td>
                   <td>` +
-                        el["item_code"] +
-                        `</td>
+                    el["item_code"] +
+                    `</td>
                   <td>Test` +
-                        index +
-                        `</td>
+                    index +
+                    `</td>
                   <td>` +
-                        required_qty +
-                        `</td>
+                    required_qty +
+                    `</td>
                   <td>` +
-                        tq +
-                        `</td>
+                    tq +
+                    `</td>
                   
                </tr>`
                 );
@@ -375,7 +381,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                                 );
                             }
                         },
-                        error: function (request, error) {},
+                        error: function (request, error) { },
                     });
                 }
             } else {
@@ -390,7 +396,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                             $("#startWorkOrder").prop("disabled", false);
                             $("#componentStatus").text(data.work_order_status);
                         },
-                        error: function (request, error) {},
+                        error: function (request, error) { },
                     });
                 }
             }
@@ -476,7 +482,7 @@ function loadWorkOrderInfo(
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) {},
+                    error: function (request, error) { },
                 });
             } else {
                 $.ajax({
@@ -489,7 +495,7 @@ function loadWorkOrderInfo(
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) {},
+                    error: function (request, error) { },
                 });
             }
             $.ajax({
@@ -542,8 +548,8 @@ function loadWorkOrderInfo(
                                 materials_complete.push(false);
                                 percentage_array.push(
                                     required_qty /
-                                        transferred_qty[productCode][index]
-                                            .quantity_avail
+                                    transferred_qty[productCode][index]
+                                        .quantity_avail
                                 );
                             }
                         } else {
@@ -557,23 +563,23 @@ function loadWorkOrderInfo(
                             <div class="row m-1">
                               <div class="d-flex justify-content-start">
                                 <label for="" class="ml-5">` +
-                                sequence +
-                                `</label>
+                            sequence +
+                            `</label>
                               </div>
                             </div>
                           </td>
                           <td>` +
-                                rawMat["item_code"] +
-                                `</td>
+                            rawMat["item_code"] +
+                            `</td>
                           <td>Test` +
-                                index +
-                                `</td>
+                            index +
+                            `</td>
                           <td>` +
-                                required_qty +
-                                `</td>
+                            required_qty +
+                            `</td>
                           <td>` +
-                                tq +
-                                `</td>
+                            tq +
+                            `</td>
                        </tr>`
                         );
                     }
@@ -613,7 +619,7 @@ function loadWorkOrderInfo(
                                         data.work_order_status
                                     );
                                 },
-                                error: function (request, error) {},
+                                error: function (request, error) { },
                             });
                         }
                     } else {
@@ -637,7 +643,7 @@ function loadWorkOrderInfo(
                                         data.work_order_status
                                     );
                                 },
-                                error: function (request, error) {},
+                                error: function (request, error) { },
                             });
                         }
                     }
@@ -1091,28 +1097,28 @@ function showItemsRet(trackingId) {
                           </div>
                       </td>
                       <td>` +
-                        item.item_code +
-                        `</td>
+                    item.item_code +
+                    `</td>
                     <td>` +
-                        item.qty_received +
-                        `</td>
+                    item.qty_received +
+                    `</td>
                     <td><input type="number" onchange="onChangeItemTransQty(this.value, this)" class="form-control w-75" max=` +
-                        item.qty_received +
-                        ` value=` +
-                        item.qty_received +
-                        `></td>
+                    item.qty_received +
+                    ` value=` +
+                    item.qty_received +
+                    `></td>
                     <td>` +
-                        item.consumable +
-                        `</td>
+                    item.consumable +
+                    `</td>
                     <td>` +
-                        item.source_station +
-                        `</td>
+                    item.source_station +
+                    `</td>
                     <td>` +
-                        item.target_station +
-                        `</td>
+                    item.target_station +
+                    `</td>
                     <td>` +
-                        item.item_condition +
-                        `</td>
+                    item.item_condition +
+                    `</td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="writeRemark(this)" disabled>Write</button>
                     </td></tr>
@@ -1144,23 +1150,23 @@ function showItemsRet(trackingId) {
                             </div>
                         </td>
                         <td>` +
-                            item.item_code +
-                            `</td>
+                        item.item_code +
+                        `</td>
                         <td>` +
-                            item.qty_transferred +
-                            `</td>
+                        item.qty_transferred +
+                        `</td>
                         <td>` +
-                            item.consumable +
-                            `</td>
+                        item.consumable +
+                        `</td>
                         <td>` +
-                            item.source_station +
-                            `</td>
+                        item.source_station +
+                        `</td>
                         <td>` +
-                            item.target_station +
-                            `</td>
+                        item.target_station +
+                        `</td>
                         <td>` +
-                            item.item_condition +
-                            `</td></tr>`
+                        item.item_condition +
+                        `</td></tr>`
                     );
                 });
             }

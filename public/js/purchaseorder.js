@@ -501,7 +501,7 @@ function calcPrice(id) {
     let qty = !$("#qty" + id).html() ? 0 : parseInt($("#qty" + id).html());
     let rate = !$("#rate" + id).html() ? 0 : parseFloat($("#rate" + id).html());
     let price = isNaN(qty * rate) ? 0 : qty * rate;
-    $("#price" + id).html("₱ " + numberWithCommas(price.toFixed(2)));
+    $("#price" + id).html(numberWithCommas(price.toFixed(2)));
 
     getQtyAndPrice();
 }
