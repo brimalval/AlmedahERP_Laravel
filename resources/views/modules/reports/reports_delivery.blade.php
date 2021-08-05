@@ -5,6 +5,15 @@
 </div>
 <br>
 
+<div class="d-flex flex-row-reverse">
+                                 <select data-column="0" id='delivery_status' class="form-control flex-row-reverse"style="width: 200px" method="POST">
+                                    <option value="">By Status</option>
+                                    @foreach($delivery_stat as $delivery_stat)
+                                    <option value="{{$delivery_stat}}">{{$delivery_stat}}</option>
+                                    @endforeach
+                                </select>
+                             </div>    
+                             <br>
 
 <div class="row">
     <div id="fixed" class="col-md-12">

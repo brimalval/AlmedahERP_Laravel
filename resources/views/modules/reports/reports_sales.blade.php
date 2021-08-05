@@ -6,15 +6,9 @@
 </div>
 
 <br>
-<div class="col-12">
-    <div class="card h-100">
-         <div class="card-header">
-               <div class="col-lg-12">
-                    <div class="row">
-                        <div id="fixed" class="col-md-12">
                              <div class="d-flex flex-row-reverse">
-                                 <select data-column="0" id='mp_status' class="form-control flex-row-reverse"style="width: 200px" method="POST">
-                                    <option value="">[ By Status ]</option>
+                                 <select data-column="0" id='sales_status' class="form-control flex-row-reverse"style="width: 200px" method="POST">
+                                    <option value=""> By Status </option>
                                     @foreach($sales_status as $sales_status)
                                     <option value="{{$sales_status}}">{{$sales_status}}</option>
                                     @endforeach

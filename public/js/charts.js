@@ -56,11 +56,18 @@ var chart = new function () {
         .done(function(response){
             $('#chart-sample').html(response);
 
-            $('#work_order_table').DataTable();
-        })
-        .fail(function(){
-
+            var table = $('#work_order_table').DataTable();
+            $('#work_status').on('change',function(){
+                table
+                .search(this.value)
+                .draw();
+            });
+            })
+            .fail(function(){
+                
         });
+
+        
     }
 
     this.report_builder_button_functions = function (){ 
@@ -288,7 +295,7 @@ var chart = new function () {
             // $('#sales_order_table').DataTable();
 
             var table = $('#sales_order_table').DataTable();
-            $('#sales_status').on('change',function(){
+            $('#sales_order_table').on('change',function(){
             table
             .search(this.value)
             .draw();
@@ -563,11 +570,18 @@ var chart = new function () {
         .done(function(response){
             $('#chart-sample').html(response);
 
-            $('#delivery_table').DataTable();
-        })
-        .fail(function(){
+           
 
+            var table = $('#delivery_table').DataTable();
+            $('#delivery_status').on('change',function(){
+                table
+                .search(this.value)
+                .draw();
+            });
+            })
+            .fail(function(){
         });
+        
 
 
 

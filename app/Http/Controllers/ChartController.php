@@ -44,6 +44,10 @@ class ChartController extends Controller
         // $chart_data = !empty($chart_data) ? $chart_data[0] : [];
         $complete   = !empty($chart_data['Completed'])  ? array_column($chart_data['Completed'],'count','date') : [];
         $pending    = !empty($chart_data['Pending'])    ? array_column($chart_data['Pending'],  'count','date') : [];
+        $work_status = DB::table('work_order')
+        ->select('work_order_status') 
+        ->pluck('work_order_status')
+        ->unique();
 
         // dd($complete,$pending);
 
@@ -100,7 +104,7 @@ class ChartController extends Controller
         ]);
 
     
-        return View('chart.chart',['table_data' => $table_data,'is_excel' => false]);
+        return View('chart.chart',['table_data' => $table_data,'is_excel' => false], ['work_status' => $work_status]);
     }
 
     public function generate_reports_sales (Request $request){
@@ -127,10 +131,14 @@ class ChartController extends Controller
         $table_data     = ChartModel::get_sales_table_data($date_from,$filter_type);
         
         // $table_data1    = ChartModel::get_sales_table_data($date_from,$date_to);
-      
+        $sales_status = DB::table('salesorder')
+       
+        ->select('sales_status') 
+        ->pluck('sales_status')
+        ->unique();
         $fully          = !empty($chart_data['Fully Paid'])                  ? array_column($chart_data['Fully Paid'],'count','date') : [];
         $outstanding    = !empty($chart_data['With Outstanding Balance'])    ? array_column($chart_data['With Outstanding Balance'],  'count','date') : [];
-        $sales = $sales_data->get();
+        
         
         
         if ($filter_type == 'yearly') {
@@ -176,7 +184,7 @@ class ChartController extends Controller
             
         ]);
 
-        return View('modules.reports.reports_sales',['table_data' => $table_data],['sales_status' => $sales_status] );
+        return View('modules.reports.reports_sales',['table_data' => $table_data], ['sales_status' => $sales_status]);
     }
 
     public function generate_report_trends (Request $request){
@@ -674,6 +682,11 @@ public function generate_reports_stock_monitoring(Request $request){
         $to_ship            = !empty($delivery_data['To Ship'])        ?         :0;
         // $shipped            = !empty($delivery_data['Shipped'])         ?        :0;
         $received           = !empty($delivery_data['Received'])        ?        :0;
+        $delivery_stat = DB::table('delivery')
+        ->select('delivery_status') 
+        ->pluck('delivery_status')
+        ->unique();
+
         if ($filter_type == 'yearly') {
             for ($i=1; $i <= 12; $i++) { 
                 $i = ($i < 10) ? '0' . $i : $i;
@@ -719,7 +732,7 @@ public function generate_reports_stock_monitoring(Request $request){
 
         ]);
         
-        return view('modules.reports.reports_delivery', ['table_data' => $table_data]);
+        return view('modules.reports.reports_delivery', ['table_data' => $table_data], ['delivery_stat' => $delivery_stat]);
 
     }
  
