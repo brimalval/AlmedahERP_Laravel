@@ -1,6 +1,9 @@
 // Array for storing item codes
 var item_codes = [];
 
+var PO_SUCCESS = "#po_success_message";
+var PO_FAIL = "#po_alert_message";
+
 // For editing purchase order
 if ($("#mp_status").length) {
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
@@ -303,7 +306,7 @@ function loadQuotation(id) {
                 new_array[i - 1] = $("#item" + i).val();
             }
             item_codes = new_array;
-            slideAlert(`${sq_id} loaded in Purchase Order.`, true);
+            slideAlert(`${sq_id} loaded in Purchase Order.`, PO_SUCCESS);
             getQtyAndPrice();
             chkBoxFunction();
         }
@@ -311,21 +314,6 @@ function loadQuotation(id) {
 }
 
 $("#saveOrder").click(saveOrder);
-
-function slideAlert(message, flag) {
-    if (flag) {
-        $("#po_success_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#po_success_message").slideUp(500);
-        });
-        $("#po_success_message").html(message);
-    }
-    else {
-        $("#po_alert_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#po_alert_message").slideUp(500);
-        });
-        $("#po_alert_message").html(message);
-    }
-}
 
 function saveOrder() {
     $.ajaxSetup({
@@ -337,7 +325,7 @@ function saveOrder() {
     let transDate = new Date($("#transDate").val());
     let reqDate = new Date($("#reqDate").val());
     if (transDate > reqDate) {
-        slideAlert('Order date is later than required date of materials!', false);
+        slideAlert('Order date is later than required date of materials!', PO_FAIL);
         return;
     }
 
@@ -347,15 +335,15 @@ function saveOrder() {
     for (let i = 1; i <= $("#itemTable tbody tr").length; i++) {
         reqDate = new Date($("#date" + i).val());
         if (transDate > reqDate) {
-            slideAlert(`Transaction date is later than required date of ${$("#item" + i).html()}.`, false);
+            slideAlert(`Transaction date is later than required date of ${$("#item" + i).html()}.`, PO_FAIL);
             return;
         }
         if (parseInt($("#qty" + i).val()) == 0) {
-            slideAlert('No quantity for material ' + $("#item" + i).html() + ' specified.', false);
+            slideAlert('No quantity for material ' + $("#item" + i).html() + ' specified.', PO_FAIL);
             return;
         }
         if (parseFloat($("#rate" + i).val()) == 0) {
-            slideAlert('No rate for material ' + $("#item" + i).html() + ' specified.', false);
+            slideAlert('No rate for material ' + $("#item" + i).html() + ' specified.', PO_FAIL);
             return;
         }
         let price_string = $("#price" + i).html().replace("₱ ", '');
@@ -393,7 +381,7 @@ function saveOrder() {
         contentType: false,
         processData: false,
         success: function (data) {
-            slideAlert("Purchase Order successfully created!", true);
+            slideAlert("Purchase Order successfully created!", PO_SUCCESS);
             purchase_id = data.purchase_id;
         }
     });

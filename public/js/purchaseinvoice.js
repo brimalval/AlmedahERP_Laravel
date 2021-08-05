@@ -1,5 +1,8 @@
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
+var PI_SUCCESS = "#pi_success_message";
+var PI_FAIL = "#pi_alert_message";
+
 $("#saveInvoice").on('click', createInvoice);
 
 $(document).ready(function () {
@@ -9,16 +12,16 @@ $(document).ready(function () {
         $("#installmentGrp").attr('hidden', true);
     }
     var amount = 0;
-    if ($("#paymentMode").val() !== 'Cash') {
-        if($("#emptyPILog").length) {
-            amount = parseFloat($("#priceToPay").val()) / 4;        
-        } else {
-            amount = parseFloat($("#priceToPay").val()) / parseFloat($("#installmentType").val());     
-        }
-    } else {
+    if ($("#paymentMode").val() === 'Cash') {
         amount = parseFloat($("#payAmount").val());
-    }
-    $("#payAmount").val(amount.toFixed(2));
+        $("#payAmount").val(amount.toFixed(2));
+        //if($("#emptyPILog").length) {
+        //    amount = parseFloat($("#priceToPay").val()) / 4;        
+        //} else {
+        //    amount = parseFloat($("#priceToPay").val()) / parseFloat($("#installmentType").val());     
+        //}
+    } 
+    
 });
 
 function viewChequeDetails(id) {
@@ -58,12 +61,18 @@ $("#payInvoice").click(function () {
     let formData = new FormData();
 
     if (!$("#payAmount").val()) {
-        slideAlert('Please enter an amount before creating a record.', false);
+        slideAlert('Please enter an amount before creating a record.', PI_FAIL);
         return;
     }
 
     if($("#paymentMethod").val() === 'non') {
-        slideAlert('Cannot create payment record without payment method!', false);
+        slideAlert('Cannot create payment record without payment method!', PI_FAIL);
+        return;
+    }
+
+    var amount = parseFloat($("#payAmount").val());
+    if(amount < 0 || amount > parseFloat($("#priceToPay").val()) ) {
+        slideAlert('Illegal price has been entered.', PI_FAIL);
         return;
     }
 
@@ -78,7 +87,7 @@ $("#payInvoice").click(function () {
                 msg = 'bank';
             else if (!$('#bankBranch').val())
                 msg = 'bank location';
-            slideAlert(`Please provide the check's ${msg}.`, false);
+            slideAlert(`Please provide the check's ${msg}.`, PI_FAIL);
             return;
         } else {
             formData.append('account_no', $('#acctNo').val());
@@ -114,21 +123,6 @@ $("#payInvoice").click(function () {
     });
 });
 
-function slideAlert(message, flag) {
-    if (flag) {
-        $("#pi_success_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#pi_success_message").slideUp(500);
-        });
-        $("#pi_success_message").html(message);
-    }
-    else {
-        $("#pi_alert_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#pi_alert_message").slideUp(500);
-        });
-        $("#pi_alert_message").html(message);
-    }
-}
-
 function createInvoice() {
     $.ajaxSetup({
         headers: {
@@ -139,12 +133,12 @@ function createInvoice() {
     let formData = new FormData();
 
     if ($("#emptyRow").length) {
-        slideAlert("Load a purchase receipt first.", false);
+        slideAlert("Load a purchase receipt first.", PI_FAIL);
         return;
     }
     
     if($("#paymentMode").val() === 'non') {
-        slideAlert('Cannot create payment invoice without specifying payment mode!', false);
+        slideAlert('Cannot create payment invoice without specifying payment mode!', PI_FAIL);
         return;
     }
 
@@ -232,7 +226,7 @@ function loadMaterials(id) {
             //console.log($('#orderId').val());
             let supplier = data.supplier;
             $("#receiptId").val(data.p_receipt_id);
-            slideAlert(`Purchase Receipt ${data.p_receipt_id} loaded.`, true);
+            slideAlert(`Purchase Receipt ${data.p_receipt_id} loaded.`, PI_SUCCESS);
             $("#suppName").val(supplier.company_name);
             if(supplier.contact_name) {
                 $("#piContact").val(supplier.contact_name);

@@ -1,15 +1,24 @@
 //--> start of Dashboard js <--//
-//if ($("#divMain").children().length == 0) {
-//    $(document).ready(function () {
-//        $("#divMain").load("/dashboard");
-//    });
-//}
-if (sessionStorage.getItem("route")) {
-    $("#divMain").load(sessionStorage.getItem("route"));
-} else {
-    $("#divMain").load("/dashboard");
+if ($("#divMain").children().length == 0) {
+    $(document).ready(function () {
+        $("#divMain").load("/dashboard");
+    });
 }
+//if (sessionStorage.getItem("route")) {
+//    $("#divMain").load(sessionStorage.getItem("route"));
+//} else {
+//    $("#divMain").load("/dashboard");
+//}
 //--> End of Dashboard js <--//
+
+function slideAlert(message, alert_appear) {
+    $(alert_appear)
+        .fadeTo(3500, 500)
+        .slideUp(500, function () {
+            $(alert_appear).slideUp(500);
+        });
+    $(alert_appear).html(message);
+}
 
 $(document).ready(function () {
     $("body").on("click", ".menu", function () {
@@ -31,52 +40,7 @@ $(document).ready(function () {
         var menu = moduleWOSpace;
         //checks if the clicked item has its tab is shown
         if (!$(`#tab${menu}`).length) {
-            $("#tabs").append(
-                `<li class="nav-item menu-item">
-            <a class="nav-link" data-toggle="tab" href="#content${menu}" id="tab${menu}">
-                  ${moduleWithSpace} <b class="closeTab text close ml-4">x</b>
-            </a>
-        </li>`
-            );
-            // append the content of the tab
-            $("#contents").append(
-                `<div class="tab-pane active p-0" id="content${menu}">
-        </div>`
-            );
-            //goes to a specific module
-            var $link = `${menu}`;
-            var $parent = $(this).attr("data-parent");
-            // set custom module route defined in data-module attribute
-            if (typeof $(this).attr("data-module-url") !== "undefined") {
-                $link = $(this).attr("data-module-url");
-            }
-
-            $(`#content${menu}`).load(
-                "/" + $link.toLowerCase(),
-                function (responseTxt, statusTxt, xhr) {
-                    if (statusTxt == "error") {
-                        console.log(
-                            "Error: " + xhr.status + ": " + xhr.statusText
-                        );
-                        console.log($parent);
-                        $(`#content${menu}`).load(
-                            "/" + $link.toLowerCase(),
-                            function (responseTxt, statusTxt, xhr) {
-                                if (statusTxt == "error")
-                                    alert(
-                                        "Error: " +
-                                        xhr.status +
-                                        ": " +
-                                        xhr.statusText
-                                    );
-                            }
-                        );
-                    }
-                    //console.log("/" + $link.toLowerCase());
-                    sessionStorage.setItem("route", "/" + $link.toLowerCase());
-                }
-            );
-            $(`#tab${menu}`).tab("show");
+            loadTab(menu, moduleWithSpace);
         }
         // if it's active, show it
         else {
@@ -112,6 +76,57 @@ $(document).ready(function () {
         //--> End of Dashboard js (close tabs) <--//
     });
 });
+
+function loadTab(menu, moduleWithSpace) {
+    $("#tabs").append(
+        `<li class="nav-item menu-item">
+    <a class="nav-link" data-toggle="tab" href="#content${menu}" id="tab${menu}">
+          ${moduleWithSpace} <b class="closeTab text close ml-4">x</b>
+    </a>
+</li>`
+    );
+    // append the content of the tab
+    $("#contents").append(
+        `<div class="tab-pane active p-0" id="content${menu}">
+</div>`
+    );
+    //goes to a specific module
+    var $link = `${menu}`;
+    var $parent = $(this).attr("data-parent");
+    // set custom module route defined in data-module attribute
+    if (typeof $(this).attr("data-module-url") !== "undefined") {
+        $link = $(this).attr("data-module-url");
+    }
+    var linkString = "/" + $link.toLowerCase();
+    $(`#content${menu}`).load(
+        linkString,
+        function (responseTxt, statusTxt, xhr) {
+            if (statusTxt == "error") {
+                console.log(
+                    "Error: " + xhr.status + ": " + xhr.statusText
+                );
+                console.log($parent);
+                $(`#content${menu}`).load(
+                    linkString,
+                    function (responseTxt, statusTxt, xhr) {
+                        if (statusTxt == "error")
+                            alert(
+                                "Error: " +
+                                xhr.status +
+                                ": " +
+                                xhr.statusText
+                            );
+                    }
+                );
+            }
+            //console.log(linkString);
+            sessionStorage.setItem("route", linkString);
+            sessionStorage.setItem("menuString", menu);
+            sessionStorage.setItem("moWSpace", moduleWithSpace);
+        }
+    );
+    $(`#tab${menu}`).tab("show");
+}
 
 function loadNewBOM() {
     $(document).ready(function () {
@@ -1489,7 +1504,7 @@ function RoutingTable() {
 
 function newoperation() {
     $(document).ready(function () {
-        $("#contentOperations").load("/newoperation");
+        $("#contentOperations").load("/operations/create");
     });
 }
 

@@ -214,6 +214,7 @@ $i = 1; ?>
                                 <option value="Installment">Installment</option>
                             </select>
                             <br>
+                            {{--
                             <div id="installmentGrp">
                                 <label class=" text-nowrap align-middle">
                                     Installment Duration
@@ -232,8 +233,7 @@ $i = 1; ?>
                                         <option value="6 Months">6 Months</option>
                                     @endif
                                 </select>
-                            </div>
-                            <br>
+                            </div>--}}
                             @if ($invoice->pi_status !== 'Draft' && $invoice->pi_status !== 'Paid')
                                 <label class=" text-nowrap align-middle">
                                     Method of Payment
@@ -289,7 +289,7 @@ $i = 1; ?>
                                             placeholder="Enter Amount to Pay..." @endif
                                             id="payAmount">
                                 @endif
-                                    <br>
+                                <br>
                                 <label class=" text-nowrap align-middle">
                                     Date of Transaction
                                 </label>

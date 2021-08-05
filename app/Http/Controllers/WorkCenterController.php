@@ -51,6 +51,13 @@ class WorkCenterController extends Controller
         $work_center->wc_label = $wc_label;
         $work_center->wc_type = $wc_type;
         $work_center->duration = $duration;
+        $work_center->production_capacity = $form_data['prod_cost'];
+        $work_center->electricity_cost = $form_data['elec_cost'];
+        $work_center->consumable_cost = $form_data['con_cost'];
+        $work_center->rent_cost = $form_data['rent_cost'];
+        $work_center->wages = $form_data['wages'];
+        $work_center->hour_rate = $form_data['hour_rate'];
+        
         if(isset($form_data['employee_id_set'])){ //checks if theres employee ID
             $work_center->employee_id_set = $form_data['employee_id_set'];
         }

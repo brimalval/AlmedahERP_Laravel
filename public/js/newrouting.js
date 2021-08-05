@@ -1,4 +1,6 @@
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+var ROUTING_SUCCESS = "#routing_success_msg";
+var ROUTING_FAIL = "#routing_alert_msg";
 
 /**
  * $.ajaxSetup({
@@ -23,7 +25,7 @@ function addRowbomOperation(){
             <input type="checkbox" class="form-check-input">
         </div>
         </td>
-        <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}"  name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
+        <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}" name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
         <td class="mr-qty-input">
         <select name="operation" id="operation1" data-live-search="true" class="form-control operation selectpicker" onchange="operationSearch(1);">
             @foreach ($operations as $operation)
@@ -33,10 +35,10 @@ function addRowbomOperation(){
             @endforeach
         </select>
         </td>
-        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control" disabled></td>
-        <td  class="mr-unit-input col-3"><textarea class="form-control" id="description${nextID}"  name="description" rows="2" disabled></textarea></td>
-        <td class="mr-unit-input col-2"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control" disabled></td>
-        <td class="mr-unit-input col-1"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control"></td>
+        <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control operation_field" disabled></td>
+        <td  class="mr-unit-input col-3"><textarea class="form-control operation_field" id="description${nextID}"  name="description" rows="2" disabled></textarea></td>
+        <td class="mr-unit-input col-2"><input type="number" value=""  name="hour_rate" id="hour_rate${nextID}" class="form-control operation_field" disabled></td>
+        <td class="mr-unit-input col-1"><input type="number" value=""  name="operation_time" id="operation_time${nextID}" class="form-control operation_field"></td>
         <td>
             <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                 <i class="fa fa-edit" aria-hidden="true"></i>
@@ -65,6 +67,10 @@ function clearOperationFields() {
 }
 
 $("#saveRouting").click(function () {
+    if(!$("#Routing_Name").val()) {
+        slideAlert("Please provide a name for this routing.", ROUTING_FAIL);
+        return;
+    }
     $("#routingsForm").submit();
 });
 
@@ -77,9 +83,7 @@ $("#routingsForm").submit(function () {
     // create a routing first....
     var routingData = new FormData(this);
     var routingId = "";
-    for (var pair of routingData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]);
-    }
+
     $.ajax({
         type: "POST",
         url: $("#routingsForm").attr('action'),
@@ -169,7 +173,7 @@ $("#operationForm").submit(function () {
                     </option>`
                 );
             }
-            $('.selectpicker').selectpicker('refresh');
+            $('.operation_select').selectpicker('refresh');
         }
     });
     return false;
@@ -178,18 +182,25 @@ $("#operationForm").submit(function () {
 
 function operationSearch(id) {
     var field = $(`#operation${id}`);
-    $.ajax({
-        type: "GET",
-        url: `/get-operation/${field.val()}`,
-        data: field.val(),
-        success: function (response) {
-            let operation = response.operation;
-            let description = operation.description;
-            let desc_clean = description.replace( /(<([^>]+)>)/ig, '');
-            $(`#workcenter${id}`).val(operation.wc_code);
-            $(`#description${id}`).val(desc_clean);
-        }
-    });
+    var field_value = field.val();
+    if (field_value !== 'non') {
+        $.ajax({
+            type: "GET",
+            url: `/get-operation/${field_value}`,
+            data: field.val(),
+            success: function (response) {
+                let operation = response.operation;
+                let description = operation.description;
+                let desc_clean = description.replace( /(<([^>]+)>)/ig, '');
+                $(`#workcenter${id}`).val(operation.wc_code);
+                $(`#description${id}`).val(desc_clean);
+                let wc = response.wc;
+                $(`#hour_rate${id}`).val(wc.hour_rate);
+            }
+        });
+    } else {
+        $('#newrouting-input-rows').find(`[data-id=${id}]`).find(".operation_field").val('');
+    }
 }
 
 

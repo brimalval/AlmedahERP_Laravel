@@ -22,4 +22,8 @@ class Operation extends Model
         return $this->hasOneThrough(Routing::class, RoutingOperation::class);
     }
 
+    public function work_center() 
+    {
+        return $this->hasOne(WorkCenter::class, 'wc_code', 'wc_code');
+    }
 }
