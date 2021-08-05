@@ -33,6 +33,8 @@ use App\Http\Controllers\ChartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
+use App\Http\Controllers\NotificationLogsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +59,10 @@ Route::get('/dashboard', function () {
 Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
+
+/*NOTIFICATION ROUTES */
+Route::get('/notification', [NotificationLogsController::class, 'get_notifications'])->name('get_notifications');
+
 
 /*ADDRESS ROUTES */
 Route::get('/address', function() {
@@ -364,7 +370,7 @@ Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class
 Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
 Route::post('/store-mp-materials/{purchase_id}', [MaterialsPurchasedController::class, 'storeMaterial']);
 Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
-Route::get('/po-all', [MaterialPurchasedController::class, 'getAll']);
+Route::get('/po-all', [MaterialsPurchasedController::class, 'getAll']);
 Route::get('/po-by-status/{status}', [MaterialsPurchasedController::class, 'getByStatus']);
 Route::get('/po-by-item/{item_code}', [MaterialsPurchasedController::class, 'getByMaterial']);
 Route::get('/po-by-supplier/{supplier_id}', [MaterialsPurchasedController::class, 'getBySupplier']);
