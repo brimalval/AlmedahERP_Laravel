@@ -125,7 +125,7 @@ class ChartController extends Controller
         $sales_data     = ChartModel::get_sales_data($date_from,$filter_type);
         $sales_data     = !empty($sales_data) ? array_column($sales_data,'total_count','sales_status') : [];
         $table_data     = ChartModel::get_sales_table_data($date_from,$filter_type);
-        // dd($table_data);
+        
         // $table_data1    = ChartModel::get_sales_table_data($date_from,$date_to);
       
         $fully          = !empty($chart_data['Fully Paid'])                  ? array_column($chart_data['Fully Paid'],'count','date') : [];
