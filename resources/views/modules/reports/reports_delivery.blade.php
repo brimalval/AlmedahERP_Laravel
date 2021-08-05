@@ -22,9 +22,9 @@
                 @if(!empty($table_data))
                     @foreach($table_data as $index => $value)
                         @if(!empty($value['due_date']) && $value['due_date'] <= now() && $value['delivery_status'] == 'To Ship')
-                            <tr class="bg-danger">
+                            <tr class="bg-warning">
                         @elseif(empty($value['date_received']) > now() && ($value['sales_status'] == 'With Outstanding Balance' || $value['delivery_status'] == 'To Ship'))
-                            <tr class="bg-danger">
+                            <tr class="bg-warning">
                        
                         @else
                             <tr>

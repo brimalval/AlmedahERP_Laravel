@@ -285,7 +285,14 @@ var chart = new function () {
         .done(function(response){
             $('#chart-sample').html(response);
 
-            $('#sales_order_table').DataTable();
+            // $('#sales_order_table').DataTable();
+
+            var table = $('#sales_order_table').DataTable();
+            $('#sales_status').on('change',function(){
+            table
+            .search(this.value)
+            .draw();
+        });
         })
         .fail(function(){
 
