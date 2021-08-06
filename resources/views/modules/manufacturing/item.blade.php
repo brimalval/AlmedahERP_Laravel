@@ -17,7 +17,7 @@
             alert("Value exists!");
         } else {
             if(value == null && $('#product_status').val() != "Variant"){
-                $('#attributes_div').append('<span class="badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i><input type="hidden" name="attribute_array[]" value="' + name + '"></span>');
+                $('#attributes_div').append('<span class="text-light badge badge-success m-1 p-1 attb-badge-'+name+'">' + name + '<i class="far fa-times-circle py-1 pl-1"></i><input type="hidden" name="attribute_array[]" value="' + name + '"></span>');
                 $('.attb-badge-'+name+' .far').click(function(){
                     $('.attb-badge-'+name).remove();
                     let index = attributeList.indexOf(name);
@@ -55,26 +55,41 @@
     function addMaterial(id, qty=""){
         console.log($('#raw_' + id).val() + ">" + Number(qty));
         console.log("MATERIADFSLAKL : " + (Number($('#raw_' + id).val()) > Number(qty)));
-        console.log(id);
+        console.log(materialList);
          if (materialList.indexOf(id) !== -1) {
             alert("Value exists!");
         } else {
             if ($('#raw_' + id).val() > 0 && $('#raw_' + id).val() > Number(qty)) {
-                $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label class="text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-'+id+'">' + $('#mat-option-'+id).text() + '</span> (<span id="material-badge-qty-'+ id + '">' + $('#raw_' + id).val() + '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value='+qty+'></div>');
+                $('#materials_div').append('<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-'+id+'"><label class="text-light text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-'+id+'">' + $('#mat-option-'+id).text() + '</span> (<span id="material-badge-qty-'+ id + '">' + $('#raw_' + id).val() + '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value='+qty+'>  </div>  </td>  </tr>');
             } else {
-                $('#materials_div').append('<div class="col-sm-6 material-badge" id="material-badge-'+id+'"><label style="cursor: pointer;" onclick="$(`#create-product-form`).hide(); $(`body`).removeClass(`modal-open`); $(`.modal-backdrop`).remove(); $(`#divMain`).load(`/inventory`);" class="text-truncate badge badge-danger m-1 p-2">' + $('#mat-option-'+id).html() + ' (' + $('#raw_' + id).val() + ' Stocks Left)</label></div>');
+                $('#materials_div').append('<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-'+id+'"><label style="cursor: pointer;" onclick="$(`#create-product-form`).hide(); $(`body`).removeClass(`modal-open`); $(`.modal-backdrop`).remove(); $(`#divMain`).load(`/inventory`);" class="text-light text-truncate badge badge-danger m-1 p-2">' + $('#mat-option-'+id).html() + ' (' + $('#raw_' + id).val() + ' Stocks Left)</label></div></td></tr>');
+                
             }
             materialList.push(id);
         }
+
+        $('.delete_mat').click(function(){
+            let index = materialList.indexOf(id);
+            materialList.splice(index, 1);
+            $(this).closest('tr').remove();
+        });
+
     }
+
+
     function addComponent(id, qty=""){
         console.log(id);
          if (componentList.indexOf(id) !== -1) {
             alert("Value exists!");
         } else {
-            $('#components_div').append('<div class="col-sm-6 component-badge" id="component-badge-'+id+'"><label class="text-truncate badge badge-success m-1 p-2"><span id="component-badge-name-'+id+'">' + $('#com-option-'+id).text() + '</span></label><input type="number" min="0" name="components_qty[]" class="form-control" placeholder="Qty." value='+qty+'></div>');
+            $('#components_div').append('<tr><td> <span class="delete_comp" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 component-badge" id="component-badge-'+id+'"><label class="text-truncate badge badge-success m-1 p-2"><span class="text-light" id="component-badge-name-'+id+'">' + $('#com-option-'+id).text() + '</span></label><input type="number" min="0" name="components_qty[]" class="form-control" placeholder="Qty." value='+qty+'></div></td>  </tr>');
             componentList.push(id);
         }
+        $('.delete_comp').click(function(){
+            let index = componentList.indexOf(id);
+            componentList.splice(index, 1);
+            $(this).closest('tr').remove();
+        });
     }
     // Creating a custom reset method since the native reset
     // function also resets the values of the materials in case
@@ -178,7 +193,7 @@
         $('#sales_price_wt').val(product['sales_price_wt']);
         $('.selectpicker1').selectpicker('val', product['unit']);
         $('#internal_description').val(product['internal_description']);
-        $('#productFormLabel').html('Edit Item');
+        $('#productFormLabel').html('<h3>Edit Item</h3>');
         $('#attbNotes').show();
         get_attribute(product['id']);
         if(!creatingVariant){
@@ -262,146 +277,115 @@
             return false;
         }
     </script>
-    <div class="container rounded">
-        <div class="row d-flex justify-content-center">
-            <div class="col-sm p-4 bg-light">
-                <h4 class="font-weight-bold text-black">Product List</h4>
-                <div id="alert-message">
-                </div>
 
-            <div class="row pb-2">
-                
-                <div class="col-12 text-right">
-
-                    <p><button type="button" id="addNew" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus" aria-hidden="true"></i> Add New</button></p>
-                    <script>
-                        $('#addNew').click(function(){
-                            $('#item_code').hide();
-                            $('#productFormLabel').html('New Item');
-                            $('#create-product-form').modal('show'); 
-                            $('#attbNotes').hide();
-                            resetProductForm(); 
-                        });
-                    </script>
-                </div>
-                <div class="col text-right" style="padding-top:5px;">
-                    <p><button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal" onclick="getLowOnStocks()">To Reproduce</button></p>
-                </div>
-                
-                <table id="products-table" class="table table-striped table-bordered hover" style="width:100%">
-                    <thead>
-                        <tr>
-                            <td>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
-                            </td>
-                            <td>Item Code</td>
-                            <td>Item Name</td>
-                            <td>Sales Price</td>
-                            <td>Sales Supply Method</td>
-                            <td>Stock Quantity </td>
-                            <td>View</td>
-                            <td>Action</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($man_products as $product)
-                            <tr id="p-row-{{ $product->id }}">
-                                <td>
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input">
-                                    </div>
-                                </td>
-                            <td class="font-weight-bold">{{ $product->product_code }}</td>
-                            <td class="font-weight-bold">{{ $product->product_name }}</td>
-                            <td class="text-black-50">
-                                <!-- sales price data -->
-                                {{ $product->sales_price_wt }}
-                            </td>
-                            <td class="text-black-50">
-                                <!-- sales supply method -->
-                                {{ $product->sale_supply_method }}
-                            </td>
-                            <td class="text-black-50">
-                                <!-- stock quantity data -->
-                                {{ $product->stock_unit }}
-                            </td>
-
-                            <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
-
-                            <td class="align-middle">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
-                                        Actions
-                                    </button>
-                                        <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-                                        <li><button onclick="editProduct({{ json_encode($product) }})" style="width:100%" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</button></li>
-                                        <li><button onclick="deleteProduct({{ $product->id }})" style="width:100%" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button></li>
-                                        @if ($product->product_status == "Template")
-                                            <li><button onclick="editProduct({{ json_encode($product) }}, creatingVariant = true)" type="button" class="btn btn-secondary" style="width: 100%;"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Variant</button></li>
-                                        @endif
-                                    </ul>
-                                </div>
-                            </td>
-                            </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <script>
-                $(document).ready(function() {
-                    $('#products-table').dataTable({
-                        columnDefs: [{
-                            orderable: false,
-                            targets: 0
-                        }],
-                        order: [
-                            [1, 'asc']
-                        ],
-                        drawCallback: function(){
-                            $('#products-table_wrapper').addClass('col-12');
-                        },
-                    });
+<div class="container rounded">
+   <div class="row d-flex justify-content-center">
+      <div class="col-12 bg-light p-4">
+         <h3 class="font-weight-bold text-black">Product Items</h3>
+         <div id="alert-message"></div>
+         <p class="text-right p-3">
+            <button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal" onclick="getLowOnStocks()">To Reproduce</button>
+            <button type="button" id="addNew" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus" aria-hidden="true"></i> Add New</button>
+         </p>
+         <script>
+            $('#addNew').click(function(){
+                $('#item_code').hide();
+                $('#productFormLabel').html('<h3>New Item</h3>');
+                $('#create-product-form').modal('show'); 
+                $('#attbNotes').hide();
+                resetProductForm(); 
+            });
+         </script>
+         <table id="products-table" class="table table-striped table-bordered hover" style="width:100%">
+            <thead>
+               <tr>
+                  <td>
+                     <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                     </div>
+                  </td>
+                  <td>Item Code</td>
+                  <td>Item Name</td>
+                  <td>Sales Price</td>
+                  <td>Sales Supply Method</td>
+                  <td>Stock Quantity </td>
+                  <td>View</td>
+                  <td>Action</td>
+               </tr>
+            </thead>
+            <tbody>
+               @foreach ($man_products as $product)
+               <tr id="p-row-{{ $product->id }}">
+                  <td>
+                     <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                     </div>
+                  </td>
+                  <td class="font-weight-bold">{{ $product->product_code }}</td>
+                  <td class="font-weight-bold">{{ $product->product_name }}</td>
+                  <td class="text-black-50">
+                     <!-- sales price data -->
+                     {{ $product->sales_price_wt }}
+                  </td>
+                  <td class="text-black-50">
+                     <!-- sales supply method -->
+                     {{ $product->sale_supply_method }}
+                  </td>
+                  <td class="text-black-50">
+                     <!-- stock quantity data -->
+                     {{ $product->stock_unit }}
+                  </td>
+                  <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $product->picture }}))" id="clickViewTagItem{{ $product->id }}">View</a></td>
+                  <td class="align-middle">
+                     <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+                        Actions
+                        </button>
+                        <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
+                           <li><button onclick="editProduct({{ json_encode($product) }})" style="width:100%" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</button></li>
+                           <li><button onclick="deleteProduct({{ $product->id }})" style="width:100%" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button></li>
+                           @if ($product->product_status == "Template")
+                           <li><button onclick="editProduct({{ json_encode($product) }}, creatingVariant = true)" type="button" class="btn btn-secondary" style="width: 100%;"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Variant</button></li>
+                           @endif
+                        </ul>
+                     </div>
+                  </td>
+               </tr>
+               @endforeach
+            </tbody>
+         </table>
+         <script>
+            $(document).ready(function() {
+                $('#products-table').dataTable({
+                    columnDefs: [{
+                        orderable: false,
+                        targets: 0
+                    }],
+                    order: [
+                        [1, 'asc']
+                    ],
+                    drawCallback: function(){
+                        $('#products-table_wrapper').addClass('col-12');
+                    },
                 });
-            </script>
-        </div>
-    </div>
-</div>
-<!-- IMAGE PART MODAL -->
-<div class="modal fade" id="exampleImage" tabindex="-1" role="dialog" aria-labelledby="exampleImageLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Sample Picture</h4>
-            </div>
-            <div class="viewImages modal-body m-0 p-0">
-                <div class="imageContainer">
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="$('#exampleImage').modal('hide');">Close</button>
-            </div>
-        </div>
-    </div>
+            });
+         </script>
+      </div>
+   </div>
 </div>
 
 <!-- Add Product Modal -->
 <form id="product-form" method="POST" enctype="multipart/form-data" action="/create-product">
     <div class="modal fade" id="create-product-form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg p-4">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="productFormLabel">Item</h5>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="$('#create-product-form').modal('hide'); $('#img_tmp').attr('src', '../images/thumbnail.png');">
                         <span aria-hidden="true">&times;</span>
-                    </button> -->
-                    <div class="text-right buttons">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#create-product-form').modal('hide'); $('#img_tmp').attr('src', '../images/thumbnail.png');">Close</button>
-                        <button type="submit" id="product-form-btn" class="btn btn-primary">Save changes</button>
-                    </div>
+                    </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-5">
                         @csrf
                         @method('PATCH')
                         <div class="row">
@@ -431,34 +415,50 @@
                         </div>
 
                         <input value="Template" class="form-control" type="text" id="product_status" name="product_status" hidden required>
-
-                        <div class="form-group">
-                            <label>Item Group</label>
-                            <select id="product_type" class="selectpicker form-control" name="product_type" data-container="body" data-live-search="true" title="Select an Option" data-hide-disabled="true">
-                                <option value="none" selected disabled hidden>
-                                    Select an Option
-                                </option>
-                                @foreach ($item_groups as $item_group)
-                                    <option value="{{ $item_group->item_group }}">{{ $item_group->item_group }}</option>
-                                @endforeach
-                                <option value="New">
-                                    &#43; Create a new Item Group
-                                </option>
-                            </select>
-                            <script type="text/javascript">
-                                $(document).ready(function() {
-                                    $('.selectpicker').selectpicker();
-                                    $('#product_type').on('change', function() {
-                                        if (this.value == "New") {
-                                            $('#item-group-modal').modal('toggle');
-                                        }
-                                    });
-                                    $('#item-group-modal').on('shown.bs.modal', function() {
-                                        $(document).off('focusin.modal');
-                                    });
-                                });
-                            </script>
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label>Item Group</label>
+                                    <select id="product_type" class="selectpicker form-control" name="product_type" data-container="body" data-live-search="true" title="Select an Option" data-hide-disabled="true">
+                                        <option value="none" selected disabled hidden>
+                                            Select an Option
+                                        </option>
+                                        @foreach ($item_groups as $item_group)
+                                        <option value="{{ $item_group->item_group }}">{{ $item_group->item_group }}</option>
+                                        @endforeach
+                                        <option value="New">
+                                            &#43; Create a new Item Group
+                                        </option>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $('.selectpicker').selectpicker();
+                                            $('#product_type').on('change', function() {
+                                                if (this.value == "New") {
+                                                    $('#item-group-modal').modal('toggle');
+                                                }
+                                            });
+                                            $('#item-group-modal').on('shown.bs.modal', function() {
+                                                $(document).off('focusin.modal');
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label class=" text-nowrap align-middle">
+                                    Sales Supply Method
+                                    </label>
+                                    <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
+                                        <option selected disabled>Please Select</option>
+                                        <option value="Made to Stock">Made to Stock</option>
+                                        <option value="To Produce">To Produce</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="row" id="product_selected" style="display: none;">
                             <div class="col-6">
                                 <div class="form-group">
@@ -515,39 +515,59 @@
                                 }
                             });
                         </script>
-
-                        <div class="form-group p-2 m-0">
-                            <label for="">Image</label>
-                            <img id="img_tmp" src="../images/thumbnail.png" style="width:100%;">
-                            <input class="form-control" type="file" id="picture" name="picture[]" onchange="readURL1(this);" required multiple>
-                        </div>
-
-                        {{-- facebook style uploading, to be continued --}}
-                        {{-- <div class="form-group p-2 image-upload d-flex">
-                            <div class="fileBoxes d-flex">
-                                <div class="d-flex align-items-center text-center mr-2" style="width: 75px; height:75px; background: #f2f2f2;">
-                                    <label for="picture">
-                                        Add Image
-                                    </label>
+                        <div class="row">
+                                <div class="col-sm">
+                                    <div class="form-group my-2">
+                                        <label for="">Product Image</label><br>
+                                        <img style="width:250px;" id="img_tmp" src="../images/thumbnail.png" style="width:100%;">
+                                        <input class="form-control" type="file" id="picture" name="picture[]" onchange="readURL1(this);" required multiple>
+                                    </div>
                                 </div>
-                                <input type="file" id="picture" name="picture[]" onchange="readURL1(this);" />
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center mr-2 btn" id="addFileBox" style="width: 75px; height:75px; background: #f2f2f2;">
-                                +
-                            </div>
-                        </div>
-                        <scri>
-                            $('#addFileBox').click(function() {
-                                console.log('worked');
-                                $(".fileBoxes").append(`<div class="d-flex align-items-center text-center mr-2" style="width: 75px; height:75px; background: #f2f2f2;">
-                                    <label for="picture">
-                                        Add Image
-                                    </label>
-                                </div>
-                                <input type="file" id="picture" name="picture[]" onchange="readURL1(this);" />`);
-                            });
-                        </scri> --}}
+                                <div class="col-sm">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <div class="form-group">
+                                                <label for="">Barcode</label>
+                                                <input class="form-control" type="text" id="bar_code" name="bar_code" required placeholder="Ex. 036000291452">
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <div class="form-group">
+                                                <label for="reorderLevel">Minimum Order Quantity</label>
+                                                <input type="number" name="reorderLevel" id="reorderLevel" class="form-control" placeholder="Ex. 100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <div class="form-group">
+                                                <label for="reorderQty">Maximum Order Quantity</label>
+                                                <input type="number" name="reorderQty" id="reorderQty" class="form-control" placeholder="Ex. 100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                                <script>
+                                    function changeSaleSupplyMethod(){
+                                        var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
+                                        if (salesSupplyMethod == "Made to Stock") {
+                                            document.getElementById("madeToStockFields").removeAttribute("hidden");
+                                            document.getElementById("reorderLevel").setAttribute("required", "");
+                                            document.getElementById("reorderQty").setAttribute("required", "");
+                                        } else {
+                                            document.getElementById("madeToStockFields").setAttribute("hidden", "");
+                                            
+                                            document.getElementById("stock_unit").value = 0;
+                                            document.getElementById("reorderLevel").removeAttribute("required");
+                                            document.getElementById("reorderQty").removeAttribute("required");
+                                        }
+                                    }
+                                </script>
                         <script>
                             function readURL1(input) {
                                 if (input.files && input.files[0]) {
@@ -560,121 +580,99 @@
                                 }
                             }
                         </script>
-                        <div class="form-group">
-                            <label class=" text-nowrap align-middle">
-                                Sales Supply Method
-                            </label>
-                            <select class="form-control sellable" id="saleSupplyMethod" required name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
-                                <option selected disabled>Please Select</option>
-                                <option value="Made to Stock">Made to Stock</option>
-                                <option value="To Produce">To Produce</option>
-                            </select>
-                        </div>
-                        <div class="form-group row" id="madeToStockFields" hidden>
-                            <div class="col">
-                                <label for="reorderLevel">Minimum Order Quantity</label>
-                                <input type="number" name="reorderLevel" id="reorderLevel" class="form-control" placeholder="Ex. 100">
+
+
+
+
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label for="">Sales Price W.T.</label>
+                                    <input class="form-control" type="number" id="sales_price_wt" name="sales_price_wt" required placeholder="Ex. 1000">
+                                </div>
                             </div>
-                            <div class="col">
-                                <label for="reorderQty">Maximum Order Quantity</label>
-                                <input type="number" name="reorderQty" id="reorderQty" class="form-control" placeholder="Ex. 100">
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label for="">Stock Quantity</label>
+                                    <input class="form-control" type="number" id="stock_unit" name="stock_unit" required placeholder="Ex. 1000">
+                                </div>
                             </div>
                         </div>
-                        <script>
-                            function changeSaleSupplyMethod(){
-                                var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
-                                if (salesSupplyMethod == "Made to Stock") {
-                                    document.getElementById("madeToStockFields").removeAttribute("hidden");
-                                    document.getElementById("reorderLevel").setAttribute("required", "");
-                                    document.getElementById("reorderQty").setAttribute("required", "");
-                                } else {
-                                    document.getElementById("madeToStockFields").setAttribute("hidden", "");
-                                    
-                                    document.getElementById("stock_unit").value = 0;
-                                    document.getElementById("reorderLevel").removeAttribute("required");
-                                    document.getElementById("reorderQty").removeAttribute("required");
-                                }
-                            }
-                        </script>
-                        <div class="form-group">
-                            <label for="">Barcode</label>
-                            <input class="form-control" type="text" id="bar_code" name="bar_code" required placeholder="Ex. 036000291452">
-                        </div>
 
-                        <div class="form-group">
-                            <label for="">Sales Price W.T.</label>
-                            <input class="form-control" type="number" id="sales_price_wt" name="sales_price_wt" required placeholder="Ex. 1000">
-                        </div>
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label>Unit of Measurement</label>
+                                    <select id="unit" class="selectpicker1 form-control" name="unit" data-container="body" data-live-search="true" title="Select an Option" data-hide-disabled="true" required>
+                                        <option value="none" selected disabled hidden>
+                                            Select an Option
+                                        </option>
+                                        @foreach ($product_units as $unit)
+                                            <option value="{{ $unit->unit }}">{{ $unit->unit }}</option>
+                                        @endforeach
+                                        <option value="New">
+                                            &#43; Create a new UOM
+                                        </option>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $('.selectpicker1').selectpicker();
+                                            $('#unit').on('change', function() {
+                                                if (this.value == "New") {
+                                                    $('#add-unit-modal').modal('toggle');
+                                                }
+                                            });
+                                            $('#add-unit-modal').on('shown.bs.modal', function() {
+                                                $(document).off('focusin.modal');
+                                            });
+                                        });
+                                    </script>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="">Stock Quantity</label>
-                            <input class="form-control" type="number" id="stock_unit" name="stock_unit" required placeholder="Ex. 1000">
-                        </div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="form-group" id="attribute_group">
+                                    <label>Attributes</label>
+                                    <select id="attribute" class="selectpicker2 form-control" name="attribute" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
+                                        <option value="none" selected disabled hidden>
+                                            Select an Option
+                                        </option>
+                                        @foreach ($product_variants as $variant)
+                                            <option id="attb_option" value="{{ $variant->attribute }}">{{ $variant->attribute }}</option>
+                                        @endforeach
+                                        <option value="New">
+                                            &#43; Create a new Attribute
+                                        </option>
+                                    </select>
+                                    <small id="attbNotes" class="form-text text-muted font-italic" style="display:none;">Attributes: click to edit attribute</small>
+                                    <script type="text/javascript">
+                                        attributeList = ""
+                                        attributeList = (typeof attributeList != 'undefined' && attributeList instanceof Array) ? attributeList : []
+                                        $(document).ready(function() {
+                                            $('.selectpicker2').selectpicker();
+                                            $('#attribute').on('change', function() {
+                                                if (this.value == "New") {
+                                                    $('#add-attribute-modal').modal('toggle');
+                                                } else {
+                                                    addAttribute(this.value);
+                                                    console.log('chosen');
+                                                }
+                                            });
+                                            $('#add-attribute-modal').on('shown.bs.modal', function() {
+                                                $(document).off('focusin.modal');
+                                            });
+                                        });
+                                    </script>
+                                    <div id="attributes_div">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
 
-                        <div class="form-group">
-                            <label>Unit of Measurement</label>
-                            <select id="unit" class="selectpicker1 form-control" name="unit" data-container="body" data-live-search="true" title="Select an Option" data-hide-disabled="true" required>
-                                <option value="none" selected disabled hidden>
-                                    Select an Option
-                                </option>
-                                @foreach ($product_units as $unit)
-                                    <option value="{{ $unit->unit }}">{{ $unit->unit }}</option>
-                                @endforeach
-                                <option value="New">
-                                    &#43; Create a new UOM
-                                </option>
-                            </select>
-                            <script type="text/javascript">
-                                $(document).ready(function() {
-                                    $('.selectpicker1').selectpicker();
-                                    $('#unit').on('change', function() {
-                                        if (this.value == "New") {
-                                            $('#add-unit-modal').modal('toggle');
-                                        }
-                                    });
-                                    $('#add-unit-modal').on('shown.bs.modal', function() {
-                                        $(document).off('focusin.modal');
-                                    });
-                                });
-                            </script>
-                        </div>
 
-                        <div id="attributes_div">
-                        </div>
 
-                        <div class="form-group" id="attribute_group">
-                            <label>Attributes</label>
-                            <select id="attribute" class="selectpicker2 form-control" name="attribute" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
-                                <option value="none" selected disabled hidden>
-                                    Select an Option
-                                </option>
-                                @foreach ($product_variants as $variant)
-                                    <option id="attb_option" value="{{ $variant->attribute }}">{{ $variant->attribute }}</option>
-                                @endforeach
-                                <option value="New">
-                                    &#43; Create a new Attribute
-                                </option>
-                            </select>
-                            <small id="attbNotes" class="form-text text-muted font-italic" style="display:none;">Attributes: click to edit attribute</small>
-                            <script type="text/javascript">
-                                attributeList = ""
-                                attributeList = (typeof attributeList != 'undefined' && attributeList instanceof Array) ? attributeList : []
-                                $(document).ready(function() {
-                                    $('.selectpicker2').selectpicker();
-                                    $('#attribute').on('change', function() {
-                                        if (this.value == "New") {
-                                            $('#add-attribute-modal').modal('toggle');
-                                        } else {
-                                            addAttribute(this.value);
-                                            console.log('chosen');
-                                        }
-                                    });
-                                    $('#add-attribute-modal').on('shown.bs.modal', function() {
-                                        $(document).off('focusin.modal');
-                                    });
-                                });
-                            </script>
-                        </div>
+
+
                         <div class="form-group" id="attribute_group">
                             <label>Value</label>
                             <select id="value_item_variants" class="selectpicker2 form-control" name="value_item_variants" data-container="body" data-live-search="true" title="Select attribute" data-hide-disabled="true">
@@ -724,8 +722,8 @@
                                     });
                                 });
                             </script>
-                            <div class="row" id="materials_div" style="background:#ecf0f1">
-                            </div>
+                            <table class="table" id="materials_div" style="background:#ecf0f1">
+                            </table>
                         </div>
 
                         <div class="form-group" id="components-picker">
@@ -754,8 +752,8 @@
                                     });
                                 });
                             </script>
-                            <div class="row" id="components_div" style="background:#ecf0f1">
-                            </div>
+                            <table class="table" id="components_div" style="background:#ecf0f1">
+                            </table>
                         </div>
 
                         <div class="form-group">
@@ -770,10 +768,37 @@
 
                         </div>
                 </div>
+                <div class="modal-footer">
+                    <div class="text-right buttons">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#create-product-form').modal('hide'); $('#img_tmp').attr('src', '../images/thumbnail.png');">Close</button>
+                        <button type="submit" id="product-form-btn" class="btn btn-primary">Save changes</button>                        
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </form>
+
+</div>
+<!-- IMAGE PART MODAL -->
+<div class="modal fade" id="exampleImage" tabindex="-1" role="dialog" aria-labelledby="exampleImageLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Sample Picture</h4>
+            </div>
+            <div class="viewImages modal-body m-0 p-0">
+                <div class="imageContainer m-5">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="$('#exampleImage').modal('hide');">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     //GET ATTRIBUTE
     function get_attribute(id) {
@@ -828,7 +853,7 @@
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">New Item Group</h4>
+                    <h3 class="modal-title">New Item Group</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="$('#item-group-modal').modal('hide')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -981,10 +1006,10 @@
 </div>
 <!-- to Reproduce Modal -->
 <div class="modal fade" id="toReproduceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Product To Reproduce</h5>
+            <h3 class="modal-title" id="exampleModalLabel">Product To Reproduce</h3>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -1118,7 +1143,7 @@
                             alert("Value exists!");
                         } else {
                             attributeList.push(attribute_name);
-                            $('#attributes_div').append('<span class="attb-badge-'+attribute_name+' badge badge-success m-1 p-1">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
+                            $('#attributes_div').append('<span class="attb-badge-'+attribute_name+' badge badge-success m-1 p-1 text-light">' + attribute_name + '<i class="far fa-times-circle py-1 pl-1"></i></span><input type="hidden" name="attribute_array[]" value="' + attribute_name + '">');
                             $('.modal').css('overflow-y', 'auto');
                         }
                     } else {
