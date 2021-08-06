@@ -12,7 +12,7 @@
 		<div class="collapse navbar-collapse" id="navbarNavDropdown">
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item li-bom">
-					<button class="btn" style="background-color: #d9dbdb;" onclick="loadIntoPage(this, '{{ route('jobscheduling.index') }}')">Cancel</button>
+					<button class="btn" style="background-color: #d9dbdb;" onclick="sessionStorage.removeItem('unsaved'); loadIntoPage(this, '{{ route('jobscheduling.index') }}')">Cancel</button>
 				</li>
 				<!-- If a jobsched variable was not given or is a draft, that means we're trying to create/update something -->
 				@if (!isset($jobsched) || $jobsched->js_status == "Draft")
@@ -77,7 +77,7 @@
 						<div class="col-lg-3 col-md-12 offset-lg-2">
 							<div class="form-group">
 								<label for="jobStartDate">Start Date</label>
-								<input type="date" name="job_start_date" class="form-control" value="{{ isset($jobsched) ? $jobsched->start_date : null }}">
+								<input type="date" name="job_start_date" class="form-control" value="{{ isset($jobsched) ? $jobsched->start_date : null }}" onchange="sessionStorage.setItem('unsaved', true)" @if(isset($jobsched) && $jobsched->js_status != "Draft") readonly @endif>
 							</div>
 						</div>
 
@@ -98,14 +98,14 @@
 						<div class="col-lg-3 col-md-6">
 							<div class="form-group">
 								<label for="job_start_time">Start Time</label>
-								<input type="time" name="job_start_time" id="job_start_time" class="form-control" value="{{ $jobsched->start_time ?? "00:00" }}" required>
+								<input type="time" name="job_start_time" id="job_start_time" class="form-control" value="{{ $jobsched->start_time ?? "00:00" }}" required onchange="sesionStorage.setItem('unsaved', true)" @if(isset($jobsched) && $jobsched->js_status != "Draft") readonly @endif>
 							</div>
 						</div>
 
 						<div class="col-lg-4">
 							<label for="employeeID">Employee ID</label>
 							<div class="input-group">
-								<select name="employee_id" id="js-emp-id-select" class="selectpicker">
+								<select name="employee_id" id="js-emp-id-select" class="selectpicker" onchange="sessionStorage.setItem('unsaved', true)" @if(isset($jobsched) && $jobsched->js_status != "Draft") disabled @endif>
 									@foreach ($employees as $employee)
 										<option value="{{ $employee->employee_id }}" data-subtext="{{ $employee->employee_id }}: {{ $employee->position }}"
 										@if(isset($jobsched) && $jobsched->employee_id == $employee->employee_id) selected @endif>
@@ -362,6 +362,14 @@
 		bSort: false,
 	});
 	function planJobSched(){
+		if(sessionStorage.getItem('unsaved')) {
+			swal({
+				title: "Unsaved Information",
+				text: "You have unsaved information!",
+				icon: "warning",
+			});
+			return false;
+		}
 		var fd = new FormData($('#js-plan-form')[0]);
 		$.ajax({
 			type: 'POST',
@@ -430,6 +438,14 @@
 	}
 
 	function pauseJobSched() {
+		if(sessionStorage.getItem('unsaved')) {
+			swal({
+				title: "Unsaved Information",
+				text: "You have unsaved information!",
+				icon: "warning",
+			});
+			return false;
+		}
 		var fd = new FormData($('#js-pause-form')[0]);
 		$.ajax({
 			type: 'POST',
@@ -479,6 +495,14 @@
 		});
 	}
 	function startJobSched() {
+		if(sessionStorage.getItem('unsaved')) {
+			swal({
+				title: "Unsaved Information",
+				text: "You have unsaved information!",
+				icon: "warning",
+			});
+			return false;
+		}
 		var fd = new FormData($('#js-start-form')[0]);
 		$.ajax({
 			type: 'POST',

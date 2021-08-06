@@ -112,6 +112,7 @@ $("#js-form")
                     icon: "success",
                 });
                 console.log(data);
+                sessionStorage.removeItem('unsaved');
                 loadIntoPage(element, data.redirect);
             },
             error: function (data) {
@@ -195,6 +196,7 @@ $(document)
 $(document)
     .off("change", 'input[name="planned_start[]"]')
     .on("change", 'input[name="planned_start[]"]', function () {
+        sessionStorage.setItem("unsaved", true);
         let row = $(this).parents("tr");
         let planned_end = row.find('input[name="planned_end[]"]');
         let running_time = row.find('input[name="running_time[]"]');
@@ -214,6 +216,12 @@ $(document)
         var dateStr = pad2(pev.getDate());
         var p_end_str = `${pev.getFullYear()}-${monthStr}-${dateStr}T${hoursStr}:${minutesStr}`;
         planned_end.val(p_end_str);
+    });
+
+$(document)
+    .off("change", 'input[name="planned_end[]"]')
+    .on("change", 'input[name="planned_end[]"]', function () {
+        sessionStorage.setItem("unsaved", true);
     });
 
 // Only do the gantt chart functions if a gantt chart container exists
