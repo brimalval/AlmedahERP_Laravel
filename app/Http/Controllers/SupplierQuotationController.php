@@ -9,7 +9,6 @@ use App\Models\MaterialRequest;
 use App\Models\MaterialUOM;
 use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
-use App\Models\supplierReports;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -125,14 +124,6 @@ class SupplierQuotationController extends Controller
 
             foreach ($items_list_rate_amt as $item) {
                 $supp_quotation->grand_total += ($item['quantity_requested'] * $item['rate']);
-
-                $saveList = new supplierReports();
-                $saveList->supp_quotation_id = "PUR-SQTN-" . Carbon::now()->year . "-" . str_pad($id, 5, '0', STR_PAD_LEFT);
-                $saveList->supplier_id = request('supplier_id');
-                $saveList->item_code = $item['item_code'];
-                $saveList->rate = $item['rate'];
-                $saveList->date_created = Carbon::now();
-                $saveList->save();
             }
             $supp_quotation->save();
             $id = $supp_quotation->id;
@@ -223,14 +214,6 @@ class SupplierQuotationController extends Controller
 
             foreach ($items_list_rate_amt as $item) {
                 $supplierquotation->grand_total += ($item['quantity_requested'] * $item['rate']);
-
-                $saveList = new supplierReports();
-                $saveList->supp_quotation_id = "PUR-SQTN-" . Carbon::now()->year . "-" . str_pad($id, 5, '0', STR_PAD_LEFT);
-                $saveList->supplier_id = request('supplier_id');
-                $saveList->item_code = $item['item_code'];
-                $saveList->rate = $item['rate'];
-                $saveList->date_created = Carbon::now();
-                $saveList->save();
             }
             $supplierquotation->save();
             return response()->json([
