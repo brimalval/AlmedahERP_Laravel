@@ -35,7 +35,7 @@
             <thead>
                 <th>ID</th>
                 <th>Purchase ID</th>
-                <th>Supplier Quatation ID</th>
+                <th>Supplier Quotation ID</th>
                 <th>Purchase Date</th>
                 <th>Total Cost</th>
                 <th>Status</th>

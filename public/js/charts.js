@@ -399,7 +399,17 @@ var chart = new function () {
     .done(function(response){
         $('#chart-sample').html(response);
 
-        var table = $('#mp_charts_table').DataTable();
+        var table = $('#mp_charts_table').DataTable(
+            {
+                dom: 'Bfrtip',
+                buttons: [
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            }
+        );
         $('#mp_status').on('change',function(){
             table
             .search(this.value)
