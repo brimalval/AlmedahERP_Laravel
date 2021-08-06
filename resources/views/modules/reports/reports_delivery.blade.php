@@ -5,6 +5,15 @@
 </div>
 <br>
 
+<div class="d-flex flex-row-reverse">
+                                 <select data-column="0" id='delivery_status' class="form-control flex-row-reverse"style="width: 200px" method="POST">
+                                    <option value="">By Status</option>
+                                    @foreach($delivery_stat as $delivery_stat)
+                                    <option value="{{$delivery_stat}}">{{$delivery_stat}}</option>
+                                    @endforeach
+                                </select>
+                             </div>    
+                             <br>
 
 <div class="row">
     <div id="fixed" class="col-md-12">
@@ -22,9 +31,9 @@
                 @if(!empty($table_data))
                     @foreach($table_data as $index => $value)
                         @if(!empty($value['due_date']) && $value['due_date'] <= now() && $value['delivery_status'] == 'To Ship')
-                            <tr class="bg-danger">
+                            <tr class="bg-warning">
                         @elseif(empty($value['date_received']) > now() && ($value['sales_status'] == 'With Outstanding Balance' || $value['delivery_status'] == 'To Ship'))
-                            <tr class="bg-danger">
+                            <tr class="bg-warning">
                        
                         @else
                             <tr>
