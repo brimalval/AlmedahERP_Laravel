@@ -16,15 +16,18 @@ class Routings extends Model
         'routing_name',
     ];
 
-    public function routingOperations() {
-        return $this->hasMany(RoutingOperation::class, 'routing_id', 'routing_id');    
+    public function routingOperations()
+    {
+        return $this->hasMany(RoutingOperation::class, 'routing_id', 'routing_id')->orderBy('sequence_id', 'asc');
     }
 
-    public function operations() {
+    public function operations()
+    {
         $r_operations = $this->routingOperations;
         $operations = array();
         foreach ($r_operations as $ro) {
-            array_push($operations,
+            array_push(
+                $operations,
                 array(
                     'operation' => Operation::where('operation_id', $ro->operation_id)->first(),
                     'operation_id' => $ro->operation_id,
@@ -39,14 +42,15 @@ class Routings extends Model
     }
 
     # use this instead
-    public function operationsThrough(){
+    public function operationsThrough()
+    {
         return $this->hasManyThrough(
-            Operation::class, 
+            Operation::class,
             RoutingOperation::class,
             'routing_id',
             'operation_id',
             'routing_id',
             'operation_id',
-        );
+        )->orderBy('sequence_id', 'asc');
     }
 }

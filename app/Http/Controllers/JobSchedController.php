@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\JobSched;
+use App\Models\Operation;
 use App\Models\WorkOrder;
 use Exception;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class JobSchedController extends Controller
     public function index()
     {
         $jobscheds = JobSched::with('work_order')->get();
-        $finished_jobscheds = JobSched::with('work_order')->where('js_status', 'Finished')->orWhere('js_status', 'In Progress')->get();
+        $finished_jobscheds = JobSched::with('work_order')->where('js_status', "Finished")->orWhere('js_status', "In Progress")->get();
         return view('modules.manufacturing.jobscheduling', [
             'jobscheds' => $jobscheds,
             'finished_jobscheds' => $finished_jobscheds,
@@ -227,13 +228,28 @@ class JobSchedController extends Controller
         }
     }
 
-    public function get_operations(WorkOrder $work_order)
+    public function get_operations(Request $request, WorkOrder $work_order)
     {
         $item = $work_order->item;
         $routing = $item->bom()->routing;
         $code = $item->product_code ?? $item->component_code;
         $name = $item->product_name ?? $item->component_name;
         $ordered_quantity = $work_order->sales_order->orderedProducts($code)->quantity_purchased;
+        // o for operation
+        if($request->query('o') !== null) {
+            $routingOperations = $routing->routingOperations;
+            $ro_count = count($routingOperations);
+            for ($i=0; $i < $ro_count; $i++) {
+                if($routingOperations[$i]->operation_id === $request->query('o')) {
+                    $operation = Operation::where('operation_id', $request->query('o'))->first();
+                    $work_center = $operation->work_center;
+                    return response()->json([
+                        'routing_operation' => $routingOperations[$i],
+                        'work_center' => $work_center
+                    ]);
+                }
+            }
+        }
         return response()->json([
             'item_code' => $code,
             'item_name' => $name,
@@ -394,7 +410,7 @@ class JobSchedController extends Controller
                 // If the key does not exist, that means there was no pause in between start & finish
                 $start_parsed = Carbon::parse(!(isset($operations[$i]['last_paused'])) ? $operations[$i]['real_start'] : $operations[$i]['last_paused']);
                 $curr_parsed = Carbon::parse($currDate);
-                $isPaused_exists = $operations[$i]['is_paused'];
+                $isPaused_exists = isset($operations[$i]['is_paused']);
                 // If it wasn't paused upon finishing, add to the total hours of the operation
                 // Machine might not have been in use while op was paused so don't add to the total hours
                 if (!$isPaused_exists || ($isPaused_exists && !$operations[$i]['is_paused'])) {
@@ -463,17 +479,24 @@ class JobSchedController extends Controller
         $data = array();
         $links = array();
         $operations_len = count($operations);
-        $start_unparsed = ($jobsched->js_status == "Finished") ? $operations[0]->real_start : $operations[0]->planned_start;
-        $end_unparsed = ($jobsched->js_status == "Finished") ? $operations[$operations_len - 1]->real_end : $operations[$operations_len - 1]->planned_end;
+        if ($jobsched->js_status == "Finished") {
+            $start_unparsed = $operations[0]->real_start;
+            $end_unparsed = $operations[$operations_len - 1]->real_end;
+        } else {
+            $start_unparsed = $operations[0]->planned_start;
+            $end_unparsed = $operations[$operations_len - 1]->planned_end;
+        }
         $start_date_obj = Carbon::parse($start_unparsed);
         $end_date_obj = Carbon::parse($end_unparsed);
-        $job_duration = $start_date_obj->diffInDays($end_date_obj);
+        $job_duration = $start_date_obj->diffInHours($end_date_obj) / 24;
         $start_date = $start_date_obj->format('Y-m-d H:i');
+        $end_date = $end_date_obj->format('Y-m-d H:i');
         array_push($data, array(
             'id' => $jobsched->jobs_sched_id,
             'text' => $jobsched->jobs_sched_id,
             'start_date' => $start_date,
-            'duration' => $job_duration ?? 0,
+            'end_date' => $end_date,
+            'duration' => $job_duration,
             'parent' => 0,
             'progress' => 0,
             'open' => true,
@@ -485,17 +508,16 @@ class JobSchedController extends Controller
             $end = $jobsched->js_status == "In Progress" ? $operation->planned_end : $operation->real_end;
             $start_parsed = Carbon::parse($start);
             $end_parsed = Carbon::parse($end);
-            $duration = $start_parsed->diffInDays($end_parsed);
             $start = $start_parsed->format("Y-m-d H:i");
             $end = $end_parsed->format("Y-m-d H:i");
             array_push($data, array(
                 'id' => $jobsched->jobs_sched_id . "+" . $operation->operation_id,
-                'text' => $operation->operation_id,
+                'text' => $operation->operation_name,
                 'start_date' => $start,
-                'duration' => $duration,
+                'end_date' => $end,
+                'duration' => 1,
                 'parent' => $jobsched->jobs_sched_id,
                 'open' => true,
-                'status' => $operation->status,
             ));
             if ($i > 0) {
                 array_push($links, array(

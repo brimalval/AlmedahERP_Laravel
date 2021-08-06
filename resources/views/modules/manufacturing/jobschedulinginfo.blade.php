@@ -49,7 +49,7 @@
 						<div class="col-lg-6 col-md-12">
 							<label for="workOrderJobSched">Work Order</label>
 							<div class="input-group">
-								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route=""{{ route('jobscheduling.getoperations', ['work_order'=>1]) }} required @if (isset($jobsched) && $jobsched->js_status != "Draft") readonly @endif>
+								<select name="work_order_no" id="js-work-order-select" class="selectpicker" data-route="{{ route('jobscheduling.getoperations', ['work_order'=>1]) }}" required @if (isset($jobsched) && $jobsched->js_status != "Draft") readonly @endif>
 									<option value="none" selected disabled>
 										Select a work order
 									</option>
@@ -229,6 +229,85 @@
 		</div>
 	</div>
 </form>
+
+<div class="modal fade h-75" id="operationsDetails" tabindex="-1" role="dialog" aria-labelledby="operationsDetails"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="OperationTitle">
+                    Operation Details
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row m-1">
+                        <div class="col-lg-6 p-1">
+                            <div class="form-group">
+                                {{-- Operation Time value --}}
+                                <label for="operation_time">Operation Time</label>
+                                <input type="text" class="form-control" readonly name="operation_time">
+                            </div>
+                            
+                        </div>
+                        <div class="col-lg-5 p-1">
+                            <div class="form-group">
+                                {{-- Machine Code Value --}}
+                                <label for="machine_code">Machine Code</label>
+                                <input type="text" class="form-control" name="machine_code">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-lg-6 p-1">
+                            <div class="form-group">
+                                {{-- Part Code Value --}}
+                                <label for="part_code">Part Code</label>
+                                <input type="text" class="form-control" name="part_code">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 p-1">
+                            <div class="form-group">
+                                {{-- WC Type value --}}
+                                <label for="wc_type">WC Type</label>
+                                <input type="text" class="form-control" name="wc_type" value="{{-- {{ $operation->wc_code }} --}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-lg-12 p-1">
+                            <div class="row ml-1">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="outsourced[]">
+                                </div>
+                                <label for="outsourced">Outsourced</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-lg-12 p-1">
+                            <div class="form-group">
+                                {{-- Where the status should be --}}
+                                <label for="operation_status">Status</label>
+                                <input type="text" class="form-control" id="operation_status" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="$('#operationsDetails').modal('hide');">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{-- Forms for updating a jobsched --}}
 @if(isset($jobsched))
@@ -598,14 +677,25 @@
 			processData: false,
 			cache: false,
 			success: function(data){
+				function pad2(number) {
+					return number < 10 ? `0${number}` : number;
+				}
 				operations = data.operations;
+				routingOperations = data.routingOperations;
 				tableBody.clear();
 				$('#js-title').text(data.item_name);
 				$('#js-status').text('{{ $jobsched->js_status ?? 'Unsaved' }}');
 				data.operations.forEach((operation, index) => {
+					var operation_time = routingOperations[index].operation_time;
+					var ot_obj = new Date("1970-01-01T" + operation_time + "Z");
+					ot_obj = new Date(ot_obj.getTime() * data.ordered_quantity);
+					var hourStr = pad2(ot_obj.getUTCHours());
+					var minStr = pad2(ot_obj.getMinutes());
+					var secStr = pad2(ot_obj.getSeconds());
+					var operation_time = `${hourStr}:${minStr}:${secStr}`;
 					tableBody.row.add([`
 						{{-- Sequence Name Value --}}
-						<a href="#" data-toggle="modal" data-target="#operationsDetails">
+						<a href="#" class="operationName" data-id="${operation.operation_id}">
 							Sequence ${data.routingOperations[index].sequence_id}
 						</a>
 					`,`
@@ -614,7 +704,8 @@
 						<input type="hidden" name="operation_id[]" value="${operation.operation_id}">
 					`,`
 						{{-- RUNNING TIME Value --}}
-						RUNNING TIME
+						<input type="hidden" name="running_time[]" value="${operation_time}">
+						${operation_time}
 					`,`
 						{{-- Predecessor Value --}}
 						${(index > 0) ? data.operations[index - 1].operation_name : "N/A"}

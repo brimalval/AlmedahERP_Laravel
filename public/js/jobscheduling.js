@@ -61,6 +61,7 @@ $("#js-form")
         var planned_ends = fd.getAll("planned_end[]");
         var real_starts = fd.getAll("real_start[]");
         var real_ends = fd.getAll("real_end[]");
+        var running_times = fd.getAll("running_time[]");
         // Operations variable is initialized and changed in jobschedulinginfo.blade.php
         // Keys are being added here & turned into a JSON
         for (var i = 0; i < operations.length; i++) {
@@ -75,10 +76,25 @@ $("#js-form")
                 });
                 return false;
             }
+
+            if (i > 0) {
+                let start_pre = new Date(planned_starts[i - 1]);
+                let start_pos = new Date(planned_starts[i]);
+
+                if (start_pre.getTime() > start_pos.getTime()) {
+                    swal({
+                        title: "Warning",
+                        text: "Predecessors must have an earlier start time than their descendants!",
+                        icon: "info",
+                    });
+                    return false;
+                }
+            }
             operations[i].planned_start = planned_starts[i];
             operations[i].planned_end = planned_ends[i];
             operations[i].real_start = real_starts[i];
             operations[i].real_end = real_ends[i];
+            operations[i].running_time = running_times[i];
         }
         fd.append("operations", JSON.stringify(operations));
         let element = this;
@@ -145,6 +161,60 @@ function operationController(btnAttributes) {
         },
     });
 }
+
+$(document)
+    .off("click", ".operationName")
+    .on("click", ".operationName", function (e) {
+        let modal = $("#operationsDetails");
+        e.preventDefault();
+        let work_order_no = $('select[name="work_order_no"] :selected').val();
+        // Perform a get request, convert the response to a json, then use
+        // the response data to populate the modal
+        fetch(
+            `/jobscheduling/${work_order_no}/get-operations?o=${$(this).data(
+                "id"
+            )}`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                let routingOperation = data.routing_operation;
+                let workCenter = data.work_center;
+                // Filling up modal forms using retrieved information
+                modal
+                    .find("input[name='operation_time']")
+                    .val(routingOperation.operation_time);
+                modal
+                    .find("input[name='machine_code']")
+                    .val(workCenter.machine_code);
+                modal.find("input[name='wc_type']").val(workCenter.wc_type);
+                // Showing the modal
+                modal.modal("show");
+            });
+    });
+
+$(document)
+    .off("change", 'input[name="planned_start[]"]')
+    .on("change", 'input[name="planned_start[]"]', function () {
+        let row = $(this).parents("tr");
+        let planned_end = row.find('input[name="planned_end[]"]');
+        let running_time = row.find('input[name="running_time[]"]');
+        var timeString = running_time.val();
+        // Used to make a date obj whose time in MS is only the number of hours
+        var datetime = new Date("1970-01-01T" + timeString + "Z");
+        var planned_start_val = new Date($(this).val());
+        // Planned end val,
+        var pev = new Date(planned_start_val.getTime() + datetime.getTime());
+        // pad with 1 zero if less than 10
+        function pad2(number) {
+            return number < 10 ? `0${number}` : number;
+        }
+        var monthStr = pad2(pev.getUTCMonth() + 1);
+        var hoursStr = pad2(pev.getHours());
+        var minutesStr = pad2(pev.getMinutes());
+        var dateStr = pad2(pev.getDate());
+        var p_end_str = `${pev.getFullYear()}-${monthStr}-${dateStr}T${hoursStr}:${minutesStr}`;
+        planned_end.val(p_end_str);
+    });
 
 // Only do the gantt chart functions if a gantt chart container exists
 if (!!$("#gantt_here")[0]) {
@@ -286,12 +356,12 @@ if (!!$("#gantt_here")[0]) {
             width: 150,
             resize: true,
         },
-        {
-            name: "work_order",
-            label: "Work Order",
-            align: "center",
-            resize: true,
-        },
+        // {
+        //     name: "work_order",
+        //     label: "Work Order",
+        //     align: "center",
+        //     resize: true,
+        // },
         {
             name: "status",
             label: "Status",
