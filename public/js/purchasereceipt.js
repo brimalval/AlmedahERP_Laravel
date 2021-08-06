@@ -1,26 +1,13 @@
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
+var PR_SUCCESS = "#pr_success_message";
+var PR_FAIL = "#pr_alert_message";
+
 
 $(document).ready(function () {
-    if ($("#receiptId").length) {
-    }
+
 });
 
 $("#saveReceipt").click(saveReceipt);
-
-function slideAlert(message, flag) {
-    if (flag) {
-        $("#pr_success_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#pr_success_message").slideUp(500);
-        });
-        $("#pr_success_message").html(message);
-    }
-    else {
-        $("#pr_alert_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#pr_alert_message").slideUp(500);
-        });
-        $("#pr_alert_message").html(message);
-    }
-}
 
 function saveReceipt() {
     $.ajaxSetup({
@@ -59,10 +46,10 @@ function saveReceipt() {
         contentType: false,
         processData: false,
         success: function (response) {
-            if(!$("#receiptId").val()) {
-                slideAlert("Purchase Receipt created!", true);
+            if(!$("#receiptId").length) {
+                slideAlert("Purchase Receipt created!", PR_SUCCESS);
             } else {
-                slideAlert(`Updated receipt ${$("#receiptId").val()}`, true);
+                slideAlert(`Updated receipt ${$("#receiptId").val()}`, PR_SUCCESS);
             }
             loadPurchaseReceipt();
             if($("#contentPurchaseInvoice").length) {
@@ -122,7 +109,7 @@ function submitReceipt() {
         contentType: false,
         processData: false,
         success: function (response) {
-            slideAlert(`Purchase Receipt ${receipt_id} submitted.`, true);
+            slideAlert(`Purchase Receipt ${receipt_id} submitted.`, PR_SUCCESS);
             loadPurchaseReceipt();
             if($("#contentPendingOrders").length) {
                 loadPendingOrders();
@@ -151,7 +138,7 @@ $("#receiveMaterials").click(function () {
                 parseInt($(`#qtyAcc${i}`).html()) ||
             parseInt($(`#qtyRec${i}`).val()) < 0
         ) {
-            slideAlert(`Quantity for ${$(`#item_code${i}`).html()} is invalid.`, false);
+            slideAlert(`Quantity for ${$(`#item_code${i}`).html()} is invalid.`, PR_FAIL);
             return;
         }
         received_mats[i] = {
@@ -171,7 +158,7 @@ $("#receiveMaterials").click(function () {
         contentType: false,
         processData: false,
         success: function (response) {
-            slideAlert("Record saved.", true);
+            slideAlert("Record saved.", PR_SUCCESS);
             loadPurchaseReceipt();
             if($("#contentPurchaseOrder").length) {
                 loadPurchaseOrder();

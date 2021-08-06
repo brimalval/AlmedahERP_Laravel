@@ -6,7 +6,15 @@
 </div>
 
 <br>
-
+                             <div class="d-flex flex-row-reverse">
+                                 <select data-column="0" id='sales_status' class="form-control flex-row-reverse"style="width: 200px" method="POST">
+                                    <option value=""> By Status </option>
+                                    @foreach($sales_status as $sales_status)
+                                    <option value="{{$sales_status}}">{{$sales_status}}</option>
+                                    @endforeach
+                                </select>
+                             </div>    
+                             <br>
 <div class="row">
     <div id="fixed" class="col-md-12">
         <table class="table table-bordered" id="sales_order_table">
@@ -24,7 +32,7 @@
                 @if(!empty($table_data))
                     @foreach($table_data as $index => $value)
                         @if(!empty($value['due_date']) && $value['due_date'] <= now() && $value['sales_status'] == 'With Outstanding Balance')
-                            <tr class="bg-danger">
+                            <tr class="bg-warning">
                         @else
                             <tr>
                         @endif

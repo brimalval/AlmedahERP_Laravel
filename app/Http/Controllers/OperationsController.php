@@ -35,6 +35,8 @@ class OperationsController extends Controller
     public function create()
     {
         //
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.newoperation', ['work_centers' => $work_centers]);
     }
 
     /**
@@ -66,7 +68,8 @@ class OperationsController extends Controller
     public function getOperation($operation_id)
     {
         $operation = Operation::where('operation_id', $operation_id)->first();
-        return ['operation' => $operation];
+        $wc = $operation->work_center;
+        return ['operation' => $operation, 'wc' => $wc];
     }
 
     /**
@@ -78,12 +81,6 @@ class OperationsController extends Controller
     public function show($id)
     {
         //
-    }
-
-    public function openOperationForm()
-    {
-        $work_centers = WorkCenter::all();
-        return view('modules.BOM.newoperation', ['work_centers' => $work_centers]);
     }
 
     /**

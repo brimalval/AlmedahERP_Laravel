@@ -9,8 +9,8 @@ $i = 1;
         let total_price = 0;
         let total_qty = 0;
         for (let i = 1; i <= $('#itemsToReceive tr').length; i++) {
-            total_qty += parseInt($(`#qtyAcc${i}`).val());
-            total_price += parseFloat($(`#amtAcc${i}`).val());
+            total_qty += parseInt($(`#qtyAcc${i}`).html());
+            total_price += parseFloat($(`#amtAcc${i}`).html());
         }
         $('#receiveQty').val(total_qty);
         $('#receivePrice').val(total_price);

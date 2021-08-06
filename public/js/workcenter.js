@@ -1,4 +1,34 @@
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+var WC_SUCCESS = "#wc_success_msg";
+var WC_FAIL = "#wc_alert_msg";
+
+function checkWC() {
+    msg = 'Work Center created!';
+    alert = WC_SUCCESS;
+    if(!$("#Work_Center_label").val()) {
+        msg = "No label indicated for work center.";
+        alert = WC_FAIL;
+    } 
+    if($("#wc_select").val() === 'N/A') {
+        msg = "No type indicated for work center."; 
+        alert = WC_FAIL;
+    } 
+    if(!$("#Production_Capacity").val()) {
+        msg = "No indicated production capacity."; 
+        alert = WC_FAIL;
+    } 
+    $(".hour_rate_compu").each(function () {
+        // element == this
+        if($(this).val() === '0') {
+            msg = "Computation of hour rate is incomplete."
+            alert = WC_FAIL;
+            return false;
+        }
+    });
+    slideAlert(msg, alert);
+    return (alert === WC_SUCCESS) ? true : false;
+
+}
 
 $("#save_wc").click(function () {
     $.ajaxSetup({
@@ -7,9 +37,18 @@ $("#save_wc").click(function () {
         }
     });
 
+    var flag = checkWC();
+    if(!flag) {return;}
+
     var formData = new FormData();
     formData.append('wc_label', $("#Work_Center_label").val());
     formData.append('wc_type', $("#wc_select").val());
+    formData.append('prod_cost', $("#Production_Capacity").val());
+    formData.append('elec_cost', $("#Electricity_Cost").val());
+    formData.append('con_cost', $("#Consumable_Cost").val());
+    formData.append('rent_cost', $("#Rent_Cost").val());
+    formData.append('wages', $("#Wages").val());
+    formData.append('hour_rate', $("#Hour_rate").val());
 
     var hrs = document.getElementById("Employee_hours").value;
     var mins = document.getElementById("Employee_minutes").value;
@@ -71,6 +110,13 @@ $("#Available_Machine").change(function () {
             $("#Running_time").val(machine.running_time);
         }
     });
+});
+
+$(".hour_rate_compu").change(function (e) { 
+    var sum = parseFloat($("#Electricity_Cost").val())+parseFloat($("#Consumable_Cost").val())+parseFloat($("#Rent_Cost").val())+parseFloat($("#Wages").val());
+    $("#Hour_rate").val(sum);
+    e.preventDefault();
+    
 });
 
 function addRownewEmployee(){

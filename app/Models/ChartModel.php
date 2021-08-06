@@ -447,7 +447,7 @@ class ChartModel extends Model
         $query ="
         
         SELECT 
-            COUNT(so.id) AS product_count,
+           COUNT(op.quantity_purchased) AS product_count,
             mnp.product_name
         
         FROM
@@ -475,6 +475,8 @@ class ChartModel extends Model
         $query .="    
         GROUP BY 
             product_name ASC
+        ORDER BY
+            product_count DESC
         ";
 
 
@@ -491,8 +493,8 @@ class ChartModel extends Model
         select
             mnp.product_name,
             mnp.sales_price_wt,
-            op.quantity_purchased,
-            mnp.sales_price_wt * op.quantity_purchased AS total_sales
+            COUNT(op.quantity_purchased) as quantity_purchased,
+            mnp.sales_price_wt * COUNT(op.quantity_purchased) AS total_sales
     
         FROM
             salesorder AS so

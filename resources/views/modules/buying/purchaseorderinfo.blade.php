@@ -258,8 +258,7 @@
                                                 id="rate{{ $loop->index + 1 }}">{{ $item['rate'] }}</span>
                                         </td>
                                         <td class="text-black-50">
-                                            <span name="price{{ $loop->index + 1 }}" id="price{{ $loop->index + 1 }}">₱
-                                                {{ $item['subtotal'] }}</span>
+                                            ₱ <span name="price{{ $loop->index + 1 }}" id="price{{ $loop->index + 1 }}">{{ $item['subtotal'] }}</span>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -43,7 +43,11 @@
             </ul>
         </div>
 </nav>
+<div id="routing_success_msg" class="alert alert-success" style="display: none;">
+</div>
 
+<div id="routing_alert_msg" class="alert alert-danger" style="display: none;">
+</div>
 <form action="{{ route('routing.store') }}" method="POST" id="routingsForm" class="create">
     @csrf
     <br>
@@ -84,7 +88,8 @@
                     <td id="mr-code-input" class="mr-code-input"><input type="number" value="1" name="seq_id"
                             id="seq_id1" class="form-control" readonly></td>
                     <td class="mr-qty-input">
-                        <select name="operation" id="operation1" data-live-search="true" class="form-control operation selectpicker" onchange="operationSearch(1);">
+                        <select name="operation" id="operation1" data-live-search="true" class="form-control operation_select selectpicker" onchange="operationSearch(1);">
+                            <option value="non">No Operation Selected.</option>
                             @foreach ($operations as $operation)
                                 <option data-subtext="{{ $operation->operation_id }}" value="{{ $operation->operation_id }}">
                                     {{ $operation->operation_name }}
@@ -93,17 +98,17 @@
                         </select>
                     </td>
                     <td class="mr-unit-input"><input type="text" value="" name="workcenter" id="workcenter1"
-                            class="form-control" disabled>
+                            class="form-control operation_field" disabled>
                     </td>
                     </td>
                     <td class="mr-unit-input col-3">
-                        <textarea class="form-control" id="description1" name="description" rows="2"
+                        <textarea class="form-control operation_field" id="description1" name="description" rows="2"
                             disabled></textarea>
                     </td>
                     <td class="mr-unit-input col-2"><input type="number" min="0" value="" name="hour_rate"
-                            id="hour_rate1" class="form-control"></td>
+                            id="hour_rate1" class="form-control operation_field" disabled></td>
                     <td class="mr-unit-input col-1"><input type="number" value="" name="operation_time"
-                            id="operation_time1" class="form-control"></td>
+                            id="operation_time1" class="form-control operation_field"></td>
                     <td>
                         <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
                             <i class="fa fa-edit" aria-hidden="true"></i>
@@ -187,7 +192,7 @@
                                             <td class="mr-unit-input"><input type="text" value="" name="operating_cost"
                                                     id="operating_cost" class="form-control"></td>
                                             <td class="mr-unit-input"><input type="text" value="" name="hour_rate"
-                                                    id="hour_rate" class="form-control"></td>
+                                                    id="hour_rate" class="form-control" disabled></td>
                                         </tr>
                                     </tbody>
                                 </table> 

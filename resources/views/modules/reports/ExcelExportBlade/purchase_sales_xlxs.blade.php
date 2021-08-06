@@ -20,8 +20,8 @@
         </tr>
     </thead>
     <tbody>
-    @if(!empty($table_data))
-        @foreach($table_data as $index => $value)
+    @if(!empty($rawmats1))
+        @foreach($rawmats1 as $index => $value)
                 <tr>
                     <td style="border:1px solid black;align:center;vertical-align:center; font-size: 12px; {{$has_width ? 'width:20px' : ''}}">{{$value->item_name}}</td>
                     <td style="border:1px solid black;align:center;vertical-align:center; font-size: 12px; {{$has_width ? 'width:20px' : ''}}">{{$value->rm_date}}</td>

@@ -7,6 +7,9 @@ var CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
     });
  */
 
+var BOM_SUCCESS_CLASS = "#bom_success_message";
+var BOM_FAIL_CLASS = "#bom_alert_message";
+
 $(document).ready(function () {
     amountChanger();
 });
@@ -105,68 +108,7 @@ function computeCosts() {
 /**Experimental function from back-end*/
 function showRoutingsForm() {
     let menu = "NewRouting";
-    if (!$(`#tab${menu}`).length) {
-        $("#tabs").append(
-            `<li class="nav-item menu-item">
-        <a class="nav-link" data-toggle="tab" href="#content${menu}" id="tab${menu}">
-              New Routing <b class="closeTab text close ml-4">x</b>
-        </a>
-    </li>`
-        );
-        // append the content of the tab
-        $("#contents").append(
-            `<div class="tab-pane active p-0" id="content${menu}">
-    </div>`
-        );
-        //goes to a specific module
-        var $link = `${menu}`;
-        var $parent = $(this).attr("data-parent");
-        // set custom module route defined in data-module attribute
-        if (typeof $(this).attr("data-module-url") !== "undefined") {
-            $link = $(this).attr("data-module-url");
-        }
-        $(`#content${menu}`).load(
-            "/" + $link.toLowerCase(),
-            function (responseTxt, statusTxt, xhr) {
-                if (statusTxt == "error") {
-                    console.log("Error: " + xhr.status + ": " + xhr.statusText);
-                    console.log($parent);
-                    $(`#content${menu}`).load(
-                        "/" + $link.toLowerCase(),
-                        function (responseTxt, statusTxt, xhr) {
-                            if (statusTxt == "error")
-                                alert(
-                                    "Error: " +
-                                        xhr.status +
-                                        ": " +
-                                        xhr.statusText
-                                );
-                        }
-                    );
-                }
-                //console.log("/" + $link.toLowerCase());
-            }
-        );
-    }
-    $(`#tab${menu}`).tab("show");
-}
-
-function slideAlert(message, flag) {
-    if (flag) {
-        $("#bom_success_message")
-            .fadeTo(3500, 500)
-            .slideUp(500, function () {
-                $("#bom_success_message").slideUp(500);
-            });
-        $("#bom_success_message").html(message);
-    } else {
-        $("#bom_alert_message")
-            .fadeTo(3500, 500)
-            .slideUp(500, function () {
-                $("#bom_alert_message").slideUp(500);
-            });
-        $("#bom_alert_message").html(message);
-    }
+    loadTab(menu, "New Routing");
 }
 
 $("#is_component").change(function () {
@@ -450,11 +392,11 @@ $("#saveBomForm").submit(function () {
     });
 
     if ($("#manprod").val() == 0 && $("#components").val() == 0) {
-        slideAlert("No product/component to make a BOM on.", false);
+        slideAlert("No product/component to make a BOM on.", BOM_FAIL_CLASS);
         return false;
     }
     if ($("#routingSelect").val() == 0) {
-        slideAlert("No routing has been provided.", false);
+        slideAlert("No routing has been provided.", BOM_FAIL_CLASS);
         window.scrollTo(0, 0);
         return false;
     }
@@ -497,7 +439,7 @@ $("#saveBomForm").submit(function () {
         contentType: false,
         success: function (response) {
             if (response.message) {
-                slideAlert(response.message, true);
+                slideAlert(response.message, BOM_SUCCESS_CLASS);
             }
             loadBOMtable();
         },

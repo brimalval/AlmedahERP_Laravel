@@ -270,7 +270,6 @@ Route::get('/archived', function () {
 /**OPERATIONS ROUTES */
 Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
-Route::get('/newoperation', [OperationsController::class, 'openOperationForm']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {

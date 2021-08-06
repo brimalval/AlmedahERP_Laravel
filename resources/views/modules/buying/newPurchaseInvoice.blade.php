@@ -192,6 +192,7 @@ $today = date('Y-m-d');
                                 <input type="number" reaodnly required class="form-input form-control" id="priceToPay">
                             </div>
                         </div>
+                        {{--
                         <div class="col-6 form-group" id="installmentGrp" hidden>
                             <label class=" text-nowrap align-middle">
                                 Installment Duration
@@ -202,7 +203,7 @@ $today = date('Y-m-d');
                                 <option value="6 Months">6 Months</option>
                             </select>
                             <br>
-                        </div>
+                        </div>--}}
                     </div>
                 </div>
             </div>

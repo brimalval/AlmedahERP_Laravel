@@ -32,7 +32,11 @@
         </div>
     </div>
 </nav>
+<div id="wc_success_msg" class="alert alert-success" style="display: none;">
+</div>
 
+<div id="wc_alert_msg" class="alert alert-danger" style="display: none;">
+</div>
 <form action="{{ route('workcenter.store') }}" method="post" id="newworkcenter" class="create">
     <br>
     <div class="container">
@@ -59,7 +63,7 @@
                 <div class="form-group">
                     <label for="Type">Type</label>
                     <select class="form-control" id="wc_select" onchange="showForm()">
-                        <option value="N/A"></option>
+                        <option value="N/A" selected></option>
                         <option value="Human">Human</option>
                         <option value="Machine">Machine</option>
                         <option value="Human and Machine">Human & Machine</option>
@@ -112,43 +116,6 @@
                     <br>
                 </div>
                 <div class="col-8">
-                    <div id="f1" style="display:block">
-                         {{-- Paalala lang po, huwag na po ito i-balik 
-                        <label>Human</label>
-                       
-                        <table class="table border-bottom table-hover table-bordered" id="operations">
-                            <thead class="border-top border-bottom bg-light">
-                                <tr class="text-muted">
-                                    <td class="text-center">Employee Name</td>
-                                    <td class="text-center">Duration</td>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody class="" id="newemployee-input-rows">
-                                <tr data-id="${nextID}">
-                                    <td id="mr-code-input" class="mr-code-input"><input type="text" value=""
-                                            name="Employee_name" list="employees" id="Employee_name"
-                                            class="form-control">
-                                    </td>
-                                    <td style="width: 10%;" class="mr-qty-input"><input type="text" value=""
-                                            name="duration" id="duration" class="form-control">
-                                    <td>
-                                        <a id="" class="btn delete-btn" href="#" role="button">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <td colspan="7" rowspan="5">
-                            <button type="button" onclick="addRownewEmployee()"
-                                class="btn btn-sm btn-sm btn-secondary">Add
-                                Row</button>
-                        </td>
-                    --}}
-                        <br>
-                    </div>
-
                     <div id="f2" style="display:none">
                         <br>
                         <div class="col-6">
@@ -191,7 +158,48 @@
                 </div>
                 <br>
             </div>
+
         </div>
-        {{-- </form> --}}
+
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="Production_Capacity">Production Capacity</label>
+                    <input type="number" min="1" name="Production_Capacity" id="Production_Capacity" value=""
+                        class="form-control">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="Electricity_Cost">Electricity Cost</label>
+                    <input type="number" min="1" name="Electricity_Cost" id="Electricity_Cost" value="0" class="form-control hour_rate_compu">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="Consumable_Cost">Consumable Cost</label>
+                    <input type="number" min="1" name="Consumable_Cost" id="Consumable_Cost" value="0" class="form-control hour_rate_compu">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="Rent_Cost">Rent Cost</label>
+                    <input type="number" min="1" name="Rent_Cost" id="Rent_Cost" value="0" class="form-control hour_rate_compu">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="Wages">Wages</label>
+                    <input type="number" min="1" name="Wages" id="Wages" value="0" class="form-control hour_rate_compu">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="Hour_rate">Hour Rate</label>
+                    <input type="number" value="0" min="0" name="Hour_rate" id="Hour_rate" value="" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
     </div>
-    <br>
+</form>
+

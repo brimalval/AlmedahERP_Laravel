@@ -5,6 +5,17 @@
 </div>
 <br>
 
+
+                        <div class="d-flex flex-row-reverse">
+                                 <select data-column="0" id='work_status' class="form-control flex-row-reverse"style="width: 200px" method="POST">
+                                    <option value="">By Status</option>
+                                    @foreach($work_status as $work_status)
+                                    <option value="{{$work_status}}">{{$work_status}}</option>
+                                    @endforeach
+                                </select>
+                             </div>    
+                             <br>
+                             
 <div class="row">
     <div id="fixed" class="col-md-12">
         <table class="w-100 table table-bom border-bottom" id="work_order_table">
