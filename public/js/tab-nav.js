@@ -1522,3 +1522,19 @@ function editoperation(id) {
         $("#contentOperations").load(`/operations/${id}/edit`);
     });
 }
+
+function repairtable() {
+    $(document).ready(function () {
+        $("#contentRepair").load("/repair");
+    });
+}
+function newrepairrequest() {
+    $(document).ready(function () {
+        $("#contentRepair").load("/newrepairrequest");
+    });
+}
+function repairinfo() {
+    $(document).ready(function () {
+        $("#contentRepair").load("/repairinfo");
+    });
+}

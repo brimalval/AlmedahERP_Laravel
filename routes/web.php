@@ -401,11 +401,11 @@ Route::get('/quality', function () {
 
 /**REPORTS ROUTES*/
 Route::get('/reportsbuilder', function () {
-    return view('modules.reports.reportsbuilder');
-});
-Route::get('/loadReportsBuilderShowReport', function () {
     return view('modules.reports.reportsbuilderform_showreport');
 });
+#Route::get('/loadReportsBuilderShowReport', function () {
+#   return view('modules.reports.reportsbuilderform_showreport');
+#});
 Route::get('/openReportsBuilderForm', function () {
     return view('modules.reports.reportsbuilderform');
 });
@@ -604,6 +604,17 @@ Route::get('/getBomId/{selected}/{text}', [WorkOrderController::class, 'getBomId
 Route::get('/getQtyFromMatOrdered/{work_order_no}', [WorkOrderController::class, 'getQtyFromMatOrdered']);
 Route::get('/checkUpdateStatus/{work_order_no}/{product_code}', [WorkOrderController::class, 'checkUpdateStatus']);
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
+
+/**REPAIR ROUTES*/
+Route::get('/repair', function () {
+    return view('modules.manufacturing.repair');
+});
+Route::get('/newrepairrequest', function () {
+    return view('modules.manufacturing.newrepairrequest');
+});
+Route::get('/repairinfo', function () {
+    return view('modules.manufacturing.repairinfo');
+});
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {
