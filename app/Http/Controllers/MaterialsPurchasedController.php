@@ -24,8 +24,10 @@ class MaterialsPurchasedController extends Controller
         $materials_purchased = MaterialPurchased::all();
         $materials = ManufacturingMaterials::all();
         $suppliers = Supplier::all();
-        return view('modules.buying.purchaseorder', ['materials_purchased' => $materials_purchased, 'materials' => $materials,
-                        'suppliers' => $suppliers]);
+        return view('modules.buying.purchaseorder', 
+                    ['materials_purchased' => $materials_purchased, 
+                     'materials' => $materials,
+                     'suppliers' => $suppliers]);
     }
 
     public function openOrderForm()
@@ -166,8 +168,10 @@ class MaterialsPurchasedController extends Controller
     {
         $mp_material = MaterialPurchased::where('purchase_id', $purchase_id)->first();
         //delete all records with same purchase_id 
-        $mp_records = MPRecord::where('purchase_id', $purchase_id)->get();
-        if($mp_records != null) $mp_records->delete();
+        $material_records = $mp_material->materialRecords;
+        foreach ($material_records as $material) {
+            $material->delete();
+        }
         //get purchase receipt and delete pending orders record related to purchase receipt
         $p_receipt = $mp_material->receipt;
         if ($p_receipt != null) {

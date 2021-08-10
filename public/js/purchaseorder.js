@@ -148,7 +148,7 @@ $("#reqDate").change(function () {
     }
 });
 
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+//var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
 function submitOrder() {
     $.ajaxSetup({

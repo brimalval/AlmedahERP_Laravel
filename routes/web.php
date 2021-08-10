@@ -524,6 +524,9 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
+Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
+Route::get('/supp-filter-sg/{supplier_group}', [SupplierController::class, 'filterBySupplierGroup']);
+Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
 /*SUPPLIER GROUP*/
 Route::get('/newsuppliergroup', function() {

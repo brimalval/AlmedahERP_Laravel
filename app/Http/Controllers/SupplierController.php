@@ -23,7 +23,8 @@ class SupplierController extends Controller
     {
         //
         $suppliers = Supplier::all();
-        return view('modules.buying.supplier', ['suppliers' => $suppliers]);
+        $names = Supplier::select('company_name')->get();
+        return view('modules.buying.supplier', ['suppliers' => $suppliers, 'names' => $names]);
     }
 
     /**
@@ -71,6 +72,21 @@ class SupplierController extends Controller
         } catch (Exception $e) {
             return $e;
         }
+    }
+
+    public function getSupplierData() {
+        $suppliers = Supplier::all();
+        return response()->json(['suppliers' => $suppliers]);
+    }
+
+    public function filterByName($name) {
+        $suppliers = Supplier::where('company_name', 'LIKE', "%".$name."%")->get();
+        return response()->json(['suppliers' => $suppliers]);
+    }
+
+    public function filterBySupplierGroup($supplier_group) {
+        $suppliers = Supplier::where('supplier_group', 'LIKE', "%".$supplier_group."%")->get();
+        return response()->json(['suppliers' => $suppliers]);
     }
 
     /**

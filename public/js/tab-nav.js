@@ -4,6 +4,9 @@ if ($("#divMain").children().length == 0) {
         $("#divMain").load("/dashboard");
     });
 }
+
+var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
 //if (sessionStorage.getItem("route")) {
 //    $("#divMain").load(sessionStorage.getItem("route"));
 //} else {

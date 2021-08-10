@@ -34,19 +34,31 @@
     <div class="card my-2">
         <div class="card-header bg-light">
             <div class="row">
-                <div class="col-2">
+                <div class="col-4">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Name">
+                        <select name="supplierName" id="supplierName" class="form-control supplier-search" data-live-search="true">
+                            <option value="None">All Suppliers</option>
+                            @foreach ($names as $name)
+                                <option value="{{ $name['company_name'] }}">{{ $name['company_name'] }}</option>
+                            @endforeach
+                        </select>
+                        {{--<input type="text" class="form-control" placeholder="Name">--}}
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-4">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Supplier Name">
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-4">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Supplier Group">
+                        <select name="sgroupSelect" id="sgroupSelect" class="form-control supplier-search">
+                            <option value="None" selected>Search by Supplier Group</option>
+                            <option value="Raw Material">Raw Material</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Electrical">Electrical</option>
+                        </select>
+                        {{--<input type="text" class="form-control" placeholder="Supplier Group">--}}
                     </div>
                 </div>
             </div>
@@ -66,57 +78,42 @@
                 </div>
             </div>
         </div>
-        <table id="supplierTbl" class="table table-bom border-bottom">
-            <thead class="border-top border-bottom bg-light">
-                <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Supplier Name</td>
-                    <td>Contact Name</td>
-                    <td>Phone Number</td>
-                    <td>Supplier Address</td>
-                    <td>Supplier Group</td>
-                </tr>
-            </thead>
-            <tbody class="">
-                @foreach ($suppliers as $supplier)
-                    <tr>
+        <div class="col-12">
+            <table id="supplierTbl" class="table table-sm table-hover w-100">
+                <thead class="border-top border-bottom bg-light">
+                    <tr class="text-muted">
                         <td>
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input">
                             </div>
                         </td>
-                        <td>
-                            <a
-                                href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a>
-                        </td>
-                        <td class="text-black-50">{{ $supplier->contact_name }}</td>
-                        <td class="text-black-50">{{ $supplier->phone_number }}</td>
-                        <td class="text-black-50">{{ $supplier->supplier_address }}</td>
-                        <td class="text-black-50">{{ $supplier->supplier_group }}</td>
+                        <td>Supplier Name</td>
+                        <td>Contact Name</td>
+                        <td>Phone Number</td>
+                        <td>Supplier Address</td>
+                        <td>Supplier Group</td>
                     </tr>
-                @endforeach
-                <!--
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a href='javascript:onclick=openSupplierInfo();'>Hi-top</a></td>
-                    <td>
-                        <ul>
-                            <li>Enabled</li>
-                        </ul>
-                    </td>
-                    <td class="text-black-50">Raw Material</td>
-                    <td class="text-black-50">2 M</td>
-                </tr>
-            -->
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="">
+                    @foreach ($suppliers as $supplier)
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input">
+                                </div>
+                            </td>
+                            <td>
+                                <a
+                                    href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a>
+                            </td>
+                            <td class="text-black-50">{{ $supplier->contact_name }}</td>
+                            <td class="text-black-50">{{ $supplier->phone_number }}</td>
+                            <td class="text-black-50">{{ $supplier->supplier_address }}</td>
+                            <td class="text-black-50">{{ $supplier->supplier_group }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

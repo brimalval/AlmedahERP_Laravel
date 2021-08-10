@@ -158,7 +158,6 @@
                 $(`#totalPrice${i}`).html("₱ " + numberWithCommas(price.toFixed(2)));
             }
 
-            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
             $(".po-datatable-search").selectpicker();
             $(".po-datatable-search").change(function() {
                 let url = ''

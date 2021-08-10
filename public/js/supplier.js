@@ -1,4 +1,3 @@
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 var SUPP_SUCCESS = "#s_success_message";
 var SUPP_FAIL = "#s_alert_message";
 
@@ -7,6 +6,60 @@ $(document).ready(function() {
         "searching": false,
         "info": false,
     });
+    $(".supplier-search").selectpicker();
+});
+
+$(".supplier-search").change(function (e) { 
+    var tbl = $("#supplierTbl").DataTable();
+    let url = ''
+    if($(this).val() === 'None')
+        url = '/supplier-all'
+    else {
+        let id = $(this).attr('id');
+        switch(id) {
+            case 'supplierName':
+                url = /supp-filter-name/
+                break;
+            case 'sgroupSelect':
+                url = '/supp-filter-sg/'
+                break;
+        }
+        url = url + $(this).val();
+        if (url === '') return;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: $(this).val(),
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                tbl.rows('tr').remove();
+                var suppliers = data.suppliers;
+                if (suppliers.length > 0) {
+                    for(let i=0; i<suppliers.length; i++) {
+                        var supplier = suppliers[i];
+                        tbl.row.add([
+                            `
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                            `,
+                            `
+                            <a href='javascript:onclick=openSupplierInfo(${supplier.id});'>${supplier.company_name}</a>
+                            `,
+                            supplier.contact_name,
+                            supplier.phone_number,
+                            supplier.supplier_address,
+                            supplier.supplier_group
+                        ]);
+                    }
+                }
+                tbl.draw();
+            }
+        });
+    }
+    e.preventDefault();
+    
 });
 
 $("#supplierForm, #updateSupplierForm").submit(function () {

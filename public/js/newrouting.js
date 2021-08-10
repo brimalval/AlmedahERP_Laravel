@@ -1,4 +1,3 @@
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 var ROUTING_SUCCESS = "#routing_success_msg";
 var ROUTING_FAIL = "#routing_alert_msg";
 

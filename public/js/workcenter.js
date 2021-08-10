@@ -31,11 +31,11 @@ function checkWC() {
 }
 
 $("#save_wc").click(function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': CSRF_TOKEN, //protection :>
-        }
-    });
+    //$.ajaxSetup({
+    //    headers: {
+    //        'X-CSRF-TOKEN': CSRF_TOKEN, //protection :>
+    //    }
+    //});
 
     var flag = checkWC();
     if(!flag) {return;}
