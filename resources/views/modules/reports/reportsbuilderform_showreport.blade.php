@@ -1,7 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h2 class="navbar-brand tab-list-title">
-        <a href='javascript:onclick=openReportsBuilderForm();' class="fas fa-arrow-left back-button"><span></span></a>
-        <span>Show Report</span>
+        <span>Reports</span>
     </h2>
 
     <div class="collapse navbar-collapse float-right" id="navbarSupportedContent">
