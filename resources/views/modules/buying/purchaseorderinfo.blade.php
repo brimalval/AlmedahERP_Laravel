@@ -47,13 +47,42 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item li-bom">
-                        <button class="btn btn-danger" id="cancelOrder" type="button">Cancel</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#npo_CancelModal" type="button">Cancel</button>
                     </li>
                 </ul>
             </div>
         @endif
     </div>
 </nav>
+{{--"Are you sure that you want to cancel this purchase order?"--}}
+
+<div id="po_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="po_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
+<div class="modal fade" id="npo_CancelModal" tabindex="-1" role="dialog" aria-labelledby="npo_CancelModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirm Cancellation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"><p>Are you sure that you want to cancel this purchase order?</p></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{{ route('purchaseorder.destroy', ['purchaseorder' => $purchase_order->id]) }}" id="cancelPO" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger" id="cancelOrder" data-dismiss="modal" type="button">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal Purchase Order-->
 <div class="modal fade" id="sq_modal" tabindex="-1" role="dialog" aria-labelledby="sq_modal" aria-hidden="true">
@@ -117,12 +146,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div id="po_success_message" class="alert alert-success" style="display: none;">
-    </div>
-
-    <div id="po_alert_message" class="alert alert-danger" style="display: none;">
     </div>
 @endif
 

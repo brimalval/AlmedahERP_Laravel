@@ -719,13 +719,13 @@ function openManufacturingWorkstationForm() {
 
 function loadManufacturingRouting() {
     $(document).ready(function () {
-        $("#contentRouting").load("/routing");
+        $("#contentRouting").load("/routing/create");
     });
 }
 function openManufacturingRoutingForm() {
     $(document).ready(function () {
-        $("#contentRouting").load("/newrouting");
-        $("#contentNewRouting").load("/newrouting");
+        $("#contentRouting").load("/routing/create");
+        $("#contentNewRouting").load("/routing/create");
     });
 }
 
@@ -821,13 +821,13 @@ function loadPurchaseOrder() {
 
 function viewPurchaseOrder(id) {
     $(document).ready(function () {
-        $("#contentPurchaseOrder").load(`/view-order/${id}`);
+        $("#contentPurchaseOrder").load(`/purchaseorder/${id}`);
     });
 }
 
 function openNewPurchaseOrder() {
     $(document).ready(function () {
-        $("#contentPurchaseOrder").load("/openNewPurchaseOrder");
+        $("#contentPurchaseOrder").load("/purchaseorder/create");
     });
 }
 
@@ -1489,7 +1489,7 @@ function loadnewworkcenter() {
 }
 function loadnewRouting() {
     $(document).ready(function () {
-        $("#contentRouting").load("/newrouting");
+        $("#contentRouting").load("/routing/create");
     });
 }
 

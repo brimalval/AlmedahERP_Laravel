@@ -160,18 +160,17 @@
 
             $(".po-datatable-search").selectpicker();
             $(".po-datatable-search").change(function() {
-                let url = ''
+                let url = "/po-filter/";
                 if ($(this).val() === 'None') {
-                    url = '/po-all';
+                    url = url + 'all/all';
                 } else {
-                    url = '/po-by-';
                     let id = $(this).attr('id');
                     switch (id) {
                         case 'status-search':
-                            url = url + 'status'
+                            url = url + 'mp_status'
                             break;
                         case 'po-mat-search':
-                            url = url + 'item'
+                            url = url + 'material'
                             break;
                         case 'po-supplier-search':
                             url = url + 'supplier'
@@ -179,8 +178,7 @@
                     }
                     url = url + `/${$(this).val()}`;
                 }
-                if (url === '/po-by-/') return;
-                console.log(url);
+                if (url === '/po-filter//') return;
                 $.ajax({
                     type: 'GET',
                     url: url,

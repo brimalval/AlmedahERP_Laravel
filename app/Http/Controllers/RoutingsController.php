@@ -8,6 +8,7 @@ use App\Models\Routings;
 use App\Models\WorkCenter;
 use Exception;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Foreach_;
 
 class RoutingsController extends Controller
 {
@@ -40,6 +41,9 @@ class RoutingsController extends Controller
     public function create()
     {
         //
+        $operations = Operation::all();
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.newrouting', ['operations' => $operations, 'work_centers' => $work_centers]);
     }
 
     /**
@@ -61,7 +65,22 @@ class RoutingsController extends Controller
             $routing->routing_name = $form_data['Routing_Name'];
             $routing->save();
             $routing = Routings::where('routing_id', $routing_id)->first();
-            return ['routing_id' => $routing->routing_id];
+            //return ['routing_id' => $routing->routing_id];
+
+            $routing_ops = json_decode($form_data['routing_operations']);
+            foreach ($routing_ops as $r_ops) {
+                $hour_rate = $r_ops->hour_rate;
+                $op_time = $r_ops->operation_time;
+                $r_operation = new RoutingOperation();
+                $r_operation->sequence_id = $r_ops->seq_id;
+                $r_operation->operation_id = $r_ops->operation;
+                $r_operation->routing_id = $routing_id;
+                $r_operation->hour_rate = $hour_rate;
+                $r_operation->operation_time = $op_time;
+                $r_operation->operating_cost = floatval($hour_rate) * floatval($op_time);
+                $r_operation->save();
+            }
+
         } catch (Exception $e) {
             return $e;
         }
@@ -119,13 +138,6 @@ class RoutingsController extends Controller
     {
         $routing = Routings::find($id);
         $routing->delete();
-    }
-
-    public function openRoutingForm()
-    {
-        $operations = Operation::all();
-        $work_centers = WorkCenter::all();
-        return view('modules.BOM.newrouting', ['operations' => $operations, 'work_centers' => $work_centers]);
     }
 
     public function getOperations($routing_id) {

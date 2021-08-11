@@ -207,35 +207,38 @@ function viewQuotationItems(id) {
 }
 
 $("#cancelOrder").click(function () { 
+    $("#cancelPO").submit();
+});
+
+$("#cancelPO").submit(function () { 
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
     });
-    let cancel = confirm("Are you sure that you want to cancel this purchase order?");
 
-    if(cancel) {
-        $.ajax({
-            type: "POST",
-            url: `/delete-order/${$("#p_id").html()}`,
-            success: function (response) {
-                if(response.error) {
-                    alert(response.error);
-                    return;
-                }
-                loadPurchaseOrder();
-                if($("#contentPurchaseReceipt").length) {
-                    loadPurchaseReceipt();
-                }
-                if($("#contentPurchaseInvoice").length) {
-                    loadPurchaseInvoice();
-                }
-                if($("#contentPendingOrders").length) {
-                    loadPendingOrders();
-                }
+    $.ajax({
+        type: "DELETE",
+        url: `/purchaseorder/${$("#p_id").html()}`,
+        success: function (response) {
+            if(response.error) {
+                slideAlert(response.error, PO_FAIL);
+                return;
             }
-        });
-    }
+            loadPurchaseOrder();
+            if($("#contentPurchaseReceipt").length) {
+                loadPurchaseReceipt();
+            }
+            if($("#contentPurchaseInvoice").length) {
+                loadPurchaseInvoice();
+            }
+            if($("#contentPendingOrders").length) {
+                loadPendingOrders();
+            }
+        }
+    });
+
+    return false;
     
 });
 
@@ -369,7 +372,7 @@ function saveOrder() {
     form_data.append('total_price', $(`#totalPrice`).val().replace("₱ ", '').replaceAll(',', ''));
     form_data.set('materials_purchased', materials_list);
 
-    let url = !$("#mp_status").length ? '/create-order' : '/update-order';
+    let url = !$("#mp_status").length ? '/purchaseorder' : '/update-order';
     let purchase_id = '';
 
     $.ajax({
@@ -388,7 +391,8 @@ function saveOrder() {
 
 
     //Only store these materials when creating purchase order
-    if (!$("#purch_id").val()) {
+    /**
+     * if (!$("#purch_id").val()) {
         let materialData = new FormData();
         materialData.append('materials_list', materials_list);
 
@@ -404,6 +408,7 @@ function saveOrder() {
             }
         });
     }
+     */
 
 }
 

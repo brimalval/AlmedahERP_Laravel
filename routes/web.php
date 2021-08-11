@@ -242,7 +242,6 @@ Route::get('/openManufacturingItemPriceForm', function () {
 
 /**MANUFACTURING ROUTING ROUTES */
 Route::resource('/routing', RoutingsController::class);
-Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
 Route::get('/get-routing-ops/{routing_id}', [RoutingsController::class, 'getOperations']);
 
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
@@ -359,20 +358,11 @@ Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::c
 Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/purchaseorder', [MaterialsPurchasedController::class, 'index']);
-Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openOrderForm']);
-Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
-Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
-Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
+Route::resource('/purchaseorder', MaterialsPurchasedController::class);
+Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
+Route::get('/po-filter/{filter}/{value}', [MaterialsPurchasedController::class, 'filterBy']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
-Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
-Route::post('/store-mp-materials/{purchase_id}', [MaterialsPurchasedController::class, 'storeMaterial']);
-Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
-Route::get('/po-all', [MaterialsPurchasedController::class, 'getAll']);
-Route::get('/po-by-status/{status}', [MaterialsPurchasedController::class, 'getByStatus']);
-Route::get('/po-by-item/{item_code}', [MaterialsPurchasedController::class, 'getByMaterial']);
-Route::get('/po-by-supplier/{supplier_id}', [MaterialsPurchasedController::class, 'getBySupplier']);
 
 /**PURCHASE RECEIPT ROUTES */
 Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
@@ -430,7 +420,7 @@ Route::get('/retail', function () {
 });
 
 /**ROUTING OPERATION ROUTES */
-Route::resource('/routingoperation', RoutingOperationController::class);
+//Route::resource('/routingoperation', RoutingOperationController::class);
 
 /**SALES ORDER ROUTES */
 Route::get('/view-sales-order/{id}', [SalesOrderController::class, 'get']);
