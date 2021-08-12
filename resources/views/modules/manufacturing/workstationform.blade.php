@@ -54,89 +54,8 @@
                         </div>
                     </form>
                 </div>
-                <div class="card-body">
-                    <hr class="mt-2 mb-5">
-                    <h6><strong>OPERATING COSTS</strong></h6>
-
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Electricity Cost</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                                <p>per hour</p>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Rent Cost</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                                <p>per hour</p>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Consumable Cost</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                                <p>per hour</p>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Wages</label>
-                                <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                                <p>Wages per hour</p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-body">
-                    <hr class="mt-2 mb-5">
-                    <h6><strong>WORKING HOURS</strong></h6>
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 0%;">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </th>
-                                <th scope="col">Start Time</th>
-                                <th scope="col">End Time</th>
-                                <th scope="col">Enabled</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php for ($i = 0; $i < 1; $i++): ?> <tr>
-                                <td class="text-center">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                </tr>
-                                <?php endfor; ?>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="7 p-5">
-                                    <button class="btn btn-secondary btn-sm">Add Row</button>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="inputEmail4">Holiday List</label>
-                            <input type="text" class="form-control" id="inputEmail4" placeholder=""></select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            &nbsp;
-                        </div>
-                    </div>
-                </div>
+                
+                
                 <div class="card-footer">
                     <!-- <div class="btn-group" role="group">
                         <button type="button" class="btn btn-dark" href="#">20</button>
@@ -169,5 +88,4 @@
             }
         });
     });
-
 </script>

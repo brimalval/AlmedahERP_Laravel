@@ -69,7 +69,7 @@
                                 <th scope="col" class="text-center" style="width: 0%;">
                                     <span class="fa fa-heart fa-fw"></span>
                                 </th>
-                                <th scope="col" style="width: 40%;">Name</th>
+                                <th scope="col" style="width: 40%;">Station ID</th>
                                 <th scope="col" style="width: 20%;">Workstation Name</th>
                                 <th scope="col" style="width: 40%;">Description</th>
                             </tr>
