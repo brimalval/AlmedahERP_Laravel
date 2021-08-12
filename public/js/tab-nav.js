@@ -1318,13 +1318,13 @@ function openPurchaseInvoiceInfo(id) {
 
 function openNewPurchaseReceipt() {
     $(document).ready(function () {
-        $("#contentPurchaseReceipt").load("/new-receipt");
+        $("#contentPurchaseReceipt").load("/purchasereceipt/create");
     });
 }
 
 function openPurchaseReceiptInfo(id) {
     $(document).ready(function () {
-        $("#contentPurchaseReceipt").load(`/view-receipt/${id}`);
+        $("#contentPurchaseReceipt").load(`/purchasereceipt/${id}`);
     });
 }
 
