@@ -161,10 +161,10 @@
             $(".po-datatable-search").selectpicker();
             $(".po-datatable-search").change(function() {
                 let url = "/po-filter/";
+                let id = $(this).attr('id');
                 if ($(this).val() === 'None') {
                     url = url + 'all/all';
                 } else {
-                    let id = $(this).attr('id');
                     switch (id) {
                         case 'status-search':
                             url = url + 'mp_status'
@@ -178,7 +178,7 @@
                     }
                     url = url + `/${$(this).val()}`;
                 }
-                if (url === '/po-filter//') return;
+                //$(`.po-datatable-search:not(#${id})`).val("None").selectpicker('refresh');
                 $.ajax({
                     type: 'GET',
                     url: url,

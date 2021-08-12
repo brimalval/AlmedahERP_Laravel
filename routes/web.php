@@ -365,14 +365,11 @@ Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_it
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 
 /**PURCHASE RECEIPT ROUTES */
-Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
-Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
+Route::resource('/purchasereceipt', PurchaseReceiptController::class);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
 Route::get('/get-materials-from-mp/{receipt_id}', [PurchaseReceiptController::class, 'getOrderedMaterialsFromInvoice']);
-Route::post('/create-receipt', [PurchaseReceiptController::class, 'createReceipt']);
-Route::get('/view-receipt/{receipt_id}', [PurchaseReceiptController::class, 'showReceipt']);
-Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
+Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
 Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
 

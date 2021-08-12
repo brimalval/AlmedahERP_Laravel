@@ -37,7 +37,7 @@ function saveReceipt() {
     formData.append("items_received", JSON.stringify(received_mats));
     formData.append("grand_total", $("#receivePrice").val());
 
-    let url = !$("#recStatus").length ? "/create-receipt" : "/update-receipt";
+    let url = !$("#recStatus").length ? "/purchasereceipt" : "/update-receipt";
 
     $.ajax({
         type: "POST",
