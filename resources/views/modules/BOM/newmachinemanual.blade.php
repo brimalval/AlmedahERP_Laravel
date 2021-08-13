@@ -36,7 +36,7 @@
     </div>
 </nav>
 
-<form action="/create-machine" method="post" id="mmForm">
+<form action="{{ route('machinemanual.store') }}" method="post" id="mmForm">
     @csrf
     <div class="container">
         <div class="row">

@@ -142,7 +142,7 @@ function createInvoice() {
         return;
     }
 
-    let url = "/create-invoice";
+    let url = "/purchaseinvoice";
 
     if($("#invoiceId").length) {
         formData.append("invoice_id", $("#invoiceId").val());

@@ -51,7 +51,7 @@
     </div>
 </div>
 
-<form action="/create-bom" method="post" id="saveBomForm" class="create">
+<form action="{{ route('bom.store') }}" method="post" id="saveBomForm" class="create">
     @csrf
     <br>
     <div class="container">

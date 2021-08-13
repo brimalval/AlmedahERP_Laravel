@@ -28,7 +28,7 @@
                     <button class="btn btn-info btn" style="display: none;" onclick="" id="saveMMBtn">Save</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <form action="/delete-machine/{{ $manual->id }}" id="deleteMM" method="post">
+                    <form action="{{ route('machinemanual.destroy', ['machinemanual' => $manual->id]) }}" id="deleteMM" method="post">
                         @csrf
                         @method('DELETE')
                         <button style="background-color: #ff0000d7;" class="btn btn-danger btn" style="float: left;"
@@ -40,7 +40,7 @@
     </div>
 </nav>
 
-<form action="/update-machine/{{ $manual->id }}" id="mmForm" method="POST">
+<form action="{{ route('machinemanual.update', ['machinemanual' => $manual->id]) }}" id="mmForm" method="POST">
     @csrf
     @method('PATCH')
     <div class="container">

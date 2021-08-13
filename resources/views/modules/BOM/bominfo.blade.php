@@ -24,7 +24,7 @@
                         onclick="loadBOMtable();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <form action="/delete-bom/{{ $bom->bom_id }}" id="deleteBOM" method="post">
+                    <form action="{{ route('bom.destroy', ['bom' => $bom->bom_id]) }}" id="deleteBOM" method="post">
                         @csrf
                         @method('DELETE')
                         <button style="background-color: #ff0000d7;" class="btn btn-danger btn" style="float: left;"
@@ -60,7 +60,7 @@
     </div>
 </div>
 
-<form action="/update-bom/{{ $bom->bom_id }}" method="post" id="saveBomForm" class="create">
+<form action="{{ route('bom.update', ['bom' => $bom->bom_id]) }}" method="post" id="saveBomForm" class="create">
     <br>
     @csrf
     @method('PATCH')

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
+
 class BOMController extends Controller
 {
     /**
@@ -21,8 +22,23 @@ class BOMController extends Controller
      */
     public function index()
     {
+        //
         $bills_of_materials = BillOfMaterials::all();
-        return view('modules.BOM.bom', ['boms' => $bills_of_materials]);//
+        return view('modules.BOM.bom', ['boms' => $bills_of_materials]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+        $man_prod = ManufacturingProducts::all();
+        $components = Component::all();
+        $routings = Routings::all();
+        return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'components' => $components, 'routings' => $routings]);
     }
 
     /**
@@ -33,6 +49,7 @@ class BOMController extends Controller
      */
     public function store(Request $request)
     {
+        //
         try {
             $form_data = $request->input();
             $last_bom = BillOfMaterials::latest()->first();
@@ -86,8 +103,16 @@ class BOMController extends Controller
         } //
     }
 
-    public function viewBOM($bom_id) {
-        $bom = BillOfMaterials::find($bom_id);
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+        $bom = BillOfMaterials::find($id);
         $routing = $bom->routing;
         $item = ($bom->product != null) ? $bom->product : $bom->component;
         $routing_ops = $routing->operations();
@@ -101,20 +126,29 @@ class BOMController extends Controller
                    );
     }
 
-
-    //Check if there is an identical BOM with 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $bom_id)
+    public function update(Request $request, $id)
     {
+        //
         try {
-            $bom = BillOfMaterials::find($bom_id);
+            $bom = BillOfMaterials::find($id);
             $form_data = $request->input();
 
             $bom_name = "BOM-"; //initialize "BOM-"
@@ -131,7 +165,7 @@ class BOMController extends Controller
                 $name = $component->component_name;
             }
 
-            $bom_name .= $name . "-" . str_pad($bom_id, 3, "0", STR_PAD_LEFT);
+            $bom_name .= $name . "-" . str_pad($id, 3, "0", STR_PAD_LEFT);
             
             $matching_boms = BillOfMaterials::where('product_code', $code)->orWhere('component_code', $code)->get();
 
@@ -167,21 +201,14 @@ class BOMController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($bom_id)
+    public function destroy($id)
     {
-        $bills_of_materials = BillOfMaterials::find($bom_id);
+        //
+        $bills_of_materials = BillOfMaterials::find($id);
         $bills_of_materials->delete();
-    }
-
-    public function BOMForm()
-    {
-        $man_prod = ManufacturingProducts::all();
-        $components = Component::all();
-        $routings = Routings::all();
-        return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'components' => $components, 'routings' => $routings]);
     }
 
     public function getProduct($product_code)

@@ -25,6 +25,7 @@ use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierGroupController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
@@ -79,14 +80,9 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::get('/bom', [BOMController::class, 'index']);
-Route::get('/newbom', [BOMController::class, 'BOMForm']);
+Route::resource('/bom', BOMController::class);
 Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
 Route::get('/get-component/{component_code}', [BOMController::class, 'getComponent']);
-Route::post('/create-bom', [BOMController::class, 'store']);
-Route::get('/view-bom/{bom_id}', [BOMController::class, 'viewBOM']);
-Route::patch('/update-bom/{bom_id}', [BOMController::class, 'update']);
-Route::delete('/delete-bom/{bom_id}', [BOMController::class, 'delete']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -206,15 +202,8 @@ Route::put('/jobscheduling/{jobsched}/pauseOperation' , [JobSchedController::cla
 Route::put('/jobscheduling/{jobsched}/finishOperation' , [JobSchedController::class, 'finishOperation'])->name('jobscheduling.op.finish');
 
 /**MACHINES MANUAL ROUTES */
-Route::get('/machinemanual', [MachinesManualController::class , 'index']);
-Route::get('/create-new-mm', function() {
-    return view('modules.BOM.newmachinemanual');
-});
-Route::get('/machinemanualinfo/{id}', [MachinesManualController::class, 'view']);
-Route::post('/create-machine', [MachinesManualController::class, 'store']);
+Route::resource('/machinemanual', MachinesManualController::class);
 Route::get('/find-machine/{machine_code}', [MachinesManualController::class, 'getMachine']);
-Route::patch('/update-machine/{id}', [MachinesManualController::class, 'update']);
-Route::delete('/delete-machine/{id}', [MachinesManualController::class, 'delete']);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function () {
@@ -243,10 +232,7 @@ Route::get('/openManufacturingItemPriceForm', function () {
 /**MANUFACTURING ROUTING ROUTES */
 Route::resource('/routing', RoutingsController::class);
 Route::get('/get-routing-ops/{routing_id}', [RoutingsController::class, 'getOperations']);
-
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
-Route::patch('/update-routing/{id}', [RoutingsController::class, 'update']);
-Route::delete('/delete-routing/{id}', [RoutingsController::class, 'delete']);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
@@ -348,10 +334,7 @@ Route::get('/loadProjectTemplate', function () {
 });
 
 /**PURCHASE INVOICE ROUTES */
-Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
-Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
-Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
-Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
+Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
 Route::post('/update-invoice-record/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoice']);
 Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
@@ -516,12 +499,7 @@ Route::get('/supp-filter-sg/{supplier_group}', [SupplierController::class, 'filt
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
 /*SUPPLIER GROUP*/
-Route::get('/newsuppliergroup', function() {
-    return view('modules.NewUI.NewSupplierGroup');
-});
-Route::get('/suppliergroup', function() {
-    return view('modules.NewUI.SupplierGroup');
-});
+Route::resource('/suppliergroup', SupplierGroupController::class);
 Route::get('/newsuppliergrouptable', function() {
     return view('modules.NewUI.NewSupplierGrpTable');
 });

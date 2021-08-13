@@ -131,24 +131,6 @@ function loadTab(menu, moduleWithSpace) {
     $(`#tab${menu}`).tab("show");
 }
 
-function loadNewBOM() {
-    $(document).ready(function () {
-        $("#contentBOM").load("/newBOM");
-    });
-}
-
-function subloadNewBOM() {
-    $(document).ready(function () {
-        $("#contentBOM").load("/subNewBOM");
-    });
-}
-
-function loadBOM() {
-    $(document).ready(function () {
-        $("#contentBOM").load("/bom");
-    });
-}
-
 function openNewWorkorder() {
     $(document).ready(function () {
         $("#contentWorkOrder").load("/openNewWorkorder");
@@ -1300,7 +1282,7 @@ function openNewSupplierQuotation() {
 
 function openNewPurchaseInvoice() {
     $(document).ready(function () {
-        $("#contentPurchaseInvoice").load("/new-invoice");
+        $("#contentPurchaseInvoice").load("/purchaseinvoice/create");
     });
 }
 
@@ -1312,7 +1294,7 @@ function loadPurchaseInvoice() {
 
 function openPurchaseInvoiceInfo(id) {
     $(document).ready(function () {
-        $("#contentPurchaseInvoice").load(`/view-invoice/${id}`);
+        $("#contentPurchaseInvoice").load(`/purchaseinvoice/${id}`);
     });
 }
 
@@ -1375,7 +1357,7 @@ function loadPricingRule() {
 }
 function openSupplierGroup() {
     $(document).ready(function () {
-        $("#contentSupplierGroup").load("/newsuppliergroup");
+        $("#contentSupplierGroup").load("/suppliergroup/create");
     });
 }
 
@@ -1447,13 +1429,13 @@ function loadAddress() {
 
 function loadBOMForm() {
     $(document).ready(function () {
-        $("#contentBom").load("/newbom");
+        $("#contentBom").load("/bom/create");
     });
 }
 
 function loadBOM(id) {
     $(document).ready(function () {
-        $("#contentBom").load(`/view-bom/${id}`);
+        $("#contentBom").load(`/bom/${id}`);
     });
 }
 
@@ -1465,13 +1447,13 @@ function loadBOMtable() {
 
 function loadmachineinfo(id) {
     $(document).ready(function () {
-        $("#contentMachineManual").load(`/machinemanualinfo/${id}`);
+        $("#contentMachineManual").load(`/machinemanual/${id}`);
     });
 }
 
 function loadNewMachineManual() {
     $(document).ready(function () {
-        $("#contentMachineManual").load("/create-new-mm");
+        $("#contentMachineManual").load("/machinemanual/create");
     });
 }
 

@@ -7,27 +7,38 @@ use Illuminate\Http\Request;
 
 class MachinesManualController extends Controller
 {
-    //
-    public function index() 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
+        //
         $machines_manual = MachinesManual::all();
         return view('modules.BOM.machinemanual', ['machines_manuals' => $machines_manual]);
     }
 
-    public function view($id) 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $machine_manual = MachinesManual::find($id);
-        return view('modules.BOM.machineinfo', ['manual' => $machine_manual]);
+        //
+        return view('modules.BOM.newmachinemanual');
     }
 
-    public function getMachine($machine_code) 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
-        $machine = MachinesManual::where('machine_code', $machine_code)->first();
-        return ["machine" => $machine];
-    }
-
-    public function store(Request $request) 
-    {
+        //
         $machine_manual = new MachinesManual();
         $form_data = $request->input();
         /**code here */
@@ -46,8 +57,40 @@ class MachinesManualController extends Controller
         $machine_manual->save();
     }
 
-    public function update(Request $request, $id) 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
+        //
+        $machine_manual = MachinesManual::find($id);
+        return view('modules.BOM.machineinfo', ['manual' => $machine_manual]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
         $machine_manual = MachinesManual::find($id);
         $form_data = $request->input();
         $machine_name = $form_data['Machine_name'];
@@ -63,13 +106,24 @@ class MachinesManualController extends Controller
         $machine_manual->setup_time = $form_data['Setup_time'];
         $machine_manual->running_time = $form_data['Running_time'];
         $machine_manual->save();
-        /**code here*/
-
     }
 
-    public function delete($id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
     {
+        //
         $machine_manual = MachinesManual::find($id);
         $machine_manual->delete();
+    }
+
+    public function getMachine($machine_code) 
+    {
+        $machine = MachinesManual::where('machine_code', $machine_code)->first();
+        return ["machine" => $machine];
     }
 }

@@ -42,11 +42,6 @@ Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 
-/**BOM ROUTES */
-Route::get('/bom', [BOMController::class, 'index']);
-Route::get('/newBOM', function() { 
-    return view('modules.manufacturing.bomsubModules.newbom');
-});
 Route::get('/subNewBOM', function() {
     return view('modules.newbom');
 });
