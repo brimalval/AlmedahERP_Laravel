@@ -1,111 +1,78 @@
 
-<script src="{{ asset('js/supplier.js') }}"></script>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
-        <h2 class="navbar-brand" style="font-size: 35px;">Supplier</h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <h2 class="navbar-brand tab-list-title">
+            <a href='javascript:onclick=loadSupplierGroup();' class="fas fa-arrow-left back-button"><span></span></a>
+            <h2 class="navbar-brand" style="font-size: 35px;">New Supplier Group</h2>
+        </h2>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Menu
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                    </ul>
-                </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="loadSupplier()">Refresh</button>
-                </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" {{--data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"--}} onclick="openSupplierForm()">New</button>
+                     
+                    <button class="btn btn-primary" type="submit">Save</button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+<div class="card">
+<br>
 <div class="container">
-    <div class="card my-2">
-        <div class="card-header bg-light">
-            <div class="row">
-                <div class="col-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Name">
-                    </div>
+    <form id="newsuppliergroupForm" name="newsuppliergroupForm" role="form">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="suppliergrpName">Supplier Group Name</label>
+                    <input type="text" name="suppliergrpName" class="form-control">
                 </div>
             </div>
-        </div>
-        <div class="card-body filter">
-            <div class="row">
-                <div class="float-left">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        Add Filter
-                    </button>
-                </div>
-                <div class=" ml-auto float-right">
-                    <span class="text-muted ">Last Modified On</span>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
+
+            <div class="col-6">
+                <!---Empty Column-->
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="parentSuppGrp">Supplier Name</label>
+                    <input type="text" name="parentSuppGrp" class="form-control">
                 </div>
             </div>
+
+            <div class="col-12">
+                <br><hr><br>
+            </div>
+            <br>
         </div>
-        <table id="supplierTbl_noDatables" class="table table-bom border-bottom">
-            <thead class="border-top border-bottom bg-light">
-                <tr class="text-muted">
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td>Supplier Name</td>
-                    <td>Contact Name</td>
-                    <td>Phone Number</td>
-                    <td>Supplier Address</td>
-                </tr>
-            </thead>
-            <tbody class="">
-                @foreach ($suppliers as $supplier)
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input">
-                            </div>
-                        </td>
-                        <td>
-                            <a
-                                href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a>
-                        </td>
-                        <td class="text-black-50">{{ $supplier->contact_name }}</td>
-                        <td class="text-black-50">{{ $supplier->phone_number }}</td>
-                        <td class="text-black-50">{{ $supplier->supplier_address }}</td>
-                    </tr>
-                @endforeach
-                <!--
-                <tr>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </td>
-                    <td><a href='javascript:onclick=openSupplierInfo();'>Hi-top</a></td>
-                    <td>
-                        <ul>
-                            <li>Enabled</li>
-                        </ul>
-                    </td>
-                    <td class="text-black-50">Raw Material</td>
-                    <td class="text-black-50">2 M</td>
-                </tr>
-            -->
-            </tbody>
-        </table>
-    </div>
+
+        <!---Credit Limit-->
+        <label>Select Raw Mats</label>
+					<!-- <div class="table table-striped table-bordered hover"> -->
+						<table class="table table-bordered hover">
+						  <thead class="thead-light">
+							<tr>
+							  <th scope="col"><input type="checkbox" name=""></th>
+							  <th scope="col" class="w-30">Item Code</th>
+							  <th scope="col">Item Name</th>
+							</tr>
+						  </thead>
+						  <tbody>
+							<tr>
+							  <th scope="row"><input type="checkbox"> 1</th>
+							  <td><a href="#" style="color: black"></a></td>
+							  <td></td>
+							</tr>
+						  </tbody>
+						</table>
+						<div class="float-left">
+							<button class="btn btn-secondary btn-sm">Add Row</button>
+						</div>
+					<!-- </div>	 -->
+        <!----End of Credit Limit-->
+        <br>
+    </form>
 </div>
+</div>
+<script src="{{ asset('js/suppliergroup.js') }}"></script>
