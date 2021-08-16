@@ -27,11 +27,6 @@ function addRowbomOperation(){
         <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}" name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
         <td class="mr-qty-input">
         <select name="operation" id="operation1" data-live-search="true" class="form-control operation selectpicker" onchange="operationSearch(1);">
-            @foreach ($operations as $operation)
-                <option data-subtext="{{ $operation->operation_id }}" value="{{ $operation->operation_id }}">
-                    {{ $operation->operation_name }}
-                </option>
-            @endforeach
         </select>
         </td>
         <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control operation_field" disabled></td>

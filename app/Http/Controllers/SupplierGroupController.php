@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ManufacturingMaterials;
 use App\Models\Supplier;
+use App\Models\SupplierGroup;
 use Illuminate\Http\Request;
 
 class SupplierGroupController extends Controller
@@ -26,8 +28,13 @@ class SupplierGroupController extends Controller
     public function create()
     {
         //
-        $suppliers = Supplier::all();
-        return view('modules.NewUI.NewSupplierGroup', ['suppliers' => $suppliers]);
+        return view('modules.NewUI.NewSupplierGroup', 
+                    ['suppliers' => Supplier::all(), 
+                    'materials' => ManufacturingMaterials::all()]);
+    }
+
+    public function getRawMat($item_code) {
+        return ['material' => ManufacturingMaterials::where('item_code', $item_code)->first()];
     }
 
     /**
@@ -39,6 +46,16 @@ class SupplierGroupController extends Controller
     public function store(Request $request)
     {
         //
+        $form_data = $request->input();
+        $supplier_code = $form_data['sgSuppField'];
+        $rm_list = json_decode($form_data['raw_materials']);
+        foreach ($rm_list as $rm) {
+            # code...
+            $sg = new SupplierGroup();
+            $sg->supplier_id = $supplier_code;
+            $sg->item_code = $rm;
+            $sg->save();
+        }
     }
 
     /**

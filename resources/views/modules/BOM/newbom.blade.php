@@ -59,7 +59,7 @@
             <div class="col-6">
                 <div class="form-group" id="product-select">
                     <label for="manprod">Item</label>
-                    <select class="form-control selectpicker" data-live-search="true" id="manprod">
+                    <select class="form-control bom-item-select selectpicker" data-live-search="true" id="manprod">
                         <option value="0">-No Product Selected-</option>
                         @foreach ($man_prods as $mp)
                             <option data-subtext="{{ $mp->product_name }}" value="{{ $mp->product_code }}">{{ $mp->product_code }}</option>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="form-group" id="component-select" hidden>
                     <label for="components">Component</label>
-                    <select class="form-control selectpicker" data-live-search="true" id="components">
+                    <select class="form-control bom-item-select selectpicker" data-live-search="true" id="components">
                         <option value="0">-No Component Selected-</option>
                         @foreach ($components as $component)
                             <option data-subtext="{{ $component->component_name }}" value="{{ $component->component_code }}">{{ $component->component_code }}</option>

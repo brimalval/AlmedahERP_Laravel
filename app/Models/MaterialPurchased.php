@@ -49,10 +49,17 @@ class MaterialPurchased extends Model
         return $items_purchased_array;
     }
 
-    public function productsAndRates($item_code) {
+    public function productsAndRates($item_code, $master_item) {
         $materials = $this->itemsPurchased();
+        $item = ManufacturingProducts::where('product_code', $master_item)->first();
+        if (is_null($item)) {
+            $item = Component::where('component_code', $master_item)->first();
+        }
+        $materials_qty = $item->qtyOfRawMat($item_code);
         foreach ($materials as $material) {
             if(in_array($item_code, $material)) {
+                $material['qty'] = $materials_qty;
+                $material['subtotal'] = $materials_qty * $material['rate'];
                 return $material; 
             }
         }

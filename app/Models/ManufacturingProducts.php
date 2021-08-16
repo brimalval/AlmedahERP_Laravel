@@ -55,6 +55,16 @@ class ManufacturingProducts extends Model
         return $materials_with_qty;
     }
 
+    public function qtyOfRawMat($item_code) {
+        $materials = $this->materials();
+        foreach ($materials as $material) {
+            # code...
+            if($item_code === $material['material']->item_code) {
+                return $material['qty'];
+            }
+        }
+    }
+
     // Returns the product's materials & their respective quantities
     // as an array of arrays {{component_object1, qty}, {component_object2, qty}, etc.}
     // Expects that the json is formatted as {"0":{'component_id' : 'id', 'component_qty': 'qty'}, "1"...}

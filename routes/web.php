@@ -81,8 +81,7 @@ Route::get('/address', function() {
 
 /**BOM ROUTES*/
 Route::resource('/bom', BOMController::class);
-Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
-Route::get('/get-component/{component_code}', [BOMController::class, 'getComponent']);
+Route::get('/get-item/{item_type}/{value}', [BOMController::class, 'getItem']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -494,12 +493,14 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
+Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
 Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
 Route::get('/supp-filter-sg/{supplier_group}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
 /*SUPPLIER GROUP*/
 Route::resource('/suppliergroup', SupplierGroupController::class);
+Route::get('/sg-get-item/{material_id}', [SupplierGroupController::class, 'getRawMat']);
 Route::get('/newsuppliergrouptable', function() {
     return view('modules.NewUI.NewSupplierGrpTable');
 });

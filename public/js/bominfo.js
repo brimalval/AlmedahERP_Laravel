@@ -143,100 +143,34 @@ $("#manprod, #components").change(function () {
     }
 });
 
-$("#components").change(function () {
+$(`.bom-item-select`).change(function () {
     if ($(this).val() == 0) return;
-    let component_code = $(this).val().trim();
-    console.log(component_code);
+    let item_code = $(this).val().trim();
+    var id = $(this).attr('id');
+    var item_type = (id === 'manprod') ?  'product' : 'component';
+    console.log(item_type);
     $.ajax({
         type: "GET",
-        url: `/get-component/${component_code}`,
-        data: component_code,
+        url: `/get-item/${item_type}/${item_code}`,
+        data: item_code,
         success: function (response) {
-            let component = response.component;
-            $(`#Item_name`).val(component.component_name);
-            var table = $("#bom-materials tbody");
-            $("#bom-materials tbody tr").remove();
-            let materials = response.materials_info;
-            for (let i = 0; i < materials.length; i++) {
-                let subtotal =
-                    parseFloat(materials[i].product_rates.rate) *
-                    parseFloat(materials[i].qty);
-                let is_readonly =
-                    materials[i].product_rates.rate == 1 ? "" : "readonly";
-                table.append(
-                    `
-                    <tr id="bomMaterial-${i}">
-                        <td class="text-center">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input">
-                            </div>
-                        </td>
-                        <td id="mr-code-input" class="mr-code-input"><input type="text" value="${
-                            i + 1
-                        }" readonly
-                                name="No" id="No" class="form-control"></td>
-                        <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${
-                            materials[i].product_rates.item.item_code
-                        }" readonly
-                                name="ItemCode" id="ItemCode" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${
-                            materials[i].qty
-                        }" readonly name="Quantity"
-                                id="Quantity" class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${
-                            materials[i].product_rates.uom.item_uom
-                        }" readonly name="UOM" id="UOM"
-                                class="form-control"></td>
-                        <td class="mr-unit-input"><input type="text" value="${
-                            materials[i].product_rates.rate
-                        }" ${is_readonly} name="Rate" id="Rate"
-                                class="form-control"></td>
-                        <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"
-                                class="form-control"></td>
-                        <td>
-                            <a id="" class="btn" data-toggle="modal" data-target="#editLinkModal" href="#"
-                                role="button">
-                                <i class="fa fa-edit" aria-hidden="true"></i>
-                            </a>
-                            <a id="" class="btn delete-btn" href="#" role="button">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    `
-                );
+            console.log(response);
+            let item = response.item;
+            if(item.product_code) {
+                $(`#Item_name`).val(item.product_name);
+                $(`#Item_UOM`).val(item.unit);
+            } else {
+                $("#Item_name").val(item.component_name);
             }
-            computeCosts();
-            amountChanger();
-        },
-        error: function (response) {
-            console.log(response);
-        },
-    });
-});
-
-$(`#manprod`).change(function () {
-    if ($(this).val() == 0) return;
-    let prod_code = $(this).val().trim();
-    console.log(prod_code);
-    $.ajax({
-        type: "GET",
-        url: `/get-product/${prod_code}`,
-        data: prod_code,
-        success: function (response) {
-            console.log(response);
-            let product = response.product;
-            $(`#Item_name`).val(product.product_name);
-            $(`#Item_UOM`).val(product.unit);
             var table = $("#bom-materials tbody");
             $("#bom-materials tbody tr").remove();
             let materials = response.materials_info;
             for (let i = 0; i < materials.length; i++) {
                 let subtotal =
-                    parseFloat(materials[i].product_rates.rate) *
+                    parseFloat(materials[i].rate) *
                     parseFloat(materials[i].qty);
                 let is_readonly =
-                    materials[i].product_rates.rate == 1 ? "" : "readonly";
+                    materials[i].rate == 1 ? "" : "readonly";
                 table.append(
                     `
                     <tr id="bomMaterial-${i}">
@@ -250,7 +184,7 @@ $(`#manprod`).change(function () {
                         }" readonly
                                 name="No" id="No" class="form-control"></td>
                         <td style="width: 10%;" class="mr-qty-input"><input type="text" value="${
-                            materials[i].product_rates.item.item_code
+                            materials[i].item.item_code
                         }" readonly
                                 name="ItemCode" id="ItemCode" class="form-control"></td>
                         <td class="mr-unit-input"><input type="text" value="${
@@ -258,11 +192,11 @@ $(`#manprod`).change(function () {
                         }" readonly name="Quantity"
                                 id="Quantity" class="form-control"></td>
                         <td class="mr-unit-input"><input type="text" value="${
-                            materials[i].product_rates.uom.item_uom
+                            materials[i].uom.item_uom
                         }" readonly name="UOM" id="UOM"
                                 class="form-control"></td>
                         <td class="mr-unit-input"><input type="text" value="${
-                            materials[i].product_rates.rate
+                            materials[i].rate
                         }" ${is_readonly} name="Rate" id="Rate"
                                 class="form-control"></td>
                         <td class="mr-unit-input"><input type="number" value="${subtotal}" readonly name="Amount" id="Amount"

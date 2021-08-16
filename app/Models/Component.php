@@ -31,6 +31,16 @@ class Component extends Model
         return $materials_with_qty;
     }
 
+    public function qtyOfRawMat($item_code) {
+        $materials = $this->materials();
+        foreach ($materials as $material) {
+            # code...
+            if($item_code === $material['material']->item_code) {
+                return $material['qty'];
+            }
+        }
+    }
+
     /**
      * Returns the latest default BOM of the component. If none exist,
      * the latest non-default BOM of the component is given.

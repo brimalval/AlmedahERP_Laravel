@@ -74,6 +74,10 @@ class SupplierController extends Controller
         }
     }
 
+    public function getSupplier($supplier_id) {
+        return ['supplier' => Supplier::where('supplier_id', $supplier_id)->first()];
+    }
+
     public function getSupplierData() {
         $suppliers = Supplier::all();
         return response()->json(['suppliers' => $suppliers]);
