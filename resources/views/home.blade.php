@@ -1071,7 +1071,7 @@ function auto_load(){
    });
 }
 auto_load();
-setInterval(auto_load,5000);
+// setInterval(auto_load,5000);
 
 </script>
 @endsection

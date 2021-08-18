@@ -31,6 +31,7 @@ use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -619,3 +620,6 @@ Route::post('/generate_reports_fast_move',                      [ChartController
 Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
 Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
 Route::get('/generate_reports_stock_monitoring',                [ChartController::class, 'generate_reports_stock_monitoring']);
+
+Route::get("/chat", [ChatController::class, 'index']);
+Route::post("/chat", [ChatController::class, 'send']);
