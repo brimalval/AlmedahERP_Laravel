@@ -491,6 +491,10 @@ Route::get('/loadStockEntry', function () {
     return view('modules.manufacturing.stockentry');
 });
 
+Route::get('/stocktracing', function () {
+    return view('modules.stock.StockTracing');
+});
+
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
 Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);

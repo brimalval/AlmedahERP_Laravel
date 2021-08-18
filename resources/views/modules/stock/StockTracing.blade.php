@@ -90,7 +90,8 @@
                 </div>
             </div>
             <div class="modal-body p-5">
-                <?php include 'newStockTrace.php' ?>
+                @include('modules.stock.newStockTrace')
+                {{-- <?php include 'newStockTrace.php' ?> --}}
             </div>
             <div class="modal-footer d-flex">
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
