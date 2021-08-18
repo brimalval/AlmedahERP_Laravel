@@ -621,7 +621,7 @@
             <hr>
             <div class="msg-thread-item">
                 <div class="row my-2">
-                    <div class="col-2 mx-0 px-3 d-flex justify-content-end">
+                    <div class="col-2 mx-0 px-1 d-flex justify-content-end">
                         <img src="https://via.placeholder.com/80" class="rounded-circle mr-1 img-fluid p-0" alt="">
                     </div>
                     <div class="col-6 pl-0 ml-0 d-flex flex-column mt-3 align-content-center">
@@ -681,7 +681,7 @@
             <hr>
             <div class="msg-thread-item">
                 <div class="row my-2">
-                    <div class="col-2 mx-0 px-3 d-flex justify-content-end">
+                    <div class="col-2 mx-0 px-1 d-flex justify-content-end">
                         <img src="https://via.placeholder.com/80" class="rounded-circle mr-1 img-fluid p-0" alt="">
                     </div>
                     <div class="col-6 pl-0 ml-0 d-flex flex-column mt-3 align-content-center">
