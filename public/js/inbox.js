@@ -25,16 +25,16 @@ function deleteMsg() {
     confirm("Are you sure to DELETE this message?");
 }
 $(".main-item").click(function() {
-    if (!$(this).hasClass("msg-active")) {
-        $(this).addClass("msg-active");
-        $(this).siblings().removeClass("msg-active");
-        $(this).siblings().find(".inbox-selector").children().prop("checked", false);
-        $(this).find(".inbox-selector").children().prop("checked", true);
+    // if (!$(this).hasClass("msg-active")) {
+    //     $(this).addClass("msg-active");
+    //     $(this).siblings().removeClass("msg-active");
+    //     $(this).siblings().find(".inbox-selector").children().prop("checked", false);
+    //     $(this).find(".inbox-selector").children().prop("checked", true);
 
-    } else {
-        $(this).removeClass("msg-active");
-        $(this).find(".inbox-selector").children().prop("checked", false);
-    }
+    // } else {
+    //     $(this).removeClass("msg-active");
+    //     $(this).find(".inbox-selector").children().prop("checked", false);
+    // }
 
 
 });

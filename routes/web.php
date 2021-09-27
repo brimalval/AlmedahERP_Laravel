@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
 use App\Http\Controllers\NotificationLogsController;
+use App\Http\Controllers\MessageController;
 
 
 /*
@@ -242,15 +243,16 @@ Route::get('/openMaterialRequestInfo', function () {
 });
 
 /**MESSAGING ROUTES */
-Route::get('/inbox', function () {
-    return view('modules.messaging.inbox');
-});
+Route::get('/inbox', [ChatController::class, 'index']);
 Route::get('/important', function () {
     return view('modules.messaging.important');
 });
 Route::get('/archived', function () {
     return view('modules.messaging.archived');
 });
+
+Route::resource("/message", MessageController::class);
+Route::resource("/chat", ChatController::class);
 
 /**OPERATIONS ROUTES */
 Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
@@ -620,6 +622,3 @@ Route::post('/generate_reports_fast_move',                      [ChartController
 Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
 Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
 Route::get('/generate_reports_stock_monitoring',                [ChartController::class, 'generate_reports_stock_monitoring']);
-
-Route::get("/chat", [ChatController::class, 'index']);
-Route::post("/chat", [ChatController::class, 'send']);
